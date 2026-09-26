@@ -1,0 +1,182 @@
+// Fase 6 -- /spotify/dashboard (dedup, top-artiesten, verdelingen). Geen nieuw visueel vocabulaire:
+// hergebruikt .layer/.band/.eyebrow (app-card.scss), .section-lede/.empty-note (dossier-card.scss)
+// en .world-grid/.world-tile (world-nav.scss) voor de "Werelden"/"MMC-BPM"-tegels. Alleen de
+// ranked-bar-lijst (top-artiesten/duplicaat-artiesten/kleurverdeling) en de dedup-tabel zijn nieuw
+// -- er was nog geen bestaand idioom voor een horizontale ranglijst-balk in deze app.
+
+// De link naar /spotify/dashboard onderaan de "Werelden"-sectie op /spotify -- los stukje ruimte
+// boven de link, zonder een inline style op de pagina zelf.
+.dashboard-link-row {
+  margin-top: 14px;
+}
+
+// Kleine subkop binnen een sectie (bv. "Werelden"/"Kleur (Plutchik)"/"MMC-BPM" binnen de
+// "Verdelingen"-sectie) -- lichter dan .section-title (dat is de paginakop-schaal), maar
+// nadrukkelijker dan .section-lede.
+.section-sublede {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+
+// --- Ranked bar-lijst (top-artiesten, duplicaat-artiesten, kleurverdeling) --------------------
+.dashboard-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.dashboard-bar-row {
+  display: grid;
+  grid-template-columns: 20px minmax(120px, 220px) 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.dashboard-bar-row .rank {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.dashboard-bar-row .label {
+  font-size: 13px;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dashboard-bar-row .label .sublabel {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.dashboard-bar-track {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.dashboard-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.dashboard-bar-row .value {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+// --- Dedup-tabel -------------------------------------------------------------------------------
+$dedup-columns: minmax(150px, 2fr) minmax(120px, 1.4fr) 74px minmax(160px, 2fr);
+
+.dedup-col-heads {
+  display: grid;
+  grid-template-columns: $dedup-columns;
+  gap: 12px;
+  padding: 0 8px 6px;
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.dedup-col-heads span:nth-child(3) {
+  text-align: center;
+}
+
+.dedup-table {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 24px;
+}
+
+.dedup-row {
+  display: grid;
+  grid-template-columns: $dedup-columns;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.12s ease;
+}
+
+.dedup-row:hover {
+  background: var(--surface-2);
+}
+
+.dedup-row .name {
+  font-size: 13.5px;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dedup-row .artists {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dedup-row .count-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  padding: 3px 10px;
+  border-radius: 999px;
+  text-align: center;
+  justify-self: center;
+}
+
+.dedup-row .in-playlists {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  $dedup-columns-compact: minmax(120px, 2fr) 0 60px 0;
+
+  .dedup-col-heads,
+  .dedup-row {
+    grid-template-columns: $dedup-columns-compact;
+  }
+
+  .dedup-col-heads span:nth-child(2),
+  .dedup-col-heads span:nth-child(4),
+  .dedup-row .artists,
+  .dedup-row .in-playlists {
+    display: none;
+  }
+
+  .dashboard-bar-row {
+    grid-template-columns: 16px minmax(90px, 1fr) 1fr auto;
+    gap: 8px;
+  }
+}

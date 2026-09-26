@@ -1,0 +1,226 @@
+// Fase 5 — Spotify playlist manager: de sticky filter/groepeer/zoek-toolbar op /spotify.
+// Idioom + tokens 1-op-1 hergebruikt uit Gwen's ontwerp-illustratie (spotify-fase5-mockup.html);
+// het chip/badge-tinting-recept (kleur vol, achtergrond/rand via color-mix) is hetzelfde recept
+// als components/_dossier-card.scss's badges, nu toegepast op de 8 --emotion-*-tokens.
+.playlist-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
+  padding: 14px 0 16px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--line);
+}
+
+.playlist-toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.playlist-toolbar-row + .playlist-toolbar-row {
+  margin-top: 10px;
+}
+
+.playlist-search {
+  flex: 1 1 260px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 9px 14px;
+  box-shadow: var(--shadow);
+}
+
+.playlist-search input {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  width: 100%;
+}
+
+.playlist-search input::placeholder {
+  color: var(--muted);
+}
+
+.playlist-search svg {
+  flex: none;
+  color: var(--muted);
+}
+
+// De bulk-actie voor de `mix:`-tags: staat boven de toolbar, tussen de tellers en de filters. Geen filter
+// maar een eenmalige opruimactie, en de enige knop die meerdere wijzigingen in Spotify maakt -- vandaar
+// dat hij op een eigen regel staat met de uitleg ernaast, in plaats van tussen de filter-chips.
+.playlist-bulk-tag {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.playlist-bulk-tag .playlist-bulk-hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+// Dezelfde hint, maar los van een bulk-knop -- gebruikt door de naam-bulk om te melden hoeveel rijen
+// erbuiten blijven omdat de bron eerst moet worden rechtgezet. Dat is geen knop en dus geen `-tag`-regel,
+// maar het hoort er wel bij te horen qua toon.
+p.playlist-bulk-hint {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+// De uitslag van een bulk-actie: hoeveel gelukt, hoeveel niet. Zelfde vorm als .playlist-empty-note (die
+// de mix-tag-bulk hiervoor leende), maar met een naam die zegt wat het is -- een uitslag is geen
+// "lege lijst"-melding, en de volgende lezer hoort dat niet te hoeven uitzoeken.
+.playlist-bulk-result {
+  margin-top: 26px;
+  font-size: 13.5px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+// De reden onder de bulk-uitslag: Spotify's eigen boodschap, doorgegeven door de route. Bewust kleiner
+// en in monospace -- het is een citaat van de API, niet onze eigen tekst, en dat verschil mag je zien.
+.playlist-bulk-reason {
+  display: inline-block;
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+// De drie genre-filters (TYPE/GENRE/SUBGENRE) naast elkaar in hun eigen toolbar-rij. Heette
+// `.playlist-typefilter` toen het één select was op de naamgevingsfamilie; Dave heeft dat 2026-07-25
+// laten opsplitsen. Stond hier eerder ook samen met `.playlist-groupby` (de "Groepeer op"-select) --
+// die is met het groeperen zelf verdwenen, zie _playlist-list.scss.
+.playlist-genrefilter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+}
+
+.playlist-genrefilter select {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 7px 10px;
+  box-shadow: var(--shadow);
+}
+
+.playlist-filter-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.playlist-filter-group .flabel {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-right: 2px;
+}
+
+// Kleur-/pil-toggles zijn echte <button>-elementen (toetsenbord + a11y "gratis"); deze reset
+// normaliseert de UA-defaults die anders per browser verschillen (Firefox' extra binnenrand op
+// focus, Safari's system-appearance) zodat alleen de eigen stijl hieronder telt.
+.color-toggle,
+.pill-toggle {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  font: inherit;
+  text-decoration: none;
+  display: inline-flex;
+}
+
+.color-toggle::-moz-focus-inner,
+.pill-toggle::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+// Kleur-filter: kleine kleur-toggles (dot + label), zelfde idioom als de emotion-swatch in de rij.
+.color-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px 5px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.color-toggle .dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.color-toggle[data-active="true"] {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+@each $color in "cyan", "green", "yellow", "orange", "red", "magenta", "purple", "blue" {
+  .color-toggle[data-color="#{$color}"][data-active="true"] {
+    background: color-mix(in srgb, var(--emotion-#{$color}) 16%, transparent);
+    border-color: color-mix(in srgb, var(--emotion-#{$color}) 45%, transparent);
+  }
+}
+
+.pill-toggle {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.pill-toggle[data-active="true"] {
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  font-weight: 600;
+}
+
+// "Wis filters": alleen zichtbaar zolang er minstens één filter/zoekterm actief is (zie
+// hasActiveFilters in playlistFilters.ts) -- rechts uitgelijnd naast groepeer-op, gedempt (geen
+// filter-staat, dus geen data-active-styling nodig).
+.playlist-clear-filters {
+  margin-left: auto;
+  color: var(--muted);
+}
+
+@media (max-width: 640px) {
+  .playlist-toolbar-row {
+    gap: 8px;
+  }
+}

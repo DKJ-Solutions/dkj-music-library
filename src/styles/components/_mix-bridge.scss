@@ -1,0 +1,427 @@
+// De brug-weergave op /spotify/musicmoodcolours/mixen (components/spotify/MixBridge.tsx): elke mix
+// uit de DJ Cylow-JSON's naast de MMC-playlist die hem weerspiegelt. Hergebruikt .layer/.band/
+// .eyebrow (app-card.scss), .section-lede/.empty-note (dossier-card.scss) en .stats (masthead.scss);
+// hier alleen de gridtabel, in dezelfde compacte-rijen-geest als _playlist-list.scss (geen zware
+// kaarten, want ~80 rijen moeten scanbaar blijven).
+//
+// Zeven kolommen: mix · dimensies · genre · bpm · tracks · playlist · match.
+$mix-link-columns: minmax(180px, 2.2fr) 150px 110px 62px 56px minmax(160px, 2fr) 52px;
+
+.mix-link-heads {
+  display: grid;
+  grid-template-columns: $mix-link-columns;
+  gap: 12px;
+  padding: 0 8px 6px;
+  margin-top: 18px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.mix-link-heads span:nth-child(4),
+.mix-link-heads span:nth-child(5),
+.mix-link-heads span:nth-child(7) {
+  text-align: center;
+}
+
+.mix-link-row {
+  display: grid;
+  grid-template-columns: $mix-link-columns;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 8px;
+  border-radius: 8px;
+  transition: background 0.12s ease;
+}
+
+.mix-link-row:hover {
+  background: var(--surface-2);
+}
+
+// Statuskleur alleen als een dun accentstreepje links -- de rij zelf blijft rustig, zodat de
+// afwijkingen (de <em>-markeringen hieronder) het enige zijn dat echt opvalt.
+.mix-link-row[data-status="own-playlist"] {
+  box-shadow: inset 2px 0 0 var(--status-done);
+}
+
+.mix-link-row[data-status="work-queue"] {
+  box-shadow: inset 2px 0 0 var(--emotion-orange);
+}
+
+.mix-link-row[data-status="bucket-only"] {
+  box-shadow: inset 2px 0 0 var(--emotion-yellow);
+}
+
+.mix-link-row[data-status="unmatched"] {
+  box-shadow: inset 2px 0 0 var(--status-critical);
+}
+
+.mix-link-row .mix-name {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+  color: var(--ink);
+  min-width: 0;
+}
+
+.mix-link-row .mix-name > small {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mix-link-row .mix-dims {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.mix-link-row .mix-dims .swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.mix-link-row .mix-genre {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.03em;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mix-link-row .mix-bpm,
+.mix-link-row .mix-tracks {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.mix-link-row .mix-playlist {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// De afwijkings-markeringen: waar de twee bronnen elkaar tegenspreken. Bewust de enige plek met een
+// waarschuwingskleur in de rij -- dit is precies waar Dave naar kijkt.
+.mix-link-row em {
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.02em;
+  color: var(--status-critical);
+  white-space: nowrap;
+}
+
+.mix-link-row .mix-score {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+// Op de harde sleutel gekoppeld (het mix-ID uit de playlistbeschrijving, zie mixIdTag.ts): dan is het
+// percentage geen koppel-criterium meer maar een controle. Accent-kleur + een `#`-merkteken maken dat
+// verschil zichtbaar, want een match van 84% betekent iets heel anders met dan zonder die sleutel.
+.mix-link-row .mix-score[data-matched-by="declared-id"] {
+  color: var(--accent-ink);
+}
+
+.mix-link-row .mix-score-key {
+  margin-right: 2px;
+  font-weight: 600;
+}
+
+// De beschrijving wijst een ándere mix aan dan de tracks: een echte tegenspraak tussen de bronnen.
+.mix-link-row .mix-id-conflict {
+  color: var(--status-critical);
+  white-space: normal; // de "is van mix X"-variant is een zin, geen label -- die mag afbreken
+}
+
+// De correctie bij een verweesde tag (MixTagFixButton.tsx): de enige knop op de brug, en de enige plek
+// hier die naar Spotify schrijft. Bewust klein en tekstueel -- hij hoort bij de melding erboven, niet
+// als call-to-action in de rij.
+.mix-link-row .mix-tag-fix {
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 2px 7px;
+  border: 1px solid var(--status-critical);
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.02em;
+  color: var(--status-critical);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
+}
+
+.mix-link-row .mix-tag-fix:hover:not(:disabled) {
+  background: var(--status-critical);
+  color: var(--surface);
+}
+
+.mix-link-row .mix-tag-fix:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+// Geschreven en gemeld: groen, want dit is geen afwijking meer. De rij zelf blijft nog de oude stand
+// tonen tot de volgende sync -- zie de toelichting in MixTagFixButton.tsx.
+.mix-link-row .mix-tag-fixed {
+  color: var(--status-done);
+}
+
+.mix-link-row .muted-cell {
+  color: var(--muted);
+}
+
+// ---------------------------------------------------------------------------------------------------
+// Het id_spotify-overzicht (SpotifyIdSection.tsx): de playlists die op naam aan een mix vastzitten, met
+// de sleutel die hun beschrijving krijgt. Eigen grid en niet dat van .mix-link-row, want hier is de
+// PLAYLIST de rij en niet de mix -- vijf kolommen: playlist · mix · nu · straks · actie.
+//
+// De twee sleutel-kolommen zijn monospace en mogen afbreken: `mmc_edm_128bpm_light_f_cyan_20251108` is
+// 36 tekens, en afkappen zou precies het deel wegnemen (de staart) waar je naar kijkt.
+$mix-key-columns: minmax(180px, 2fr) 82px minmax(120px, 1.2fr) minmax(150px, 1.6fr) 76px;
+
+.mix-key-heads {
+  display: grid;
+  grid-template-columns: $mix-key-columns;
+  gap: 12px;
+  padding: 0 8px 6px;
+  margin-top: 18px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.mix-key-row {
+  display: grid;
+  grid-template-columns: $mix-key-columns;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 8px;
+  border-radius: 8px;
+  transition: background 0.12s ease;
+}
+
+.mix-key-row:hover {
+  background: var(--surface-2);
+}
+
+// Zelfde afspraak als bij .mix-link-row: de stand is een dun accentstreepje links, zodat de rij rustig
+// blijft en alleen de afwijkingen echt opvallen.
+.mix-key-row[data-state="to-write"] {
+  box-shadow: inset 2px 0 0 var(--emotion-orange);
+}
+
+.mix-key-row[data-state="in-sync"] {
+  box-shadow: inset 2px 0 0 var(--status-done);
+}
+
+.mix-key-row[data-state="blocked"] {
+  box-shadow: inset 2px 0 0 var(--status-critical);
+}
+
+.mix-key-row .mix-name {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+  color: var(--ink);
+  min-width: 0;
+}
+
+.mix-key-row .mix-name > small {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mix-key-row .mix-key-id {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.mix-key-row .mix-key-now,
+.mix-key-row .mix-key-next {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+// Wat er nú staat is de oude stand: gedempt. Wat er kómt te staan is het doel: accent-kleur, want dat
+// is de enige waarde op deze rij die je met de bron wil vergelijken.
+.mix-key-row .mix-key-now {
+  color: var(--muted);
+}
+
+.mix-key-row .mix-key-next {
+  color: var(--accent-ink);
+}
+
+.mix-key-row em {
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.02em;
+  color: var(--status-critical);
+}
+
+.mix-key-row .mix-key-action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mix-key-row .mix-key-ok {
+  font-size: 12px;
+  color: var(--status-done);
+}
+
+.mix-key-row .muted-cell {
+  color: var(--muted);
+}
+
+// De schrijfknop is dezelfde vorm als op de brug-rij (.mix-tag-fix), maar in de accent-kleur: dit is
+// geen correctie van een fout maar het uitvoeren van een afspraak.
+.mix-key-row .mix-tag-fix {
+  align-self: center;
+  margin-top: 0;
+  border-color: var(--accent-ink);
+  color: var(--accent-ink);
+}
+
+.mix-key-row .mix-tag-fix:hover:not(:disabled) {
+  background: var(--accent-ink);
+  color: var(--surface);
+}
+
+@media (max-width: 860px) {
+  // De mix-kolom en "staat er nu" vallen weg: het ID zit al in de sleutel ernaast, en waar je naar kijkt
+  // is wat er kómt te staan.
+  $mix-key-columns-compact: minmax(140px, 2fr) 0 0 minmax(150px, 1.8fr) 72px;
+
+  .mix-key-heads,
+  .mix-key-row {
+    grid-template-columns: $mix-key-columns-compact;
+  }
+
+  .mix-key-heads span:nth-child(2),
+  .mix-key-heads span:nth-child(3),
+  .mix-key-row .mix-key-id,
+  .mix-key-row .mix-key-now {
+    display: none;
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------
+// De omgekeerde blik: genummerde playlists zonder mix. Een kale lijst volstaat -- er is hier geen
+// tweede bron om kolommen naast te zetten.
+.mix-orphan-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mix-orphan-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 8px;
+  border-radius: 8px;
+  box-shadow: inset 2px 0 0 var(--status-critical);
+}
+
+.mix-orphan-list li:hover {
+  background: var(--surface-2);
+}
+
+.mix-orphan-list .name {
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.mix-orphan-list .meta {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.band .mix-group-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--tile);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+@media (max-width: 860px) {
+  // Dimensies, genre en de match-score vallen weg; mix, bpm, tracks en de playlist blijven -- dat is
+  // het minimum om de weerspiegeling te kunnen lezen.
+  $mix-link-columns-compact: minmax(140px, 2fr) 0 0 56px 52px minmax(120px, 1.6fr) 0;
+
+  .mix-link-heads,
+  .mix-link-row {
+    grid-template-columns: $mix-link-columns-compact;
+  }
+
+  .mix-link-heads span:nth-child(2),
+  .mix-link-heads span:nth-child(3),
+  .mix-link-heads span:nth-child(7),
+  .mix-link-row .mix-dims,
+  .mix-link-row .mix-genre,
+  .mix-link-row .mix-score {
+    display: none;
+  }
+}

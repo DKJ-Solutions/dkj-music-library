@@ -1,0 +1,94 @@
+// "Werelden" (sub-routes per top-folder, zie classifyWorld.ts): de drie nav-tegels met tellers op
+// /spotify, en de terug-link boven de masthead op elke wereld-route. Idioom hergebruikt van
+// app-card.scss (dezelfde kaart-hover/schaduw-taal) en het band/eyebrow-recept -- geen nieuw
+// visueel vocabulaire, alleen een compactere variant voor drie tegels i.p.v. een volle grid.
+.world-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.world-tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+
+.world-tile:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+}
+
+// Niet-klikbare variant (bv. de "overig"-BPM-tegel op /spotify/musicmoodcolours, zie
+// BpmOverviewSection.tsx): zelfde kaart-vorm, maar zonder hover-affordance -- er is niets om naar
+// door te klikken.
+.world-tile--static {
+  cursor: default;
+}
+
+.world-tile--static:hover {
+  transform: none;
+  border-color: var(--line);
+}
+
+.world-tile .emoji {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--tile);
+  display: grid;
+  place-items: center;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.world-tile .label {
+  flex: 1;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
+
+.world-tile .count {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+// Terug-link boven de masthead van elke wereld-sub-route (WorldPage.tsx).
+.world-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 14px;
+}
+
+.world-back-link:hover {
+  color: var(--accent-ink);
+}
+
+@media (max-width: 520px) {
+  .world-grid {
+    grid-template-columns: 1fr;
+  }
+}

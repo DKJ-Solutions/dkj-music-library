@@ -1,0 +1,70 @@
+// Fase 3: de trigger voor de daadwerkelijke ingest. Draait de volledige sync (alle playlists +
+// alle tracks, met snapshot_id-diffing) en schrijft het resultaat naar data/spotify/snapshot.json.
+// Aangeroepen vanuit de playlist manager (/spotify, zie SyncButton.tsx) -- kan ook los aangeroepen
+// worden, bv. `curl -X POST http://127.0.0.1:3000/api/spotify/sync`.
+//
+// READ-ONLY richting Spotify: uitsluitend GET-calls via ingest.ts/httpClient.ts.
+import { NextResponse } from "next/server";
+import { buildSnapshot } from "@/lib/spotify/ingest";
+import { archiveCurrentSnapshot, readSnapshot, writeSnapshot } from "@/lib/spotify/snapshotStore";
+import { SpotifyReauthRequiredError } from "@/lib/spotify/errors";
+import { sameOriginGuard } from "@/lib/http/sameOrigin";
+
+// fs/de Spotify-token-laag vereisen de Node-runtime, niet de edge-runtime. Een volledige sync van
+// honderden playlists kan een tijd duren -- force-dynamic voorkomt dat Next.js dit probeert te
+// cachen/prerenderen.
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export async function POST(request: Request) {
+  const guard = sameOriginGuard(request);
+  if (guard) return guard;
+
+  try {
+    const previousSnapshot = readSnapshot();
+
+    // Eén losse playlist die onderweg blijft falen (5xx, netwerk, ...) mag de hele sync van
+    // soms honderden playlists niet laten crashen zonder snapshot -- ingest.ts vangt zo'n fout nu
+    // per playlist af (net als een 403) en meldt het gefaalde aantal terug via het afsluitende
+    // 'done'-voortgangsevent.
+    let failedPlaylistCount = 0;
+    const snapshot = await buildSnapshot({
+      previousSnapshot,
+      onProgress: (event) => {
+        if (event.type === "done") failedPlaylistCount = event.failedCount ?? 0;
+      },
+    });
+
+    // Archiveer de oude snapshot pas ná een geslaagde build, vlak vóór 'm overschreven wordt --
+    // zo blijft de vorige versie intact als de sync halverwege was misgelopen.
+    archiveCurrentSnapshot();
+    writeSnapshot(snapshot);
+
+    const trackCount = snapshot.playlists.reduce((sum, p) => sum + p.tracks.length, 0);
+    return NextResponse.json({
+      syncedAt: snapshot.syncedAt,
+      playlistCount: snapshot.playlists.length,
+      trackCount,
+      failedPlaylistCount,
+    });
+  } catch (err) {
+    if (err instanceof SpotifyReauthRequiredError) {
+      return NextResponse.json(
+        { error: "reauth_required", message: err.message },
+        { status: 401 }
+      );
+    }
+
+    // De interne foutdetails (kan een rauwe Spotify-foutbody of een stacktrace-achtig bericht
+    // bevatten) blijven server-side in de log -- de client krijgt een generieke melding, geen
+    // 1-op-1-doorgifte.
+    console.error("[api/spotify/sync] sync mislukt:", err);
+    return NextResponse.json(
+      {
+        error: "sync_failed",
+        message: "Synchronisatie mislukt. Zie de serverconsole (het venster waarin `npm run dev` draait) voor details.",
+      },
+      { status: 500 }
+    );
+  }
+}

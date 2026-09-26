@@ -1,0 +1,7 @@
+{
+  "ownerUserId": "jouw-spotify-user-id",
+  "priveNamePatterns": [
+    "voorbeeld\\s+playlist",
+    "\\bverjaardag\\b"
+  ]
+}

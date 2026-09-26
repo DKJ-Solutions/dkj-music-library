@@ -1,0 +1,132 @@
+// Design-tokens 1-op-1 hergebruikt uit de vorige Vite-hub (apps/src/index.css), zelf weer
+// hergebruikt uit specialisten-overzicht.html, zodat de hub en de self-contained tools in
+// public/ als één visueel geheel ogen. Licht/donker via prefers-color-scheme + data-theme (een
+// handmatige toggle overschrijft de OS-voorkeur in beide richtingen).
+:root {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --surface-2: #edf1f4;
+  --tile: #e7edf1;
+  --ink: #191d24;
+  --ink-soft: #495260;
+  --muted: #7b8695;
+  --line: #e0e5eb;
+  --accent: #0e7a6e;
+  --accent-ink: #0b5c53;
+  --accent-soft: #ddeeea;
+  --gold: #9a6a12;
+  --gold-soft: #f3e7ce;
+  // Status-palette voor de fase-badges van het dossier-overzicht — schaars en betekenisvol,
+  // nooit voor iets anders dan kritiek/afgerond hergebruikt. "Lopend" krijgt bewust geen kleur
+  // uit deze set (outline-badge, zie components/_dossier-card.scss) zodat een normale actieve
+  // werkvoorraad niet als waarschuwing oogt. --meter-fill is een aparte sequentiële blauwe hue
+  // voor de neutrale voortgangsmeter, losstaand van --accent zodat de meter niet met de
+  // status-kleuren concurreert.
+  --status-critical: #d03b3b;
+  --status-done: #0ca30c;
+  --meter-fill: #2f6fed;
+  // Spotify playlist manager (fase 5) — het 8-kleuren Plutchik-emotiepalet, Gwen's ontwerpspec.
+  // Naamgeving lowercase-matchend met plutchikColors.ts' PlutchikColor-waarden zodat de UI
+  // `var(--emotion-${color.toLowerCase()})` kan opbouwen.
+  --emotion-cyan: #0369a1;
+  --emotion-green: #15803d;
+  --emotion-yellow: #a16207;
+  --emotion-orange: #c2410c;
+  --emotion-red: #dc2626;
+  --emotion-magenta: #a21caf;
+  --emotion-purple: #6d28d9;
+  --emotion-blue: #1d4ed8;
+  --font-display: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
+  --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
+  --shadow: 0 1px 2px rgba(19, 26, 34, 0.04), 0 6px 20px rgba(19, 26, 34, 0.06);
+  --radius: 14px;
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d0f13;
+    --surface: #171b22;
+    --surface-2: #1e242d;
+    --tile: #232b35;
+    --ink: #eceff3;
+    --ink-soft: #aeb7c3;
+    --muted: #79828f;
+    --line: #28303a;
+    --accent: #34b6a4;
+    --accent-ink: #4fcfbd;
+    --accent-soft: #0f312c;
+    --gold: #d6981f;
+    --gold-soft: #2c2410;
+    --status-critical: #e66767;
+    --status-done: #0ca30c;
+    --meter-fill: #6f9bff;
+    --emotion-cyan: #38bdf8;
+    --emotion-green: #4ade80;
+    --emotion-yellow: #facc15;
+    --emotion-orange: #fb923c;
+    --emotion-red: #f87171;
+    --emotion-magenta: #e879f9;
+    --emotion-purple: #a78bfa;
+    --emotion-blue: #60a5fa;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 26px rgba(0, 0, 0, 0.4);
+  }
+}
+
+:root[data-theme="light"] {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --surface-2: #edf1f4;
+  --tile: #e7edf1;
+  --ink: #191d24;
+  --ink-soft: #495260;
+  --muted: #7b8695;
+  --line: #e0e5eb;
+  --accent: #0e7a6e;
+  --accent-ink: #0b5c53;
+  --accent-soft: #ddeeea;
+  --gold: #9a6a12;
+  --gold-soft: #f3e7ce;
+  --status-critical: #d03b3b;
+  --status-done: #0ca30c;
+  --meter-fill: #2f6fed;
+  --emotion-cyan: #0369a1;
+  --emotion-green: #15803d;
+  --emotion-yellow: #a16207;
+  --emotion-orange: #c2410c;
+  --emotion-red: #dc2626;
+  --emotion-magenta: #a21caf;
+  --emotion-purple: #6d28d9;
+  --emotion-blue: #1d4ed8;
+  --shadow: 0 1px 2px rgba(19, 26, 34, 0.04), 0 6px 20px rgba(19, 26, 34, 0.06);
+}
+
+:root[data-theme="dark"] {
+  --bg: #0d0f13;
+  --surface: #171b22;
+  --surface-2: #1e242d;
+  --tile: #232b35;
+  --ink: #eceff3;
+  --ink-soft: #aeb7c3;
+  --muted: #79828f;
+  --line: #28303a;
+  --accent: #34b6a4;
+  --accent-ink: #4fcfbd;
+  --accent-soft: #0f312c;
+  --gold: #d6981f;
+  --gold-soft: #2c2410;
+  --status-critical: #e66767;
+  --status-done: #0ca30c;
+  --meter-fill: #6f9bff;
+  --emotion-cyan: #38bdf8;
+  --emotion-green: #4ade80;
+  --emotion-yellow: #facc15;
+  --emotion-orange: #fb923c;
+  --emotion-red: #f87171;
+  --emotion-magenta: #e879f9;
+  --emotion-purple: #a78bfa;
+  --emotion-blue: #60a5fa;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 26px rgba(0, 0, 0, 0.4);
+}

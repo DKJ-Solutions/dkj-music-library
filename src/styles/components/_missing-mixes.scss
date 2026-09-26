@@ -1,0 +1,215 @@
+// De tweede tabel onder de playlist-manager: mixen uit de DJ Cylow-bron zonder eigen Spotify-playlist
+// (zie components/spotify/MissingMixes.tsx). Zelfde compacte grid-rij als de hoofdtabel, en met de
+// tussenruimte in de cellen i.p.v. een grid-gap, om dezelfde reden als daar (_playlist-list.scss).
+//
+// DE BREEDTES ZIJN DIE VAN DE HOOFDTABEL (Dave, 2026-07-25: "zorg wel dat de volgorde van de kolommen
+// zoveel mogelijk overeenkomen"). Kolomvolgorde én -breedte volgen $playlist-cols, met alleen de kolommen
+// die voor een mix bestaan -- WERELD en TYPE ontbreken (TYPE is voor elke mix EDM, daarom verbergt de
+// hoofdtabel die op MMC ook), en de done-vink is hier de "waarom"-kolom geworden.
+//
+// Op /spotify/musicmoodcolours -- waar de hoofdtabel WERELD en TYPE verbergt -- lijnen beide tabellen
+// daardoor kolom voor kolom uit. Wijzigt een breedte in $playlist-cols, dan hoort die hier mee te gaan.
+$missing-col-gap: 10px;
+$missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56px 32px;
+
+.missing-mixes .missing-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--tile);
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-left: 2px;
+}
+
+.missing-heads,
+.missing-row {
+  display: grid;
+  grid-template-columns: $missing-columns;
+  padding-inline: 3px;
+}
+
+.missing-heads > *,
+.missing-row > * {
+  padding-inline: $missing-col-gap * 0.5;
+}
+
+.missing-row > .swatch {
+  padding-inline: 0;
+}
+
+.missing-heads {
+  margin-top: 18px;
+  padding-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+// De koppen zijn sorteerknoppen (`.col-head-sort`, gedeeld met de hoofdtabel -- zie
+// _playlist-list.scss). Uitlijning dus via justify-content i.p.v. text-align: BPM (1), Kleur (3),
+// Dicht. (7), M/V (8), Vol (9) en de vlag (11) gecentreerd, Tr. (10) rechts -- exact zoals de
+// gelijknamige kolommen in de hoofdtabel. Links blijven de tekstkolommen: mix, ID, genre en subgenre.
+.missing-heads > button:nth-child(1),
+.missing-heads > button:nth-child(3),
+.missing-heads > button:nth-child(7),
+.missing-heads > button:nth-child(8),
+.missing-heads > button:nth-child(9),
+.missing-heads > button:nth-child(11) {
+  justify-content: center;
+}
+
+.missing-heads > button:nth-child(10) {
+  justify-content: flex-end;
+}
+
+.missing-row {
+  align-items: center;
+  padding-block: 8px;
+  border-radius: 8px;
+  transition: background 0.12s ease;
+}
+
+.missing-row:hover {
+  background: var(--surface-2);
+}
+
+.missing-row .swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+  justify-self: center;
+}
+
+.missing-row .swatch--neutral {
+  background: transparent;
+  border: 1.5px dashed var(--muted);
+}
+
+.missing-row .missing-id {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+// Zelfde maat als `.playlist-row .name`, zodat de twee tabellen ook typografisch één geheel zijn.
+.missing-row .missing-title {
+  font-size: 13.5px;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// De échte BPM uit de mix-data. Platte tekst, want hier is niets te corrigeren -- in de hoofdtabel is
+// dezelfde kolom binnen MMC een select.
+.missing-row .missing-bpm {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+// Dichtheid + geslacht: dezelfde vorm als in de hoofdtabel (`.playlist-row .density`/`.gender`).
+.missing-row .missing-density {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+.missing-row .missing-density[data-density="Light"] {
+  color: var(--muted);
+}
+
+.missing-row .missing-gender {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.missing-row .missing-genre,
+.missing-row .missing-subgenre {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.missing-row .missing-subgenre {
+  color: var(--muted);
+}
+
+.missing-row .missing-vol {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+// Rechts uitgelijnd, net als de tracks-kolom in de hoofdtabel.
+.missing-row .missing-tracks {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+// De uitzondering-vlag, op de plek en breedte van de done-vink in de hoofdtabel. "Alleen in een emmer"
+// is de normale werkvoorraad en krijgt daarom niets dan een puntje; "niet teruggevonden" is het geval dat
+// aandacht vraagt. Accent i.p.v. alarm-rood: het is een signaal over de data, geen fout in de app.
+.missing-row .missing-flag {
+  font-size: 12px;
+  line-height: 1;
+  text-align: center;
+  color: var(--line);
+  cursor: help;
+}
+
+.missing-row[data-reason="unmatched"] .missing-flag {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+// Hetzelfde teken in de lede-tekst, zodat de legenda en de kolom hetzelfde zeggen.
+.missing-mixes .missing-flag-inline {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  // Dezelfde keuze als de hoofdtabel op smal scherm: ID/genre/subgenre/dichtheid/M-V/vol vallen weg, en
+  // bpm, mix, kleur, tracks + de reden blijven staan. Zelfde aanpak ook: 0-brede kolommen + de cellen uit
+  // de flow.
+  .missing-heads,
+  .missing-row {
+    grid-template-columns: 82px minmax(120px, 2fr) 50px 0 0 0 0 0 0 56px 32px;
+  }
+
+  .missing-heads > button:nth-child(4),
+  .missing-heads > button:nth-child(5),
+  .missing-heads > button:nth-child(6),
+  .missing-heads > button:nth-child(7),
+  .missing-heads > button:nth-child(8),
+  .missing-heads > button:nth-child(9),
+  .missing-row .missing-id,
+  .missing-row .missing-genre,
+  .missing-row .missing-subgenre,
+  .missing-row .missing-density,
+  .missing-row .missing-gender,
+  .missing-row .missing-vol {
+    display: none;
+  }
+}

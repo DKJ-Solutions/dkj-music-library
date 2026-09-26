@@ -1,0 +1,634 @@
+@use "sass:list";
+@use "sass:map";
+
+// Fase 5 — Spotify playlist manager: de playlist-lijst op /spotify. Compacte grid-rijen (geen
+// zware kaarten) zodat de ~375-386 items (375 = Dave's eigen playlists, 386 = totaal incl. de
+// playlists die hij alleen volgt) vlot scanbaar blijven. Idioom 1-op-1 hergebruikt uit Gwen's
+// ontwerp-illustratie (spotify-fase5-mockup.html).
+//
+// "Werelden" (sub-routes per top-folder, zie classifyWorld.ts): een kolom voor de correctie-select +
+// het handmatig-overschreven-merkteken. BPM-sub-routes binnen MMC (classifyBpm.ts, tweede
+// bijstelling 2026-07-23) hadden eerst een aparte "MMC-BPM"-kolom naast de geparsede BPM-kolom; die
+// twee zijn samengevoegd tot één BPM-kolom (breed genoeg voor de correctie-select + reset-knopje).
+//
+// 2026-07-25 -- de mix-kolommen + geen groepering meer (Dave):
+//   * De groepskoppen zijn weg (`groupPlaylists()` is uit playlistFilters.ts verdwenen): de lijst is
+//     één doorlopende reeks. De kleur-swatch die eerst alleen in de groepskop een label had, staat nu
+//     als eigen kolom mét kop op elke rij -- daarmee was de kleur-tussenkop overbodig.
+//   * Drie kolommen erbij uit de gekoppelde mix-JSON (lib/mixes/playlistMixInfo.ts): ID, GENRE en
+//     SUBGENRE. De bestaande TYPE-kolom draagt sindsdien Dave's muzieksoort (EDM/ROCK/POP/ALT) i.p.v.
+//     de naamgevingsfamilie -- die laatste leeft verder als het "Familie"-filter in de toolbar.
+//   * Dertien kolommen passen alleen binnen de 1080px van `.wrap` met een krappere gap (10px i.p.v.
+//     12px) en overal een paar pixels eraf; de naam-kolom houdt ruim 240px over.
+//   * De kleur-kolom is 44px i.p.v. de 20px die de swatch zelf nodig heeft: precies genoeg voor de
+//     kop "KLEUR" (10px mono, uppercase, letter-spacing) die anders over de naam-kop heen liep. De
+//     swatch staat gecentreerd in die ruimte; de kleurnaam zelf zit als tooltip op de cirkel.
+//   * Kolomvolgorde door Dave vastgelegd: WERELD, TYPE, BPM, NAAM, KLEUR -- de assen waarop hij de
+//     lijst scant -- en daarna de detailkolommen (ID, GENRE, SUBGENRE, dicht., M/V, vol, tracks, done).
+//     De breedtes hieronder staan in diezelfde orde; PlaylistManager.tsx houdt zijn koppen en zijn
+//     rij-spans in dezelfde orde, want het is één grid.
+// M/V is 32px i.p.v. 24px sinds de koppen sorteerknoppen zijn: "M/V" plus de richtingspijl paste niet
+// in 24px. De andere kolommen hadden al genoeg lucht voor die pijl (7px, dus ~8px inclusief marge).
+//
+// 2026-07-25 -- kolommen verbergen per pagina (Dave, "de tabel zo compact mogelijk"): een kolom die op
+// een pagina per definitie één waarde heeft is ruis. Op /spotify/musicmoodcolours zijn dat WERELD
+// (altijd MMC) en TYPE (altijd EDM); een laag dieper, op de BPM-sub-routes, ook BPM.
+//
+// Daarvoor staat elke kolombreedte nu in een **CSS-variabele** i.p.v. in één vaste `$playlist-columns`
+// -lijst: de wrapper `.playlist-table` draagt de defaults, en `data-hidden="world type"` zet de
+// betreffende variabele op 0 en verbergt de cellen. Drie dingen die daarbij essentieel zijn:
+//   * elke cel krijgt een **expliciete `grid-column`** (zie de @each hieronder). Zonder die vaste plek
+//     schuift grid-auto-placement de zichtbare cellen op zodra er een `display: none` tussen zit, en
+//     verspringt de hele tabel;
+//   * de mobiele breakpoint werkt via dezelfde variabelen, zodat "smal scherm" en "verborgen op deze
+//     pagina" gewoon over elkaar heen kunnen liggen zonder aparte kolomlijst per combinatie;
+//   * **geen `gap`** (Dave, 2026-07-25: "de GAP is nog wel steeds zichtbaar in de kolommen die verborgen
+//     zijn"). Een grid-gap hoort bij de *track*, niet bij het item: een kolom op 0px zetten liet er dus
+//     nog 10px lucht van over, drie verborgen kolommen 30px. De tussenruimte zit daarom in de cellen
+//     zelf -- `padding-inline: 5px` links en rechts, samen dezelfde 10px -- en verdwijnt mee met de cel.
+//     De breedtes hieronder zijn daarom 10px hoger dan de inhoud nodig heeft (de padding zit erin,
+//     `box-sizing: border-box` staat globaal in base/_reset.scss), en de rij-padding is 8px → 3px zodat
+//     de buitenrand gelijk blijft.
+$playlist-col-gap: 10px;
+
+$playlist-cols: (
+  "world": 102px,
+  "type": 54px,
+  "bpm": 86px,
+  "name": minmax(150px, 2fr),
+  "color": 54px,
+  "mix-id": 78px,
+  "genre": 96px,
+  "subgenre": 114px,
+  "density": 56px,
+  "gender": 42px,
+  "volume": 44px,
+  // 56px sinds de "tr."-suffix achter het getal weg is (Dave, 2026-07-25): de kop "TRACKS" bepaalt nu de
+  // ondergrens, niet de waarde. Houd deze gelijk aan de tracks-kolom in _missing-mixes.scss.
+  "tracks": 56px,
+  "done": 32px,
+);
+
+.playlist-table {
+  @each $naam, $breedte in $playlist-cols {
+    --col-#{$naam}: #{$breedte};
+  }
+}
+
+.playlist-col-heads,
+.playlist-row {
+  grid-template-columns:
+    var(--col-world) var(--col-type) var(--col-bpm) var(--col-name) var(--col-color)
+    var(--col-mix-id) var(--col-genre) var(--col-subgenre) var(--col-density) var(--col-gender)
+    var(--col-volume) var(--col-tracks) var(--col-done);
+}
+
+// Vaste plaatsing per kolom + het verbergen zelf, uit één lijst zodat de twee niet uiteen kunnen lopen.
+@each $naam, $breedte in $playlist-cols {
+  $index: list.index(map.keys($playlist-cols), $naam);
+
+  .col-#{$naam} {
+    grid-column: #{$index};
+  }
+
+  .playlist-table[data-hidden~="#{$naam}"] {
+    --col-#{$naam}: 0;
+
+    .col-#{$naam} {
+      display: none;
+    }
+  }
+}
+
+// De tussenruimte tussen de kolommen: in de cel i.p.v. in een grid-gap, zodat ze met een verborgen
+// kolom mee verdwijnt (zie de toelichting bij $playlist-cols). Symmetrisch, dus alles wat gecentreerd
+// of rechts uitgelijnd staat blijft op zijn plek.
+.playlist-col-heads > *,
+.playlist-row > * {
+  padding-inline: $playlist-col-gap * 0.5;
+}
+
+// Uitzondering: de kleur-swatch is zelf de gekleurde cirkel. Padding zou de achtergrond meerekken en er
+// een pil van maken -- die staat al gecentreerd in zijn kolom en heeft de lucht dus niet nodig.
+.playlist-row > .swatch {
+  padding-inline: 0;
+}
+
+.playlist-col-heads {
+  display: grid;
+  padding: 0 3px 6px;
+  margin-top: 22px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+// Elke kop is een sorteerknop (zie playlistSort.ts): een kale button die de kop-typografie van zijn
+// ouder overneemt, zodat de rij er hetzelfde uitziet als toen het spans waren.
+.col-head-sort {
+  appearance: none;
+  -webkit-appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0; // laat het label ellipsissen i.p.v. de grid-kolom oprekken
+  // Alleen verticaal op 0: de horizontale padding is de kolom-tussenruimte en komt van
+  // `.playlist-col-heads > *` hierboven -- een kale `padding: 0` zou die eruit gooien.
+  padding-block: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: color 0.12s ease;
+}
+
+.col-head-sort:hover {
+  color: var(--ink-soft);
+}
+
+// De kolom waarop gesorteerd wordt: accent-kleur + iets zwaarder, zodat in één blik te zien is welke
+// kop de lijst bepaalt -- ook als de pijl in een smalle kolom nauwelijks opvalt.
+.col-head-sort[data-active="true"] {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.col-head-sort .col-head-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.col-head-sort .col-head-arrow {
+  flex: none;
+  font-size: 7px;
+  line-height: 1;
+}
+
+.col-head-sort::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+// Uitlijning van de koppen, op kolomnaam i.p.v. op nth-child: sinds de kolommen per pagina verborgen
+// kunnen worden is een positie-selector te breekbaar om nog leesbaar te zijn.
+// Tracks rechts uitgelijnd, net als de waarde eronder.
+.playlist-col-heads > .col-tracks {
+  justify-content: flex-end;
+}
+
+// Wereld, Type, BPM en Kleur gecentreerd, net als de detailkolommen dicht., M/V, Vol en de done-vink.
+// De BPM-kolom hoort daar sinds het samenvoegen bij: binnen MMC is het een select+reset-paar, geen los
+// getal. Links uitgelijnd blijven alleen de tekstkolommen: naam, ID, genre en subgenre.
+.playlist-col-heads > .col-world,
+.playlist-col-heads > .col-type,
+.playlist-col-heads > .col-bpm,
+.playlist-col-heads > .col-color,
+.playlist-col-heads > .col-density,
+.playlist-col-heads > .col-gender,
+.playlist-col-heads > .col-volume,
+.playlist-col-heads > .col-done {
+  justify-content: center;
+}
+
+.playlist-row {
+  display: grid;
+  align-items: center;
+  padding: 9px 3px;
+  border-radius: 8px;
+  transition: background 0.12s ease;
+}
+
+.playlist-row:hover {
+  background: var(--surface-2);
+}
+
+// De swatch is smaller dan zijn kolom (zie de toelichting bij $playlist-columns) -- vandaar
+// justify-self i.p.v. de cel vullen: een cirkel van 10px, gecentreerd onder de kop "KLEUR".
+.playlist-row .swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+  justify-self: center;
+}
+
+.playlist-row .swatch--neutral {
+  background: transparent;
+  border: 1.5px dashed var(--muted);
+}
+
+.playlist-row .name {
+  font-size: 13.5px;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// TYPE: Dave's muzieksoort op het breedste niveau (EDM/ROCK/POP/ALT, zie lib/mixes/genreFamilies.ts).
+// Houdt de badge-vorm die deze kolom als naamgevingsfamilie had -- vier korte woorden in een pil.
+// De TYPE-cel ís de gevulde pil. De kolom-tussenruimte moet hier dus een `margin` zijn en geen
+// `padding`: als padding zou de accent-achtergrond die ruimte opvullen en plakt de pil tegen de
+// buurkolom. Vandaar 5px marge buiten de pil + 6px padding erbinnen.
+.playlist-row .type {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.03em;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  margin-inline: $playlist-col-gap * 0.5;
+  padding: 3px 6px;
+  border-radius: 6px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Geen muzieksoort af te leiden (geen mix, en de playlistnaam zegt niets over het genre): geen
+// gevulde pil, alleen het streepje -- zelfde geest als .swatch--neutral, geen kleur/nadruk toekennen
+// waar er niets bekend is.
+.playlist-row .type[data-empty="true"] {
+  color: var(--muted);
+  background: none;
+  padding-inline: 0;
+}
+
+// Het mix-ID uit de JSON's (YYYYMMDD) -- bewust leeg i.p.v. een streepje zodra deze playlist geen
+// mix exclusief weerspiegelt: een kolom vol streepjes leest als ruis, terwijl de gevulde ID's juist
+// in één blik moeten opvallen.
+.playlist-row .mix-id {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Het ID staat in de playlistbeschrijving zelf (`mix:...`): dan is het een harde sleutel en geen
+// vondst van de tracklist-heuristiek. Accent + een `#` ervóór, zodat in één blik te zien is welke rijen
+// nog een tag missen -- en dáár staat dan het schrijfknopje.
+.playlist-row .mix-id {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.playlist-row .mix-id[data-key="declared"] {
+  color: var(--accent-ink);
+}
+
+.playlist-row .mix-id[data-key="declared"]::before {
+  content: "#";
+  margin-right: 1px;
+  font-weight: 600;
+}
+
+// Het schrijfknopje: de enige knop in deze interface die iets in Dave's Spotify-account wijzigt. Bewust
+// stil (muted, alleen bij hover in accent) -- het is een hulpmiddel bij het opruimen, geen call-to-action
+// die om aandacht vraagt terwijl je de tabel scant.
+.playlist-row .mix-id-write {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: none;
+  border: none;
+  background: none;
+  padding: 0 2px;
+  margin: 0;
+  font: inherit;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--line);
+  cursor: pointer;
+  transition: color 0.12s ease;
+}
+
+.playlist-row .mix-id-write:hover:not(:disabled) {
+  color: var(--accent-ink);
+}
+
+// De beschrijving STAAT er, maar wijkt af van de mix-JSON (bv. het Vol.-nummer is in de bron bijgesteld
+// nadat de beschrijving is geschreven). Een ander soort werk dan een ontbrekende beschrijving -- daar
+// mist iets, hier klopt iets niet -- en dus een waarschuwingskleur in plaats van de neutrale lijn.
+.playlist-row .mix-id-write[data-state="outdated"] {
+  color: var(--status-critical);
+}
+
+// Zelfde onderscheid in de cel: een afwijkende waarde is niet "leeg", dus hij mag niet in het gedempte
+// grijs van een ongevulde cel wegzakken.
+.playlist-row .mix-id[data-state="outdated"] {
+  color: var(--status-critical);
+}
+
+.playlist-row .mix-id-write:disabled {
+  cursor: progress;
+  color: var(--muted);
+}
+
+.playlist-row .mix-id-write::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+// Het hernoem-knopje in de naam-cel: trekt de playlistnaam gelijk met `title_spotify` uit de mix-bron.
+// Erft het gedrag van het schrijfknopje hierboven -- stil in rust, accent bij hover -- want het is
+// dezelfde soort actie: een opruimstap die iets in Dave's Spotify-account wijzigt.
+//
+// Alleen zichtbaar bij hover of focus binnen de rij. De naam is de langste kolom en de reden dat je de
+// tabel scant; een knopje dat daar permanent naast staat, staat in 47 rijen tegelijk in de weg.
+.playlist-row .name-write {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: none;
+  border: none;
+  background: none;
+  padding: 0 2px;
+  margin-left: 4px;
+  font: inherit;
+  line-height: 1;
+  color: var(--line);
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    color 0.12s ease,
+    opacity 0.12s ease;
+}
+
+.playlist-row:hover .name-write,
+.playlist-row .name-write:focus-visible {
+  opacity: 1;
+}
+
+.playlist-row .name-write:hover:not(:disabled) {
+  color: var(--accent-ink);
+}
+
+.playlist-row .name-write:disabled {
+  cursor: progress;
+  color: var(--muted);
+  opacity: 1;
+}
+
+.playlist-row .name-write::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+// De naam KAN niet gezet worden: de bron levert een naam die niet klopt (nu: 💠 in plaats van 🧊 bij de
+// Cyan-mixen). Anders dan het knopje is dit géén actie maar een melding, dus altijd zichtbaar en in de
+// waarschuwingskleur -- de reden staat in de tooltip. Zie lib/mixes/spotifyTitle.ts.
+.playlist-row .name-blocked {
+  flex: none;
+  margin-left: 4px;
+  font-size: 10px;
+  line-height: 1;
+  color: var(--status-critical);
+  cursor: help;
+}
+
+// GENRE + SUBGENRE: de twee onderste lagen, rechtstreeks uit de gekoppelde mix-JSON. Platte tekst
+// (geen badge zoals TYPE) -- ze zijn te lang voor een pil ("Liquid Drum & Bass") en zouden de rij
+// anders visueel domineren.
+.playlist-row .genre,
+.playlist-row .subgenre {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playlist-row .subgenre {
+  color: var(--muted);
+}
+
+.playlist-row .density {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+.playlist-row .density[data-density="Light"] {
+  color: var(--muted);
+}
+
+.playlist-row .gender {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+}
+
+// De ene BPM-kolom draagt twee gedaanten: binnen MMC de correctie-select (+ reset-knopje),
+// daarbuiten de uit de naam geparsede BPM als platte tekst -- vandaar een gecentreerde flex-cel
+// i.p.v. het oude rechts-uitgelijnde getal.
+.playlist-row .bpm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.playlist-row .vol {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.playlist-row .tracks {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+// Wereld-correctie: een select (effectieve wereld) + een klein reset-knopje dat alleen verschijnt
+// zodra er een handmatige override is (playlist.worldIsOverridden) -- zie PlaylistManager.tsx.
+.playlist-row .world-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.world-select {
+  appearance: none;
+  -webkit-appearance: none;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 3px 6px;
+  cursor: pointer;
+  max-width: 76px;
+  text-overflow: ellipsis;
+}
+
+// Handmatig overschreven: dezelfde geest als de accent-badges elders (dossier-card.scss) --
+// subtiel, geen alarmkleur, puur "dit is een menselijke correctie, geen gok".
+.world-select[data-overridden="true"] {
+  color: var(--accent-ink);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+
+.world-reset {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.world-reset:hover {
+  color: var(--accent-ink);
+}
+
+.world-reset::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+// BPM-correctie binnen MMC (classifyBpm.ts/bpmStore.ts): een select (effectieve BPM-tier) + een
+// klein reset-knopje, exact hetzelfde recept als de wereld-correctie hierboven -- woont sinds het
+// samenvoegen in de BPM-kolom (`.playlist-row .bpm`) i.p.v. in een eigen `.bpm-tier-cell`.
+.bpm-tier-select {
+  appearance: none;
+  -webkit-appearance: none;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 3px 6px;
+  cursor: pointer;
+  max-width: 60px;
+  text-overflow: ellipsis;
+}
+
+.bpm-tier-select[data-overridden="true"] {
+  color: var(--accent-ink);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+
+.bpm-tier-reset {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.bpm-tier-reset:hover {
+  color: var(--accent-ink);
+}
+
+.bpm-tier-reset::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+.playlist-row .done {
+  appearance: none;
+  -webkit-appearance: none;
+  text-align: center;
+  font-size: 13px;
+  background: none;
+  border: none;
+  // Alleen verticaal op 0 -- horizontaal blijft de kolom-tussenruimte staan (zie $playlist-cols).
+  padding-block: 0;
+  margin: 0;
+  cursor: pointer;
+  font: inherit;
+  line-height: 1;
+}
+
+.playlist-row .done::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+.playlist-row .done[data-done="true"] {
+  color: var(--status-done);
+}
+
+.playlist-row .done[data-done="false"] {
+  color: var(--line);
+}
+
+.playlist-empty-note {
+  margin-top: 26px;
+  font-size: 13.5px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+@media (max-width: 720px) {
+  // Smal scherm gebruikt exact hetzelfde mechanisme als het verbergen per pagina: de kolombreedte op 0
+  // en de cellen uit de flow. Daardoor kunnen de twee over elkaar heen liggen -- op
+  // /spotify/musicmoodcolours/176bpm op een telefoon zijn wereld/type/bpm én de detailkolommen weg,
+  // zonder dat daar een aparte kolomlijst voor bestaat.
+  //
+  // De wereld-kolom verdwijnt hier bewust mee: die correctie-select is prima op een groter scherm te
+  // bedienen, maar te krap op telefoonbreedte -- en de effectieve wereld blijft afleesbaar op de
+  // wereld-sub-route waar de rij staat. De BPM-kolom blijft wél staan: sinds het samenvoegen ís die
+  // kolom de BPM-weergave, dus verbergen zou de waarde zelf wegnemen. Van de mix-kolommen blijft
+  // alleen TYPE staan -- EDM/POP/ALT is één kort woord, ID/GENRE/SUBGENRE passen hier niet meer.
+  $verborgen-op-smal: ("world", "mix-id", "genre", "subgenre", "density", "gender", "volume");
+
+  // Ook deze breedtes hebben de 10px tussenruimte in zich (zie $playlist-cols).
+  .playlist-table {
+    --col-name: minmax(130px, 2fr);
+    --col-type: 52px;
+    --col-bpm: 82px;
+    --col-color: 50px;
+
+    @each $naam in $verborgen-op-smal {
+      --col-#{$naam}: 0;
+    }
+  }
+
+  // Sorteren op een verborgen kolom kan hier dus niet; dat is bewust -- een knop die je niet ziet is
+  // geen knop.
+  @each $naam in $verborgen-op-smal {
+    .col-#{$naam} {
+      display: none;
+    }
+  }
+}

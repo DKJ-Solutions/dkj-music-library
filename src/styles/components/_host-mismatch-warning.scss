@@ -1,0 +1,55 @@
+// De host-melding op /spotify (app/spotify/page.tsx, logica in lib/spotify/redirectHost.ts): de app
+// staat op een andere host dan waar de OAuth-callback binnenkomt.
+//
+// Twee tonen, omdat de betekenis is veranderd. Zolang de login-route de host zelf rechtzet, is dit
+// **informatie** (`data-tone="info"`): het werkt, maar je verhuist onderweg. Zonder die correctie zou
+// het een blokkade zijn, en dan hoort de kritieke kleur erbij -- die stand blijft daarom staan als
+// standaard, zodat de melding niet stil vriendelijk wordt als de correctie ooit verdwijnt.
+.host-mismatch-warning {
+  margin: 0 0 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  box-shadow: inset 3px 0 0 var(--status-critical);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.host-mismatch-warning strong {
+  color: var(--status-critical);
+}
+
+.host-mismatch-warning[data-tone="info"] {
+  box-shadow: inset 3px 0 0 var(--accent-ink);
+}
+
+.host-mismatch-warning[data-tone="info"] strong {
+  color: var(--accent-ink);
+}
+
+.host-mismatch-warning code {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--tile);
+  color: var(--ink);
+}
+
+// De aanhaling van de foutmelding die de gebruiker anders te zien krijgt -- citaat, geen nadruk.
+.host-mismatch-warning em {
+  font-style: italic;
+  color: var(--muted);
+}
+
+// Het juiste adres is de kern van de boodschap: dit is de enige link in het vlak en mag eruit zien
+// als iets om aan te klikken.
+.host-mismatch-warning a {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  word-break: break-all;
+}

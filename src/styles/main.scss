@@ -1,0 +1,18 @@
+// Aggregator — geïmporteerd door src/app/layout.tsx. Meegekomen uit life-hub (BASE -> LAYOUT ->
+// COMPONENTS), zonder de dossier-lagen (markdown, print, PDF) die daar achterbleven.
+
+// BASE
+@use "base/root"; // 1. CSS-variabelen (licht/donker + data-theme)
+@use "base/reset"; // 2. Browser-reset & body-basis
+
+// LAYOUT
+@use "layout/masthead"; // Pagina-shell + masthead-kop
+
+// COMPONENTS
+@use "components/playlist-toolbar"; // Spotify-toolbar (zoek/groepeer/filter-chips)
+@use "components/playlist-list"; // De gegroepeerde rijenlijst onder de toolbar
+@use "components/world-nav"; // Spotify-werelden: nav-tegels + terug-link (sub-routes per top-folder)
+@use "components/dashboard"; // /spotify/dashboard -- ranked bar-lijst + dedup-tabel
+@use "components/host-mismatch-warning"; // /spotify: app-host <-> OAuth-callback-host lopen uiteen
+@use "components/mix-bridge"; // Mixen <-> playlists: de brug met de DJ Cylow-mix-JSON's
+@use "components/missing-mixes"; // Tweede tabel onder de playlist-manager: mixen zonder eigen playlist

@@ -1,0 +1,25 @@
+.DS_Store
+Thumbs.db
+
+# dependencies
+node_modules/
+
+# Next.js (apps-laag — zie package.json / CLAUDE.md)
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# lokale env-bestanden
+.env*
+!.env.local.example
+
+# lokale, niet-gecommitte app-data (bv. de Spotify-token-store, zie src/lib/spotify/tokenStore.ts)
+.data/
+
+# lokale, niet-gecommitte app-datasnapshots (bv. de Spotify-playlist-snapshot, zie
+# src/lib/spotify/snapshotStore.ts) -- bevat Dave's persoonlijke muziekbibliotheek, mag nooit
+# gecommit worden. LET OP: dit is een ANDERE map dan .data/ hierboven (die is voor geheimen zoals
+# tokens; deze is voor opgehaalde brondata).
+data/
+
