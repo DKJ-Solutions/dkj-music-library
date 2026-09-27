@@ -47,6 +47,7 @@ elkaar. De sortering werkt op het gefilterde resultaat en springt terug naar pag
 ### CREATE
 
 - [x] `sortRegister` + `SortKey`/`RegisterSort` in `src/lib/library/register.ts` (pure, numerieke collator)
+- [x] Beschrijving (lede) onder de kop "DKJ Trackregister" weggehaald, op verzoek van Dave
 - [x] Klikbare kopregel met `aria-sort` en ▲/▼/↕ in `TrackRegister.tsx`, stijl in `_track-register.scss`
 
 ### TEST
@@ -59,7 +60,7 @@ elkaar. De sortering werkt op het gefilterde resultaat en springt terug naar pag
 
 Het trackregister sorteert op elke kolom: klik op een kolomkop voor oplopend, nog eens voor aflopend, en
 een derde keer voor de oorspronkelijke volgorde. Lege cellen blijven onderaan, BPM en ID's sorteren
-numeriek (96BPM vóór 112BPM).
+numeriek (96BPM vóór 112BPM). De beschrijving onder de kop "DKJ Trackregister" is weg.
 
 **Score:** 3
 
