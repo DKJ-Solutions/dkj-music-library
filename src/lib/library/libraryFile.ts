@@ -193,8 +193,13 @@ export function restoreLibrary(
   const links = readLines(path.join(dir, LINKS_FILE)).map(withTrackId);
   const artistsFile = path.join(dir, ARTISTS_FILE);
   const artists = fs.existsSync(artistsFile) ? readLines(artistsFile) : [];
-  // Alleen velden die (nog) in fields.ts staan; een veld dat intussen weg is, valt stil weg.
-  const known = fields.filter((field) => tracks.some((track) => field.key in track));
+  // Alleen velden die (nog) in fields.ts staan; een veld dat intussen weg is, valt stil weg. Een hernoemd
+  // veld wordt ook onder zijn oude naam gelezen (renamedFrom), zodat een oudere export gewoon terugzet.
+  const valueOf = (track: Record<string, unknown>, field: FieldDef): unknown =>
+    field.key in track ? track[field.key] : field.renamedFrom ? track[field.renamedFrom] : undefined;
+  const known = fields.filter((field) =>
+    tracks.some((track) => field.key in track || (field.renamedFrom !== undefined && field.renamedFrom in track))
+  );
   const columns = [TRACK_ID_KEY, "created_at", "updated_at", ...known.map((field) => field.key)];
   const insertTrack = db.prepare(
     `INSERT INTO ${TRACKS_TABLE} (${columns.map((c) => `"${c}"`).join(", ")}) ` +
@@ -218,7 +223,7 @@ export function restoreLibrary(
         requireText(track, TRACK_ID_KEY, where),
         requireText(track, "created_at", where),
         requireText(track, "updated_at", where),
-        ...known.map((field) => toSqlValue(field, track[field.key] as TrackValue | undefined)),
+        ...known.map((field) => toSqlValue(field, valueOf(track, field) as TrackValue | undefined)),
       ];
       insertTrack.run(...values);
     });

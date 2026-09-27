@@ -215,7 +215,7 @@ interface MissingTrack {
   title: string | null;
   /** Artiestnamen uit `artists`. */
   names: string[];
-  /** Namen van de playlists uit `dkj_playlists`. */
+  /** Namen van de playlists uit `spotify_playlist`. */
   playlists: string[];
 }
 
@@ -300,7 +300,7 @@ export interface LibraryIdResult {
   albumsFilled: number;
   /** Tracks die in deze run hun `dkj_file` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
   fileNamesFilled: number;
-  /** Tracks waarvan `dkj_playlists` in deze run veranderde (playlistLinks.ts). */
+  /** Tracks waarvan `spotify_playlist` in deze run veranderde (playlistLinks.ts). */
   playlistsChanged: number;
   /** Tracks die in deze run hun `dkj_albumartiest` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
   albumArtistsFilled: number;

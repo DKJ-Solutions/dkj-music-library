@@ -1,5 +1,5 @@
 // `dkj_album` UIT DE PLAYLISTS: welk eigen album een track heeft, afgeleid uit de namen van de
-// Spotify-playlists waarin hij staat (dkj_playlists).
+// Spotify-playlists waarin hij staat (spotify_playlist).
 //
 // Een playlistnaam noemt het album in zijn kleur, dichtheid en geslacht ("Magenta Light (m) ♦️ 128BPM
 // EDM", "House Mix 🟠 Orange Full (f) 🟠 Vol. X"); parsePlaylistName() haalt die eruit, in welke volgorde

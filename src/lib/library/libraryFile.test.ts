@@ -175,6 +175,16 @@ describe("syncWithExport / openLibrary / withLibrary", () => {
     again.db.close();
   });
 
+  it("zet een hernoemd veld terug uit een export die nog de oude naam heeft", () => {
+    withLibrary((db) => upsertTracks(db, [{ dkj_track_id: "T1", spotify_playlist: [{ id: "p1", name: "Een" }] }]), dbPath, exportDir);
+    const file = path.join(exportDir, "tracks.ndjson");
+    fs.writeFileSync(file, fs.readFileSync(file, "utf8").replace('"spotify_playlist"', '"dkj_playlists"'));
+
+    const target = memoryDb();
+    restoreLibrary(target, exportDir);
+    expect(getTrack(target, "T1")?.spotify_playlist).toEqual([{ id: "p1", name: "Een" }]);
+  });
+
   it("schrijft de export als er wel data is maar nog geen export", () => {
     const { db: first } = openLibraryDb(dbPath);
     seed(first);
