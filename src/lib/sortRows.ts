@@ -36,10 +36,25 @@ function zonderLeestekens(tekst: string): string {
   return kaal.trim() === "" ? tekst : kaal;
 }
 
-/** Alfabetische vergelijking van twee teksten: Nederlandse collatie, hoofdletters, accenten en
- *  leestekens tellen niet, getallen numeriek. Gedeeld met het trackregister (lib/library/register.ts). */
+// Een Engels lidwoord vooraan telt niet mee, zoals in elke muziekbibliotheek: "The Beatles" hoort bij de
+// B en "A Tribe Called Quest" bij de T. Alleen als los woord gevolgd door witruimte -- "Abba" en "A-ha"
+// blijven bij de A -- en alleen als er daarna nog iets overblijft: "The The" sorteert als "The".
+const LIDWOORD = /^\s*(?:the|an|a)\s+(?=\S)/iu;
+
+function zonderLidwoord(tekst: string): string {
+  return tekst.replace(LIDWOORD, "");
+}
+
+/** De tekst zoals hij alfabetisch vergeleken wordt: zonder leestekens en zonder lidwoord vooraan. */
+function sorteertekst(tekst: string): string {
+  return zonderLidwoord(zonderLeestekens(tekst));
+}
+
+/** Alfabetische vergelijking van twee teksten: Nederlandse collatie, hoofdletters, accenten, leestekens
+ *  en een Engels lidwoord vooraan (A, An, The) tellen niet, getallen numeriek. Gedeeld met het
+ *  trackregister (lib/library/register.ts). */
 export function compareText(a: string, b: string): number {
-  return collator.compare(zonderLeestekens(a), zonderLeestekens(b));
+  return collator.compare(sorteertekst(a), sorteertekst(b));
 }
 
 function compareKeys(a: string | number, b: string | number): number {

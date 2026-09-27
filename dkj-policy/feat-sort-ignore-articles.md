@@ -39,19 +39,28 @@
 
 ### PLAN
 
+- [x] Eén vergelijkingspunt gevonden: `compareText` in `src/lib/sortRows.ts`, gedeeld door de playlisttabel, de mixentabel en het trackregister.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `compareText` negeert een Engels lidwoord vooraan (A, An, The) als los woord, na het weghalen van leestekens.
 
 ### TEST
 
+- [x] Tests in `register.test.ts`: lidwoord genegeerd, `Abba`/`A-ha`/`Theory` onaangetast, `The The` en `A` blijven staan.
+- [x] vitest (788), tsc en eslint groen.
+
 ### DEPLOY: feat/sort-ignore-articles
 
-**Score:**
+Alfabetisch sorteren slaat een Engels lidwoord vooraan over: `The Beatles` staat bij de B, `A Tribe Called Quest` bij de T. Het geldt als los woord (`Abba`, `A-ha` en `Theory of a Deadman` blijven waar ze stonden) en een titel die alleen uit een lidwoord bestaat (`The The`) sorteert op zichzelf. Het zit in de gedeelde `compareText`, dus alle sorteerbare tabellen en het trackregister doen het gelijk.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A -- een lokale app zonder abonnees; alleen de eigenaar ziet de sortering.
+
+**Score:** N/A
 
 #### Pull Request
 
