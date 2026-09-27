@@ -63,7 +63,24 @@ describe("TrackRegister", () => {
   it("kapt dkj_file af, met de volledige naam als tooltip", () => {
     const file = "Airdraw, Jo.E & Aaren - Bryde's Whale (New Ordinance Edit) (Extended Mix)";
     render(<TrackRegister rows={[row(1, { file })]} artistCount={1} />);
-    expect(screen.getByTitle(file).className).toBe("register-file-text");
+    expect(screen.getByTitle(file).className).toContain("register-oneline");
+  });
+
+  it("zet tot twee artiest-ID's naast elkaar, en meer in een menu met de namen", () => {
+    render(
+      <TrackRegister
+        rows={[
+          row(1, { artistIds: ["AAA01", "BBB01"], artistNames: ["Aa", "Bb"] }),
+          row(2, { artistIds: ["CCC01", "DDD01", "EEE01"], artistNames: ["Cc", "Dd", "Ee"] }),
+        ]}
+        artistCount={5}
+      />
+    );
+    expect(screen.getByTitle("Bb").textContent).toBe("BBB01");
+    expect(screen.queryByText("EEE01")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /CCC01\s*\+2/ }));
+    expect(screen.getByText("EEE01")).toBeTruthy();
+    expect(screen.getByText("Ee")).toBeTruthy();
   });
 
   it("meldt het als niets past", () => {

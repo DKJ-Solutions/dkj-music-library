@@ -50,6 +50,7 @@ kan het niet. De app wel: de export staat in git en de bibliotheek bouwt zich op
 - [x] Kolom Titel weg: `dkj_file` neemt zijn plek in (Dave); zoeken op titel werkt nog
 - [x] Kolom `dkj_playlists` na #19: één playlist is een label dat hem op Spotify opent, meer dan één een menu met alle playlists als link (Dave); ook doorzoekbaar
 - [x] Lange `dkj_file` op één regel afgekapt met …, volledige naam als tooltip (Dave)
+- [x] Elke rij is precies één regel (Dave): tekstcellen afgekapt met tooltip, meer dan twee artiest-ID's in een menu met de namen; één gedeeld menu voor playlists en ID's
 
 ### TEST
 

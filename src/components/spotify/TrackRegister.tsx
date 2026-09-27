@@ -2,7 +2,7 @@
 // De tabel van /spotify/trackregister: zoeken, filteren op dkj_bpm en dkj_album, en bladeren per
 // 100 rijen (12.000+ rijen in één keer renderen maakt de pagina traag). Alle logica die geen React is
 // zit in register.ts; hier alleen de weergave en de filterstand.
-import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { DKJ_ALBUM_COLOURS, DKJ_BPM_OPTIONS } from "@/lib/library/fields";
 import { playlistUrl, type PlaylistLink } from "@/lib/library/playlistLink";
 import {
@@ -68,9 +68,9 @@ function PlaylistLabel({ playlist, term, className }: { playlist: PlaylistLink; 
   );
 }
 
-/** Eén playlist: een label dat hem opent. Meer dan één: een knop met een menu van links. Het menu sluit
- *  bij een klik ernaast of met Escape. */
-function PlaylistLabels({ playlists, term }: { playlists: PlaylistLink[]; term: string }) {
+/** Een knop die een menu opent, voor een cel die anders op twee regels zou komen. Het menu sluit bij
+ *  een klik ernaast of met Escape. */
+function Dropdown({ label, children }: { label: ReactNode; children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const menu = useRef<HTMLDivElement>(null);
 
@@ -89,31 +89,87 @@ function PlaylistLabels({ playlists, term }: { playlists: PlaylistLink[]; term: 
     };
   }, [open]);
 
+  return (
+    <div className="register-menu" ref={menu}>
+      <button
+        type="button"
+        className="register-menu-toggle"
+        aria-expanded={open}
+        aria-haspopup="true"
+        onClick={() => setOpen(!open)}
+      >
+        {label}
+        <span aria-hidden="true"> ▾</span>
+      </button>
+      {open && <div className="register-menu-list">{children}</div>}
+    </div>
+  );
+}
+
+/** Eén playlist: een label dat hem opent. Meer dan één: een menu van links. */
+function PlaylistLabels({ playlists, term }: { playlists: PlaylistLink[]; term: string }) {
   if (playlists.length === 0) return <Empty />;
   if (playlists.length === 1) return <PlaylistLabel playlist={playlists[0]} term={term} className="register-playlist" />;
   // Zoekt iemand op een playlistnaam, dan staat die treffer op de knop, zodat je ziet waarom de rij er staat.
   const hit = term ? playlists.find((playlist) => fold(playlist.name).includes(term)) : undefined;
   return (
-    <div className="register-playlist-menu" ref={menu}>
-      <button
-        type="button"
-        className="register-playlist register-playlist-toggle"
-        aria-expanded={open}
-        aria-haspopup="true"
-        onClick={() => setOpen(!open)}
-      >
-        {hit ? <Highlight text={hit.name} term={term} /> : `${playlists.length} playlists`}
-        {hit && <span className="register-playlist-count"> +{playlists.length - 1}</span>}
-        <span aria-hidden="true"> ▾</span>
-      </button>
-      {open && (
-        <div className="register-playlist-list">
-          {playlists.map((playlist) => (
-            <PlaylistLabel key={playlist.id} playlist={playlist} term={term} className="register-playlist-item" />
-          ))}
-        </div>
-      )}
-    </div>
+    <Dropdown
+      label={
+        hit ? (
+          <>
+            <Highlight text={hit.name} term={term} />
+            <span className="register-menu-count">+{playlists.length - 1}</span>
+          </>
+        ) : (
+          `${playlists.length} playlists`
+        )
+      }
+    >
+      {playlists.map((playlist) => (
+        <PlaylistLabel key={playlist.id} playlist={playlist} term={term} className="register-menu-item" />
+      ))}
+    </Dropdown>
+  );
+}
+
+/** Zoveel artiest-ID's staan er naast elkaar; bij meer wordt het een menu, zodat de rij één regel blijft. */
+const ARTIST_IDS_INLINE = 2;
+
+function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term: string }) {
+  const chip = (id: string, i: number) => (
+    <span key={id} className="register-chip" title={names[i]}>
+      <Highlight text={id} term={term} />
+    </span>
+  );
+  if (ids.length <= ARTIST_IDS_INLINE) return <div className="register-chips">{ids.map(chip)}</div>;
+  // De treffer van een zoekopdracht op de knop, anders de hoofdartiest.
+  const shown = Math.max(0, term ? ids.findIndex((id, i) => fold(`${id} ${names[i]}`).includes(term)) : 0);
+  return (
+    <Dropdown
+      label={
+        <>
+          <Highlight text={ids[shown]} term={term} />
+          <span className="register-menu-count">+{ids.length - 1}</span>
+        </>
+      }
+    >
+      {ids.map((id, i) => (
+        <span key={id} className="register-menu-item register-menu-item--static">
+          <span className="register-menu-id"><Highlight text={id} term={term} /></span>
+          <Highlight text={names[i]} term={term} />
+        </span>
+      ))}
+    </Dropdown>
+  );
+}
+
+/** Tekst die op één regel afgekapt wordt, met de volledige tekst als tooltip. */
+function OneLine({ text, term, className }: { text: string | null; term: string; className: string }) {
+  if (!text) return <Empty />;
+  return (
+    <span className={`register-oneline ${className}`} title={text}>
+      <Highlight text={text} term={term} />
+    </span>
   );
 }
 
@@ -224,28 +280,10 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
               slice.map((row) => (
                 <tr key={row.id}>
                   <td className="register-id"><Highlight text={row.id} term={term} /></td>
-                  <td className="register-file">
-                    {row.file ? (
-                      <span className="register-file-text" title={row.file}>
-                        <Highlight text={row.file} term={term} />
-                      </span>
-                    ) : (
-                      <Empty />
-                    )}
-                  </td>
-                  <td className="register-album-artist">
-                    {row.albumArtist ? <Highlight text={row.albumArtist} term={term} /> : <Empty />}
-                  </td>
-                  <td className="register-artist">{row.artist ? <Highlight text={row.artist} term={term} /> : <Empty />}</td>
-                  <td>
-                    <div className="register-chips">
-                      {row.artistIds.map((id, i) => (
-                        <span key={id} className="register-chip" title={row.artistNames[i]}>
-                          <Highlight text={id} term={term} />
-                        </span>
-                      ))}
-                    </div>
-                  </td>
+                  <td><OneLine text={row.file} term={term} className="register-file" /></td>
+                  <td><OneLine text={row.albumArtist} term={term} className="register-album-artist" /></td>
+                  <td><OneLine text={row.artist} term={term} className="register-artist" /></td>
+                  <td><ArtistIds ids={row.artistIds} names={row.artistNames} term={term} /></td>
                   <td>{row.bpm ? <span className="register-tag"><Highlight text={row.bpm} term={term} /></span> : <Empty />}</td>
                   <td>{row.album ? <AlbumTag album={row.album} term={term} /> : <Empty />}</td>
                   <td className="register-playlists-cell"><PlaylistLabels playlists={row.playlists} term={term} /></td>
