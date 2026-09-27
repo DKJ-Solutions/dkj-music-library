@@ -39,19 +39,35 @@
 
 ### PLAN
 
+Dave: "zet in dkj_album ook een dropdownmenu als de track in 2 playlists voorkomt waarbij er verschil
+zit". Het register is alleen-lezen, dus het menu toont de kandidaten, net als bij playlists en groepen.
+Heeft een track al een (zelf gekozen) `dkj_album`, dan blijft het gewoon dat label.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `albumsOfPlaylists()` in `albumFromPlaylists.ts`: alle albums die de playlists noemen; `albumFromPlaylists()` gebruikt hem
+- [x] `RegisterRow.albumCandidates` in `register.ts`
+- [x] `Album`-cel in `TrackRegister.tsx`: label, of menu "N albums" bij twee of meer kandidaten
 
 ### TEST
 
+- [x] Unit-test `albumsOfPlaylists`, component-test voor het menu; vitest (771), typecheck en eslint groen
+- [~] Visuele controle in de browser -- dat is Daves eigen blik vóór de merge (zichtbaar resultaat)
+
 ### DEPLOY: feat/album-candidates-dropdown
 
-**Score:**
+Staat `dkj_album` in het Trackregister leeg omdat de playlists van een track verschillende albums
+noemen, dan toont de cel nu een menu "N albums" met die kandidaten, elk met zijn kleurstaal -- net als
+de menu's bij playlists en groepen. Zoek je op een albumnaam, dan staat die treffer op de knop. Een
+track met een ingevuld album toont gewoon dat album.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A -- de Trackregister is een intern beheerscherm; geen abonnee ziet het.
+
+**Score:** N/A
 
 #### Pull Request
 

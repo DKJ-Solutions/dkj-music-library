@@ -6,6 +6,7 @@
 // dkj_bpm en dkj_album.
 //
 // Pure module: geen fs, geen sqlite -- ook vanuit een client-component te importeren.
+import { albumsOfPlaylists } from "./albumFromPlaylists";
 import type { PlaylistLink } from "./playlistLink";
 import type { StoredTrack } from "./trackStore";
 
@@ -20,6 +21,9 @@ export interface RegisterRow {
   albumArtist: string | null;
   bpm: string | null;
   album: string | null;
+  /** De albums die de playlists noemen (albumsOfPlaylists). Meer dan één: de playlists verschillen, en
+   *  dan blijft `album` leeg tot je zelf kiest. */
+  albumCandidates: string[];
   file: string | null;
   /** De eigen groepen (dkj_group), in de volgorde van de options. */
   groups: string[];
@@ -45,6 +49,12 @@ export function toRegisterRow(track: StoredTrack, artistNames: Record<string, st
   const ids = Array.isArray(track.dkj_artist_ids)
     ? track.dkj_artist_ids.filter((id): id is string => typeof id === "string")
     : [];
+  const playlists = Array.isArray(track.spotify_playlist)
+    ? track.spotify_playlist.filter(
+        (p): p is PlaylistLink =>
+          typeof p === "object" && p !== null && typeof (p as PlaylistLink).id === "string" && typeof (p as PlaylistLink).name === "string"
+      )
+    : [];
   return {
     id: track.dkj_track_id,
     title: text(track.title) ?? "",
@@ -54,14 +64,10 @@ export function toRegisterRow(track: StoredTrack, artistNames: Record<string, st
     albumArtist: text(track.dkj_albumartiest),
     bpm: text(track.dkj_bpm),
     album: text(track.dkj_album),
+    albumCandidates: albumsOfPlaylists(playlists.map((p) => p.name)),
     file: text(track.dkj_file),
     groups: Array.isArray(track.dkj_group) ? track.dkj_group.filter((g): g is string => typeof g === "string") : [],
-    playlists: Array.isArray(track.spotify_playlist)
-      ? track.spotify_playlist.filter(
-          (p): p is PlaylistLink =>
-            typeof p === "object" && p !== null && typeof (p as PlaylistLink).id === "string" && typeof (p as PlaylistLink).name === "string"
-        )
-      : [],
+    playlists,
   };
 }
 

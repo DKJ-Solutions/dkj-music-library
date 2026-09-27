@@ -16,6 +16,7 @@ function row(n: number, over: Partial<RegisterRow> = {}): RegisterRow {
     albumArtist: "Artiest",
     bpm: null,
     album: null,
+    albumCandidates: [],
     file: `Artiest - Nummer ${n}`,
     groups: [],
     playlists: [],
@@ -113,6 +114,22 @@ describe("TrackRegister", () => {
     fireEvent.click(header);
     expect(ids()).toEqual(["ART01-001", "ART01-002", "ART01-003"]);
     expect(header.closest("th")?.getAttribute("aria-sort")).toBe("none");
+  });
+
+  it("toont bij verschillende albums in de playlists een menu met de kandidaten", () => {
+    const candidates = ["Green Full (f)", "Cyan Full (f)"];
+    render(
+      <TrackRegister
+        rows={[row(1, { albumCandidates: candidates }), row(2, { album: "Green Full (f)", albumCandidates: candidates })]}
+        artistCount={1}
+      />
+    );
+    // Rij 2 heeft zelf een album gekozen: dan geen menu, alleen dat album.
+    const toggles = screen.getAllByRole("button", { name: /2 albums/ });
+    expect(toggles).toHaveLength(1);
+    fireEvent.click(toggles[0]);
+    const menu = document.querySelector(".register-menu-list");
+    expect(Array.from(menu?.querySelectorAll(".register-menu-item") ?? [], (item) => item.textContent)).toEqual(candidates);
   });
 
   it("meldt het als niets past", () => {

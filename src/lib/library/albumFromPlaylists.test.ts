@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { albumFromPlaylists, albumOfPlaylist } from "./albumFromPlaylists";
+import { albumFromPlaylists, albumOfPlaylist, albumsOfPlaylists } from "./albumFromPlaylists";
 
 describe("albumOfPlaylist", () => {
   it("haalt kleur, dichtheid en geslacht uit de naam, in elke volgorde", () => {
@@ -25,5 +25,14 @@ describe("albumFromPlaylists", () => {
     expect(albumFromPlaylists(["Cyan Full (f) 🧊 Classic Pop", "Green Full (f) 🟢 Classic Pop"])).toBeNull();
     expect(albumFromPlaylists(["Green Full | OST"])).toBeNull();
     expect(albumFromPlaylists([])).toBeNull();
+  });
+});
+
+describe("albumsOfPlaylists", () => {
+  it("noemt elk album één keer, in de volgorde van de opties", () => {
+    expect(
+      albumsOfPlaylists(["Green Light (f) 🟢 Pop", "Cyan Full (f) 🧊 Classic Pop", "Mijn favorieten", "Green Full (f) 🟢 Classic Pop", "Cyan Full (f) 🧊 Top 100"])
+    ).toEqual(["Green Light (f)", "Green Full (f)", "Cyan Full (f)"]);
+    expect(albumsOfPlaylists(["Green Full | OST"])).toEqual([]);
   });
 });
