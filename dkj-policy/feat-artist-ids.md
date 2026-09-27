@@ -55,6 +55,7 @@ Spotify-artiest) zijn de eigenaar voorgelegd en niet afgewezen; de namen `dkj_ar
 
 - [x] `artistIds.test.ts`: 17 naamgevallen, volgorde + laagste vrije nummer, MAR100, zelfde naam andere artiest, opnieuw draaien doet niets, eigen waarde blijft staan, export/restore met en zonder `artists.ndjson`
 - [x] Vitest 686/686, `tsc --noEmit` en `eslint` schoon
+- [x] Review Victor: geen blokkerende bevindingen; ~35 extra namen door `artistPrefix` gehaald, oude export zonder `artists.ndjson` geeft geen onterechte restore
 
 ### DEPLOY: feat/artist-ids
 
