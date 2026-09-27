@@ -63,12 +63,79 @@ export function fileArtists(title: string, artists: readonly string[]): string[]
   return kept.length > 0 ? kept : [...artists];
 }
 
-/** `dkj_title` voor een track: alleen de titel, in dezelfde vorm als in `dkj_file` na de artiesten
- *  ("Levels - Radio Edit" -> "Levels (Radio Edit)"), of null zonder titel. Geen bestandsnaam, dus de
- *  tekens die Windows niet toestaat blijven staan. */
-export function titleNameOf(title: string | null): string | null {
+// `dkj_title` is alleen de titel (Dave, 27 september 2026): een generieke versie-aanduiding en een
+// featuring gaan eruit, een remix van een artiest blijft staan.
+//   99 Biker Friends (Main Version) (Explicit)  ->  99 Biker Friends
+//   2 up in the Morning (Radio Mix)             ->  2 up in the Morning
+//   Titanium (feat. Sia)                        ->  Titanium
+//   Higher (David Penn Remix)                   ->  Higher (David Penn Remix)
+// Een groep tussen haakjes is generiek als ELK woord erin een versiewoord of een jaartal is. Daardoor
+// blijft "Falling (JORDAZ Radio Mix)" staan (JORDAZ is geen versiewoord) en ook alles wat bij de
+// titel hoort: "(I Can't Get No) Satisfaction", "Blue (Da Ba Dee)". Een groep met meerdere delen
+// ("Danny Byrd Remix; Explicit") verliest alleen zijn generieke delen.
+
+/** De woorden van een generieke versie-aanduiding, in kleine letters en zonder accenten. */
+const VERSION_WORDS = new Set([
+  "a", "acapella", "accapella", "acoustic", "album", "and", "bonus", "clean", "club", "cut", "demo", "digital",
+  "dub", "edit", "edited", "explicit", "extended", "full", "instrumental", "lange", "long", "main", "mix",
+  "mixed", "mono", "non", "original", "radio", "re", "recorded", "remaster", "remastered", "remix", "rerecorded",
+  "short", "single", "stereo", "studio", "track", "versie", "version", "vocal",
+]);
+
+/** Een groep tussen ronde of rechte haakjes zonder haakjes erin (de binnenste eerst). */
+const GROUP = /\s*[([]([^()[\]]*)[)\]]/g;
+
+/** Een featuring-groep: "(feat. X)", "[ft. X]", "(Featuring X)", "(with X)". */
+const FEATURING_GROUP = /^\s*(?:feat\.?|ft\.?|featuring|with)\s/i;
+
+/** Een losse featuring buiten haakjes: "Kawir feat. X" -- tot het eind of de volgende groep. */
+const LOOSE_FEATURING = /\s(?:feat\.|ft\.|featuring)\s[^()[\]]*/gi;
+
+function isVersionPart(part: string): boolean {
+  const words = part
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .toLowerCase()
+    .split(/[\s-]+/)
+    .map((word) => word.replace(/[^\p{L}\p{N}"]/gu, ""))
+    .filter((word) => word !== "");
+  return words.length > 0 && words.every((word) => VERSION_WORDS.has(word) || /^\d{4}$/.test(word) || /^\d+"$/.test(word));
+}
+
+/** Wat er van de inhoud van een groep overblijft: null als de hele groep weg moet. */
+function cleanGroup(content: string): string | null {
+  if (FEATURING_GROUP.test(content)) return null;
+  const pieces = content.split(/\s*[;,]\s*|\s+\/\s+/);
+  const kept = pieces.filter((piece) => !isVersionPart(piece));
+  if (kept.length === 0) return null;
+  if (kept.length === pieces.length) return content;
+  const separator = content.match(/[;,]|\s\/\s/)?.[0].trim() ?? ";";
+  return kept.join(separator === "/" ? " / " : `${separator} `);
+}
+
+/** De titel zonder generieke versie-aanduidingen en featuring. */
+export function cleanTitle(title: string): string {
+  const cleaned = title.replace(LOOSE_FEATURING, " ").replace(GROUP, (match, content: string) => {
+    const kept = cleanGroup(content);
+    return kept === null ? "" : match.replace(content, kept);
+  });
+  return cleaned.replace(/\s+/g, " ").replace(/\s*[-–]\s*$/, "").trim();
+}
+
+/** De titel in de vorm van `dkj_file` na de artiesten ("Levels - Radio Edit" -> "Levels (Radio Edit)").
+ *  Tot 27 september 2026 was dit ook `dkj_title`; refreshTitles() herkent die oude waarden eraan. */
+export function versionedTitleOf(title: string | null): string | null {
   if (!title || title.trim() === "") return null;
   return fileTitle(title).replace(/\s+/g, " ").trim() || null;
+}
+
+/** `dkj_title` voor een track: alleen de titel, zonder generieke versie-aanduiding en featuring (zie
+ *  boven), of null zonder titel. Geen bestandsnaam, dus de tekens die Windows niet toestaat blijven
+ *  staan. Blijft er niets over, dan de titel met versie. */
+export function titleNameOf(title: string | null): string | null {
+  const versioned = versionedTitleOf(title);
+  if (versioned === null) return null;
+  return cleanTitle(versioned) || versioned;
 }
 
 /** `dkj_file` voor een track, of null zonder titel. */

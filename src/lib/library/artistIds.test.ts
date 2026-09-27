@@ -4,6 +4,7 @@ import path from "path";
 import { describe, expect, it } from "vitest";
 import { openLibraryDb } from "./db";
 import {
+  refreshTitles,
   applyArtistIdsFromSnapshot,
   applyLibraryIdsFromSnapshot,
   artistPrefix,
@@ -233,5 +234,21 @@ describe("applyArtistIdsFromSnapshot", () => {
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
     }
+  });
+});
+
+describe("refreshTitles", () => {
+  it("maakt een afgeleide dkj_title schoon, laat een zelf ingevulde staan, en doet de tweede keer niets", () => {
+    const { db } = openLibraryDb(":memory:");
+    upsertTracks(db, [
+      { dkj_track_id: "A", title: "2 up in the Morning - Radio Mix", dkj_title: "2 up in the Morning (Radio Mix)" },
+      { dkj_track_id: "B", title: "Titanium (feat. Sia)", dkj_title: "Mijn Titanium" },
+      { dkj_track_id: "C", title: "Higher - David Penn Remix", dkj_title: "Higher (David Penn Remix)" },
+    ]);
+    expect(refreshTitles(db)).toBe(1);
+    expect(getTrack(db, "A")?.dkj_title).toBe("2 up in the Morning");
+    expect(getTrack(db, "B")?.dkj_title).toBe("Mijn Titanium");
+    expect(getTrack(db, "C")?.dkj_title).toBe("Higher (David Penn Remix)");
+    expect(refreshTitles(db)).toBe(0);
   });
 });

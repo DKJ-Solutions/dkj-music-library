@@ -39,19 +39,35 @@
 
 ### PLAN
 
+- [x] Keuze van Dave: generieke versie-aanduidingen en featuring gaan eruit, remixen van artiesten blijven staan
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `titleNameOf` in `fileName.ts`: een groep tussen haakjes valt weg als elk woord een versiewoord of jaartal is, of als het een featuring is
+- [x] `refreshTitles` in `artistIds.ts`: zet bestaande `dkj_title` recht waar hij nog de oude afgeleide vorm heeft; draait mee in elke sync
+- [x] Export bijgewerkt: 1668 titels schoongemaakt, verder niets veranderd
 
 ### TEST
 
+- [x] Tests voor `titleNameOf` en `refreshTitles`; vitest, tsc en eslint zijn groen, en een steekproef van 30 gewijzigde titels is nagelopen
+
 ### DEPLOY: feat/clean-dkj-title
 
-**Score:**
+`dkj_title` is nu alleen de titel. Generieke versie-aanduidingen en featuring gaan eruit:
+*99 Biker Friends (Main Version) (Explicit)* wordt *99 Biker Friends*, *2 up in the Morning (Radio Mix)* wordt
+*2 up in the Morning* en *Titanium (feat. Sia)* wordt *Titanium*. Een remix van een artiest blijft staan
+(*Higher (David Penn Remix)*), net als wat bij de titel hoort (*(I Can't Get No) Satisfaction*). Een groep
+tussen haakjes is generiek als elk woord erin een versiewoord of een jaartal is (`fileName.ts`).
+Bestaande waarden in de oude afgeleide vorm zijn rechtgezet (1668 tracks) door `refreshTitles`, die ook in
+elke sync meedraait. Een zelf ingevulde titel blijft staan.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+In het trackregister staat voortaan de kale titel, zonder Radio Mix, Remastered of featuring.
+
+**Score:** 3
 
 #### Pull Request
 

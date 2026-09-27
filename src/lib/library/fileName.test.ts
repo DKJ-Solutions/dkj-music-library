@@ -72,9 +72,41 @@ describe("hulpfuncties", () => {
 });
 
 describe("titleNameOf", () => {
-  it("geeft alleen de titel, in de vorm van dkj_file", () => {
+  it("geeft alleen de titel, in de vorm van dkj_file; een remix van een artiest blijft staan", () => {
     expect(titleNameOf("Higher - David Penn Remix")).toBe("Higher (David Penn Remix)");
     expect(titleNameOf("Falling (JORDAZ Radio Mix)")).toBe("Falling (JORDAZ Radio Mix)");
+  });
+
+  it("haalt generieke versie-aanduidingen weg", () => {
+    expect(titleNameOf("99 Biker Friends (Main Version) (Explicit)")).toBe("99 Biker Friends");
+    expect(titleNameOf("2 up in the Morning (Radio Mix)")).toBe("2 up in the Morning");
+    expect(titleNameOf("Levels - Radio Edit")).toBe("Levels");
+    expect(titleNameOf("Title - Main Version - Explicit")).toBe("Title");
+    expect(titleNameOf("Title (Remastered 2011)")).toBe("Title");
+    expect(titleNameOf('Title (7" Single Edit; 2017 Remaster)')).toBe("Title");
+    expect(titleNameOf("Title [Mixed]")).toBe("Title");
+    expect(titleNameOf("Title (Radio-Edit)")).toBe("Title");
+  });
+
+  it("haalt featuring weg, tussen haakjes en los", () => {
+    expect(titleNameOf("Titanium (feat. Sia)")).toBe("Titanium");
+    expect(titleNameOf("Song [ft. X] (Extended Mix)")).toBe("Song");
+    expect(titleNameOf("Song feat. X (Radio Edit)")).toBe("Song");
+  });
+
+  it("laat van een groep met meerdere delen alleen het generieke deel weg", () => {
+    expect(titleNameOf("Song (Danny Byrd Remix; Explicit)")).toBe("Song (Danny Byrd Remix)");
+    expect(titleNameOf("Hey (Hayden James Remix, Extended)")).toBe("Hey (Hayden James Remix)");
+  });
+
+  it("laat staan wat bij de titel hoort", () => {
+    expect(titleNameOf("(I Can't Get No) Satisfaction")).toBe("(I Can't Get No) Satisfaction");
+    expect(titleNameOf("Blue (Da Ba Dee)")).toBe("Blue (Da Ba Dee)");
+    expect(titleNameOf("Shake (Shake, Shake, Shake)")).toBe("Shake (Shake, Shake, Shake)");
+  });
+
+  it("valt terug op de titel met versie als er anders niets overblijft", () => {
+    expect(titleNameOf("(Radio Edit)")).toBe("(Radio Edit)");
   });
 
   it("laat tekens staan die een bestandsnaam niet mag hebben, en geeft null zonder titel", () => {
