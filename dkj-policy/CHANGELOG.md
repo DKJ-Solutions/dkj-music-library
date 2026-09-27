@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**26 / 34 minor entries** <!-- pending-tally -->
+**27 / 35 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/hide-artist-id-column · 20260927-211144Z
+
+Het trackregister toont de kolom `dkj_artist_id` niet meer, net als eerder `dkj_track_id`. Zoeken op een
+artiest-ID werkt nog steeds. De ruimte gaat naar `dkj_title` en `dkj_albumartiest`. De cel met de
+artiest-chips en zijn menu, en de stijlen die alleen die cel gebruikte, zijn weg.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Het register is rustiger: geen kolom met artiest-codes meer, en er is meer ruimte voor de titel en de artiest.
+
+**Score:** 2
+
+#### Pull Request
+
+dkj_artist_id verborgen in het trackregister
+
+[PR #38](https://github.com/DKJ-Solutions/dkj-music-library/pull/38)
+
+---
 
 ### DEPLOY: feat/clean-dkj-title · 20260927-210735Z
 
