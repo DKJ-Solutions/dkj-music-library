@@ -142,15 +142,19 @@ function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term:
     </span>
   );
   if (ids.length <= ARTIST_IDS_INLINE) return <div className="register-chips">{ids.map(chip)}</div>;
-  // De treffer van een zoekopdracht op de knop, anders de hoofdartiest.
-  const shown = Math.max(0, term ? ids.findIndex((id, i) => fold(`${id} ${names[i]}`).includes(term)) : 0);
+  // Net als bij de playlists: "3 artists", en bij een zoekopdracht de treffer op de knop.
+  const hit = term ? ids.findIndex((id, i) => fold(`${id} ${names[i]}`).includes(term)) : -1;
   return (
     <Dropdown
       label={
-        <>
-          <Highlight text={ids[shown]} term={term} />
-          <span className="register-menu-count">+{ids.length - 1}</span>
-        </>
+        hit >= 0 ? (
+          <>
+            <Highlight text={ids[hit]} term={term} />
+            <span className="register-menu-count">+{ids.length - 1}</span>
+          </>
+        ) : (
+          `${ids.length} artists`
+        )
       }
     >
       {ids.map((id, i) => (

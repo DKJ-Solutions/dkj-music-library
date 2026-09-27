@@ -78,7 +78,7 @@ describe("TrackRegister", () => {
     );
     expect(screen.getByTitle("Bb").textContent).toBe("BBB01");
     expect(screen.queryByText("EEE01")).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: /CCC01\s*\+2/ }));
+    fireEvent.click(screen.getByRole("button", { name: /3 artists/ }));
     expect(screen.getByText("EEE01")).toBeTruthy();
     expect(screen.getByText("Ee")).toBeTruthy();
   });
