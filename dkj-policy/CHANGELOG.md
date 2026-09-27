@@ -2,7 +2,41 @@
 
 ## [Unreleased]
 
-**0 / 23 patch entries** <!-- pending-tally -->
+**0 / 24 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/trackregister-page · 20260927-185715Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+Het Trackregister is nu een pagina in de app: `/spotify/trackregister`, met een link bovenaan `/spotify`.
+Je ziet elk nummer met `dkj_track_id`, `dkj_artist`, `dkj_albumartiest`, `dkj_artist_ids`, `dkj_bpm`,
+`dkj_album` en `dkj_file`, zoekt zonder op accenten te letten en filtert op `dkj_bpm` en `dkj_album` (ook op "leeg"). De
+pagina leest de bibliotheek uit de export in git, dus hij werkt op elke kloon, zonder Spotify-login, sync
+of Claude-account.
+
+**Score:** 4
+
+##### Tier 1
+
+Een eigen werkpagina; management merkt hier niets van.
+
+**Score:** N/A
+
+##### Tier 2
+
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
+
+#### Pull Request
+
+Het Trackregister als pagina in de app (/spotify/trackregister)
+
+[PR #15](https://github.com/DKJ-Solutions/dkj-music-library/pull/15)
+
+---
 
 ### DEPLOY: feat/dkj-group-from-worlds · 20260927-185319Z
 
