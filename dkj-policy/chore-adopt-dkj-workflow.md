@@ -32,11 +32,21 @@
 
 ### PLAN
 
+Adopt the shared specialists (`specialists-init`) and the `dkj-policy` workflow (`adopt-dkj-policy`,
+parts 1 to 3) in this repo, as one change.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `specialists-init` bootstrap: persona lenses, specialist lens scaffolds, `SPECIALISTS.md`, seam libs
+- [x] `CLAUDE.md` reduced to the two `@`-imports (constitution + specialists)
+- [x] Part 1: `dkj-policy/` folder, branch-entry and always-on-budget gates, PR template
+- [x] Part 2: the 12 `copy` seam functions placed in `scripts/repo-config.ps1`
+- [x] Part 3: fold-on-merge, verify-resolved, repo-settings and merge-on-green runners
+- [x] Branch prefix table filled in `scripts/lib/branch-info.ps1`
 
 ### TEST
+
+- [x] `check-script-contract.ps1`: 0 errors
 
 ### DEPLOY: chore/adopt-dkj-workflow
 
@@ -44,27 +54,23 @@
 
 ##### Tier 0
 
-**Score:**
+The repo now runs the shared specialist team and the dkj-policy branch/PR/fold workflow: every PR
+carries a branch document, is gated in CI, and is folded into `dkj-policy/CHANGELOG.md` at the merge.
 
-<!--
-     Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
-     If not, say so there in one line and put N/A in its Score.
--->
+**Score:** 4
 
 ##### Tier 1
 
-**Score:**
+N/A -- workflow tooling only; nothing management or a commissioner sees changes.
 
-<!--
-     Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
-     If not, say so there in one line and put N/A in its Score.
--->
+**Score:** N/A
 
 ##### Tier 2
 
-**Score:**
+N/A -- no user-facing behaviour of the app changes.
+
+**Score:** N/A
 
 #### Pull Request
 
 Adopt the dkj specialists and dkj-policy workflow
-
