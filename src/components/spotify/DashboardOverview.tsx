@@ -121,7 +121,13 @@ function DedupSection({
   );
 }
 
-function TopArtistsSection({ topArtists }: { topArtists: ArtistRanking[] }) {
+function TopArtistsSection({
+  topArtists,
+  distinctArtists,
+}: {
+  topArtists: ArtistRanking[];
+  distinctArtists: number;
+}) {
   return (
     <section className="layer">
       <div className="band">
@@ -137,15 +143,21 @@ function TopArtistsSection({ topArtists }: { topArtists: ArtistRanking[] }) {
       {topArtists.length === 0 ? (
         <p className="empty-note">Nog geen tracks om te tellen.</p>
       ) : (
-        <BarList
-          unit="tracks"
-          items={topArtists.map((a) => ({
-            key: a.name,
-            label: a.name,
-            value: a.trackCount,
-            sublabel: `${fmt(a.playlistCount)} playlist${a.playlistCount === 1 ? "" : "s"}`,
-          }))}
-        />
+        <>
+          <p className="empty-note" style={{ marginBottom: "10px" }}>
+            {fmt(distinctArtists)} verschillende artiesten in je bibliotheek -- de top{" "}
+            {topArtists.length} hieronder.
+          </p>
+          <BarList
+            unit="tracks"
+            items={topArtists.map((a) => ({
+              key: a.name,
+              label: a.name,
+              value: a.trackCount,
+              sublabel: `${fmt(a.playlistCount)} playlist${a.playlistCount === 1 ? "" : "s"}`,
+            }))}
+          />
+        </>
       )}
     </section>
   );
@@ -254,6 +266,7 @@ export function DashboardOverview({
   dedup,
   duplicateArtists,
   topArtists,
+  distinctArtists,
   worldTracks,
   bpmTracks,
   colorDistribution,
@@ -262,6 +275,7 @@ export function DashboardOverview({
   dedup: DedupSummary;
   duplicateArtists: TopDuplicateArtist[];
   topArtists: ArtistRanking[];
+  distinctArtists: number;
   worldTracks: Record<SpotifyWorld, number>;
   bpmTracks: Record<MmcBpmTier | "overig", number>;
   colorDistribution: ColorDistribution;
@@ -270,7 +284,7 @@ export function DashboardOverview({
   return (
     <>
       <DedupSection dedup={dedup} duplicateArtists={duplicateArtists} />
-      <TopArtistsSection topArtists={topArtists} />
+      <TopArtistsSection topArtists={topArtists} distinctArtists={distinctArtists} />
       <DistributionsSection
         worldTracks={worldTracks}
         bpmTracks={bpmTracks}

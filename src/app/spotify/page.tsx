@@ -5,13 +5,16 @@
 // pagina. Daaronder de nieuwe interactieve laag (PlaylistManager, 'use client') die client-side
 // filtert/groepeert/zoekt over de al-geladen data.
 //
-// Bewust ÉÉN lees van de (grote) snapshot: getEnrichedSnapshot() leest 'm al -- de
-// sync-samenvatting hierboven wordt afgeleid uit die al-verrijkte data (playlist-/trackcount),
-// in plaats van er via een aparte readSnapshot()-call nog een tweede keer doorheen te parsen.
+// Bewust ÉÉN lees van de (grote) snapshot: readSnapshot() hieronder, die getEnrichedSnapshot()
+// aangereikt krijgt (zelfde recept als /spotify/dashboard). De sync-samenvatting komt uit de
+// verrijkte data (playlist-/trackcount); het aantal artiesten uit de ruwe, want EnrichedPlaylist
+// draagt geen tracks (zie enrichedPlaylists.ts).
 import Link from "next/link";
 import { headers } from "next/headers";
 import { readTokens } from "@/lib/spotify/tokenStore";
+import { readSnapshot } from "@/lib/spotify/snapshotStore";
 import { getEnrichedSnapshot } from "@/lib/spotify/enrichedPlaylists";
+import { countDistinctArtists } from "@/lib/spotify/dashboardStats";
 import { countByWorld } from "@/lib/spotify/playlistFilters";
 import { SPOTIFY_WORLDS, WORLD_META } from "@/lib/spotify/classifyWorld";
 import { getSpotifyRedirectUri } from "@/lib/spotify/config";
@@ -42,7 +45,9 @@ export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusP
     "/spotify"
   );
   const tokens = readTokens();
-  const enriched = getEnrichedSnapshot();
+  const snapshot = readSnapshot();
+  const enriched = getEnrichedSnapshot(snapshot);
+  const artistCount = snapshot ? countDistinctArtists(snapshot) : null;
   const worldCounts = enriched ? countByWorld(enriched.playlists) : { mmc: 0, djcylow: 0, prive: 0 };
   // Zie WorldPage.tsx: de mix-kant van de tabel is een server-side fs-read, doorgegeven als prop.
   const mixIndex = enriched
@@ -169,6 +174,7 @@ export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusP
       {enriched ? (
         <PlaylistManager
           playlists={enriched.playlists}
+          artistCount={artistCount}
           mixInfoById={mixIndex.byPlaylistId}
           mixesWithId={mixIndex.mixesWithId}
           missingMixes={mixIndex.missingMixes}

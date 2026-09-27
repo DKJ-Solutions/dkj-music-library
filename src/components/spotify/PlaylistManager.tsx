@@ -50,12 +50,17 @@ function SearchIcon() {
 
 export function PlaylistManager({
   playlists: initialPlaylists,
+  artistCount = null,
   mixInfoById = {},
   mixesWithId = null,
   missingMixes = [],
   hiddenColumns = [],
 }: {
   playlists: EnrichedPlaylist[];
+  /** Aantal verschillende artiesten in de hele snapshot (countDistinctArtists, server-side berekend:
+   *  EnrichedPlaylist draagt geen tracks). `null`/weggelaten = geen teller -- alleen meegeven op een
+   *  weergave die álle playlists toont, net als `mixesWithId`. */
+  artistCount?: number | null;
   /** Mix-info per playlist-id, server-side opgehaald uit de brug met de mix-JSON's
    *  (lib/mixes/playlistMixInfo.ts). Optioneel: zonder mix-map blijven ID/GENRE/SUBGENRE leeg. */
   mixInfoById?: Record<string, PlaylistMixInfo>;
@@ -454,6 +459,12 @@ export function PlaylistManager({
           <b>{playlists.length}</b>
           <span>playlists</span>
         </div>
+        {artistCount !== null && (
+          <div className="stat">
+            <b>{artistCount.toLocaleString("nl-NL")}</b>
+            <span>artiesten</span>
+          </div>
+        )}
         {/* Alleen als er een mix-bron is: zonder die bron is elke ID-cel leeg en zou hier "0 met ID"
             staan, wat een probleem suggereert dat er niet is. */}
         {!geenMixBron && (

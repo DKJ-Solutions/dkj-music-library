@@ -183,6 +183,19 @@ export function topDuplicateArtists(duplicates: readonly DuplicateTrack[], limit
 
 // --- Top-artiesten -------------------------------------------------------------------------
 
+/** Aantal VERSCHILLENDE artiesten over de hele bibliotheek (alle playlists). Gesleuteld op
+ *  artist.id, net als computeTopArtists: twee artiesten met toevallig dezelfde naam tellen dus als
+ *  twee. Elke artiest op een track telt mee (ook de featured artiesten van een samenwerking). */
+export function countDistinctArtists(snapshot: Snapshot): number {
+  const artistIds = new Set<string>();
+  for (const playlist of snapshot.playlists) {
+    for (const item of playlist.tracks) {
+      for (const artist of item.track?.artists ?? []) artistIds.add(artist.id);
+    }
+  }
+  return artistIds.size;
+}
+
 export interface ArtistRanking {
   name: string;
   /** Totaal aantal track-entries van deze artiest, over ALLE playlists heen (dus inclusief

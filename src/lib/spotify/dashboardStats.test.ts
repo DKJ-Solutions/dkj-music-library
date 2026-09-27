@@ -4,6 +4,7 @@
 import { describe, expect, it } from "vitest";
 import {
   computeDedupSummary,
+  countDistinctArtists,
   computeTopArtists,
   findDuplicateTracks,
   sumTracksByColor,
@@ -303,6 +304,43 @@ describe("topDuplicateArtists", () => {
     const result = topDuplicateArtists(allDuplicates);
     // (4-1) + (3-1) + (2-1) = 3 + 2 + 1 = 6
     expect(result).toEqual([{ id: "x", name: "Artist X", extraCopies: 6 }]);
+  });
+});
+
+describe("countDistinctArtists", () => {
+  it("telt elke artiest één keer, over alle playlists en samenwerkingen heen", () => {
+    const byX = makeTrack({ id: "t1", artists: [{ id: "x", name: "Artist X" }] });
+    const collab = makeTrack({
+      id: "t2",
+      artists: [
+        { id: "x", name: "Artist X" },
+        { id: "y", name: "Artist Y" },
+      ],
+    });
+    const snapshot = makeSnapshot([
+      makePlaylist({ id: "p1", tracks: [makeItem(byX), makeItem(collab)] }),
+      makePlaylist({ id: "p2", tracks: [makeItem(byX)] }),
+    ]);
+
+    expect(countDistinctArtists(snapshot)).toBe(2);
+  });
+
+  it("sleutelt op artist.id: twee artiesten met dezelfde naam tellen als twee", () => {
+    const snapshot = makeSnapshot([
+      makePlaylist({
+        tracks: [
+          makeItem(makeTrack({ id: "t1", artists: [{ id: "a", name: "Namesake" }] })),
+          makeItem(makeTrack({ id: "t2", artists: [{ id: "b", name: "Namesake" }] })),
+        ],
+      }),
+    ]);
+
+    expect(countDistinctArtists(snapshot)).toBe(2);
+  });
+
+  it("slaat items zonder track over en geeft 0 bij een lege snapshot", () => {
+    expect(countDistinctArtists(makeSnapshot([makePlaylist({ tracks: [makeItem(null)] })]))).toBe(0);
+    expect(countDistinctArtists(makeSnapshot([]))).toBe(0);
   });
 });
 
