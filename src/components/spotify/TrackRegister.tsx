@@ -281,7 +281,7 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
               <th><code>dkj_artist</code></th>
               <th><code>dkj_albumartiest</code></th>
               <th><code>dkj_artist_ids</code></th>
-              <th><code>dkj_playlists</code></th>
+              <th><code>spotify_playlist</code></th>
               <th><code>dkj_bpm</code></th>
               <th><code>dkj_album</code></th>
             </tr>

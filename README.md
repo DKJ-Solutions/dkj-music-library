@@ -186,9 +186,9 @@ Penn wordt `Abel Ramos - Higher (David Penn Remix)`.
 
 Ook dit veld wordt alleen gevuld zolang het leeg is. De regels staan in `src/lib/library/fileName.ts`.
 
-### De playlists: `dkj_playlists`
+### De playlists: `spotify_playlist`
 
-`dkj_playlists` is de lijst Spotify-playlists waarin een track staat, elk met ID en naam, in de volgorde
+`spotify_playlist` (tot 27 september 2026 `dkj_playlists`) is de lijst Spotify-playlists waarin een track staat, elk met ID en naam, in de volgorde
 van je playlists. Anders dan de andere eigen velden wordt dit veld bij elke sync opnieuw gezet: het is
 een feit van Spotify, geen keuze van jou. Let op: de playlistnamen staan daarmee in de publieke export,
 ook die uit de wereld Privé. Daarvoor is bewust gekozen, zodat het register ze op elke machine toont. De
@@ -202,6 +202,9 @@ Hoofdletters en spaties tellen niet mee (`128 bpm` wordt `128BPM`).
 - **`dkj_bpm`**: `128BPM`, `112BPM`, `176BPM`, `144BPM`, `96BPM`.
 - **`dkj_album`**: een kleur met `Light (f)`, `Full (f)`, `Light (m)` of `Full (m)`, bijvoorbeeld
   `Green Light (f)`. De acht kleuren zijn Green, Yellow, Red, Purple, Cyan, Blue, Orange en Magenta.
+  Het veld wordt bij elke sync uit de playlists afgeleid zolang het leeg is: noemen alle playlists van
+  een track (`Magenta Light (m) ♦️ 128BPM EDM`) hetzelfde album, dan wordt dat het album. Noemen ze
+  verschillende albums, dan blijft het leeg en kies je zelf (`src/lib/library/albumFromPlaylists.ts`).
 
 ### Een veld toevoegen
 

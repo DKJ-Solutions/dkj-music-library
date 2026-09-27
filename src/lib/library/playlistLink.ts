@@ -1,4 +1,4 @@
-// Een playlist in `dkj_playlists`, en de link ernaar. Apart van playlistLinks.ts, dat de database
+// Een playlist in `spotify_playlist`, en de link ernaar. Apart van playlistLinks.ts, dat de database
 // gebruikt: dit deel moet ook in de browser kunnen (TrackRegister.tsx).
 //
 // Pure module: geen fs, geen sqlite.

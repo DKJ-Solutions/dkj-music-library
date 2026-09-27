@@ -14,7 +14,7 @@ function stored(over: Partial<StoredTrack> = {}): StoredTrack {
     dkj_bpm: null,
     dkj_album: null,
     dkj_file: "Mark Ronson - Uptown Funk",
-    dkj_playlists: [{ id: "p1", name: "Funk" }, { bad: true }],
+    spotify_playlist: [{ id: "p1", name: "Funk" }, { bad: true }],
     ...over,
   };
 }

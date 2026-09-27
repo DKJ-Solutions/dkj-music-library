@@ -21,7 +21,7 @@ export interface RegisterRow {
   bpm: string | null;
   album: string | null;
   file: string | null;
-  /** De Spotify-playlists waarin de track staat (dkj_playlists). */
+  /** De Spotify-playlists waarin de track staat (spotify_playlist). */
   playlists: PlaylistLink[];
 }
 
@@ -51,8 +51,8 @@ export function toRegisterRow(track: StoredTrack, artistNames: Record<string, st
     bpm: text(track.dkj_bpm),
     album: text(track.dkj_album),
     file: text(track.dkj_file),
-    playlists: Array.isArray(track.dkj_playlists)
-      ? track.dkj_playlists.filter(
+    playlists: Array.isArray(track.spotify_playlist)
+      ? track.spotify_playlist.filter(
           (p): p is PlaylistLink =>
             typeof p === "object" && p !== null && typeof (p as PlaylistLink).id === "string" && typeof (p as PlaylistLink).name === "string"
         )

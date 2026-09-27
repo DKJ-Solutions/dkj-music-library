@@ -58,7 +58,7 @@ export const ALBUM_ARTIST_KEY = "dkj_albumartiest";
 export const FILE_KEY = "dkj_file";
 
 /** Het veld met de Spotify-playlists waarin een track staat (zie playlistLinks.ts). */
-export const PLAYLISTS_KEY = "dkj_playlists";
+export const PLAYLISTS_KEY = "spotify_playlist";
 
 /** Hoe de namen in `dkj_albumartiest` aan elkaar staan. */
 export const ALBUM_ARTIST_SEPARATOR = ", ";
@@ -70,6 +70,9 @@ export function albumArtistOf(names: readonly string[]): string | null {
 
 /** De eigen BPM-groepen, in de volgorde waarin ze getoond worden. */
 export const DKJ_BPM_OPTIONS = ["128BPM", "112BPM", "176BPM", "144BPM", "96BPM"] as const;
+
+/** Het veld met het eigen album (zie albumFromPlaylists.ts). */
+export const ALBUM_KEY = "dkj_album";
 
 /** De acht kleuren van de eigen albums. */
 export const DKJ_ALBUM_COLOURS = ["Green", "Yellow", "Red", "Purple", "Cyan", "Blue", "Orange", "Magenta"] as const;
@@ -102,7 +105,12 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
   { key: "dkj_artist", type: "text", label: "Eén artiest: de remixer/editor, anders de eerste uit artists, tenzij zelf ingevuld" },
   { key: "dkj_albumartiest", type: "text", label: "Alle artiesten in Spotify-volgorde, met komma's, tenzij zelf ingevuld" },
   { key: "dkj_file", type: "text", label: "Bestandsnaam zoals op de desktop, zonder extensie (fileName.ts), tenzij zelf ingevuld" },
-  { key: "dkj_playlists", type: "json", label: "Spotify-playlists waarin de track staat, als { id, name }; bij elke sync ververst (playlistLinks.ts)" },
+  {
+    key: "spotify_playlist",
+    type: "json",
+    label: "Spotify-playlists waarin de track staat, als { id, name }; bij elke sync ververst (playlistLinks.ts)",
+    renamedFrom: "dkj_playlists",
+  },
   // Nieuw veld? Voeg het hier toe, bv.:
   // { key: "energy", type: "integer", label: "Energie 1-10" },
 ];

@@ -1,4 +1,4 @@
-// `dkj_playlists`: in welke Spotify-playlists een track staat, als lijst { id, name }.
+// `spotify_playlist`: in welke Spotify-playlists een track staat, als lijst { id, name }.
 //
 // Anders dan de andere eigen velden wordt dit veld bij ELKE sync opnieuw gezet, niet alleen zolang het
 // leeg is: welke playlists een track heeft, is een feit van Spotify, geen keuze van jou. Een track die
@@ -41,7 +41,7 @@ export function planPlaylistLinks(
   return plan;
 }
 
-/** Zet `dkj_playlists` bij elke track gelijk aan de snapshot. Geeft het aantal gewijzigde tracks terug. */
+/** Zet `spotify_playlist` bij elke track gelijk aan de snapshot. Geeft het aantal gewijzigde tracks terug. */
 export function applyPlaylistLinks(db: DatabaseSync, snapshot: Snapshot): number {
   ensureSpotifyLinkTable(db);
   const trackIdOf = new Map(

@@ -45,11 +45,11 @@ describe("applyPlaylistLinks", () => {
     db.exec(`INSERT INTO spotify_track_ids (spotify_track_id, dkj_track_id, song_key) VALUES ('s1','T1','k1'), ('s2','T2','k2')`);
     const first = snap(playlist("p1", "Eén", track("s1"), track("s2")));
     expect(applyPlaylistLinks(db, first)).toBe(2);
-    expect(getTrack(db, "T1")?.dkj_playlists).toEqual([{ id: "p1", name: "Eén" }]);
+    expect(getTrack(db, "T1")?.spotify_playlist).toEqual([{ id: "p1", name: "Eén" }]);
     expect(applyPlaylistLinks(db, first)).toBe(0);
     expect(applyPlaylistLinks(db, snap(playlist("p1", "Eén (nieuw)", track("s1"))))).toBe(2);
-    expect(getTrack(db, "T1")?.dkj_playlists).toEqual([{ id: "p1", name: "Eén (nieuw)" }]);
-    expect(getTrack(db, "T2")?.dkj_playlists).toBeNull();
+    expect(getTrack(db, "T1")?.spotify_playlist).toEqual([{ id: "p1", name: "Eén (nieuw)" }]);
+    expect(getTrack(db, "T2")?.spotify_playlist).toBeNull();
   });
 });
 
