@@ -75,9 +75,10 @@ hides itself, the same as the **met ID** tile. Resolves #6.
 
 #### What makes this deploy extra special
 
-A subscriber of a service never sees this page; it runs locally for Dave alone.
+The user of the app no longer sees a tile claiming the mix source holds zero mixes on a machine where
+it was simply not found; small, and noticed only on such a machine.
 
-**Score:** N/A
+**Score:** 2
 
 #### Pull Request
 
