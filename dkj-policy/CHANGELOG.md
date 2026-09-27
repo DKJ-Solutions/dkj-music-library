@@ -2,7 +2,32 @@
 
 ## [Unreleased]
 
-**24 / 31 minor entries** <!-- pending-tally -->
+**24 / 32 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/dkj-title-djcylow-mix · 20260927-205619Z
+
+Het trackregister heeft twee nieuwe kolommen. `dkj_title` toont alleen de titel van het nummer, in de
+vorm van `dkj_file` na de artiesten, en vervangt `dkj_file` in de tabel (zoeken op `dkj_file` kan nog).
+De tabel staat in een smaller lettertype (Bahnschrift, iets smaller dan normaal), en de labels voor BPM, album en groep en de artiest-ID's hebben geen achtergrond meer, en de rijen zijn om en om gekleurd. Ook `dkj_artist` en `dkj_track_id` staan niet meer in de tabel. Het veld `dkj_artist_ids` heet nu
+`dkj_artist_id`; een bestaande database en een oudere export zetten de oude naam zelf om. `djcylow_mix` noemt de mixen op djcylow.com waarin een track zit en linkt naar hun pagina, net zoals
+`spotify_playlist` naar Spotify linkt. Een track zit in een mix als hij in de eigen MMC-playlist van
+die mix staat; zonder mix-bron op de machine blijft het veld zoals het was.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+N/A: het register is een lokaal werkinstrument; geen abonnee ziet het.
+
+**Score:** N/A
+
+#### Pull Request
+
+dkj_title en djcylow_mix in het trackregister, dkj_artist_id, drie kolommen verborgen
+
+[PR #35](https://github.com/DKJ-Solutions/dkj-music-library/pull/35)
+
+---
 
 ### DEPLOY: feat/album-candidates-dropdown · 20260927-202957Z
 
