@@ -2,7 +2,41 @@
 
 ## [Unreleased]
 
-**8 patch entries** <!-- pending-tally -->
+**9 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/track-id-format · 20260927-155129Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+`dkj_track_id` bestaat nu uit het artiest-ID van de hoofdartiest, een streepje en een volgnummer per
+artiest: Firestarter van The Prodigy is `PRO02-21`, Rehab van Amy Winehouse `AMY01-01`. Het volgnummer
+heeft minstens twee cijfers en groeit na 99 door (`IMM01-143`). De bestaande `T000001`-ID's zijn één keer
+omgenummerd, per artiest in hun oude volgorde, en in de koppeltabel mee aangepast. Een nieuw nummer krijgt
+bij het aanmaken meteen ook zijn `dkj_artist_ids`.
+
+**Score:** 4
+
+##### Tier 1
+
+Een persoonlijke tool zonder opdrachtgever; niemand buiten de ontwikkelaar merkt dit.
+
+**Score:** N/A
+
+##### Tier 2
+
+Er is geen dienst met abonnees.
+
+**Score:** N/A
+
+#### Pull Request
+
+dkj_track_id becomes <dkj_artist_id>-<NN>, numbered per main artist (PRO02-01)
+
+[PR #11](https://github.com/DKJ-Solutions/dkj-music-library/pull/11)
+
+---
 
 ### DEPLOY: refactor/dkj-track-id · 20260927-152759Z
 
