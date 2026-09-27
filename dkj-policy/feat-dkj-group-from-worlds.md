@@ -32,11 +32,23 @@
 
 ### PLAN
 
+Dave: vul `dkj_group` in; een Spotify-playlist met een beschrijving hoort sowieso bij MMC, en een track in
+meer dan één wereld krijgt een menu. Dus `dkj_group` wordt een lijst: de werelden (classifyWorld plus de
+handmatige correcties) van de playlists van de track. Gemeten: 872 tracks liggen in meerdere werelden
+zonder de beschrijvingsregel. `Overige` wordt niet afgeleid; daar is geen regel voor.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `options` ook bij `json`-velden: elk element moet een optie zijn, dubbelen vallen weg, volgorde van de options (`trackStore.ts`, `fields.ts`)
+- [x] `dkj_group` van `text` naar een `json`-lijst (het veld was overal nog leeg)
+- [x] `groupFromWorlds.ts`: per playlist de groep van zijn wereld plus MMC bij een beschrijving, per track alle groepen; alleen zolang het veld leeg is
+- [x] Aangesloten op de sync (`api/spotify/sync`) en `library:assign-ids`, met de verrijkte snapshot voor de werelden
+- [x] Echte data: alle 12.471 tracks gevuld; 2.088 met meer dan één groep
+- [x] README bijgewerkt
 
 ### TEST
+
+- [x] typecheck, eslint en vitest groen, met `groupFromWorlds.test.ts` en tests voor optielijsten
 
 ### DEPLOY: feat/dkj-group-from-worlds
 
@@ -44,7 +56,12 @@
 
 ##### Tier 0
 
-**Score:**
+`dkj_group` is nu een lijst en wordt gevuld uit de werelden van de Spotify-playlists van een track: MMC,
+DJ CYLOW en Prive, en een playlist met een beschrijving telt sowieso als MMC. Een track in meer werelden
+krijgt meer groepen. Alle 12.471 tracks zijn gevuld: 9.662 alleen Prive, 409 alleen MMC, 312 alleen DJ
+CYLOW en 2.088 met meer dan één groep. `Overige` zet je zelf.
+
+**Score:** 3
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +70,9 @@
 
 ##### Tier 1
 
-**Score:**
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +81,9 @@
 
 ##### Tier 2
 
-**Score:**
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
 
 #### Pull Request
 
