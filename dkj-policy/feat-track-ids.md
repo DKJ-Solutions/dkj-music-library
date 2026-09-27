@@ -32,11 +32,21 @@
 
 ### PLAN
 
+- [x] Beslist met de eigenaar: ID-vorm is een oplopend nummer (`T000001`), en tracks worden samengevoegd op titel + exact dezelfde artiesten
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `src/lib/library/trackIds.ts`: pure `planTrackIds` plus `applyTrackIdsFromSnapshot`, en de koppeltabel `spotify_track_ids`
+- [x] `npm run library:assign-ids` (`scripts/library/assign-track-ids.ts`)
+- [x] Na elke sync automatisch (`src/app/api/spotify/sync/route.ts`); als dat mislukt, faalt de sync niet
+- [x] README: sectie "Eigen track-ID's uit Spotify"
 
 ### TEST
+
+- [x] Unit-tests: formaat, sleutel, samenvoegen, stabiliteit over runs, eigen velden blijven staan
+- [x] Volledige suite (650 tests), typecheck en lint groen
+- [x] Met de hand gedraaid op de echte snapshot: 13.140 Spotify-ID's worden 12.471 nummers; een tweede run doet niets
+- [x] De sync-route compileert in Next met `node:sqlite` (GET geeft 405 en geen bundelfout)
 
 ### DEPLOY: feat/track-ids
 
@@ -44,7 +54,16 @@
 
 ##### Tier 0
 
-**Score:**
+Elk nummer uit de Spotify-snapshot krijgt een eigen, oplopend ID (`T000001`) in de trackdatabase.
+Releasevarianten met dezelfde titel en precies dezelfde artiesten krijgen hetzelfde ID. De nieuwe
+koppeltabel `spotify_track_ids` houdt de ID's stabiel over syncs heen: een nieuwe variant van een bekend
+nummer krijgt het bestaande ID, en alleen een echt nieuw nummer krijgt het volgende vrije nummer. Een
+nieuw nummer wordt aangemaakt met titel, artiesten, album en duur van Spotify. Bestaande rijen worden
+daarna nooit meer overschreven. Dit gebeurt na elke sync op `/spotify`, en los via
+`npm run library:assign-ids`. Op de huidige snapshot levert dat 12.471 nummers op, uit 13.140
+Spotify-ID's.
+
+**Score:** 3
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +72,9 @@
 
 ##### Tier 1
 
-**Score:**
+Een lokale, persoonlijke tool: er is geen management of opdrachtgever die hier iets aan heeft.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +83,9 @@
 
 ##### Tier 2
 
-**Score:**
+De app heeft geen abonnees: hij draait alleen op de eigen machine.
+
+**Score:** N/A
 
 #### Pull Request
 

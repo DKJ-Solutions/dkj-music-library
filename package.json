@@ -10,7 +10,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "library:import": "tsx scripts/library/import-tracks.ts"
+    "library:import": "tsx scripts/library/import-tracks.ts",
+    "library:assign-ids": "tsx scripts/library/assign-track-ids.ts"
   },
   "dependencies": {
     "next": "^16.2.4",
