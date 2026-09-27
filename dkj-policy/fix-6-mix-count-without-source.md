@@ -39,19 +39,45 @@
 
 ### PLAN
 
+Issue #6: on a machine without the mix source, the **in DJ Cylow** tile on `/spotify` read `0`, while
+the **met ID** tile hides itself in the same case. Verified: `buildPlaylistMixIndex` counts `0` over no
+links, and the fallbacks in `page.tsx` and `WorldPage.tsx` pass `0` too; `PlaylistManager` shows the
+tile for everything except `null`.
+
+The fix goes where the number is made: an index with no mix links reports `mixesWithId: null`, so the
+tile's existing `!== null` rule hides it. The README already names `MIXES_DATA_DIR` (the issue's second
+proposal). No new candidate path is added: `djcylow-react` is not on this machine, so where it lives now
+cannot be checked here. The `mixStore.ts` comment that said both repos sit under `DaveKJohn/` is
+corrected instead.
+
+#### Stops for a look
+
+The change alters what `/spotify` shows, so this branch is parked without a PR until Dave has looked.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `PlaylistMixIndex.mixesWithId` is `number | null`; `null` when no mix came in
+- [x] the fallbacks in `src/app/spotify/page.tsx` and `WorldPage.tsx` pass `null`
+- [x] `mixStore.ts`: the sibling-repo comment says when the fallback works, and when `MIXES_DATA_DIR` is needed
 
 ### TEST
 
+- [x] `playlistMixInfo.test.ts`: an empty link list gives `null`, not `0`
+- [x] the existing `PlaylistManager` test already covers "no tile when `mixesWithId` is null"
+- [x] gates run with `open-pr -GatesOnly` before parking
+
 ### DEPLOY: fix/6-mix-count-without-source
 
-**Score:**
+On `/spotify`, the **in DJ Cylow** tile no longer shows `0` when the mix source cannot be found. It
+hides itself, the same as the **met ID** tile. Resolves #6.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+A subscriber of a service never sees this page; it runs locally for Dave alone.
+
+**Score:** N/A
 
 #### Pull Request
 

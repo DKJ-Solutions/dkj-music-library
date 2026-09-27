@@ -96,8 +96,12 @@ export interface PlaylistMixIndex {
   /** Aantal publieke mixen in de bron (`djcylow-react`) met een gevuld `id`-veld -- de noemer waartegen
    *  de tabel haar eigen "met ID"-teller afzet. Legacy-entries zonder `id` tellen niet mee: die kunnen
    *  per definitie geen ID in de tabel opleveren, dus meerekenen zou een verschil laten zien dat
-   *  onoplosbaar is. */
-  mixesWithId: number;
+   *  onoplosbaar is.
+   *
+   *  `null` als er geen enkele mix binnenkwam -- de bron is niet gevonden (of leeg). Dan is er niets om
+   *  tegen af te zetten, en een `0` zou op de pagina lezen als "de bron telt nul mixen". Zo verbergt de
+   *  tegel zich, net als de "met ID"-tegel (zie `geenMixBron` in PlaylistManager.tsx). */
+  mixesWithId: number | null;
 }
 
 /** Waarom deze mix géén eigen rij in de playlist-tabel kan krijgen, of `null` als hij er wél een heeft.
@@ -208,7 +212,7 @@ export function buildPlaylistMixIndex(links: readonly MixLink[]): PlaylistMixInd
   // ID zakken naar de bodem -- die kunnen sowieso nooit in de tabel opduiken.
   missingMixes.sort((a, b) => (Number(b.mixId) || 0) - (Number(a.mixId) || 0));
 
-  return { byPlaylistId, missingMixes, mixesWithId };
+  return { byPlaylistId, missingMixes, mixesWithId: links.length === 0 ? null : mixesWithId };
 }
 
 /** Dezelfde opzoektabel, met de koppelingen van schijf gehaald. SERVER-ONLY (fs via getMixLinks()).

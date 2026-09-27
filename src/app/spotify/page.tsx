@@ -52,7 +52,7 @@ export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusP
   // Zie WorldPage.tsx: de mix-kant van de tabel is een server-side fs-read, doorgegeven als prop.
   const mixIndex = enriched
     ? getPlaylistMixIndex()
-    : { byPlaylistId: {}, missingMixes: [], mixesWithId: 0 };
+    : { byPlaylistId: {}, missingMixes: [], mixesWithId: null };
   // Sinds de login-route zichzelf op de juiste host zet (api/auth/login/spotify) hóórt een
   // state_mismatch hier niet meer door het adres te komen. Komt hij tóch voor terwijl de hosts
   // uiteenlopen, dan is dat waardevolle informatie -- dan heeft de hop niet gedaan wat hij moest doen --
