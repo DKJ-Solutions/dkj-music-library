@@ -2,7 +2,40 @@
 
 ## [Unreleased]
 
-**17 patch entries** <!-- pending-tally -->
+**18 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/dkj-album-from-playlists · 20260927-182815Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+`dkj_album` wordt nu uit de Spotify-playlists afgeleid: noemen alle playlists van een track hetzelfde
+album (`Magenta Light (m) ♦️ 128BPM EDM` → Magenta Light (m)), dan krijgt de track dat album. Noemen ze
+verschillende albums, of geen, dan blijft het leeg om zelf te kiezen. 8.257 van de 12.471 tracks hebben
+zo hun album gekregen; de sync doet het voortaan bij elke nieuwe track.
+
+**Score:** 4
+
+##### Tier 1
+
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
+
+##### Tier 2
+
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
+
+#### Pull Request
+
+dkj_album wordt afgeleid uit de playlists, als dat eenduidig is
+
+[PR #21](https://github.com/DKJ-Solutions/dkj-music-library/pull/21)
+
+---
 
 ### DEPLOY: fix/library-sync-fields · 20260927-180523Z
 
