@@ -53,19 +53,20 @@ Workflow and developer tooling stay N/A. Tier 0 and tier 1 are left as written.
 ### CREATE
 
 - [x] 21 entries rescored for tier 2, reason above the score, in the entries' own language
+- [x] feat/trackregister-sort (#29), folded while this branch was open with the same N/A, rescored too: 22 in all
 - [x] Four stay N/A: fix/1-stale-spotify-write-comment, feat/release-audience-tier,
       chore/commit-settings-statusline, chore/adopt-dkj-workflow
-- [x] Tally line recomputed with `Set-ChangelogPendingSummary`: `21 / 25 minor entries`
+- [x] Tally line recomputed with `Set-ChangelogPendingSummary`: `22 / 26 minor entries`
 
 ### TEST
 
-- [x] `Resolve-EntryImpact` reads the 21 as tier 2 and the four as tier 0; only the tier-2 reason and
-      score lines changed (43 lines, 21 × 2 plus the tally)
+- [x] `Resolve-EntryImpact` reads the 22 as tier 2 and the four as tier 0; only the tier-2 reason and
+      score lines changed (45 lines, 22 × 2 plus the tally)
 
 ### DEPLOY: docs/25-rescore-tier-2
 
-The 21 changelog entries whose work the app's user can see are now scored for tier 2. The four that are
-workflow or developer tooling stay N/A. The pending tally now reads `21 / 25 minor entries`, so the next
+The 22 changelog entries whose work the app's user can see are now scored for tier 2. The four that are
+workflow or developer tooling stay N/A. The pending tally now reads `22 / 26 minor entries`, so the next
 release earns a minor instead of a patch. Resolves #25.
 
 **Score:** 2

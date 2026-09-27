@@ -96,6 +96,25 @@ describe("TrackRegister", () => {
     expect(screen.getByText("1 van 2 nummers")).toBeTruthy();
   });
 
+  it("sorteert via de kopregel: oplopend, aflopend, en weer uit", () => {
+    render(
+      <TrackRegister
+        rows={[row(1, { bpm: "112BPM" }), row(2), row(3, { bpm: "96BPM" })]}
+        artistCount={1}
+      />
+    );
+    const ids = () => Array.from(bodyRows(), (tr) => tr.querySelector(".register-id")?.textContent);
+    const header = screen.getByRole("button", { name: /dkj_bpm/ });
+    fireEvent.click(header);
+    expect(ids()).toEqual(["ART01-003", "ART01-001", "ART01-002"]);
+    expect(header.closest("th")?.getAttribute("aria-sort")).toBe("ascending");
+    fireEvent.click(header);
+    expect(ids()).toEqual(["ART01-001", "ART01-003", "ART01-002"]);
+    fireEvent.click(header);
+    expect(ids()).toEqual(["ART01-001", "ART01-002", "ART01-003"]);
+    expect(header.closest("th")?.getAttribute("aria-sort")).toBe("none");
+  });
+
   it("meldt het als niets past", () => {
     render(<TrackRegister rows={rows} artistCount={1} />);
     fireEvent.change(screen.getByLabelText(/dkj_album/), { target: { value: "Red Light (f)" } });

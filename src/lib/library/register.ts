@@ -111,3 +111,42 @@ export function countBy(rows: readonly RegisterRow[], key: "bpm" | "album" | "gr
   }
   return counts;
 }
+
+/** De kolommen waarop de tabel kan sorteren; elke kolom van het register. */
+export type SortKey = "id" | "file" | "artist" | "albumArtist" | "artistIds" | "playlists" | "bpm" | "album" | "groups";
+
+export interface RegisterSort {
+  key: SortKey;
+  dir: "asc" | "desc";
+}
+
+// Numeriek, zodat 96BPM voor 112BPM komt en PRO2 voor PRO10; hoofdletters en accenten tellen niet.
+const collator = new Intl.Collator("nl", { numeric: true, sensitivity: "base" });
+
+/** De tekst waarop een rij sorteert; een lijst op zijn waarden achter elkaar, null als er niets staat. */
+function sortValue(row: RegisterRow, key: SortKey): string | null {
+  const list = (values: readonly string[]) => (values.length > 0 ? values.join(", ") : null);
+  switch (key) {
+    case "artistIds":
+      return list(row.artistIds);
+    case "playlists":
+      return list(row.playlists.map((p) => p.name));
+    case "groups":
+      return list(row.groups);
+    default:
+      return row[key];
+  }
+}
+
+/** De rijen gesorteerd op één kolom. Lege cellen staan altijd onderaan, in beide richtingen; gelijke
+ *  waarden houden hun volgorde. Zonder sortering komt de lijst ongewijzigd terug. */
+export function sortRegister(rows: readonly RegisterRow[], sort: RegisterSort | null): RegisterRow[] {
+  if (!sort) return [...rows];
+  const sign = sort.dir === "asc" ? 1 : -1;
+  const keyed = rows.map((row) => ({ row, value: sortValue(row, sort.key) }));
+  keyed.sort((a, b) => {
+    if (a.value === null || b.value === null) return a.value === b.value ? 0 : a.value === null ? 1 : -1;
+    return sign * collator.compare(a.value, b.value);
+  });
+  return keyed.map((entry) => entry.row);
+}
