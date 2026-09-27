@@ -29,7 +29,7 @@ try {
       `${total} tracks, ${totalLinks} Spotify-ID's in totaal`
   );
   console.log(
-    `${artists.newArtists} nieuwe artiesten, artist_ids gevuld bij ${artists.tracksFilled} tracks -- ` +
+    `${artists.newArtists} nieuwe artiesten, dkj_artist_ids gevuld bij ${artists.tracksFilled} tracks -- ` +
       `${artists.totalArtists} artiesten in totaal`
   );
   console.log("Export bijgewerkt in data/library/export/ -- commit die map om hem op je andere machines te hebben.");

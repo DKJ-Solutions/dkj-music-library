@@ -12,7 +12,7 @@
 // twee artiesten, en een artiest die op Spotify van naam verandert, houdt zijn ID. De tabel `artists`
 // onthoudt de koppeling; opnieuw toekennen op dezelfde snapshot doet niets.
 //
-// Elke track krijgt in `artist_ids` de lijst eigen artiest-ID's, hoofdartiest eerst, maar alleen
+// Elke track krijgt in `dkj_artist_ids` de lijst eigen artiest-ID's, hoofdartiest eerst, maar alleen
 // zolang dat veld nog leeg is: wat je zelf invult, blijft staan.
 //
 // planArtistIds() is puur (geen database) en daardoor los te testen; applyArtistIdsFromSnapshot()
@@ -24,7 +24,7 @@ import { TRACK_ID_KEY } from "./fields";
 import { SPOTIFY_LINK_TABLE, ensureSpotifyLinkTable } from "./trackIds";
 
 export const ARTISTS_TABLE = "artists";
-export const ARTIST_IDS_FIELD = "artist_ids";
+export const ARTIST_IDS_FIELD = "dkj_artist_ids";
 
 const PREFIX_LENGTH = 3;
 const NUMBER_DIGITS = 2;
@@ -98,7 +98,7 @@ export function planArtistIds(snapshot: Snapshot, existing: readonly ArtistLink[
 export function ensureArtistsTable(db: DatabaseSync): void {
   db.exec(`
     CREATE TABLE IF NOT EXISTS ${ARTISTS_TABLE} (
-      artist_id TEXT PRIMARY KEY NOT NULL,
+      dkj_artist_id TEXT PRIMARY KEY NOT NULL,
       spotify_artist_id TEXT NOT NULL UNIQUE,
       name TEXT NOT NULL,
       created_at TEXT NOT NULL
@@ -109,23 +109,23 @@ export function ensureArtistsTable(db: DatabaseSync): void {
 export interface ArtistIdResult {
   /** Artiesten die in deze run een eigen ID kregen. */
   newArtists: number;
-  /** Tracks waarvan `artist_ids` in deze run gevuld werd. */
+  /** Tracks waarvan `dkj_artist_ids` in deze run gevuld werd. */
   tracksFilled: number;
   /** Totaal aantal artiesten na deze run. */
   totalArtists: number;
 }
 
-/** Kent eigen ID's toe aan elke nieuwe artiest in de snapshot en vult `artist_ids` bij tracks waar
+/** Kent eigen ID's toe aan elke nieuwe artiest in de snapshot en vult `dkj_artist_ids` bij tracks waar
  *  dat nog leeg is. Draai dit ná applyTrackIdsFromSnapshot(): een track moet zijn eigen ID al hebben. */
 export function applyArtistIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot): ArtistIdResult {
   ensureArtistsTable(db);
   ensureSpotifyLinkTable(db);
   const existing = (
-    db.prepare(`SELECT artist_id, spotify_artist_id FROM ${ARTISTS_TABLE}`).all() as {
-      artist_id: string;
+    db.prepare(`SELECT dkj_artist_id, spotify_artist_id FROM ${ARTISTS_TABLE}`).all() as {
+      dkj_artist_id: string;
       spotify_artist_id: string;
     }[]
-  ).map((row) => ({ spotifyArtistId: row.spotify_artist_id, artistId: row.artist_id }));
+  ).map((row) => ({ spotifyArtistId: row.spotify_artist_id, artistId: row.dkj_artist_id }));
   const plan = planArtistIds(snapshot, existing);
   const idOf = new Map([...existing, ...plan].map((artist) => [artist.spotifyArtistId, artist.artistId]));
 
@@ -147,7 +147,7 @@ export function applyArtistIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot)
 
   const now = new Date().toISOString();
   const insertArtist = db.prepare(
-    `INSERT INTO ${ARTISTS_TABLE} (artist_id, spotify_artist_id, name, created_at) VALUES (?, ?, ?, ?)`
+    `INSERT INTO ${ARTISTS_TABLE} (dkj_artist_id, spotify_artist_id, name, created_at) VALUES (?, ?, ?, ?)`
   );
   const fillTrack = db.prepare(
     `UPDATE ${TRACKS_TABLE} SET "${ARTIST_IDS_FIELD}" = ?, updated_at = ? ` +

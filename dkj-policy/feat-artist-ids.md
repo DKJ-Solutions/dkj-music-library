@@ -32,24 +32,24 @@
 
 ### PLAN
 
-artists table keyed by Spotify artist id; artist_id = first 3 letters of the name (leading article dropped, accents folded, X-padded) + lowest free 2-digit number, growing past 99; tracks get artist_ids (list); artists.ndjson joins the export.
+artists table keyed by Spotify artist id; dkj_artist_id = first 3 letters of the name (leading article dropped, accents folded, X-padded) + lowest free 2-digit number, growing past 99; tracks get dkj_artist_ids (list); artists.ndjson joins the export.
 
 #### Keuzes van de eigenaar (27 september 2026)
 
-Zijn oorspronkelijke vraag was 2 letters + 2 cijfers. Gemeten op 6.951 artiesten zaten 11 lettercombinaties
+De oorspronkelijke vraag was 2 letters + 2 cijfers. Gemeten op 6.951 artiesten zaten 11 lettercombinaties
 boven de 99 (MA = 266). De eigenaar koos daarna 3 letters + 2 cijfers, met lidwoorden altijd genegeerd;
 dan komt geen combinatie boven de 99 (MAR = 87). Het vangnet voorbij 99 (MAR100) en de overige
-standaarden (eigen tabel, `artist_ids` als lijst, accenten eraf, aanvullen met X, één ID per
-Spotify-artiest) zijn hem genoemd en niet afgewezen.
+standaarden (eigen tabel, `dkj_artist_ids` als lijst, accenten eraf, aanvullen met X, één ID per
+Spotify-artiest) zijn de eigenaar voorgelegd en niet afgewezen; de namen `dkj_artist_id` en `dkj_artist_ids` zijn op verzoek van de eigenaar gekozen, zodat duidelijk is dat het eigen velden zijn.
 
 ### CREATE
 
-- [x] `src/lib/library/artistIds.ts`: `artistPrefix`, `planArtistIds` (laagste vrije nummer, groeit voorbij 99), `applyArtistIdsFromSnapshot` (tabel `artists`, vult `artist_ids` alleen als die leeg is)
-- [x] `fields.ts`: veld `artist_ids` (json)
+- [x] `src/lib/library/artistIds.ts`: `artistPrefix`, `planArtistIds` (laagste vrije nummer, groeit voorbij 99), `applyArtistIdsFromSnapshot` (tabel `artists`, vult `dkj_artist_ids` alleen als die leeg is)
+- [x] `fields.ts`: veld `dkj_artist_ids` (json)
 - [x] `libraryFile.ts`: `artists.ndjson` in de export; een export zonder dat bestand zet nog steeds terug
 - [x] Sync-endpoint en `library:assign-ids` kennen na de track-ID's ook de artiest-ID's toe
 - [x] README: sectie "Eigen artiest-ID's"
-- [x] Echte bibliotheek: 6.951 artiesten, alle ID's vijf tekens lang, alle 12.471 tracks hebben `artist_ids`
+- [x] Echte bibliotheek: 6.951 artiesten, alle ID's vijf tekens lang, alle 12.471 tracks hebben `dkj_artist_ids`
 
 ### TEST
 
@@ -65,7 +65,7 @@ Spotify-artiest) zijn hem genoemd en niet afgewezen.
 Elke Spotify-artiest krijgt een eigen ID van drie letters plus een nummer (The Prodigy wordt `PRO02`,
 Amy Winehouse `AMY01`). De letters zijn de eerste drie van de naam, zonder lidwoord en zonder accenten;
 het nummer is het laagste dat nog vrij is en groeit voorbij 99 door als dat nodig is. De ID's staan in de
-nieuwe tabel `artists` en in de export als `artists.ndjson`. Elke track heeft nu `artist_ids`, met de
+nieuwe tabel `artists` en in de export als `artists.ndjson`. Elke track heeft nu `dkj_artist_ids`, met de
 hoofdartiest eerst. Dat gebeurt na elke sync op `/spotify` en met `npm run library:assign-ids`.
 
 **Score:** 3

@@ -115,21 +115,21 @@ describe("applyArtistIdsFromSnapshot", () => {
     track("t3", "Valerie", [["a2", "Mark Ronson"], ["a5", "Amy Winehouse"]])
   );
 
-  it("vult artist_ids per track, hoofdartiest eerst, en doet bij opnieuw draaien niets", () => {
+  it("vult dkj_artist_ids per track, hoofdartiest eerst, en doet bij opnieuw draaien niets", () => {
     const db = memoryDb();
     applyTrackIdsFromSnapshot(db, snap);
     expect(applyArtistIdsFromSnapshot(db, snap)).toEqual({ newArtists: 3, tracksFilled: 2, totalArtists: 3 });
-    expect(getTrack(db, "T000001")?.artist_ids).toEqual(["MAR01", "BRU01"]);
-    expect(getTrack(db, "T000002")?.artist_ids).toEqual(["MAR01", "AMY01"]);
+    expect(getTrack(db, "T000001")?.dkj_artist_ids).toEqual(["MAR01", "BRU01"]);
+    expect(getTrack(db, "T000002")?.dkj_artist_ids).toEqual(["MAR01", "AMY01"]);
     expect(applyArtistIdsFromSnapshot(db, snap)).toEqual({ newArtists: 0, tracksFilled: 0, totalArtists: 3 });
   });
 
-  it("laat een zelf ingevulde artist_ids staan", () => {
+  it("laat een zelf ingevulde dkj_artist_ids staan", () => {
     const db = memoryDb();
     applyTrackIdsFromSnapshot(db, snap);
-    upsertTracks(db, [{ track_id: "T000001", artist_ids: ["ZZZ01"] }]);
+    upsertTracks(db, [{ track_id: "T000001", dkj_artist_ids: ["ZZZ01"] }]);
     applyArtistIdsFromSnapshot(db, snap);
-    expect(getTrack(db, "T000001")?.artist_ids).toEqual(["ZZZ01"]);
+    expect(getTrack(db, "T000001")?.dkj_artist_ids).toEqual(["ZZZ01"]);
   });
 
   it("gaat mee in de export, en een export van vóór de artiesten zet gewoon terug", () => {

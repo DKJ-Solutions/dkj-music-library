@@ -129,7 +129,7 @@ De regels staan bovenaan `src/lib/library/trackIds.ts`.
 
 Elke artiest krijgt bij dezelfde stap een eigen ID: drie letters en een nummer, bijvoorbeeld `PRO01`.
 De ID's staan in de tabel `artists` (en in de export als `artists.ndjson`). Elke track krijgt in
-`artist_ids` de lijst ID's van zijn artiesten, met de hoofdartiest eerst.
+`dkj_artist_ids` de lijst ID's van zijn artiesten, met de hoofdartiest eerst.
 
 - **De letters zijn de eerste drie van de naam.** Een lidwoord vooraan telt niet mee: The Prodigy wordt
   `PRO`, De Dijk `DIJ`. Accenten gaan eraf (Röyksopp → `ROY`), en tekens die geen letter zijn tellen niet
@@ -138,7 +138,7 @@ De ID's staan in de tabel `artists` (en in de export als `artists.ndjson`). Elke
   vol, dan gaat het door met `MAR100`, zodat elke artiest een ID krijgt.
 - **Eén ID per Spotify-artiest.** Twee artiesten met dezelfde naam houden elk hun eigen ID, en een
   artiest die op Spotify van naam verandert, houdt zijn ID.
-- **Een zelf ingevulde `artist_ids` blijft staan.**
+- **Een zelf ingevulde `dkj_artist_ids` blijft staan.**
 
 De regels staan bovenaan `src/lib/library/artistIds.ts`.
 

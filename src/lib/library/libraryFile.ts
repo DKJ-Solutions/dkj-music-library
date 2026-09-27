@@ -5,7 +5,7 @@
 //   - tracks.ndjson             één regel per nummer (track_id, created_at, updated_at + fields.ts),
 //                               gesorteerd op track_id
 //   - spotify_track_ids.ndjson  de koppeltabel uit trackIds.ts, gesorteerd op track_id en Spotify-ID
-//   - artists.ndjson            de artiesten uit artistIds.ts, gesorteerd op artist_id (ontbreekt in
+//   - artists.ndjson            de artiesten uit artistIds.ts, gesorteerd op dkj_artist_id (ontbreekt in
 //                               een export van vóór de artiest-ID's; dan is de tabel gewoon leeg)
 // Eén rij per regel en een vaste volgorde, dus een diff laat precies zien wat er veranderde.
 //
@@ -127,7 +127,7 @@ export function exportLibrary(
     .all()
     .map((row) => ({ ...row }));
   const artists = db
-    .prepare(`SELECT artist_id, spotify_artist_id, name, created_at FROM ${ARTISTS_TABLE} ORDER BY artist_id`)
+    .prepare(`SELECT dkj_artist_id, spotify_artist_id, name, created_at FROM ${ARTISTS_TABLE} ORDER BY dkj_artist_id`)
     .all()
     .map((row) => ({ ...row }));
 
@@ -187,7 +187,7 @@ export function restoreLibrary(
     `INSERT INTO ${SPOTIFY_LINK_TABLE} (spotify_track_id, ${TRACK_ID_KEY}, song_key) VALUES (?, ?, ?)`
   );
   const insertArtist = db.prepare(
-    `INSERT INTO ${ARTISTS_TABLE} (artist_id, spotify_artist_id, name, created_at) VALUES (?, ?, ?, ?)`
+    `INSERT INTO ${ARTISTS_TABLE} (dkj_artist_id, spotify_artist_id, name, created_at) VALUES (?, ?, ?, ?)`
   );
 
   db.exec("BEGIN");
@@ -216,7 +216,7 @@ export function restoreLibrary(
     artists.forEach((artist, index) => {
       const where = `${ARTISTS_FILE} regel ${index + 1}`;
       insertArtist.run(
-        requireText(artist, "artist_id", where),
+        requireText(artist, "dkj_artist_id", where),
         requireText(artist, "spotify_artist_id", where),
         requireText(artist, "name", where),
         requireText(artist, "created_at", where)
