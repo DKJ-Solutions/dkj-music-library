@@ -34,6 +34,11 @@ const SQL_TYPE: Record<FieldType, string> = {
   json: "TEXT",
 };
 
+// Verweesde kolommen blijven bewust staan (syncSchema verwijdert nooit), dus ze zijn er bij elke opening
+// weer -- en de database wordt per request geopend. Eén melding per kolom per proces is genoeg; anders
+// staat de serverconsole bij elke paginalading vol met dezelfde regels.
+const warnedOrphans = new Set<string>();
+
 export function getLibraryDbPath(): string {
   const override = process.env.LIBRARY_DB_PATH;
   return override ? path.resolve(override) : DEFAULT_LIBRARY_DB_PATH;
@@ -60,6 +65,8 @@ export function openLibraryDb(
   db.exec("PRAGMA busy_timeout = 5000");
   const schema = syncSchema(db, fields);
   for (const column of schema.orphaned) {
+    if (warnedOrphans.has(column)) continue;
+    warnedOrphans.add(column);
     console.warn(
       `[library/db] kolom "${column}" staat in de database maar niet in fields.ts -- de data blijft ` +
         `staan, de app gebruikt hem niet`
