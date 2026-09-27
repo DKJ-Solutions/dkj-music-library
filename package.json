@@ -11,7 +11,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "library:import": "tsx scripts/library/import-tracks.ts",
-    "library:assign-ids": "tsx scripts/library/assign-track-ids.ts"
+    "library:assign-ids": "tsx scripts/library/assign-track-ids.ts",
+    "library:sync": "tsx scripts/library/sync-library.ts"
   },
   "dependencies": {
     "next": "^16.2.4",

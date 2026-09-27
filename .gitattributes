@@ -1,0 +1,2 @@
+# De bibliotheek-export altijd met LF: dan is een regel op elke machine byte-gelijk (libraryFile.ts).
+data/library/export/*.ndjson text eol=lf

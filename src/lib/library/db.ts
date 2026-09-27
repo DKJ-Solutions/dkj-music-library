@@ -1,5 +1,7 @@
-// De trackdatabase: één SQLite-bestand in data/library/library.db (de al git-ignored data/-map, zie
-// .gitignore -- de collectie is persoonlijke data en komt nooit in git).
+// De trackdatabase: één SQLite-bestand in data/library/library.db, lokaal en git-ignored. Wat wél in
+// git staat, is de tekst-export in data/library/export/ -- die is de bron, deze database een kopie
+// ervan. Open de bibliotheek daarom via openLibrary()/withLibrary() uit libraryFile.ts; die trekken
+// database en export gelijk. openLibraryDb() hieronder is alleen het SQLite-deel.
 //
 // Gebruikt de SQLite die in Node zelf zit (`node:sqlite`, Node 22.13+), dus er is geen native
 // dependency om te bouwen. Het schema komt uit fields.ts; syncSchema() brengt de tabel bij elke
