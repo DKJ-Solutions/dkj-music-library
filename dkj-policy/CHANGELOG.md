@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-**0 / 25 patch entries** <!-- pending-tally -->
+**21 / 25 minor entries** <!-- pending-tally -->
 
 ### DEPLOY: fix/1-stale-spotify-write-comment · 20260927-190116Z
 
@@ -50,9 +50,9 @@ Een eigen werkpagina; management merkt hier niets van.
 
 ##### Tier 2
 
-Geen abonnee van een dienst ziet dit.
+De gebruiker krijgt een eigen pagina om de hele collectie te doorzoeken en te filteren, zonder login of sync; die pagina wordt waar hij dagelijks in werkt.
 
-**Score:** N/A
+**Score:** 4
 
 #### Pull Request
 
@@ -83,9 +83,9 @@ Intern datamodel; management merkt hier niets van.
 
 ##### Tier 2
 
-Geen abonnee van een dienst ziet dit.
+Elke track in het register heeft nu een groep, afgeleid uit de playlists; wie de collectie opent, ziet het veld meteen gevuld in plaats van leeg.
 
-**Score:** N/A
+**Score:** 3
 
 #### Pull Request
 
@@ -137,9 +137,9 @@ Intern datamodel; management merkt hier niets van.
 
 ##### Tier 2
 
-Geen abonnee van een dienst ziet dit.
+Een nieuwe kolom in het register, nog leeg; de gebruiker merkt het pas als iemand hem erop wijst.
 
-**Score:** N/A
+**Score:** 2
 
 #### Pull Request
 
@@ -170,9 +170,9 @@ Intern datamodel; management merkt hier niets van.
 
 ##### Tier 2
 
-Geen abonnee van een dienst ziet dit.
+7.454 tracks hebben zonder handwerk een BPM gekregen; de gebruiker ziet dat zodra hij het veld opent.
 
-**Score:** N/A
+**Score:** 3
 
 #### Pull Request
 
@@ -202,9 +202,9 @@ Intern datamodel; management merkt hier niets van.
 
 ##### Tier 2
 
-Geen abonnee van een dienst ziet dit.
+Alleen de naam van een veld in de export verandert; een importbestand met de oude naam werkt nog, dus de gebruiker hoeft niets te doen.
 
-**Score:** N/A
+**Score:** 1
 
 #### Pull Request
 
@@ -235,9 +235,9 @@ Intern datamodel; management merkt hier niets van.
 
 ##### Tier 2
 
-Geen abonnee van een dienst ziet dit.
+8.257 tracks hebben zonder handwerk een album gekregen; de gebruiker ziet dat zodra hij het veld opent.
 
-**Score:** N/A
+**Score:** 3
 
 #### Pull Request
 
@@ -268,9 +268,9 @@ Intern; management merkt hier niets van.
 
 ##### Tier 2
 
-Geen abonnee van een dienst ziet dit.
+Een veld dat na een `git pull` leeg bleef bij alle 12.471 tracks is nu gevuld; de gebruiker merkt het de eerste keer dat hij dat veld bekijkt.
 
-**Score:** N/A
+**Score:** 3
 
 #### Pull Request
 
@@ -301,9 +301,9 @@ Intern datamodel; management merkt hier niets van.
 
 ##### Tier 2
 
-Geen abonnee van een dienst ziet dit.
+Bij elke track staat nu in welke playlists hij zit, met link; de gebruiker ziet dat zodra hij een track opzoekt.
 
-**Score:** N/A
+**Score:** 3
 
 #### Pull Request
 
@@ -334,9 +334,9 @@ Intern datamodel; management merkt hier niets van.
 
 ##### Tier 2
 
-Geen abonnee van een dienst ziet dit.
+Elke track heeft nu de bestandsnaam zoals op de desktop; de gebruiker ziet dat zodra hij een track opzoekt.
 
-**Score:** N/A
+**Score:** 3
 
 #### Pull Request
 
@@ -367,9 +367,9 @@ Intern datamodel; management merkt hier niets van.
 
 ##### Tier 2
 
-Geen abonnee van een dienst ziet dit.
+Bij 209 tracks staat nu een andere artiest; klein, en pas zichtbaar bij die tracks.
 
-**Score:** N/A
+**Score:** 2
 
 #### Pull Request
 
@@ -401,9 +401,9 @@ Intern datamodel; management merkt hier niets van.
 
 ##### Tier 2
 
-Geen abonnee van een dienst ziet dit.
+Bij 1.214 tracks staat nu de remixer als artiest, zoals de gebruiker het zelf ordent; zichtbaar zodra hij die tracks opzoekt.
 
-**Score:** N/A
+**Score:** 3
 
 #### Pull Request
 
@@ -434,9 +434,9 @@ Intern datamodel; management merkt hier niets van.
 
 ##### Tier 2
 
-Geen abonnee van een dienst ziet dit.
+Elke track toont nu al zijn artiesten in één veld; de gebruiker ziet dat zodra hij een track opzoekt.
 
-**Score:** N/A
+**Score:** 3
 
 #### Pull Request
 
@@ -470,9 +470,9 @@ Intern datamodel; management merkt hier niets van.
 
 ##### Tier 2
 
-Geen abonnee van een dienst ziet dit.
+Drie nieuwe velden in het register, waarvan `dkj_artist` meteen gevuld bij elke track; de gebruiker ziet dat zodra hij de collectie opent.
 
-**Score:** N/A
+**Score:** 3
 
 #### Pull Request
 
@@ -503,9 +503,9 @@ Een persoonlijke tool zonder opdrachtgever; niemand buiten de ontwikkelaar merkt
 
 ##### Tier 2
 
-Er is geen dienst met abonnees.
+De 4.692 tracks met meer dan één artiest hebben een nieuw ID; de gebruiker ziet dat zodra hij er een opzoekt.
 
-**Score:** N/A
+**Score:** 3
 
 #### Pull Request
 
@@ -537,9 +537,9 @@ Een persoonlijke tool zonder opdrachtgever; niemand buiten de ontwikkelaar merkt
 
 ##### Tier 2
 
-Er is geen dienst met abonnees.
+Elk track-ID is veranderd van `T000001` naar een leesbaar ID per artiest; de gebruiker merkt het bij de eerste track die hij opzoekt.
 
-**Score:** N/A
+**Score:** 4
 
 #### Pull Request
 
@@ -570,9 +570,9 @@ Een persoonlijke tool zonder opdrachtgever; niemand buiten de ontwikkelaar merkt
 
 ##### Tier 2
 
-Er is geen dienst met abonnees.
+Alleen de naam van het ID-veld verandert; oude exports en importbestanden werken nog, dus de gebruiker hoeft niets te doen.
 
-**Score:** N/A
+**Score:** 1
 
 #### Pull Request
 
@@ -604,9 +604,9 @@ Een persoonlijke tool zonder opdrachtgever; niemand buiten de ontwikkelaar merkt
 
 ##### Tier 2
 
-Er is geen dienst met abonnees.
+Elke artiest heeft nu een eigen ID en elke track de ID's van zijn artiesten; zichtbaar zodra de gebruiker een track opzoekt.
 
-**Score:** N/A
+**Score:** 3
 
 #### Pull Request
 
@@ -638,9 +638,9 @@ Een persoonlijke tool zonder opdrachtgever; niemand buiten de ontwikkelaar merkt
 
 ##### Tier 2
 
-Er is geen dienst met abonnees.
+De collectie staat op elke machine waar de repo gekloond wordt, zonder eerst te syncen; de gebruiker merkt het de eerste keer dat hij op een andere machine werkt.
 
-**Score:** N/A
+**Score:** 3
 
 #### Pull Request
 
@@ -675,9 +675,9 @@ Een lokale, persoonlijke tool: er is geen management of opdrachtgever die hier i
 
 ##### Tier 2
 
-De app heeft geen abonnees: hij draait alleen op de eigen machine.
+Elke track in de collectie heeft nu een eigen, stabiel ID; zichtbaar zodra de gebruiker de collectie opent.
 
-**Score:** N/A
+**Score:** 3
 
 #### Pull Request
 
@@ -708,9 +708,9 @@ Not relevant: the app is local and has no subscribers.
 
 ##### Tier 2
 
-Not relevant: see Tier 1.
+De collectie heeft voor het eerst een eigen database met eigen velden naast de Spotify-gegevens; daar werkt de gebruiker voortaan in.
 
-**Score:** N/A
+**Score:** 4
 
 #### Pull Request
 
@@ -743,9 +743,9 @@ Een lokale, persoonlijke tool: er is geen management of opdrachtgever die hier i
 
 ##### Tier 2
 
-De app heeft geen abonnees: hij draait alleen op de eigen machine.
+Een extra tegel op `/spotify` en het dashboard; klein, en zichtbaar als je erop let.
 
-**Score:** N/A
+**Score:** 2
 
 #### Pull Request
 

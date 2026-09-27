@@ -39,19 +39,42 @@
 
 ### PLAN
 
+Issue #25: every entry under `[Unreleased]` answered tier 2 with N/A, written before this repo settled
+that the app's user is its tier-2 reader (`Get-ReleaseAudienceTier = 2`; the definition is in
+DKJ-Solutions/dkj-claude-plugins#2557: a tool its user relies on is tier 2, even when that user is its
+maintainer). By now there are 25 entries, not 19. Measured with the plugin's own
+`Resolve-EntryImpact` / `Format-ChangelogPendingSummary`: all 25 read as tier 0, and the tally said
+`0 / 25 patch entries`.
+
+The rule used per entry: does the user of the app see it in their collection, on the register, on
+`/spotify` or in their track data? If so, tier 2 is scored on the 1-5 scale from that user's view.
+Workflow and developer tooling stay N/A. Tier 0 and tier 1 are left as written.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] 21 entries rescored for tier 2, reason above the score, in the entries' own language
+- [x] Four stay N/A: fix/1-stale-spotify-write-comment, feat/release-audience-tier,
+      chore/commit-settings-statusline, chore/adopt-dkj-workflow
+- [x] Tally line recomputed with `Set-ChangelogPendingSummary`: `21 / 25 minor entries`
 
 ### TEST
 
+- [x] `Resolve-EntryImpact` reads the 21 as tier 2 and the four as tier 0; only the tier-2 reason and
+      score lines changed (43 lines, 21 × 2 plus the tally)
+
 ### DEPLOY: docs/25-rescore-tier-2
 
-**Score:**
+The 21 changelog entries whose work the app's user can see are now scored for tier 2. The four that are
+workflow or developer tooling stay N/A. The pending tally now reads `21 / 25 minor entries`, so the next
+release earns a minor instead of a patch. Resolves #25.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A. This changes how past entries are scored; the app itself does not change for its user.
+
+**Score:** N/A
 
 #### Pull Request
 
