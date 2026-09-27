@@ -24,7 +24,7 @@ if (!snapshot) {
 const mixLinks = getMixLinks(snapshot);
 
 try {
-  const { tracks, artists, primaryArtistsFilled, albumArtistsFilled, fileNamesFilled, titlesFilled, playlistsChanged, mixesChanged, albumsFilled, bpmsFilled, groupsFilled, live, renumbered, total } = withLibrary((db) => ({
+  const { tracks, artists, primaryArtistsFilled, albumArtistsFilled, fileNamesFilled, titlesFilled, titlesRefreshed, playlistsChanged, mixesChanged, albumsFilled, bpmsFilled, groupsFilled, live, renumbered, total } = withLibrary((db) => ({
     ...applyLibraryIdsFromSnapshot(db, snapshot),
     // De werelden (met je handmatige correcties) voor dkj_group; zie groupFromWorlds.ts.
     groupsFilled: fillGroupsFromWorlds(db, getEnrichedSnapshot(snapshot)?.playlists ?? []),
@@ -49,6 +49,7 @@ try {
   if (albumArtistsFilled > 0) console.log(`dkj_albumartiest gevuld bij ${albumArtistsFilled} bestaande tracks`);
   if (fileNamesFilled > 0) console.log(`dkj_file gevuld bij ${fileNamesFilled} bestaande tracks`);
   if (titlesFilled > 0) console.log(`dkj_title gevuld bij ${titlesFilled} bestaande tracks`);
+  if (titlesRefreshed > 0) console.log(`dkj_title schoongemaakt bij ${titlesRefreshed} tracks`);
   if (playlistsChanged > 0) console.log(`spotify_playlist bijgewerkt bij ${playlistsChanged} tracks`);
   if (mixLinks.mixCount === 0) console.log("djcylow_mix niet bijgewerkt: geen mix-bron gevonden (zie MIXES_DATA_DIR in de README)");
   else if (mixesChanged > 0) console.log(`djcylow_mix bijgewerkt bij ${mixesChanged} tracks`);

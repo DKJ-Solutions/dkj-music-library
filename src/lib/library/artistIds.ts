@@ -41,7 +41,7 @@ import {
 } from "./fields";
 import { albumFromPlaylists } from "./albumFromPlaylists";
 import { bpmFromPlaylists } from "./bpmFromPlaylists";
-import { fileNameOf, titleNameOf } from "./fileName";
+import { fileNameOf, titleNameOf, versionedTitleOf } from "./fileName";
 import { mergeLiveVariants, type LiveMergeResult } from "./liveVariants";
 import { applyPlaylistLinks } from "./playlistLinks";
 import { primaryArtistOf } from "./primaryArtist";
@@ -317,6 +317,35 @@ export function fillTitles(db: DatabaseSync): number {
   return fillMissing(db, TITLE_KEY, (track) => titleNameOf(track.title));
 }
 
+/** Zet `dkj_title` recht waar hij nog de oude afgeleide vorm heeft: de titel met versie, zoals tot
+ *  27 september 2026 (fileName.ts). Een zelf ingevulde titel blijft staan. Een tweede keer doet niets.
+ *  Geeft het aantal bijgewerkte tracks terug. */
+export function refreshTitles(db: DatabaseSync): number {
+  const tracks = db.prepare(`SELECT ${TRACK_ID_KEY} AS id, title, "${TITLE_KEY}" AS current FROM ${TRACKS_TABLE} WHERE "${TITLE_KEY}" IS NOT NULL`).all() as {
+    id: string;
+    title: string | null;
+    current: string;
+  }[];
+  const update = db.prepare(`UPDATE ${TRACKS_TABLE} SET "${TITLE_KEY}" = ?, updated_at = ? WHERE ${TRACK_ID_KEY} = ?`);
+  const now = new Date().toISOString();
+  let refreshed = 0;
+  db.exec("BEGIN");
+  try {
+    for (const track of tracks) {
+      if (track.current !== versionedTitleOf(track.title)) continue;
+      const next = titleNameOf(track.title);
+      if (next === null || next === track.current) continue;
+      update.run(next, now, track.id);
+      refreshed++;
+    }
+    db.exec("COMMIT");
+  } catch (err) {
+    db.exec("ROLLBACK");
+    throw err;
+  }
+  return refreshed;
+}
+
 /** Vult `dkj_album` uit de playlists (albumFromPlaylists.ts) bij elke track waar het nog leeg is en de
  *  playlists één album noemen. Geeft het aantal gevulde tracks terug. */
 export function fillAlbumsFromPlaylists(db: DatabaseSync): number {
@@ -339,6 +368,8 @@ export interface LibraryIdResult {
   fileNamesFilled: number;
   /** Tracks die in deze run hun `dkj_title` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
   titlesFilled: number;
+  /** Tracks waarvan `dkj_title` in deze run zijn versie-aanduiding of featuring kwijtraakte. */
+  titlesRefreshed: number;
   /** Tracks waarvan `spotify_playlist` in deze run veranderde (playlistLinks.ts). */
   playlistsChanged: number;
   /** Tracks die in deze run hun `dkj_albumartiest` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
@@ -366,9 +397,10 @@ export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot
   const albumArtistsFilled = fillAlbumArtists(db);
   const fileNamesFilled = fillFileNames(db);
   const titlesFilled = fillTitles(db);
+  const titlesRefreshed = refreshTitles(db);
   const playlistsChanged = applyPlaylistLinks(db, snapshot);
   // Na de playlists: het album en de BPM worden uit hun namen afgeleid.
   const albumsFilled = fillAlbumsFromPlaylists(db);
   const bpmsFilled = fillBpmsFromPlaylists(db);
-  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, live, playlistsChanged, primaryArtistsFilled, renumbered, titlesFilled, tracks };
+  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, live, playlistsChanged, primaryArtistsFilled, renumbered, titlesFilled, titlesRefreshed, tracks };
 }
