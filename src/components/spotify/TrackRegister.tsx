@@ -4,6 +4,7 @@
 // zit in register.ts; hier alleen de weergave en de filterstand.
 import { useDeferredValue, useMemo, useRef, useState } from "react";
 import { DKJ_ALBUM_COLOURS, DKJ_BPM_OPTIONS } from "@/lib/library/fields";
+import { playlistUrl, type PlaylistLink } from "@/lib/library/playlistLink";
 import {
   EMPTY_FILTER,
   countBy,
@@ -14,6 +15,8 @@ import {
 } from "@/lib/library/register";
 
 const PAGE_SIZE = 100;
+/** Zoveel playlist-labels staan er direct; de rest achter "+N". */
+const PLAYLISTS_SHOWN = 3;
 const ALBUM_VARIANTS = ["Light (f)", "Full (f)", "Light (m)", "Full (m)"] as const;
 const nf = new Intl.NumberFormat("nl-NL");
 
@@ -50,6 +53,34 @@ function AlbumTag({ album, term }: { album: string; term: string }) {
       )}
       <Highlight text={album} term={term} />
     </span>
+  );
+}
+
+function PlaylistLabels({ playlists, term }: { playlists: PlaylistLink[]; term: string }) {
+  const [open, setOpen] = useState(false);
+  if (playlists.length === 0) return <Empty />;
+  const shown = open ? playlists : playlists.slice(0, PLAYLISTS_SHOWN);
+  const hidden = playlists.length - shown.length;
+  return (
+    <div className="register-playlists">
+      {shown.map((playlist) => (
+        <a
+          key={playlist.id}
+          className="register-playlist"
+          href={playlistUrl(playlist.id)}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={`Open "${playlist.name}" op Spotify`}
+        >
+          <Highlight text={playlist.name} term={term} />
+        </a>
+      ))}
+      {hidden > 0 && (
+        <button type="button" className="register-playlist-more" onClick={() => setOpen(true)}>
+          +{hidden}
+        </button>
+      )}
+    </div>
   );
 }
 
@@ -148,12 +179,13 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
               <th><code>dkj_artist_ids</code></th>
               <th><code>dkj_bpm</code></th>
               <th><code>dkj_album</code></th>
+              <th><code>dkj_playlists</code></th>
             </tr>
           </thead>
           <tbody>
             {slice.length === 0 ? (
               <tr>
-                <td colSpan={7} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
+                <td colSpan={8} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
               </tr>
             ) : (
               slice.map((row) => (
@@ -175,6 +207,7 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
                   </td>
                   <td>{row.bpm ? <span className="register-tag"><Highlight text={row.bpm} term={term} /></span> : <Empty />}</td>
                   <td>{row.album ? <AlbumTag album={row.album} term={term} /> : <Empty />}</td>
+                  <td className="register-playlists-cell"><PlaylistLabels playlists={row.playlists} term={term} /></td>
                 </tr>
               ))
             )}

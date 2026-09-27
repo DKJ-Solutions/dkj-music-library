@@ -17,17 +17,10 @@ import type { DatabaseSync } from "node:sqlite";
 import type { Snapshot } from "@/lib/spotify/types";
 import { TRACKS_TABLE } from "./db";
 import { PLAYLISTS_KEY, TRACK_ID_KEY } from "./fields";
+import type { PlaylistLink } from "./playlistLink";
 import { SPOTIFY_LINK_TABLE, ensureSpotifyLinkTable } from "./trackIds";
 
-export interface PlaylistLink {
-  id: string;
-  name: string;
-}
-
-/** De link naar een playlist op Spotify. */
-export function playlistUrl(id: string): string {
-  return `https://open.spotify.com/playlist/${encodeURIComponent(id)}`;
-}
+export { playlistUrl, type PlaylistLink } from "./playlistLink";
 
 /** dkj_track_id -> de playlists waarin die track staat, in snapshot-volgorde, zonder dubbelen. */
 export function planPlaylistLinks(

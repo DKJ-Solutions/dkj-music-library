@@ -1,6 +1,6 @@
 // /spotify/trackregister -- de tabel van het Trackregister. Hergebruikt .stats/.stat (masthead.scss),
 // .playlist-search (playlist-toolbar.scss) en de --emotion-*-tokens voor de albumkleuren; nieuw is
-// alleen de tabel zelf, want die heeft ruim twaalfduizend rijen en zeven kolommen, meer dan de rijenlijsten
+// alleen de tabel zelf, want die heeft ruim twaalfduizend rijen en acht kolommen, meer dan de rijenlijsten
 // elders in de app dragen.
 // Het register gebruikt de hele breedte van het venster, niet de 1080px van de andere pagina's: acht
 // kolommen passen daar niet in. De zijmarges van .wrap blijven.
@@ -135,6 +135,55 @@
 .register-file {
   min-width: 280px;
   color: var(--ink);
+}
+
+// dkj_playlists: elk label is een link naar de playlist op Spotify.
+.register-playlists-cell {
+  min-width: 240px;
+}
+
+.register-playlists {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.register-playlist,
+.register-playlist-more {
+  font-size: 11.5px;
+  line-height: 1.5;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--ink);
+  white-space: nowrap;
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.register-playlist {
+  text-decoration: none;
+}
+
+.register-playlist:hover,
+.register-playlist:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+}
+
+.register-playlist-more {
+  font-family: var(--font-mono);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.register-playlist:focus-visible,
+.register-playlist-more:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .register-chips {

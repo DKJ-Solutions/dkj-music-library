@@ -48,6 +48,7 @@ kan het niet. De app wel: de export staat in git en de bibliotheek bouwt zich op
 - [x] Kolom `dkj_file` erbij, na #18; ook doorzoekbaar
 - [x] Volle breedte van het venster, tabel in een eigen scrollvak met vaste kolomkoppen (Dave)
 - [x] Kolom Titel weg: `dkj_file` neemt zijn plek in (Dave); zoeken op titel werkt nog
+- [x] Kolom `dkj_playlists` na #19: per playlist een label dat de playlist op Spotify opent, na drie een `+N`; ook doorzoekbaar
 
 ### TEST
 

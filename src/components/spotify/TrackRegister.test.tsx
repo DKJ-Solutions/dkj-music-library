@@ -17,6 +17,7 @@ function row(n: number, over: Partial<RegisterRow> = {}): RegisterRow {
     bpm: null,
     album: null,
     file: `Artiest - Nummer ${n}`,
+    playlists: [],
     ...over,
   };
 }
@@ -44,6 +45,17 @@ describe("TrackRegister", () => {
     expect(bodyRows()).toHaveLength(1);
     expect(screen.getByText("Blue Full (m)")).toBeTruthy();
     expect(screen.getByText("1 van 150 nummers")).toBeTruthy();
+  });
+
+  it("toont elke playlist als link, en na drie een +N dat de rest opent", () => {
+    const playlists = ["Een", "Twee", "Drie", "Vier", "Vijf"].map((name, i) => ({ id: `p${i}`, name }));
+    render(<TrackRegister rows={[row(1, { playlists })]} artistCount={1} />);
+    const link = screen.getByRole("link", { name: "Een" });
+    expect(link.getAttribute("href")).toBe("https://open.spotify.com/playlist/p0");
+    expect(link.getAttribute("target")).toBe("_blank");
+    expect(screen.queryByRole("link", { name: "Vier" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "+2" }));
+    expect(screen.getByRole("link", { name: "Vijf" })).toBeTruthy();
   });
 
   it("meldt het als niets past", () => {

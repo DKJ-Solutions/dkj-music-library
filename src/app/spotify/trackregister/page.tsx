@@ -43,8 +43,9 @@ export default function TrackRegisterPage() {
         <p className="lede">
           Elk nummer uit je playlists met je eigen velden: <code>dkj_track_id</code>, <code>dkj_artist</code> (de
           eerste artiest), <code>dkj_albumartiest</code> (alle artiesten in Spotify-volgorde),{" "}
-          <code>dkj_artist_ids</code>, <code>dkj_bpm</code>, <code>dkj_album</code> en <code>dkj_file</code> (de
-          bestandsnaam zoals op de desktop). De data komt uit{" "}
+          <code>dkj_artist_ids</code>, <code>dkj_bpm</code>, <code>dkj_album</code>, <code>dkj_file</code> (de
+          bestandsnaam zoals op de desktop) en <code>dkj_playlists</code> (klik op een playlist om hem op Spotify te
+          openen). De data komt uit{" "}
           <code>data/library/export/</code>, dus elke kloon van de repo toont hetzelfde register.
         </p>
       </header>

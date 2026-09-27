@@ -14,6 +14,7 @@ function stored(over: Partial<StoredTrack> = {}): StoredTrack {
     dkj_bpm: null,
     dkj_album: null,
     dkj_file: "Mark Ronson - Uptown Funk",
+    dkj_playlists: [{ id: "p1", name: "Funk" }, { bad: true }],
     ...over,
   };
 }
@@ -31,6 +32,7 @@ describe("toRegisterRow", () => {
       bpm: "112BPM",
       album: null,
       file: "Mark Ronson - Uptown Funk",
+      playlists: [{ id: "p1", name: "Funk" }],
     });
   });
 
@@ -48,6 +50,10 @@ describe("filterRegister", () => {
   const hay = rows.map(searchText);
   const run = (filter: Partial<{ term: string; bpm: string; album: string }>) =>
     filterRegister(rows, hay, { term: "", bpm: "", album: "", ...filter }).map((row) => row.id);
+
+  it("zoekt ook op playlistnaam", () => {
+    expect(run({ term: "funk" })).toEqual(["MAR01-BRU01-01", "ROY01-01"]);
+  });
 
   it("zoekt zonder accenten of hoofdletters, ook in artiest-ID's", () => {
     expect(run({ term: "royksopp" })).toEqual(["ROY01-01"]);
