@@ -2,7 +2,35 @@
 
 ## [Unreleased]
 
-**22 / 27 minor entries** <!-- pending-tally -->
+**23 / 28 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/dedupe-live-variants · 20260927-192739Z
+
+Een live-opname is geen eigen nummer meer. Hij krijgt het ID van zijn studioversie, en de rij houdt de
+titel en de Spotify-gegevens van de studioversie. Zo is ACD01-02 nu "You Shook Me All Night Long" van
+*Back In Black*, en is ACD01-38 vrijgekomen. Een nummer dat alleen live in je playlists staat, blijft
+bestaan onder de titel zonder "- Live". Komt de studioversie later binnen, dan neemt die zijn plaats in.
+De bestaande bibliotheek is één keer rechtgezet: 11 live-rijen zijn opgegaan in hun studioversie, en 51
+titels zijn schoongemaakt. Live wordt alleen aan de titel herkend, dus "Live Forever" en het album
+"I Live, I Learn" blijven buiten schot. Dit is een bewuste, eenmalige uitzondering op "een ID verandert
+niet meer": de samengevoegde rij krijgt het laagste ID van de groep.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Wie het Trackregister opent, ziet elk nummer nog maar één keer, en nergens meer een live-titel. Elf
+dubbele rijen zijn weg.
+
+**Score:** 3
+
+#### Pull Request
+
+live-varianten vallen samen met het studionummer
+
+[PR #32](https://github.com/DKJ-Solutions/dkj-music-library/pull/32)
+
+---
 
 ### DEPLOY: docs/25-rescore-tier-2 · 20260927-191125Z
 
