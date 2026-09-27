@@ -17,9 +17,15 @@ next-env.d.ts
 # lokale, niet-gecommitte app-data (bv. de Spotify-token-store, zie src/lib/spotify/tokenStore.ts)
 .data/
 
-# lokale, niet-gecommitte app-datasnapshots (bv. de Spotify-playlist-snapshot, zie
-# src/lib/spotify/snapshotStore.ts) -- bevat Dave's persoonlijke muziekbibliotheek, mag nooit
-# gecommit worden. LET OP: dit is een ANDERE map dan .data/ hierboven (die is voor geheimen zoals
-# tokens; deze is voor opgehaalde brondata).
-data/
+# lokale, niet-gecommitte app-data (bv. de Spotify-playlist-snapshot, zie
+# src/lib/spotify/snapshotStore.ts, en de SQLite-database zelf). LET OP: dit is een ANDERE map dan
+# .data/ hierboven (die is voor geheimen zoals tokens; deze is voor opgehaalde brondata).
+#
+# Eén uitzondering: data/library/export/, de tekst-export van de trackbibliotheek (eigen ID's +
+# velden, zie src/lib/library/libraryFile.ts). Die staat bewust in git, zodat elke kloon hem heeft --
+# en deze repo is PUBLIEK, dus alles wat daarin staat (ook notities en tags) is voor iedereen te zien.
+data/*
+!data/library/
+data/library/*
+!data/library/export/
 

@@ -1,5 +1,7 @@
-// De trackdatabase: één SQLite-bestand in data/library/library.db (de al git-ignored data/-map, zie
-// .gitignore -- de collectie is persoonlijke data en komt nooit in git).
+// De trackdatabase: één SQLite-bestand in data/library/library.db, lokaal en git-ignored. Wat wél in
+// git staat, is de tekst-export in data/library/export/ -- die is de bron, deze database een kopie
+// ervan. Open de bibliotheek daarom via openLibrary()/withLibrary() uit libraryFile.ts; die trekken
+// database en export gelijk. openLibraryDb() hieronder is alleen het SQLite-deel.
 //
 // Gebruikt de SQLite die in Node zelf zit (`node:sqlite`, Node 22.13+), dus er is geen native
 // dependency om te bouwen. Het schema komt uit fields.ts; syncSchema() brengt de tabel bij elke
@@ -53,6 +55,8 @@ export function openLibraryDb(
   if (dbPath !== ":memory:") fs.mkdirSync(path.dirname(dbPath), { recursive: true });
   const db = new DatabaseSync(dbPath);
   db.exec("PRAGMA journal_mode = WAL");
+  // Schrijven de dev-server en een script tegelijk, dan wacht de tweede even in plaats van te falen.
+  db.exec("PRAGMA busy_timeout = 5000");
   const schema = syncSchema(db, fields);
   for (const column of schema.orphaned) {
     console.warn(

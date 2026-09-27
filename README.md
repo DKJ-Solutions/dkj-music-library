@@ -26,12 +26,14 @@ niet meer als redirect-URI. De redirect-URI in `.env.local` moet **exact** gelij
 
 ## Waar de data staat
 
-Er komt geen persoonlijke data in git. Beide mappen staan in `.gitignore`:
+Deze repo is publiek. Geheimen en Spotify-brondata blijven daarom buiten git, op één map na:
 
-| Map | Inhoud |
-|---|---|
-| `.data/spotify/` | geheimen: de OAuth-tokens |
-| `data/spotify/` | opgehaalde brondata: de snapshot, de historie, en de BPM-, wereld- en afgevinkt-stores |
+| Map | Inhoud | In git? |
+|---|---|---|
+| `.data/spotify/` | geheimen: de OAuth-tokens | nee |
+| `data/spotify/` | opgehaalde brondata: de snapshot, de historie, en de BPM-, wereld- en afgevinkt-stores | nee |
+| `data/library/library.db` | de trackdatabase zelf (een lokale kopie, zie hieronder) | nee |
+| `data/library/export/` | de trackbibliotheek als tekst: je eigen ID's en alle velden | **ja, en dus openbaar** |
 
 ### Persoonlijke regels: `data/spotify/private-rules.json`
 
@@ -58,10 +60,32 @@ De mix-JSON's van de DJ Cylow-website worden alleen gelezen, nooit geschreven. D
 
 ## De trackdatabase
 
-De eigen collectie (ongeveer 6000 tracks: je eigen track-ID met de metadata, zonder audio) staat in één
-SQLite-bestand, `data/library/library.db`. Die map valt onder `data/` en blijft dus buiten git. Het
-bestand gebruikt de SQLite die in Node zelf zit (22.13 of hoger), dus er hoeft niets extra's
-geïnstalleerd te worden. Wil je het bestand ergens anders, zet dan `LIBRARY_DB_PATH`.
+De eigen collectie (je eigen track-ID met de metadata, zonder audio) staat in één SQLite-bestand,
+`data/library/library.db`. Het bestand gebruikt de SQLite die in Node zelf zit (22.13 of hoger), dus er
+hoeft niets extra's geïnstalleerd te worden. Wil je het bestand ergens anders, zet dan `LIBRARY_DB_PATH`.
+
+### Op elke machine dezelfde bibliotheek
+
+De database zelf staat niet in git: een binair bestand valt niet te vergelijken of samen te voegen.
+Wat wel in git staat, is een tekst-export in `data/library/export/`:
+
+- `tracks.ndjson`: één regel per nummer, gesorteerd op `track_id`;
+- `spotify_track_ids.ndjson`: welk Spotify-ID bij welk eigen ID hoort.
+
+**De export is de bron, de database een kopie.** Elke stap die de bibliotheek opent (de sync op
+`/spotify`, `library:import`, `library:assign-ids`) kijkt eerst of de export veranderd is sinds de
+database hem het laatst las of schreef. Zo ja (een verse kloon, of een `git pull` met nieuwe data), dan
+wordt de database uit de export opnieuw opgebouwd. Na elke schrijvende stap wordt de export meteen
+bijgewerkt. Je hoeft dus alleen te committen en te pushen:
+
+```sh
+git add data/library/export && git commit -m "data: bibliotheek bijgewerkt" && git push
+```
+
+Na een verse kloon of een pull kun je de database ook direct opbouwen met `npm run library:sync`.
+Kolommen die niet (meer) in `fields.ts` staan, gaan niet mee in de export. Hoe het werkt staat in
+`src/lib/library/libraryFile.ts`. Let op: omdat de repo publiek is, zijn ook je `notes` en `tags` voor
+iedereen te lezen zodra je ze pusht.
 
 ### Importeren
 

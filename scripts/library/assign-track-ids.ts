@@ -5,8 +5,8 @@
 //
 // De sync op /spotify doet dit na elke run zelf; dit script is er voor een bestaande snapshot, of om
 // het los na te lopen. Opnieuw draaien is veilig: wat al een ID heeft, houdt dat. Hoe het werkt staat
-// in src/lib/library/trackIds.ts.
-import { openLibraryDb } from "../../src/lib/library/db";
+// in src/lib/library/trackIds.ts; hoe de ID's met de repo meereizen in src/lib/library/libraryFile.ts.
+import { withLibrary } from "../../src/lib/library/libraryFile";
 import { applyTrackIdsFromSnapshot } from "../../src/lib/library/trackIds";
 import { countTracks } from "../../src/lib/library/trackStore";
 import { readSnapshot } from "../../src/lib/spotify/snapshotStore";
@@ -18,13 +18,15 @@ if (!snapshot) {
 }
 
 try {
-  const { db } = openLibraryDb();
-  const { newTracks, newLinks, totalLinks } = applyTrackIdsFromSnapshot(db, snapshot);
+  const { newTracks, newLinks, totalLinks, total } = withLibrary((db) => ({
+    ...applyTrackIdsFromSnapshot(db, snapshot),
+    total: countTracks(db),
+  }));
   console.log(
     `${newTracks} nieuwe nummers, ${newLinks} Spotify-ID's gekoppeld -- ` +
-      `${countTracks(db)} tracks, ${totalLinks} Spotify-ID's in totaal`
+      `${total} tracks, ${totalLinks} Spotify-ID's in totaal`
   );
-  db.close();
+  console.log("Export bijgewerkt in data/library/export/ -- commit die map om hem op je andere machines te hebben.");
 } catch (err) {
   console.error(`Toekennen mislukt: ${err instanceof Error ? err.message : String(err)}`);
   process.exit(1);
