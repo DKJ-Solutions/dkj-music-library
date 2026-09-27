@@ -114,6 +114,7 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
     label: "Spotify-playlists waarin de track staat, als { id, name }; bij elke sync ververst (playlistLinks.ts)",
     renamedFrom: "dkj_playlists",
   },
+  { key: "dkj_group", type: "text", label: "Eigen groep", options: ["MMC", "DJ CYLOW", "Prive", "Overige"] },
   // Nieuw veld? Voeg het hier toe, bv.:
   // { key: "energy", type: "integer", label: "Energie 1-10" },
 ];
