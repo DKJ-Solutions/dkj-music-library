@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**21 patch entries** <!-- pending-tally -->
+**0 / 22 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/release-audience-tier · 20260927-185039Z
+
+Nieuwe changelog-entries vragen voortaan alleen naar tier 0 en naar tier 2 (de gebruiker van de app),
+net als in de bronrepo. De vraag naar tier 1 (management of opdrachtgever) vervalt, omdat die hier
+nooit van toepassing is.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+N/A. Dit verandert alleen hoe entries gevraagd worden; in de app merkt de gebruiker niets.
+
+**Score:** N/A
+
+#### Pull Request
+
+Deze repo publiceert voor tier 2
+
+[PR #26](https://github.com/DKJ-Solutions/dkj-music-library/pull/26)
+
+---
 
 ### DEPLOY: feat/dkj-group-field · 20260927-184320Z
 
