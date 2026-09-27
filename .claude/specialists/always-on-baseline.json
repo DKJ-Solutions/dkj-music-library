@@ -1,0 +1,14 @@
+{
+    "schema":  1,
+    "bytes":  37244,
+    "recorded":  "2026-09-27",
+    "reason":  "",
+    "note":  "LF bytes of the always-on document path. Written by the always-on budget gate -- see always-on-budget-lib.ps1. Do not hand-edit this to make room: the gate lowers it on its own and raises it only behind -Raise, with a reason.",
+    "documents":  {
+                      ".claude/specialists/SPECIALISTS.md":  1007,
+                      "~/.claude/plugins/marketplaces/dkj-claude-plugins/plugins/dkj-policy/CLAUDE.md":  7970,
+                      "~/.claude/plugins/marketplaces/dkj-claude-plugins/plugins/dkj-subagents/dkj-subagents-alpha/personas/specialist-01-01-persona.md":  27170,
+                      "CLAUDE.md":  116,
+                      "lenses/specialist-01-01-lens.md":  981
+                  }
+}
