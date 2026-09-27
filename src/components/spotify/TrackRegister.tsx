@@ -137,7 +137,8 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
           <thead>
             <tr>
               <th><code>dkj_track_id</code></th>
-              <th>Titel · <code>dkj_albumartiest</code></th>
+              <th>Titel</th>
+              <th><code>dkj_albumartiest</code></th>
               <th><code>dkj_artist</code></th>
               <th><code>dkj_artist_ids</code></th>
               <th><code>dkj_bpm</code></th>
@@ -147,17 +148,15 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
           <tbody>
             {slice.length === 0 ? (
               <tr>
-                <td colSpan={6} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
+                <td colSpan={7} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
               </tr>
             ) : (
               slice.map((row) => (
                 <tr key={row.id}>
                   <td className="register-id"><Highlight text={row.id} term={term} /></td>
-                  <td className="register-title">
-                    <Highlight text={row.title} term={term} />
-                    <div className="register-artists">
-                      {row.albumArtist ? <Highlight text={row.albumArtist} term={term} /> : <Empty />}
-                    </div>
+                  <td className="register-title"><Highlight text={row.title} term={term} /></td>
+                  <td className="register-album-artist">
+                    {row.albumArtist ? <Highlight text={row.albumArtist} term={term} /> : <Empty />}
                   </td>
                   <td className="register-artist">{row.artist ? <Highlight text={row.artist} term={term} /> : <Empty />}</td>
                   <td>

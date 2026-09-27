@@ -1,6 +1,6 @@
 // /spotify/trackregister -- de tabel van het Trackregister. Hergebruikt .stats/.stat (masthead.scss),
 // .playlist-search (playlist-toolbar.scss) en de --emotion-*-tokens voor de albumkleuren; nieuw is
-// alleen de tabel zelf, want die heeft ruim twaalfduizend rijen en zes kolommen, meer dan de rijenlijsten
+// alleen de tabel zelf, want die heeft ruim twaalfduizend rijen en zeven kolommen, meer dan de rijenlijsten
 // elders in de app dragen.
 .track-register {
   display: flex;
@@ -112,9 +112,9 @@
   color: var(--ink);
 }
 
-.register-artists {
-  color: var(--muted);
-  font-size: 12.5px;
+.register-album-artist {
+  min-width: 160px;
+  color: var(--ink-soft);
 }
 
 .register-artist {

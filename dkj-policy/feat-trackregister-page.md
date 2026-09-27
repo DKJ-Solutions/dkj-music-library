@@ -44,6 +44,7 @@ kan het niet. De app wel: de export staat in git en de bibliotheek bouwt zich op
 - [x] Stijl in `_track-register.scss`, hergebruikt `.stat`, `.playlist-search` en de `--emotion-*`-kleuren
 - [x] Link in de kop van `/spotify`, buiten de snapshot-secties, zodat hij ook zonder sync zichtbaar is
 - [x] README: hoe je het register opent
+- [x] Titel en `dkj_albumartiest` elk een eigen kolom (Dave, na het eerste bekijken)
 
 ### TEST
 
