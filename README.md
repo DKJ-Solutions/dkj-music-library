@@ -155,9 +155,10 @@ De ID's staan in de tabel `artists` (en in de export als `artists.ndjson`). Elke
 Daarnaast krijgt elke track in `dkj_artist` precies één artiest. De artiest die de remix of edit maakte,
 gaat altijd voor: staat een van de artiesten van de track in het versiedeel van de titel (`Filmic - CRi
 Remix` → CRi, `Falling (JORDAZ Radio Mix)` → JORDAZ), dan is die het. Anders is het de eerste uit
-`artists`, de hoofdartiest. Een naam die alleen in de titel staat en niet bij de track, telt niet mee
-(`Lenzman Remix` op een track van alleen Amy Steele blijft Amy Steele). De regels staan in
-`src/lib/library/primaryArtist.ts`. En in `dkj_albumartiest` de hele rij artiesten als één tekst, in de volgorde van Spotify,
+`artists`, de hoofdartiest. Staat de remixer niet bij de track, dan telt de naam uit de titel
+(`The Wolves - Lenzman Remix` → Lenzman). Een stijl leest dan ook als naam (`Techno Mix` → Techno);
+alleen woorden als `Radio`, `Original`, `Extended`, een jaartal of een plaatformaat tellen niet
+(`Levels - Radio Edit` blijft Avicii). De regels staan in `src/lib/library/primaryArtist.ts`. En in `dkj_albumartiest` de hele rij artiesten als één tekst, in de volgorde van Spotify,
 met komma's ertussen (`Aaron Smith, Indiblu, JORDAZ`). Beide worden alleen gevuld zolang ze leeg zijn;
 wat je zelf invult, blijft staan.
 

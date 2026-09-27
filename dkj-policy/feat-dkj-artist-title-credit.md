@@ -32,11 +32,21 @@
 
 ### PLAN
 
+Vervolg op #16. Daar ging alleen een remixer voor die Spotify ook bij de track zet; bij 223 tracks noemt
+de titel een naam die er niet bij staat. Dave koos (27 september 2026): de naam uit de titel gaat altijd
+voor, ook als dat soms een stijl is ("Techno Mix" -> Techno), omdat een echte remixer missen erger is.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `titleCreditOf()` in `primaryArtist.ts`: de naam vóór het versiewoord, zonder versiewoorden (`Radio`, `Original`, `Extended`, `UK`, `Re-`), jaartallen en plaatformaten, en zonder een `feat.`-stuk ervoor
+- [x] Stap 1 (artiest van de track) kijkt nu in álle versiedelen, de laatste eerst, zodat `Taking You Back (Afrojack Edit) - Radio Edit` → AFROJACK
+- [x] Bestaande data omgezet waar `dkj_artist` nog de hoofdartiest was: 209 tracks. De 14 andere van de 223 hebben alleen een jaartal of formaat en houden de hoofdartiest
+- [x] README bijgewerkt
 
 ### TEST
+
+- [x] typecheck, eslint en vitest groen, met tests voor de naam uit de titel en de uitzonderingen
+- [x] Alle 223 kandidaten nagelopen; parserfouten (`Uk`, `98`, `1985 7`, `feat. Starling -`, `Re-`) gevonden en gerepareerd vóór het omzetten
 
 ### DEPLOY: feat/dkj-artist-title-credit
 
@@ -44,7 +54,12 @@
 
 ##### Tier 0
 
-**Score:**
+`dkj_artist` neemt nu ook een remixer die alleen in de titel staat: `The Wolves - Lenzman Remix` →
+Lenzman, `Good Times - Martin Sharp Remix` → Martin Sharp. Een stijl leest daarbij als naam (`Techno
+Mix` → Techno), zoals gekozen; jaartallen, plaatformaten en woorden als `Radio` of `Original` tellen niet.
+Bij 209 bestaande tracks is `dkj_artist` daarmee veranderd.
+
+**Score:** 2
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +68,9 @@
 
 ##### Tier 1
 
-**Score:**
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +79,9 @@
 
 ##### Tier 2
 
-**Score:**
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
 
 #### Pull Request
 
