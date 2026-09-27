@@ -97,6 +97,8 @@
   min-width: 900px;
   table-layout: fixed;
   border-collapse: collapse;
+  font-family: var(--font-narrow);
+  font-stretch: semi-condensed;
   font-size: 13.5px;
 }
 
@@ -117,7 +119,6 @@
   z-index: 1;
   background: var(--surface);
   box-shadow: inset 0 -1px 0 var(--line);
-  font-family: var(--font-mono);
   font-size: 10.5px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -127,6 +128,7 @@
 }
 
 .register-table th code {
+  font-family: inherit;
   text-transform: none;
   letter-spacing: 0;
   font-size: 1em;
@@ -179,7 +181,6 @@
 }
 
 .register-id {
-  font-family: var(--font-mono);
   font-size: 12px;
   white-space: nowrap;
   overflow: hidden;
@@ -288,6 +289,8 @@
   max-height: 260px;
   overflow-y: auto;
   padding: 4px;
+  font-family: var(--font-narrow);
+  font-stretch: semi-condensed;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -327,7 +330,6 @@ a.register-menu-item:hover {
 .register-menu-id {
   display: inline-block;
   min-width: 64px;
-  font-family: var(--font-mono);
   font-size: 11.5px;
   color: var(--ink-soft);
 }
@@ -348,14 +350,13 @@ a.register-menu-item:hover {
 
 .register-chip,
 .register-tag {
-  font-family: var(--font-mono);
   font-size: 11.5px;
-  padding: 1px 7px;
-  border-radius: 5px;
   white-space: nowrap;
 }
 
 .register-chip {
+  padding: 1px 7px;
+  border-radius: 5px;
   background: var(--surface-2);
   color: var(--ink);
   cursor: default;
@@ -368,7 +369,6 @@ a.register-menu-item:hover {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: var(--surface-2);
   color: var(--ink);
 }
 
