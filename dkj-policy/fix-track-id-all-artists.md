@@ -57,6 +57,7 @@ werden 4.692 tracks omgezet, precies het aantal nummers met meer dan één artie
 
 - [x] Tests bijgewerkt voor het nieuwe formaat, plus `renumberTrackIds` met het predicaat van het tussenformaat (volgorde van het oude ID, nummers met één artiest ongemoeid, tweede keer niets)
 - [x] Vitest 694/694, `tsc --noEmit` en `eslint` schoon
+- [x] Review Victor: geen bevindingen (buckets met streepjes, oldOrder, botsingen, automatische T-omnummering); verband tussen `artistPart()` en `dkj_artist_ids` als commentaar vastgelegd
 - [x] Echte data: alle 12.471 ID's = alle artiesten + volgnummer, alle uniek, 0 koppelingen naar een onbekend ID; verse database uit de export opgebouwd; `library:assign-ids` daarna doet niets
 
 ### DEPLOY: fix/track-id-all-artists

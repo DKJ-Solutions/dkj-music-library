@@ -92,7 +92,8 @@ function ownArtistIds(track: Track, artistIdOf: ArtistIdMap): string[] {
   return track.artists.map((a) => (a.id ? artistIdOf.get(a.id) : undefined)).filter((id): id is string => !!id);
 }
 
-/** Het artiest-deel van een track-ID: alle eigen artiest-ID's in volgorde, met streepjes. */
+/** Het artiest-deel van een track-ID: alle eigen artiest-ID's in volgorde, met streepjes. Krijgt dezelfde
+ *  lijst als `dkj_artist_ids` (ownArtistIds, ook in metadataOf), zodat ID en veld altijd overeenkomen. */
 export function artistPart(artistIds: readonly string[]): string {
   return artistIds.length > 0 ? artistIds.join("-") : NO_ARTIST_ID;
 }
