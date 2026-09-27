@@ -2,7 +2,41 @@
 
 ## [Unreleased]
 
-**5 patch entries** <!-- pending-tally -->
+**6 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/library-export · 20260927-150712Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+De trackbibliotheek reist nu met de repo mee. `data/library/export/` bevat elk nummer met zijn eigen ID en
+alle velden als gesorteerde NDJSON, en elke kloon bouwt zijn lokale `library.db` daar vanzelf uit op. Elke
+schrijvende stap (de sync op `/spotify`, `library:import`, `library:assign-ids`) werkt de export
+direct bij. Een `git pull` met een nieuwere export wordt bij de volgende opening overgenomen. Met
+`npm run library:sync` trek je database en export met de hand gelijk.
+
+**Score:** 4
+
+##### Tier 1
+
+Een persoonlijke tool zonder opdrachtgever; niemand buiten de ontwikkelaar merkt dit.
+
+**Score:** N/A
+
+##### Tier 2
+
+Er is geen dienst met abonnees.
+
+**Score:** N/A
+
+#### Pull Request
+
+Track library travels with the repo as a text export and rebuilds itself on a fresh clone
+
+[PR #8](https://github.com/DKJ-Solutions/dkj-music-library/pull/8)
+
+---
 
 ### DEPLOY: feat/track-ids · 20260927-093930Z
 
