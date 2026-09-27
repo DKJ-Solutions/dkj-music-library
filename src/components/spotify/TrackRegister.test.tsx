@@ -18,8 +18,10 @@ function row(n: number, over: Partial<RegisterRow> = {}): RegisterRow {
     album: null,
     albumCandidates: [],
     file: `Artiest - Nummer ${n}`,
+    dkjTitle: `Nummer ${n}`,
     groups: [],
     playlists: [],
+    mixes: [],
     ...over,
   };
 }
@@ -62,10 +64,28 @@ describe("TrackRegister", () => {
     expect(screen.queryByRole("link", { name: "Drie" })).toBeNull();
   });
 
-  it("kapt dkj_file af, met de volledige naam als tooltip", () => {
-    const file = "Airdraw, Jo.E & Aaren - Bryde's Whale (New Ordinance Edit) (Extended Mix)";
-    render(<TrackRegister rows={[row(1, { file })]} artistCount={1} />);
-    expect(screen.getByTitle(file).className).toContain("register-oneline");
+  it("toont één mix als link naar djcylow.com, en meer dan één als menu", () => {
+    const mixes = ["Een", "Twee"].map((name, i) => ({ slug: `red-light-m-edm-128bpm-2026061${i}`, name }));
+    render(<TrackRegister rows={[row(1, { mixes: [mixes[0]] }), row(2, { mixes })]} artistCount={1} />);
+    expect(screen.getByRole("link", { name: "Een" }).getAttribute("href")).toBe(
+      "https://djcylow.com/luister/mix/red-light-m-edm-128bpm-20260610"
+    );
+    fireEvent.click(screen.getByRole("button", { name: /2 mixes/ }));
+    expect(screen.getByRole("link", { name: "Twee" }).getAttribute("href")).toBe(
+      "https://djcylow.com/luister/mix/red-light-m-edm-128bpm-20260611"
+    );
+  });
+
+  it("kapt dkj_title af, met de volledige titel als tooltip, en toont dkj_file, dkj_artist en dkj_track_id niet", () => {
+    const dkjTitle = "Bryde's Whale (New Ordinance Edit) (Extended Mix)";
+    const file = `Airdraw, Jo.E & Aaren - ${dkjTitle}`;
+    render(<TrackRegister rows={[row(1, { dkjTitle, file })]} artistCount={1} />);
+    expect(screen.getByTitle(dkjTitle).className).toContain("register-oneline");
+    expect(screen.queryByTitle(file)).toBeNull();
+    expect(screen.queryByRole("button", { name: /dkj_file/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /^dkj_artist/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /dkj_track_id/ })).toBeNull();
+    expect(screen.getByRole("button", { name: /dkj_artist_id/ })).toBeTruthy();
   });
 
   it("zet één artiest-ID als chip, en meer in een menu met de namen", () => {
@@ -104,15 +124,15 @@ describe("TrackRegister", () => {
         artistCount={1}
       />
     );
-    const ids = () => Array.from(bodyRows(), (tr) => tr.querySelector(".register-id")?.textContent);
+    const titles = () => Array.from(bodyRows(), (tr) => tr.querySelector(".register-title")?.textContent);
     const header = screen.getByRole("button", { name: /dkj_bpm/ });
     fireEvent.click(header);
-    expect(ids()).toEqual(["ART01-003", "ART01-001", "ART01-002"]);
+    expect(titles()).toEqual(["Nummer 3", "Nummer 1", "Nummer 2"]);
     expect(header.closest("th")?.getAttribute("aria-sort")).toBe("ascending");
     fireEvent.click(header);
-    expect(ids()).toEqual(["ART01-001", "ART01-003", "ART01-002"]);
+    expect(titles()).toEqual(["Nummer 1", "Nummer 3", "Nummer 2"]);
     fireEvent.click(header);
-    expect(ids()).toEqual(["ART01-001", "ART01-002", "ART01-003"]);
+    expect(titles()).toEqual(["Nummer 1", "Nummer 2", "Nummer 3"]);
     expect(header.closest("th")?.getAttribute("aria-sort")).toBe("none");
   });
 

@@ -1,7 +1,7 @@
 // EIGEN TRACK-ID'S UIT DE SPOTIFY-SNAPSHOT: elk NUMMER krijgt één ID, bv. PRO02-01 of MAR01-BRU01-01.
 //
 // HET FORMAAT: <dkj_artist_id>-<dkj_artist_id>-...-<volgnummer>: de eigen ID's van ALLE artiesten van
-// het nummer, in de volgorde die Spotify noemt (dus hoofdartiest eerst, gelijk aan `dkj_artist_ids`),
+// het nummer, in de volgorde die Spotify noemt (dus hoofdartiest eerst, gelijk aan `dkj_artist_id`),
 // met een streepje ertussen, en daarachter een volgnummer. Firestarter van The Prodigy (PRO02) is
 // PRO02-21; Uptown Funk van Mark Ronson (MAR01) en Bruno Mars (BRU01) is MAR01-BRU01-01. Het
 // volgnummer telt per combinatie van artiesten: het laagste dat voor die combinatie nog vrij is,
@@ -24,7 +24,7 @@
 // het kreeg, samen met de nummer-sleutel. Een bekend Spotify-ID houdt zijn ID. Een nieuw Spotify-ID
 // van een bekend nummer krijgt het ID van dat nummer, ook als de oude variant intussen uit je
 // playlists is verdwenen. Alleen een echt nieuw nummer krijgt een nieuw ID. Een ID verandert daarna
-// niet meer, ook niet als je `dkj_artist_ids` later zelf aanpast.
+// niet meer, ook niet als je `dkj_artist_id` later zelf aanpast.
 //
 // DE OUDE ID'S (T000001, tot 27 september 2026) worden één keer omgenummerd door
 // renumberLegacyTrackIds(): per artiestencombinatie in de volgorde van hun T-nummer, dus het oudste
@@ -45,13 +45,14 @@ import {
   ALBUM_ARTIST_KEY,
   ARTIST_IDS_KEY,
   FILE_KEY,
+  TITLE_KEY,
   LEGACY_TRACK_ID_KEY,
   PRIMARY_ARTIST_KEY,
   TRACK_FIELDS,
   TRACK_ID_KEY,
   albumArtistOf,
 } from "./fields";
-import { fileNameOf } from "./fileName";
+import { fileNameOf, titleNameOf } from "./fileName";
 import { isLiveTitle, studioTitleOf } from "./liveTitle";
 import { primaryArtistOf } from "./primaryArtist";
 import { toSqlValue, type TrackValue } from "./trackStore";
@@ -116,7 +117,7 @@ function ownArtistIds(track: Track, artistIdOf: ArtistIdMap): string[] {
 }
 
 /** Het artiest-deel van een track-ID: alle eigen artiest-ID's in volgorde, met streepjes. Krijgt dezelfde
- *  lijst als `dkj_artist_ids` (ownArtistIds, ook in metadataOf), zodat ID en veld altijd overeenkomen. */
+ *  lijst als `dkj_artist_id` (ownArtistIds, ook in metadataOf), zodat ID en veld altijd overeenkomen. */
 export function artistPart(artistIds: readonly string[]): string {
   return artistIds.length > 0 ? artistIds.join("-") : NO_ARTIST_ID;
 }
@@ -212,6 +213,7 @@ function metadataOf(track: Track, artistIdOf: ArtistIdMap): Record<string, Track
     [PRIMARY_ARTIST_KEY]: primaryArtistOf(title, track.artists.map((a) => a.name)),
     [ALBUM_ARTIST_KEY]: albumArtistOf(track.artists.map((a) => a.name)),
     [FILE_KEY]: fileNameOf(title, track.artists.map((a) => a.name)),
+    [TITLE_KEY]: titleNameOf(title),
   };
 }
 
@@ -314,10 +316,10 @@ export function compareTrackIds(a: string, b: string): number {
   return pa < pb ? -1 : pa > pb ? 1 : na - nb;
 }
 
-/** Geeft elke track waarvoor `isStale` waar is een nieuw ID uit zijn huidige `dkj_artist_ids`, in één
+/** Geeft elke track waarvoor `isStale` waar is een nieuw ID uit zijn huidige `dkj_artist_id`, in één
  *  transactie, en werkt de koppeltabel mee bij. Volgorde van toekenning = volgorde van het oude ID.
  *  Geeft het aantal omgenummerde tracks terug. Bewust niet automatisch voor elk ID: een ID verandert
- *  niet meer zodra het bestaat, ook niet als `dkj_artist_ids` later wijzigt. */
+ *  niet meer zodra het bestaat, ook niet als `dkj_artist_id` later wijzigt. */
 export function renumberTrackIds(
   db: DatabaseSync,
   isStale: (trackId: string, artistIds: readonly string[]) => boolean
@@ -326,9 +328,9 @@ export function renumberTrackIds(
   const stale = (
     db
       .prepare(`SELECT ${TRACK_ID_KEY}, "${ARTIST_IDS_KEY}" FROM ${TRACKS_TABLE}`)
-      .all() as { dkj_track_id: string; dkj_artist_ids: string | null }[]
+      .all() as { dkj_track_id: string; dkj_artist_id: string | null }[]
   )
-    .map((row) => ({ id: row.dkj_track_id, artistIds: parseArtistIds(row.dkj_artist_ids) }))
+    .map((row) => ({ id: row.dkj_track_id, artistIds: parseArtistIds(row.dkj_artist_id) }))
     .filter((row) => isStale(row.id, row.artistIds))
     .sort((a, b) => compareTrackIds(a.id, b.id));
   if (stale.length === 0) return 0;

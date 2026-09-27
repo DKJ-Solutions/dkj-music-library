@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fileNameOf, fileTitle, joinArtists, safeFileName } from "./fileName";
+import { fileNameOf, fileTitle, joinArtists, safeFileName, titleNameOf } from "./fileName";
 
 describe("fileNameOf", () => {
   it("volgt Dave's voorbeelden", () => {
@@ -68,5 +68,18 @@ describe("hulpfuncties", () => {
     expect(safeFileName("AC/DC - Demedim Mi?")).toBe("AC-DC - Demedim Mi");
     expect(safeFileName('Ba:sen - "Live" <1>|*')).toBe("Ba-sen - Live 1");
     expect(safeFileName("Track...")).toBe("Track");
+  });
+});
+
+describe("titleNameOf", () => {
+  it("geeft alleen de titel, in de vorm van dkj_file", () => {
+    expect(titleNameOf("Higher - David Penn Remix")).toBe("Higher (David Penn Remix)");
+    expect(titleNameOf("Falling (JORDAZ Radio Mix)")).toBe("Falling (JORDAZ Radio Mix)");
+  });
+
+  it("laat tekens staan die een bestandsnaam niet mag hebben, en geeft null zonder titel", () => {
+    expect(titleNameOf("What?  Why: Now")).toBe("What? Why: Now");
+    expect(titleNameOf("  ")).toBeNull();
+    expect(titleNameOf(null)).toBeNull();
   });
 });

@@ -7,6 +7,7 @@
 //
 // Pure module: geen fs, geen sqlite -- ook vanuit een client-component te importeren.
 import { albumsOfPlaylists } from "./albumFromPlaylists";
+import type { DjcylowMixLink } from "./djcylowMix";
 import type { PlaylistLink } from "./playlistLink";
 import type { StoredTrack } from "./trackStore";
 
@@ -25,10 +26,14 @@ export interface RegisterRow {
    *  dan blijft `album` leeg tot je zelf kiest. */
   albumCandidates: string[];
   file: string | null;
+  /** Alleen de titel (dkj_title). */
+  dkjTitle: string | null;
   /** De eigen groepen (dkj_group), in de volgorde van de options. */
   groups: string[];
   /** De Spotify-playlists waarin de track staat (spotify_playlist). */
   playlists: PlaylistLink[];
+  /** De mixen op djcylow.com waarin de track zit (djcylow_mix). */
+  mixes: DjcylowMixLink[];
 }
 
 /** Filterwaarde voor "geen waarde ingevuld"; geen geldige optie van dkj_bpm of dkj_album. */
@@ -46,13 +51,19 @@ export interface RegisterFilter {
 const text = (value: unknown): string | null => (typeof value === "string" && value !== "" ? value : null);
 
 export function toRegisterRow(track: StoredTrack, artistNames: Record<string, string>): RegisterRow {
-  const ids = Array.isArray(track.dkj_artist_ids)
-    ? track.dkj_artist_ids.filter((id): id is string => typeof id === "string")
+  const ids = Array.isArray(track.dkj_artist_id)
+    ? track.dkj_artist_id.filter((id): id is string => typeof id === "string")
     : [];
   const playlists = Array.isArray(track.spotify_playlist)
     ? track.spotify_playlist.filter(
         (p): p is PlaylistLink =>
           typeof p === "object" && p !== null && typeof (p as PlaylistLink).id === "string" && typeof (p as PlaylistLink).name === "string"
+      )
+    : [];
+  const mixes = Array.isArray(track.djcylow_mix)
+    ? track.djcylow_mix.filter(
+        (m): m is DjcylowMixLink =>
+          typeof m === "object" && m !== null && typeof (m as DjcylowMixLink).slug === "string" && typeof (m as DjcylowMixLink).name === "string"
       )
     : [];
   return {
@@ -66,8 +77,10 @@ export function toRegisterRow(track: StoredTrack, artistNames: Record<string, st
     album: text(track.dkj_album),
     albumCandidates: albumsOfPlaylists(playlists.map((p) => p.name)),
     file: text(track.dkj_file),
+    dkjTitle: text(track.dkj_title),
     groups: Array.isArray(track.dkj_group) ? track.dkj_group.filter((g): g is string => typeof g === "string") : [],
     playlists,
+    mixes,
   };
 }
 
@@ -79,7 +92,7 @@ export function fold(value: string): string {
 /** Alles waarop gezocht wordt, in één gevouwen string. */
 export function searchText(row: RegisterRow): string {
   return fold(
-    [row.id, row.title, ...row.artistIds, ...row.artistNames, row.artist, row.albumArtist, row.bpm, row.album, ...row.groups, row.file, ...row.playlists.map((p) => p.name)]
+    [row.id, row.title, ...row.artistIds, ...row.artistNames, row.artist, row.albumArtist, row.bpm, row.album, ...row.groups, row.file, row.dkjTitle, ...row.playlists.map((p) => p.name), ...row.mixes.map((m) => m.name)]
       .filter(Boolean)
       .join(" ")
   );
@@ -119,7 +132,7 @@ export function countBy(rows: readonly RegisterRow[], key: "bpm" | "album" | "gr
 }
 
 /** De kolommen waarop de tabel kan sorteren; elke kolom van het register. */
-export type SortKey = "id" | "file" | "artist" | "albumArtist" | "artistIds" | "playlists" | "bpm" | "album" | "groups";
+export type SortKey = "id" | "file" | "dkjTitle" | "artist" | "albumArtist" | "artistIds" | "playlists" | "mixes" | "bpm" | "album" | "groups";
 
 export interface RegisterSort {
   key: SortKey;
@@ -137,6 +150,8 @@ function sortValue(row: RegisterRow, key: SortKey): string | null {
       return list(row.artistIds);
     case "playlists":
       return list(row.playlists.map((p) => p.name));
+    case "mixes":
+      return list(row.mixes.map((m) => m.name));
     case "groups":
       return list(row.groups);
     default:

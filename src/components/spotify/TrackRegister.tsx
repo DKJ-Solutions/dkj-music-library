@@ -5,7 +5,8 @@
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { DKJ_ALBUM_COLOURS, DKJ_BPM_OPTIONS, TRACK_FIELDS } from "@/lib/library/fields";
-import { playlistUrl, type PlaylistLink } from "@/lib/library/playlistLink";
+import { mixUrl } from "@/lib/library/djcylowMix";
+import { playlistUrl } from "@/lib/library/playlistLink";
 import {
   EMPTY_FILTER,
   countBy,
@@ -23,14 +24,14 @@ const ALBUM_VARIANTS = ["Light (f)", "Full (f)", "Light (m)", "Full (m)"] as con
 const nf = new Intl.NumberFormat("nl-NL");
 const GROUP_OPTIONS: readonly string[] = TRACK_FIELDS.find((field) => field.key === "dkj_group")?.options ?? [];
 
-/** De kolommen van de tabel, in volgorde: het veld en waarop hij sorteert. */
+/** De kolommen van de tabel, in volgorde: het veld en waarop hij sorteert. dkj_track_id, dkj_file en
+ *  dkj_artist staan er niet in (Dave); op alle drie zoeken kan nog steeds. */
 const COLUMNS: readonly { key: SortKey; field: string }[] = [
-  { key: "id", field: "dkj_track_id" },
-  { key: "file", field: "dkj_file" },
-  { key: "artist", field: "dkj_artist" },
+  { key: "dkjTitle", field: "dkj_title" },
   { key: "albumArtist", field: "dkj_albumartiest" },
-  { key: "artistIds", field: "dkj_artist_ids" },
+  { key: "artistIds", field: "dkj_artist_id" },
   { key: "playlists", field: "spotify_playlist" },
+  { key: "mixes", field: "djcylow_mix" },
   { key: "bpm", field: "dkj_bpm" },
   { key: "album", field: "dkj_album" },
   { key: "groups", field: "dkj_group" },
@@ -78,16 +79,17 @@ function AlbumTag({ album, term }: { album: string; term: string }) {
   );
 }
 
-function PlaylistLabel({ playlist, term, className }: { playlist: PlaylistLink; term: string; className: string }) {
+/** Een link naar buiten: een playlist op Spotify of een mix op djcylow.com. */
+interface OutLink {
+  key: string;
+  name: string;
+  href: string;
+}
+
+function OutLinkLabel({ link, site, term, className }: { link: OutLink; site: string; term: string; className: string }) {
   return (
-    <a
-      className={className}
-      href={playlistUrl(playlist.id)}
-      target="_blank"
-      rel="noopener noreferrer"
-      title={`Open "${playlist.name}" op Spotify`}
-    >
-      <Highlight text={playlist.name} term={term} />
+    <a className={className} href={link.href} target="_blank" rel="noopener noreferrer" title={`Open "${link.name}" op ${site}`}>
+      <Highlight text={link.name} term={term} />
     </a>
   );
 }
@@ -176,27 +178,27 @@ function Dropdown({ label, children }: { label: ReactNode; children: ReactNode }
   );
 }
 
-/** Eén playlist: een label dat hem opent. Meer dan één: een menu van links. */
-function PlaylistLabels({ playlists, term }: { playlists: PlaylistLink[]; term: string }) {
-  if (playlists.length === 0) return <Empty />;
-  if (playlists.length === 1) return <PlaylistLabel playlist={playlists[0]} term={term} className="register-playlist" />;
-  // Zoekt iemand op een playlistnaam, dan staat die treffer op de knop, zodat je ziet waarom de rij er staat.
-  const hit = term ? playlists.find((playlist) => fold(playlist.name).includes(term)) : undefined;
+/** Eén link: een label dat hem opent. Meer dan één: een menu "N <noun>" van links (playlists, mixen). */
+function OutLinkLabels({ links, site, noun, term }: { links: OutLink[]; site: string; noun: string; term: string }) {
+  if (links.length === 0) return <Empty />;
+  if (links.length === 1) return <OutLinkLabel link={links[0]} site={site} term={term} className="register-playlist" />;
+  // Zoekt iemand op een naam, dan staat die treffer op de knop, zodat je ziet waarom de rij er staat.
+  const hit = term ? links.find((link) => fold(link.name).includes(term)) : undefined;
   return (
     <Dropdown
       label={
         hit ? (
           <>
             <Highlight text={hit.name} term={term} />
-            <span className="register-menu-count">+{playlists.length - 1}</span>
+            <span className="register-menu-count">+{links.length - 1}</span>
           </>
         ) : (
-          `${playlists.length} playlists`
+          `${links.length} ${noun}`
         )
       }
     >
-      {playlists.map((playlist) => (
-        <PlaylistLabel key={playlist.id} playlist={playlist} term={term} className="register-menu-item" />
+      {links.map((link) => (
+        <OutLinkLabel key={link.key} link={link} site={site} term={term} className="register-menu-item" />
       ))}
     </Dropdown>
   );
@@ -410,14 +412,13 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
         <table className="register-table">
           {/* Vaste verdeling van de breedte (table-layout: fixed), zodat alle kolommen altijd passen. */}
           <colgroup>
-            <col style={{ width: "10%" }} />
-            <col style={{ width: "21%" }} />
-            <col style={{ width: "10%" }} />
-            <col style={{ width: "12%" }} />
+            <col style={{ width: "23%" }} />
+            <col style={{ width: "15%" }} />
             <col style={{ width: "9%" }} />
+            <col style={{ width: "14%" }} />
             <col style={{ width: "13%" }} />
             <col style={{ width: "7%" }} />
-            <col style={{ width: "10%" }} />
+            <col style={{ width: "11%" }} />
             <col style={{ width: "8%" }} />
           </colgroup>
           <thead>
@@ -445,17 +446,30 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
           <tbody>
             {slice.length === 0 ? (
               <tr>
-                <td colSpan={9} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
+                <td colSpan={COLUMNS.length} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
               </tr>
             ) : (
               slice.map((row) => (
                 <tr key={row.id}>
-                  <td className="register-id"><Highlight text={row.id} term={term} /></td>
-                  <td><OneLine text={row.file} term={term} className="register-file" /></td>
-                  <td><OneLine text={row.artist} term={term} className="register-artist" /></td>
+                  <td><OneLine text={row.dkjTitle} term={term} className="register-title" /></td>
                   <td><OneLine text={row.albumArtist} term={term} className="register-album-artist" /></td>
                   <td><ArtistIds ids={row.artistIds} names={row.artistNames} term={term} /></td>
-                  <td className="register-playlists-cell"><PlaylistLabels playlists={row.playlists} term={term} /></td>
+                  <td className="register-playlists-cell">
+                    <OutLinkLabels
+                      links={row.playlists.map((p) => ({ key: p.id, name: p.name, href: playlistUrl(p.id) }))}
+                      site="Spotify"
+                      noun="playlists"
+                      term={term}
+                    />
+                  </td>
+                  <td className="register-playlists-cell">
+                    <OutLinkLabels
+                      links={row.mixes.map((m) => ({ key: m.slug, name: m.name, href: mixUrl(m.slug) }))}
+                      site="djcylow.com"
+                      noun="mixes"
+                      term={term}
+                    />
+                  </td>
                   <td>{row.bpm ? <span className="register-tag"><Highlight text={row.bpm} term={term} /></span> : <Empty />}</td>
                   <td><Album album={row.album} candidates={row.albumCandidates} term={term} /></td>
                   <td><Groups groups={row.groups} term={term} /></td>

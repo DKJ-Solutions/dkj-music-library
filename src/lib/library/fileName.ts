@@ -63,6 +63,14 @@ export function fileArtists(title: string, artists: readonly string[]): string[]
   return kept.length > 0 ? kept : [...artists];
 }
 
+/** `dkj_title` voor een track: alleen de titel, in dezelfde vorm als in `dkj_file` na de artiesten
+ *  ("Levels - Radio Edit" -> "Levels (Radio Edit)"), of null zonder titel. Geen bestandsnaam, dus de
+ *  tekens die Windows niet toestaat blijven staan. */
+export function titleNameOf(title: string | null): string | null {
+  if (!title || title.trim() === "") return null;
+  return fileTitle(title).replace(/\s+/g, " ").trim() || null;
+}
+
 /** `dkj_file` voor een track, of null zonder titel. */
 export function fileNameOf(title: string | null, artists: readonly string[]): string | null {
   if (!title || title.trim() === "") return null;

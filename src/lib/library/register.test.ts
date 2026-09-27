@@ -8,14 +8,16 @@ function stored(over: Partial<StoredTrack> = {}): StoredTrack {
     created_at: "2026-09-27T00:00:00Z",
     updated_at: "2026-09-27T00:00:00Z",
     title: "Uptown Funk",
-    dkj_artist_ids: ["MAR01", "BRU01"],
+    dkj_artist_id: ["MAR01", "BRU01"],
     dkj_artist: "Mark Ronson",
     dkj_albumartiest: "Mark Ronson, Bruno Mars",
     dkj_bpm: null,
     dkj_album: null,
     dkj_file: "Mark Ronson - Uptown Funk",
     dkj_group: ["MMC"],
+    dkj_title: "Uptown Funk",
     spotify_playlist: [{ id: "p1", name: "Funk" }, { bad: true }],
+    djcylow_mix: [{ slug: "red-light-m-edm-128bpm-20260615", name: "Red Mix" }, { slug: 1 }],
     ...over,
   };
 }
@@ -34,13 +36,15 @@ describe("toRegisterRow", () => {
       album: null,
       albumCandidates: [],
       file: "Mark Ronson - Uptown Funk",
+      dkjTitle: "Uptown Funk",
       groups: ["MMC"],
       playlists: [{ id: "p1", name: "Funk" }],
+      mixes: [{ slug: "red-light-m-edm-128bpm-20260615", name: "Red Mix" }],
     });
   });
 
   it("maakt van ontbrekende of lege velden null en een lege lijst", () => {
-    const row = toRegisterRow(stored({ dkj_artist_ids: null, dkj_artist: "", title: null }), {});
+    const row = toRegisterRow(stored({ dkj_artist_id: null, dkj_artist: "", title: null }), {});
     expect([row.artistIds, row.artist, row.title]).toEqual([[], null, ""]);
   });
 });
@@ -48,7 +52,7 @@ describe("toRegisterRow", () => {
 describe("filterRegister", () => {
   const rows: RegisterRow[] = [
     toRegisterRow(stored({ dkj_bpm: "128BPM", dkj_album: "Green Light (f)" }), {}),
-    toRegisterRow(stored({ dkj_track_id: "ROY01-01", title: "Eple", dkj_artist_ids: ["ROY01"], dkj_artist: "Röyksopp", dkj_albumartiest: "Röyksopp" }), {}),
+    toRegisterRow(stored({ dkj_track_id: "ROY01-01", title: "Eple", dkj_artist_id: ["ROY01"], dkj_artist: "Röyksopp", dkj_albumartiest: "Röyksopp" }), {}),
   ];
   const hay = rows.map(searchText);
   const run = (filter: Partial<{ term: string; bpm: string; album: string; group: string }>) =>

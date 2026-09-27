@@ -12,14 +12,15 @@
 // twee artiesten, en een artiest die op Spotify van naam verandert, houdt zijn ID. De tabel `artists`
 // onthoudt de koppeling; opnieuw toekennen op dezelfde snapshot doet niets.
 //
-// Elke track krijgt in `dkj_artist_ids` de lijst eigen artiest-ID's, hoofdartiest eerst, maar alleen
+// Elke track krijgt in `dkj_artist_id` de lijst eigen artiest-ID's, hoofdartiest eerst, maar alleen
 // zolang dat veld nog leeg is: wat je zelf invult, blijft staan.
 //
 // En elke track krijgt in `dkj_artist` één artiest: de remixer of editor als de titel er een noemt,
 // anders de eerste uit `artists` (primaryArtist.ts), ook weer alleen zolang dat veld leeg is -- zie
 // fillPrimaryArtists(). En in `dkj_albumartiest` de hele rij
 // artiesten als één tekst, in de volgorde van Spotify ("A, B, C") -- zie fillAlbumArtists(). En in
-// `dkj_file` de bestandsnaam zoals op de desktop (fileName.ts) -- zie fillFileNames().
+// `dkj_file` de bestandsnaam zoals op de desktop (fileName.ts) -- zie fillFileNames(). En in `dkj_title`
+// alleen de titel, in de vorm van dkj_file -- zie fillTitles().
 //
 // planArtistIds() is puur (geen database) en daardoor los te testen; applyArtistIdsFromSnapshot()
 // voert het plan uit, in één transactie.
@@ -33,13 +34,14 @@ import {
   BPM_KEY,
   FILE_KEY,
   PLAYLISTS_KEY,
+  TITLE_KEY,
   PRIMARY_ARTIST_KEY,
   TRACK_ID_KEY,
   albumArtistOf,
 } from "./fields";
 import { albumFromPlaylists } from "./albumFromPlaylists";
 import { bpmFromPlaylists } from "./bpmFromPlaylists";
-import { fileNameOf } from "./fileName";
+import { fileNameOf, titleNameOf } from "./fileName";
 import { mergeLiveVariants, type LiveMergeResult } from "./liveVariants";
 import { applyPlaylistLinks } from "./playlistLinks";
 import { primaryArtistOf } from "./primaryArtist";
@@ -137,15 +139,15 @@ export function ensureArtistsTable(db: DatabaseSync): void {
 export interface ArtistIdResult {
   /** Artiesten die in deze run een eigen ID kregen. */
   newArtists: number;
-  /** Tracks waarvan `dkj_artist_ids` in deze run gevuld werd. */
+  /** Tracks waarvan `dkj_artist_id` in deze run gevuld werd. */
   tracksFilled: number;
   /** Totaal aantal artiesten na deze run. */
   totalArtists: number;
 }
 
-/** Kent eigen ID's toe aan elke nieuwe artiest in de snapshot en vult `dkj_artist_ids` bij tracks waar
+/** Kent eigen ID's toe aan elke nieuwe artiest in de snapshot en vult `dkj_artist_id` bij tracks waar
  *  dat nog leeg is. Draai dit vóór de track-ID's (zoals applyLibraryIdsFromSnapshot() doet): nieuwe tracks krijgen hun
- *  dkj_artist_ids dan al bij het aanmaken, en dit vult alleen oudere tracks aan. */
+ *  dkj_artist_id dan al bij het aanmaken, en dit vult alleen oudere tracks aan. */
 export function applyArtistIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot): ArtistIdResult {
   ensureArtistsTable(db);
   ensureSpotifyLinkTable(db);
@@ -310,6 +312,11 @@ export function fillFileNames(db: DatabaseSync): number {
   return fillMissing(db, FILE_KEY, (track) => fileNameOf(track.title, track.names));
 }
 
+/** Vult `dkj_title` (fileName.ts) bij elke track waar het nog leeg is. Geeft het aantal gevulde tracks terug. */
+export function fillTitles(db: DatabaseSync): number {
+  return fillMissing(db, TITLE_KEY, (track) => titleNameOf(track.title));
+}
+
 /** Vult `dkj_album` uit de playlists (albumFromPlaylists.ts) bij elke track waar het nog leeg is en de
  *  playlists één album noemen. Geeft het aantal gevulde tracks terug. */
 export function fillAlbumsFromPlaylists(db: DatabaseSync): number {
@@ -330,6 +337,8 @@ export interface LibraryIdResult {
   albumsFilled: number;
   /** Tracks die in deze run hun `dkj_file` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
   fileNamesFilled: number;
+  /** Tracks die in deze run hun `dkj_title` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
+  titlesFilled: number;
   /** Tracks waarvan `spotify_playlist` in deze run veranderde (playlistLinks.ts). */
   playlistsChanged: number;
   /** Tracks die in deze run hun `dkj_albumartiest` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
@@ -343,7 +352,7 @@ export interface LibraryIdResult {
   tracks: TrackIdResult;
 }
 
-/** Alle eigen ID's uit de snapshot, in de volgorde die nodig is: eerst de artiesten (en `dkj_artist_ids`
+/** Alle eigen ID's uit de snapshot, in de volgorde die nodig is: eerst de artiesten (en `dkj_artist_id`
  *  bij bestaande tracks), dan het eenmalig omnummeren van oude track-ID's en het samenvoegen van
  *  live-varianten (zodat de koppeltabel de sleutels zonder live kent), dan de nieuwe nummers --
  *  een track-ID begint met het artiest-ID van zijn hoofdartiest. Elke stap is een eigen transactie en
@@ -356,9 +365,10 @@ export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot
   const primaryArtistsFilled = fillPrimaryArtists(db);
   const albumArtistsFilled = fillAlbumArtists(db);
   const fileNamesFilled = fillFileNames(db);
+  const titlesFilled = fillTitles(db);
   const playlistsChanged = applyPlaylistLinks(db, snapshot);
   // Na de playlists: het album en de BPM worden uit hun namen afgeleid.
   const albumsFilled = fillAlbumsFromPlaylists(db);
   const bpmsFilled = fillBpmsFromPlaylists(db);
-  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, live, playlistsChanged, primaryArtistsFilled, renumbered, tracks };
+  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, live, playlistsChanged, primaryArtistsFilled, renumbered, titlesFilled, tracks };
 }

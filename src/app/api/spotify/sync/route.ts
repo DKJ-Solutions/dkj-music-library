@@ -12,6 +12,8 @@ import { sameOriginGuard } from "@/lib/http/sameOrigin";
 import { withLibrary } from "@/lib/library/libraryFile";
 import { applyLibraryIdsFromSnapshot, type ArtistIdResult } from "@/lib/library/artistIds";
 import { fillGroupsFromWorlds } from "@/lib/library/groupFromWorlds";
+import { applyDjcylowMixes } from "@/lib/library/djcylowMixes";
+import { getMixLinks } from "@/lib/mixes/mixLinks";
 import { getEnrichedSnapshot } from "@/lib/spotify/enrichedPlaylists";
 import type { TrackIdResult } from "@/lib/library/trackIds";
 
@@ -57,6 +59,8 @@ export async function POST(request: Request) {
       const ids = withLibrary((db) => {
         const result = applyLibraryIdsFromSnapshot(db, snapshot);
         fillGroupsFromWorlds(db, worlds);
+        // De mixen op djcylow.com voor djcylow_mix; zie djcylowMixes.ts.
+        applyDjcylowMixes(db, snapshot, getMixLinks(snapshot));
         return result;
       });
       trackIds = ids.tracks;

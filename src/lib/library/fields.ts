@@ -46,9 +46,10 @@ export const TRACK_ID_KEY = "dkj_track_id";
  *  importbestand met de kolomkop `track_id` werkt nog (trackStore.ts). Geschreven wordt alleen de nieuwe. */
 export const LEGACY_TRACK_ID_KEY = "track_id";
 
-/** Het veld met de eigen artiest-ID's van een track (zie artistIds.ts). Hier en niet in artistIds.ts,
+/** Het veld met de eigen artiest-ID's van een track (zie artistIds.ts), tot 27 september 2026
+ *  `dkj_artist_ids`. Zelfde naam als de sleutel van de tabel artists, maar hier een lijst. Hier en niet in artistIds.ts,
  *  omdat trackIds.ts het ook nodig heeft en artistIds.ts trackIds.ts al importeert. */
-export const ARTIST_IDS_KEY = "dkj_artist_ids";
+export const ARTIST_IDS_KEY = "dkj_artist_id";
 
 /** Het veld met precies één artiest: de remixer, anders de eerste uit `artists` (zie primaryArtist.ts). */
 export const PRIMARY_ARTIST_KEY = "dkj_artist";
@@ -58,6 +59,12 @@ export const ALBUM_ARTIST_KEY = "dkj_albumartiest";
 
 /** Het veld met de bestandsnaam zoals op de desktop (zie fileName.ts). */
 export const FILE_KEY = "dkj_file";
+
+/** Het veld met alleen de titel van het nummer, zoals in `dkj_file` na de artiesten (zie fileName.ts). */
+export const TITLE_KEY = "dkj_title";
+
+/** Het veld met de mixen op djcylow.com waarin een track zit (zie djcylowMixes.ts). */
+export const MIXES_KEY = "djcylow_mix";
 
 /** Het veld met de Spotify-playlists waarin een track staat (zie playlistLinks.ts). */
 export const PLAYLISTS_KEY = "spotify_playlist";
@@ -102,7 +109,12 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
   { key: "genre", type: "text", label: "Genre" },
   { key: "tags", type: "json", label: "Eigen tags, als lijst" },
   { key: "notes", type: "text", label: "Vrije notities" },
-  { key: "dkj_artist_ids", type: "json", label: "Eigen artiest-ID's (tabel artists, zie artistIds.ts), hoofdartiest eerst" },
+  {
+    key: "dkj_artist_id",
+    type: "json",
+    label: "Eigen artiest-ID's (tabel artists, zie artistIds.ts), hoofdartiest eerst",
+    renamedFrom: "dkj_artist_ids",
+  },
   {
     key: "dkj_bpm",
     type: "text",
@@ -124,6 +136,12 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
     type: "json",
     label: "Eigen groepen, als lijst: de werelden van de playlists van de track (groupFromWorlds.ts)",
     options: ["MMC", "DJ CYLOW", "Prive", "Overige"],
+  },
+  { key: "dkj_title", type: "text", label: "Alleen de titel, zoals in dkj_file na de artiesten (fileName.ts), tenzij zelf ingevuld" },
+  {
+    key: "djcylow_mix",
+    type: "json",
+    label: "Mixen op djcylow.com waarin de track zit, als { slug, name }; bij elke sync ververst zolang de mix-bron er is (djcylowMixes.ts)",
   },
   // Nieuw veld? Voeg het hier toe, bv.:
   // { key: "energy", type: "integer", label: "Energie 1-10" },

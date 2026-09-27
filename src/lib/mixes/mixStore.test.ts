@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import fs from "fs";
 import os from "os";
 import path from "path";
-import { getMixDirCandidates, normalizeMix, readMixes } from "./mixStore";
+import { getMixDirCandidates, mixSlugOf, normalizeMix, readMixes } from "./mixStore";
 import type { RawMixEntry } from "./types";
 
 let tempDir: string;
@@ -204,5 +204,13 @@ describe("readMixes", () => {
     writeMixFile("light-red.json", [FULL_ENTRY]);
 
     expect(readMixes().map((m) => m.id)).toEqual(["20260615"]);
+  });
+});
+
+describe("mixSlugOf", () => {
+  it("leidt de slug af zoals de website: bestandsnaam zonder .html, in kleine letters", () => {
+    expect(mixSlugOf("luister/mix/red-light-m-EDM-128BPM-20260615.html")).toBe("red-light-m-edm-128bpm-20260615");
+    expect(mixSlugOf("")).toBeNull();
+    expect(mixSlugOf(undefined)).toBeNull();
   });
 });
