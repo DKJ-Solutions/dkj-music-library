@@ -36,7 +36,15 @@
 import type { DatabaseSync } from "node:sqlite";
 import type { Snapshot, Track } from "@/lib/spotify/types";
 import { TRACKS_TABLE, renameLegacyColumn } from "./db";
-import { ARTIST_IDS_KEY, LEGACY_TRACK_ID_KEY, PRIMARY_ARTIST_KEY, TRACK_FIELDS, TRACK_ID_KEY } from "./fields";
+import {
+  ALBUM_ARTIST_KEY,
+  ARTIST_IDS_KEY,
+  LEGACY_TRACK_ID_KEY,
+  PRIMARY_ARTIST_KEY,
+  TRACK_FIELDS,
+  TRACK_ID_KEY,
+  albumArtistOf,
+} from "./fields";
 import { toSqlValue, type TrackValue } from "./trackStore";
 
 export const SPOTIFY_LINK_TABLE = "spotify_track_ids";
@@ -182,6 +190,7 @@ function metadataOf(track: Track, artistIdOf: ArtistIdMap): Record<string, Track
     duration_ms: track.durationMs,
     [ARTIST_IDS_KEY]: ownIds.length > 0 ? ownIds : null,
     [PRIMARY_ARTIST_KEY]: track.artists[0]?.name ?? null,
+    [ALBUM_ARTIST_KEY]: albumArtistOf(track.artists.map((a) => a.name)),
   };
 }
 

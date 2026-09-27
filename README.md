@@ -153,7 +153,9 @@ De ID's staan in de tabel `artists` (en in de export als `artists.ndjson`). Elke
 - **Een zelf ingevulde `dkj_artist_ids` blijft staan.**
 
 Daarnaast krijgt elke track in `dkj_artist` precies één artiest: de eerste uit `artists`, dus de
-hoofdartiest. Ook die wordt alleen gevuld zolang hij leeg is; wat je zelf invult, blijft staan.
+hoofdartiest. En in `dkj_albumartiest` de hele rij artiesten als één tekst, in de volgorde van Spotify,
+met komma's ertussen (`Aaron Smith, Indiblu, JORDAZ`). Beide worden alleen gevuld zolang ze leeg zijn;
+wat je zelf invult, blijft staan.
 
 De regels staan bovenaan `src/lib/library/artistIds.ts`.
 

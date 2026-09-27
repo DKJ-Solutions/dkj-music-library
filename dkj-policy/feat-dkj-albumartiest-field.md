@@ -32,11 +32,21 @@
 
 ### PLAN
 
+Vierde nieuwe kolom in het Trackregister, op verzoek van Dave direct na #13: `dkj_albumartiest`, de hele
+rij artiesten in de volgorde van Spotify. Gekozen vorm: één tekst met `, ` ertussen (de manier waarop
+Spotify en een album-artist-tag ze tonen), zodat hij naast de JSON-lijst `artists` een kant-en-klare
+waarde is.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `dkj_albumartiest` in `fields.ts`, met `albumArtistOf()` als enige plek waar de vorm staat
+- [x] Nieuwe tracks krijgen hem bij het aanmaken (`metadataOf`), bestaande via `fillAlbumArtists()` in elke sync, alleen zolang leeg
+- [x] Export bijgewerkt: alle 12.471 tracks gevuld
+- [x] README bijgewerkt
 
 ### TEST
+
+- [x] typecheck, eslint en vitest groen (699 tests), met een nieuwe test voor `dkj_albumartiest`
 
 ### DEPLOY: feat/dkj-albumartiest-field
 
@@ -44,7 +54,12 @@
 
 ##### Tier 0
 
-**Score:**
+Het Trackregister krijgt de kolom `dkj_albumartiest`: alle artiesten van een track als één tekst, in de
+volgorde van Spotify, met komma's ertussen (`Aaron Smith, Indiblu, JORDAZ`). Nieuwe tracks krijgen hem bij
+het aanmaken, bestaande bij elke sync zolang het veld leeg is; wat je zelf invult, blijft staan. Alle
+12.471 tracks in de export zijn meteen gevuld.
+
+**Score:** 3
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +68,9 @@
 
 ##### Tier 1
 
-**Score:**
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +79,9 @@
 
 ##### Tier 2
 
-**Score:**
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
 
 #### Pull Request
 
