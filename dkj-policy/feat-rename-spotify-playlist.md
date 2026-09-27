@@ -32,11 +32,19 @@
 
 ### PLAN
 
+Dave: `dkj_playlists` heet voortaan `spotify_playlist`. Het schema hernoemt kolommen al met `renamedFrom`,
+maar een restore uit een export met de oude naam sloeg dat veld stil over -- hetzelfde soort gat als #20.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `spotify_playlist` in `fields.ts`, met `renamedFrom: "dkj_playlists"`; alle verwijzingen in code, script en README
+- [x] `restoreLibrary` leest een hernoemd veld ook onder zijn oude naam, zodat een oudere export gewoon terugzet
+- [x] Echte bibliotheek: kolom hernoemd, export herschreven met de nieuwe naam (12.471 tracks, nergens nog `dkj_playlists`)
 
 ### TEST
+
+- [x] typecheck, eslint en vitest groen, met een test die een export met de oude naam terugzet
+- [x] `library:sync` daarna: "gelijk"
 
 ### DEPLOY: feat/rename-spotify-playlist
 
@@ -44,7 +52,11 @@
 
 ##### Tier 0
 
-**Score:**
+Het veld met de Spotify-playlists van een track heet nu `spotify_playlist` in plaats van `dkj_playlists`.
+Een bestaande database hernoemt de kolom zelf, en een export met de oude naam zet nog gewoon terug; dat
+laatste geldt voortaan voor elk hernoemd veld.
+
+**Score:** 2
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +65,9 @@
 
 ##### Tier 1
 
-**Score:**
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +76,9 @@
 
 ##### Tier 2
 
-**Score:**
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
 
 #### Pull Request
 
