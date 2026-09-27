@@ -39,19 +39,35 @@
 
 ### PLAN
 
+Dave (27 september 2026): de tabel mag niet hoger worden dan het scherm, Vorige en Volgende moeten altijd
+zichtbaar zijn, en `.masthead` krijgt `padding-bottom: 12px` in plaats van 28px. Zichtbaar resultaat:
+de PR wacht op Dave's oordeel.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `.register-table-box`: `max-height` is het venster min de pager (`100dvh`, met `100vh` als terugval), zonder de oude minimale 420px
+- [x] `.register-pager`: plakt aan de onderkant van het venster, met de paginakleur erachter
+- [x] `.masthead`: `padding-bottom` 28px -> 12px
 
 ### TEST
 
+- [x] SCSS compileert; `TrackRegister.test.tsx` groen
+- [~] Zelf in de browser bekeken -- de browserextensie was niet verbonden; Dave beoordeelt het vóór de merge
+
 ### DEPLOY: style/trackregister-fits-screen
 
-**Score:**
+De tabel in het Trackregister wordt nooit hoger dan het venster. Vorige en Volgende plakken aan de
+onderkant van het scherm, dus je hoeft niet meer naar beneden te scrollen om te bladeren. De kop van elke
+pagina met een masthead heeft onderaan minder ruimte: 12px in plaats van 28px.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie door het register bladert, ziet de knoppen Vorige en Volgende altijd, zonder eerst naar beneden te
+scrollen.
+
+**Score:** 3
 
 #### Pull Request
 
