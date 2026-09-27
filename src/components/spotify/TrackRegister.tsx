@@ -3,6 +3,7 @@
 // 100 rijen (12.000+ rijen in één keer renderen maakt de pagina traag). Alle logica die geen React is
 // zit in register.ts; hier alleen de weergave en de filterstand.
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { DKJ_ALBUM_COLOURS, DKJ_BPM_OPTIONS, TRACK_FIELDS } from "@/lib/library/fields";
 import { playlistUrl, type PlaylistLink } from "@/lib/library/playlistLink";
 import {
@@ -91,40 +92,86 @@ function PlaylistLabel({ playlist, term, className }: { playlist: PlaylistLink; 
   );
 }
 
-/** Een knop die een menu opent, voor een cel die anders op twee regels zou komen. Het menu sluit bij
- *  een klik ernaast of met Escape. */
+// Maten van het menu, gelijk aan .register-menu-list in _track-register.scss.
+const MENU_MAX_HEIGHT = 260;
+const MENU_MAX_WIDTH = 360;
+const MENU_GAP = 4;
+const MENU_MARGIN = 8;
+
+type MenuPlace = { left: number; top?: number; bottom?: number; maxHeight: number };
+
+/** Waar het menu komt: onder de knop, of erboven als daar meer ruimte is en eronder niet genoeg. */
+function placeMenu(toggle: HTMLElement): MenuPlace {
+  const rect = toggle.getBoundingClientRect();
+  const below = window.innerHeight - rect.bottom - MENU_GAP - MENU_MARGIN;
+  const above = rect.top - MENU_GAP - MENU_MARGIN;
+  const left = Math.max(MENU_MARGIN, Math.min(rect.left, window.innerWidth - MENU_MAX_WIDTH - MENU_MARGIN));
+  return below >= MENU_MAX_HEIGHT || below >= above
+    ? { left, top: rect.bottom + MENU_GAP, maxHeight: Math.min(MENU_MAX_HEIGHT, below) }
+    : { left, bottom: window.innerHeight - rect.top + MENU_GAP, maxHeight: Math.min(MENU_MAX_HEIGHT, above) };
+}
+
+/** Een knop die een menu opent, voor een cel die anders op twee regels zou komen. Het menu ligt ALTIJD
+ *  OVER DE TABEL HEEN (Dave): het staat in een portal op <body> met position: fixed, zodat het scrollvak
+ *  van de tabel (overflow: auto) het niet meer afkapt. Het sluit bij een klik ernaast, met Escape, en bij
+ *  scrollen of een ander venstermaat, want dan klopt de plek naast de knop niet meer. */
 function Dropdown({ label, children }: { label: ReactNode; children: ReactNode }) {
-  const [open, setOpen] = useState(false);
-  const menu = useRef<HTMLDivElement>(null);
+  const [place, setPlace] = useState<MenuPlace | null>(null);
+  const toggle = useRef<HTMLButtonElement>(null);
+  const list = useRef<HTMLDivElement>(null);
+  const open = place !== null;
 
   useEffect(() => {
     if (!open) return;
-    const close = (event: MouseEvent | KeyboardEvent) => {
-      if (event instanceof KeyboardEvent ? event.key === "Escape" : !menu.current?.contains(event.target as Node)) {
-        setOpen(false);
-      }
+    const inside = (target: EventTarget | null) =>
+      target instanceof Node && (toggle.current?.contains(target) || list.current?.contains(target));
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setPlace(null);
     };
-    document.addEventListener("mousedown", close);
-    document.addEventListener("keydown", close);
+    const onPointer = (event: MouseEvent) => {
+      if (!inside(event.target)) setPlace(null);
+    };
+    // Scrollen in het menu zelf laat het open; scrollen van de tabel of de pagina sluit het.
+    const onScroll = (event: Event) => {
+      if (!list.current?.contains(event.target as Node)) setPlace(null);
+    };
+    const onResize = () => setPlace(null);
+    document.addEventListener("mousedown", onPointer);
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("scroll", onScroll, true);
+    window.addEventListener("resize", onResize);
     return () => {
-      document.removeEventListener("mousedown", close);
-      document.removeEventListener("keydown", close);
+      document.removeEventListener("mousedown", onPointer);
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("scroll", onScroll, true);
+      window.removeEventListener("resize", onResize);
     };
   }, [open]);
 
   return (
-    <div className="register-menu" ref={menu}>
+    <div className="register-menu">
       <button
+        ref={toggle}
         type="button"
         className="register-menu-toggle"
         aria-expanded={open}
         aria-haspopup="true"
-        onClick={() => setOpen(!open)}
+        onClick={() => setPlace(open || !toggle.current ? null : placeMenu(toggle.current))}
       >
         {label}
         <span aria-hidden="true"> ▾</span>
       </button>
-      {open && <div className="register-menu-list">{children}</div>}
+      {place &&
+        createPortal(
+          <div
+            ref={list}
+            className="register-menu-list"
+            style={{ left: place.left, top: place.top, bottom: place.bottom, maxHeight: place.maxHeight }}
+          >
+            {children}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

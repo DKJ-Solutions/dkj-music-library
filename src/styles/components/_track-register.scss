@@ -263,10 +263,11 @@
   }
 }
 
-// Het menu voor een cel met meer dan op één regel past (playlists, artiest-ID's). Het ligt over de rijen
-// eronder heen (absolute), binnen het scrollvak.
+// Het menu voor een cel met meer dan op één regel past (playlists, artiest-ID's). Het ligt ALTIJD OVER DE
+// TABEL HEEN (Dave): Dropdown in TrackRegister.tsx zet de lijst in een portal op <body> met position: fixed,
+// dus het scrollvak (overflow: auto) kapt hem niet af. De plek (left/top/bottom/max-height) zet de
+// component inline; onderin beeld klapt het menu naar boven open.
 .register-menu {
-  position: relative;
   display: inline-block;
   max-width: 100%;
 }
@@ -276,11 +277,10 @@
   font-weight: 400;
 }
 
+// Boven alles wat plakt: de kolomkoppen, de werkbalk en de pager.
 .register-menu-list {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  z-index: 3;
+  position: fixed;
+  z-index: 100;
   display: flex;
   flex-direction: column;
   min-width: 220px;
