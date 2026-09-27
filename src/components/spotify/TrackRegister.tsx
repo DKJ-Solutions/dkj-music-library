@@ -267,8 +267,8 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
             <tr>
               <th><code>dkj_track_id</code></th>
               <th><code>dkj_file</code></th>
-              <th><code>dkj_albumartiest</code></th>
               <th><code>dkj_artist</code></th>
+              <th><code>dkj_albumartiest</code></th>
               <th><code>dkj_artist_ids</code></th>
               <th><code>dkj_playlists</code></th>
               <th><code>dkj_bpm</code></th>
@@ -285,8 +285,8 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
                 <tr key={row.id}>
                   <td className="register-id"><Highlight text={row.id} term={term} /></td>
                   <td><OneLine text={row.file} term={term} className="register-file" /></td>
-                  <td><OneLine text={row.albumArtist} term={term} className="register-album-artist" /></td>
                   <td><OneLine text={row.artist} term={term} className="register-artist" /></td>
+                  <td><OneLine text={row.albumArtist} term={term} className="register-album-artist" /></td>
                   <td><ArtistIds ids={row.artistIds} names={row.artistNames} term={term} /></td>
                   <td className="register-playlists-cell"><PlaylistLabels playlists={row.playlists} term={term} /></td>
                   <td>{row.bpm ? <span className="register-tag"><Highlight text={row.bpm} term={term} /></span> : <Empty />}</td>
