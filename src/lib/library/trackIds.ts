@@ -13,7 +13,12 @@
 // Spotify (single, album, compilatie), elk met een eigen Spotify-ID. Twee Spotify-tracks tellen als
 // hetzelfde nummer als de titel gelijk is (hoofdletterongevoelig, spaties aan de randen genegeerd) en
 // de artiesten precies dezelfde zijn (op artist-id). Een "Radio Edit" of remix heeft een andere titel
-// en blijft dus een eigen nummer.
+// en blijft dus een eigen nummer. Een live-aanduiding in de titel telt niet mee (liveTitle.ts): een
+// live-opname is hetzelfde nummer als de studioversie, en een nieuw nummer krijgt de titel zonder
+// "- Live". Komt de studioversie pas binnen als het nummer er al is via een live-opname, dan neemt de
+// rij de Spotify-gegevens van de studioversie over (spotify_track_id, album, duur) -- zolang de
+// live-opname nog in de snapshot staat, want alleen daaraan is te zien dat het een live-opname was.
+// Wat al in de bibliotheek stond vóór deze regel, zet liveVariants.ts één keer recht.
 //
 // STABIEL OVER SYNCS HEEN. De koppeltabel `spotify_track_ids` onthoudt per Spotify-ID welk eigen ID
 // het kreeg, samen met de nummer-sleutel. Een bekend Spotify-ID houdt zijn ID. Een nieuw Spotify-ID
@@ -47,6 +52,7 @@ import {
   albumArtistOf,
 } from "./fields";
 import { fileNameOf } from "./fileName";
+import { isLiveTitle, studioTitleOf } from "./liveTitle";
 import { primaryArtistOf } from "./primaryArtist";
 import { toSqlValue, type TrackValue } from "./trackStore";
 
@@ -65,10 +71,16 @@ export function formatTrackId(artistId: string, n: number): string {
   return `${artistId}-${String(n).padStart(NUMBER_DIGITS, "0")}`;
 }
 
-/** De sleutel waarop Spotify-tracks tot één nummer samenvallen: titel + gesorteerde artist-id's. */
+/** De sleutel waarop Spotify-tracks tot één nummer samenvallen: titel zonder live-aanduiding +
+ *  gesorteerde artist-id's. */
 export function songKey(track: Pick<Track, "name" | "artists">): string {
   const artists = track.artists.map((a) => a.id).sort().join(",");
-  return `${track.name.trim().toLowerCase()}|${artists}`;
+  return `${studioTitleOf(track.name).toLowerCase()}|${artists}`;
+}
+
+/** Het artiest-deel van een eigen track-ID: alles vóór het laatste streepje (MAR01-BRU01 van MAR01-BRU01-01). */
+export function trackIdPrefix(trackId: string): string {
+  return OWN_ID_SHAPE.exec(trackId)?.[1] ?? trackId;
 }
 
 /** Deelt nieuwe volgnummers uit per artiest-ID: steeds het laagste dat nog vrij is. */
@@ -126,6 +138,8 @@ export interface TrackIdPlan {
   newTracks: NewTrack[];
   /** Spotify-ID's die nog niet in de koppeltabel stonden (ook nieuwe varianten van bekende nummers). */
   newLinks: SpotifyLink[];
+  /** Nieuwe studioversies (geen live-titel) van nummers die al een ID hadden. */
+  studioVariants: NewTrack[];
 }
 
 /** Bepaalt welke Spotify-tracks uit de snapshot een (nieuw of bestaand) eigen ID krijgen. Volgorde van
@@ -142,7 +156,7 @@ export function planTrackIds(
   const bySongKey = new Map(existingLinks.map((link) => [link.songKey, link.trackId]));
   const numbers = new TrackNumbers(existingTrackIds);
 
-  const plan: TrackIdPlan = { newTracks: [], newLinks: [] };
+  const plan: TrackIdPlan = { newTracks: [], newLinks: [], studioVariants: [] };
   for (const playlist of snapshot.playlists) {
     for (const item of playlist.tracks) {
       const track = item.track;
@@ -154,6 +168,8 @@ export function planTrackIds(
         trackId = numbers.next(artistPart(ownArtistIds(track, artistIdOf)));
         bySongKey.set(key, trackId);
         plan.newTracks.push({ trackId, track });
+      } else if (!isLiveTitle(track.name)) {
+        plan.studioVariants.push({ trackId, track });
       }
       bySpotifyId.set(track.id, trackId);
       plan.newLinks.push({ spotifyTrackId: track.id, trackId, songKey: key });
@@ -185,16 +201,17 @@ function readLinks(db: DatabaseSync): SpotifyLink[] {
 /** De Spotify-metadata waarmee een nieuw nummer in `tracks` komt. */
 function metadataOf(track: Track, artistIdOf: ArtistIdMap): Record<string, TrackValue> {
   const ownIds = ownArtistIds(track, artistIdOf);
+  const title = studioTitleOf(track.name);
   return {
     spotify_track_id: track.id,
-    title: track.name,
+    title,
     artists: track.artists.map((a) => a.name),
     album: track.album.name,
     duration_ms: track.durationMs,
     [ARTIST_IDS_KEY]: ownIds.length > 0 ? ownIds : null,
-    [PRIMARY_ARTIST_KEY]: primaryArtistOf(track.name, track.artists.map((a) => a.name)),
+    [PRIMARY_ARTIST_KEY]: primaryArtistOf(title, track.artists.map((a) => a.name)),
     [ALBUM_ARTIST_KEY]: albumArtistOf(track.artists.map((a) => a.name)),
-    [FILE_KEY]: fileNameOf(track.name, track.artists.map((a) => a.name)),
+    [FILE_KEY]: fileNameOf(title, track.artists.map((a) => a.name)),
   };
 }
 
@@ -203,6 +220,8 @@ export interface TrackIdResult {
   newTracks: number;
   /** Spotify-ID's die in deze run gekoppeld werden (nieuwe nummers + nieuwe varianten). */
   newLinks: number;
+  /** Nummers die in deze run de Spotify-gegevens van hun studioversie kregen in plaats van een live-opname. */
+  studioReplaced: number;
   /** Totaal aantal Spotify-ID's in de koppeltabel na deze run. */
   totalLinks: number;
 }
@@ -230,6 +249,15 @@ export function applyTrackIdsFromSnapshot(
   const insertLink = db.prepare(
     `INSERT INTO ${SPOTIFY_LINK_TABLE} (spotify_track_id, ${TRACK_ID_KEY}, song_key) VALUES (?, ?, ?)`
   );
+  // Welke Spotify-ID's in de snapshot een live-opname zijn: alleen daaraan is een live-rij te herkennen.
+  const liveInSnapshot = new Set(
+    snapshot.playlists.flatMap((p) => p.tracks.map((item) => item.track)).filter((t) => t?.id && isLiveTitle(t.name)).map((t) => t!.id)
+  );
+  const spotifyIdOf = db.prepare(`SELECT spotify_track_id FROM ${TRACKS_TABLE} WHERE ${TRACK_ID_KEY} = ?`);
+  const takeStudio = db.prepare(
+    `UPDATE ${TRACKS_TABLE} SET spotify_track_id = ?, album = ?, duration_ms = ?, updated_at = ? WHERE ${TRACK_ID_KEY} = ?`
+  );
+  let studioReplaced = 0;
 
   db.exec("BEGIN");
   try {
@@ -243,6 +271,12 @@ export function applyTrackIdsFromSnapshot(
       ).run(trackId, now, now, ...entries.map(([key, value]) => toSqlValue(fields.get(key)!, value)));
     }
     for (const link of plan.newLinks) insertLink.run(link.spotifyTrackId, link.trackId, link.songKey);
+    for (const { trackId, track } of plan.studioVariants) {
+      const current = spotifyIdOf.get(trackId) as { spotify_track_id: string | null } | undefined;
+      if (!current?.spotify_track_id || !liveInSnapshot.has(current.spotify_track_id)) continue;
+      takeStudio.run(track.id, track.album.name, track.durationMs, now, trackId);
+      studioReplaced++;
+    }
     db.exec("COMMIT");
   } catch (err) {
     db.exec("ROLLBACK");
@@ -252,6 +286,7 @@ export function applyTrackIdsFromSnapshot(
   return {
     newTracks: plan.newTracks.length,
     newLinks: plan.newLinks.length,
+    studioReplaced,
     totalLinks: links.length + plan.newLinks.length,
   };
 }
@@ -267,7 +302,7 @@ function parseArtistIds(value: string | null): string[] {
 
 /** Volgorde waarin tracks bij het omnummeren hun nieuwe volgnummer krijgen: op het oude ID, met het
  *  getal als getal (T1000000 na T999999, MAR01-10 na MAR01-09). */
-function oldOrder(a: string, b: string): number {
+export function compareTrackIds(a: string, b: string): number {
   const split = (id: string): [string, number] => {
     const own = OWN_ID_SHAPE.exec(id);
     if (own) return [own[1], Number(own[2])];
@@ -295,7 +330,7 @@ export function renumberTrackIds(
   )
     .map((row) => ({ id: row.dkj_track_id, artistIds: parseArtistIds(row.dkj_artist_ids) }))
     .filter((row) => isStale(row.id, row.artistIds))
-    .sort((a, b) => oldOrder(a.id, b.id));
+    .sort((a, b) => compareTrackIds(a.id, b.id));
   if (stale.length === 0) return 0;
 
   // Alle bestaande ID's tellen als bezet, ook de oude die nog omgezet worden: zo kan een nieuw ID nooit
