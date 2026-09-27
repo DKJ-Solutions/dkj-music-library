@@ -1,0 +1,381 @@
+// /spotify/trackregister -- de tabel van het Trackregister. Hergebruikt .stats/.stat (masthead.scss),
+// .playlist-search (playlist-toolbar.scss) en de --emotion-*-tokens voor de albumkleuren; nieuw is
+// alleen de tabel zelf, want die heeft ruim twaalfduizend rijen en negen kolommen, meer dan de rijenlijsten
+// elders in de app dragen.
+// Het register gebruikt de hele breedte van het venster, niet de 1080px van de andere pagina's: acht
+// kolommen passen daar niet in. De zijmarges van .wrap blijven.
+.wrap--full {
+  max-width: none;
+}
+
+.track-register {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 8px;
+}
+
+.track-register code,
+.masthead .lede code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+}
+
+.register-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.register-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+}
+
+.register-filter span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.register-filter select {
+  max-width: 100%;
+  font: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+.register-filter select:focus-visible,
+.register-pager button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.register-count {
+  font-size: 13px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+// Eigen scrollvak zo hoog als het venster (min. 420px): de kolomkoppen blijven bovenaan staan en de
+// horizontale scrollbalk zit onderin beeld, in plaats van onder honderd rijen.
+.register-table-box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: auto;
+  max-height: max(420px, calc(100vh - 140px));
+  overscroll-behavior: contain;
+}
+
+// De tabel past altijd in de breedte die er is: een vaste verdeling per kolom (<colgroup> in
+// TrackRegister.tsx) en alles in een cel afgekapt. Pas onder 900px, waar acht kolommen niet meer te lezen
+// zijn, komt er een horizontale scrollbalk.
+.register-table {
+  width: 100%;
+  min-width: 900px;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.register-table th,
+.register-table td {
+  white-space: nowrap;
+  text-align: left;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.register-table th {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface);
+  box-shadow: inset 0 -1px 0 var(--line);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.register-table th code {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 1em;
+}
+
+.register-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.register-id {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.register-album-artist {
+  color: var(--ink-soft);
+}
+
+// ELKE RIJ IS PRECIES ÉÉN REGEL (Dave). Tekst wordt afgekapt met … en staat volledig in de tooltip
+// (title); wat niet op één regel past aan chips of labels, gaat in een menu (Dropdown in TrackRegister.tsx).
+.register-oneline {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: default;
+}
+
+// dkj_file is de hoofdkolom (hij verving de titel): volle inktkleur.
+.register-file {
+  color: var(--ink);
+}
+
+// DRIE VORMEN, ZODAT JE ZONDER KLIKKEN ZIET WAT IETS DOET (Dave):
+//   - een LINK (één playlist) is tekst in de accentkleur, met ↗, zonder rand of vlak: hij opent Spotify;
+//   - een MENU ("3 playlists ▾", "3 artists ▾") is een knop met een gevulde lichte accentachtergrond en
+//     een rand: hij opent hier een lijst;
+//   - STATISCHE informatie (artiest-ID, BPM, album) is een grijs vlak zonder rand.
+.register-playlist {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: top;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--accent-ink);
+  text-decoration: none;
+}
+
+.register-playlist::after {
+  content: " ↗";
+}
+
+.register-playlist:hover {
+  color: var(--accent);
+}
+
+.register-menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: top;
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  padding: 1px 8px 1px 10px;
+  border-radius: 6px;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--line));
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+.register-menu-toggle:hover,
+.register-menu-toggle[aria-expanded="true"] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 22%, var(--surface));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .register-menu-toggle {
+    transition: none;
+  }
+}
+
+// Het menu voor een cel met meer dan op één regel past (playlists, artiest-ID's). Het ligt over de rijen
+// eronder heen (absolute), binnen het scrollvak.
+.register-menu {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.register-menu-count {
+  margin-left: 4px;
+  font-weight: 400;
+}
+
+.register-menu-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+  max-width: 360px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 4px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.register-menu-item {
+  font-size: 12.5px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+a.register-menu-item {
+  color: var(--accent-ink);
+  font-weight: 500;
+}
+
+a.register-menu-item::after {
+  content: " ↗";
+  font-weight: 400;
+}
+
+a.register-menu-item:hover {
+  background: var(--accent-soft);
+}
+
+.register-menu-item--static {
+  cursor: default;
+  color: var(--ink);
+}
+
+.register-menu-id {
+  display: inline-block;
+  min-width: 64px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink-soft);
+}
+
+.register-playlist:focus-visible,
+.register-menu-toggle:focus-visible,
+.register-menu-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.register-chips {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.register-chip,
+.register-tag {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  padding: 1px 7px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+.register-chip {
+  background: var(--surface-2);
+  color: var(--ink);
+  cursor: default;
+}
+
+.register-tag {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+// Full is een gevulde stip, Light alleen de rand -- dezelfde kleur, minder dicht.
+.register-swatch {
+  width: 10px;
+  height: 10px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 2px solid var(--c);
+  background: var(--c);
+  flex: none;
+}
+
+.register-swatch--light {
+  background: transparent;
+}
+
+.register-none {
+  color: var(--muted);
+  opacity: 0.6;
+}
+
+.register-table mark {
+  background: var(--gold-soft);
+  color: inherit;
+  border-radius: 2px;
+}
+
+.register-empty {
+  padding: 28px 14px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.register-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.register-pager-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.register-pager button {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.register-pager button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}

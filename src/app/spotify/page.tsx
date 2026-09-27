@@ -72,6 +72,13 @@ export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusP
           Read-only back-up van je Spotify-playlists, met filteren, groeperen en cross-playlist
           zoeken. Er wordt niets naar Spotify teruggeschreven.
         </p>
+        {/* Buiten de snapshot-secties: het register leest de bibliotheek uit git, dus deze link hoort ook
+            zichtbaar te zijn op een machine die nog nooit gesynct heeft. */}
+        <p className="dashboard-link-row">
+          <Link href="/spotify/trackregister" className="accent-text">
+            🗂️ Bekijk het DKJ Trackregister (elke track met zijn eigen velden) →
+          </Link>
+        </p>
       </header>
 
       <section className="layer">
