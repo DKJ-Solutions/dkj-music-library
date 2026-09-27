@@ -151,7 +151,9 @@
   color: var(--ink);
 }
 
-// dkj_playlists: één playlist is een label dat hem opent.
+// INTERACTIEF VERSUS STATISCH (Dave): wat je kunt aanklikken -- een playlistlabel, een menuknop -- heeft
+// de accentkleur, een rand en een teken (↗ of ▾); wat alleen informatie is -- een artiest-ID, een BPM-
+// of albumlabel -- is een grijs vlak zonder rand.
 .register-playlists-cell {
   min-width: 200px;
 }
@@ -161,26 +163,40 @@
   display: inline-block;
   font: inherit;
   font-size: 11.5px;
+  font-weight: 600;
   line-height: 1.5;
-  padding: 1px 8px;
+  padding: 1px 9px;
   border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--surface-2);
-  color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--line));
+  background: var(--surface);
+  color: var(--accent-ink);
   text-decoration: none;
   white-space: nowrap;
   max-width: 280px;
   overflow: hidden;
   text-overflow: ellipsis;
   vertical-align: top;
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+a.register-playlist::after {
+  content: " ↗";
+  font-weight: 400;
 }
 
 a.register-playlist:hover,
 .register-menu-toggle:hover,
 .register-menu-toggle[aria-expanded="true"] {
   border-color: var(--accent);
-  color: var(--accent-ink);
   background: var(--accent-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .register-playlist,
+  .register-menu-toggle {
+    transition: none;
+  }
 }
 
 // Het menu voor een cel met meer dan op één regel past (playlists, artiest-ID's). Het ligt over de rijen
@@ -190,13 +206,9 @@ a.register-playlist:hover,
   display: inline-block;
 }
 
-.register-menu-toggle {
-  cursor: pointer;
-}
-
 .register-menu-count {
   margin-left: 4px;
-  color: var(--muted);
+  font-weight: 400;
 }
 
 .register-menu-list {
@@ -228,13 +240,23 @@ a.register-playlist:hover,
   text-overflow: ellipsis;
 }
 
+a.register-menu-item {
+  color: var(--accent-ink);
+  font-weight: 500;
+}
+
+a.register-menu-item::after {
+  content: " ↗";
+  font-weight: 400;
+}
+
 a.register-menu-item:hover {
   background: var(--accent-soft);
-  color: var(--accent-ink);
 }
 
 .register-menu-item--static {
   cursor: default;
+  color: var(--ink);
 }
 
 .register-menu-id {
