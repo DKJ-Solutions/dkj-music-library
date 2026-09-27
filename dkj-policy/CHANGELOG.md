@@ -2,7 +2,30 @@
 
 ## [Unreleased]
 
-**24 / 32 minor entries** <!-- pending-tally -->
+**25 / 33 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/sort-ignore-punctuation · 20260927-210219Z
+
+Bij het sorteren van A naar Z tellen leestekens niet meer mee. `'Til Tuesday` staat bij de T,
+`...Baby One More Time` bij de B en `(Here I Am)` bij de H. Dat geldt voor het trackregister en de
+tabellen op /spotify, die nu één vergelijkingsfunctie delen (`compareText` in `src/lib/sortRows.ts`).
+Spaties tellen wel mee, zodat "De La Soul" niet samenvalt met "Dela".
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Wie op een titelkolom sorteert, vindt een titel die met een leesteken begint voortaan onder zijn eerste letter in plaats van bovenaan de lijst.
+
+**Score:** 3
+
+#### Pull Request
+
+Leestekens tellen niet mee bij alfabetisch sorteren
+
+[PR #36](https://github.com/DKJ-Solutions/dkj-music-library/pull/36)
+
+---
 
 ### DEPLOY: feat/dkj-title-djcylow-mix · 20260927-205619Z
 
