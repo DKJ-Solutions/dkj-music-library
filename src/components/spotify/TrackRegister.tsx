@@ -2,7 +2,7 @@
 // De tabel van /spotify/trackregister: zoeken, filteren op dkj_bpm en dkj_album, en bladeren per
 // 100 rijen (12.000+ rijen in één keer renderen maakt de pagina traag). Alle logica die geen React is
 // zit in register.ts; hier alleen de weergave en de filterstand.
-import { useDeferredValue, useMemo, useState } from "react";
+import { useDeferredValue, useMemo, useRef, useState } from "react";
 import { DKJ_ALBUM_COLOURS, DKJ_BPM_OPTIONS } from "@/lib/library/fields";
 import {
   EMPTY_FILTER,
@@ -59,6 +59,11 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
   const [album, setAlbum] = useState("");
   const [page, setPage] = useState(0);
   const deferredQuery = useDeferredValue(query);
+  const box = useRef<HTMLDivElement>(null);
+  const goTo = (next: number) => {
+    setPage(next);
+    box.current?.scrollTo?.({ top: 0 });
+  };
 
   const haystacks = useMemo(() => rows.map(searchText), [rows]);
   const bpmCounts = useMemo(() => countBy(rows, "bpm"), [rows]);
@@ -76,7 +81,7 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
   const label = (value: string, n: number | undefined) => `${value} (${nf.format(n ?? 0)})`;
   const reset = <T,>(set: (value: T) => void) => (value: T) => {
     set(value);
-    setPage(0);
+    goTo(0);
   };
 
   return (
@@ -132,30 +137,29 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
         </span>
       </div>
 
-      <div className="register-table-box">
+      <div className="register-table-box" ref={box}>
         <table className="register-table">
           <thead>
             <tr>
               <th><code>dkj_track_id</code></th>
-              <th>Titel</th>
+              <th><code>dkj_file</code></th>
               <th><code>dkj_albumartiest</code></th>
               <th><code>dkj_artist</code></th>
               <th><code>dkj_artist_ids</code></th>
               <th><code>dkj_bpm</code></th>
               <th><code>dkj_album</code></th>
-              <th><code>dkj_file</code></th>
             </tr>
           </thead>
           <tbody>
             {slice.length === 0 ? (
               <tr>
-                <td colSpan={8} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
+                <td colSpan={7} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
               </tr>
             ) : (
               slice.map((row) => (
                 <tr key={row.id}>
                   <td className="register-id"><Highlight text={row.id} term={term} /></td>
-                  <td className="register-title"><Highlight text={row.title} term={term} /></td>
+                  <td className="register-file">{row.file ? <Highlight text={row.file} term={term} /> : <Empty />}</td>
                   <td className="register-album-artist">
                     {row.albumArtist ? <Highlight text={row.albumArtist} term={term} /> : <Empty />}
                   </td>
@@ -171,7 +175,6 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
                   </td>
                   <td>{row.bpm ? <span className="register-tag"><Highlight text={row.bpm} term={term} /></span> : <Empty />}</td>
                   <td>{row.album ? <AlbumTag album={row.album} term={term} /> : <Empty />}</td>
-                  <td className="register-file">{row.file ? <Highlight text={row.file} term={term} /> : <Empty />}</td>
                 </tr>
               ))
             )}
@@ -185,8 +188,8 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
             `Nummer ${nf.format(current * PAGE_SIZE + 1)}–${nf.format(current * PAGE_SIZE + slice.length)} · pagina ${current + 1} van ${pages}`}
         </span>
         <div className="register-pager-buttons">
-          <button type="button" disabled={current === 0} onClick={() => setPage(current - 1)}>Vorige</button>
-          <button type="button" disabled={current >= pages - 1} onClick={() => setPage(current + 1)}>Volgende</button>
+          <button type="button" disabled={current === 0} onClick={() => goTo(current - 1)}>Vorige</button>
+          <button type="button" disabled={current >= pages - 1} onClick={() => goTo(current + 1)}>Volgende</button>
         </div>
       </div>
     </section>

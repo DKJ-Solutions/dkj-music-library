@@ -33,7 +33,7 @@ export default function TrackRegisterPage() {
   const register = readRegister();
 
   return (
-    <main className="wrap">
+    <main className="wrap wrap--full">
       <header className="masthead">
         <Link href="/spotify" className="world-back-link">
           ← Terug naar alle playlists

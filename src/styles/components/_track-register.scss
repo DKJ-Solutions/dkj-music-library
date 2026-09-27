@@ -1,7 +1,13 @@
 // /spotify/trackregister -- de tabel van het Trackregister. Hergebruikt .stats/.stat (masthead.scss),
 // .playlist-search (playlist-toolbar.scss) en de --emotion-*-tokens voor de albumkleuren; nieuw is
-// alleen de tabel zelf, want die heeft ruim twaalfduizend rijen en acht kolommen, meer dan de rijenlijsten
+// alleen de tabel zelf, want die heeft ruim twaalfduizend rijen en zeven kolommen, meer dan de rijenlijsten
 // elders in de app dragen.
+// Het register gebruikt de hele breedte van het venster, niet de 1080px van de andere pagina's: acht
+// kolommen passen daar niet in. De zijmarges van .wrap blijven.
+.wrap--full {
+  max-width: none;
+}
+
 .track-register {
   display: flex;
   flex-direction: column;
@@ -59,12 +65,16 @@
   font-variant-numeric: tabular-nums;
 }
 
+// Eigen scrollvak zo hoog als het venster (min. 420px): de kolomkoppen blijven bovenaan staan en de
+// horizontale scrollbalk zit onderin beeld, in plaats van onder honderd rijen.
 .register-table-box {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  overflow-x: auto;
+  overflow: auto;
+  max-height: max(420px, calc(100vh - 140px));
+  overscroll-behavior: contain;
 }
 
 .register-table {
@@ -82,6 +92,11 @@
 }
 
 .register-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface);
+  box-shadow: inset 0 -1px 0 var(--line);
   font-family: var(--font-mono);
   font-size: 10.5px;
   font-weight: 600;
@@ -107,11 +122,6 @@
   white-space: nowrap;
 }
 
-.register-title {
-  min-width: 200px;
-  color: var(--ink);
-}
-
 .register-album-artist {
   min-width: 160px;
   color: var(--ink-soft);
@@ -121,11 +131,10 @@
   min-width: 130px;
 }
 
+// dkj_file is de hoofdkolom (hij verving de titel): gewone letter, volle inktkleur.
 .register-file {
-  min-width: 260px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--ink-soft);
+  min-width: 280px;
+  color: var(--ink);
 }
 
 .register-chips {

@@ -46,6 +46,8 @@ kan het niet. De app wel: de export staat in git en de bibliotheek bouwt zich op
 - [x] README: hoe je het register opent
 - [x] Titel en `dkj_albumartiest` elk een eigen kolom (Dave, na het eerste bekijken)
 - [x] Kolom `dkj_file` erbij, na #18; ook doorzoekbaar
+- [x] Volle breedte van het venster, tabel in een eigen scrollvak met vaste kolomkoppen (Dave)
+- [x] Kolom Titel weg: `dkj_file` neemt zijn plek in (Dave); zoeken op titel werkt nog
 
 ### TEST
 
