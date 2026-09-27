@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**0 / 25 patch entries** <!-- pending-tally -->
+**0 / 26 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/trackregister-sort · 20260927-190735Z
+
+Het trackregister sorteert op elke kolom: klik op een kolomkop voor oplopend, nog eens voor aflopend, en
+een derde keer voor de oorspronkelijke volgorde. Lege cellen blijven onderaan, BPM en ID's sorteren
+numeriek (96BPM vóór 112BPM). De beschrijving onder de kop "DKJ Trackregister" is weg, en `.masthead` heeft geen `margin-bottom` meer (op alle pagina's met die kop).
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+N/A -- een lokale app zonder abonnees; alleen Dave gebruikt het register.
+
+**Score:** N/A
+
+#### Pull Request
+
+Trackregister sorteert op elke kolom via de kopregel
+
+[PR #29](https://github.com/DKJ-Solutions/dkj-music-library/pull/29)
+
+---
 
 ### DEPLOY: fix/1-stale-spotify-write-comment · 20260927-190116Z
 
