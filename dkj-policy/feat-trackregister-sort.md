@@ -55,7 +55,7 @@ elkaar. De sortering werkt op het gefilterde resultaat en springt terug naar pag
 
 - [x] Unit-tests `sortRegister` (numeriek, leeg onderaan, lijstkolom, invoer onaangetast) en een componenttest voor de klikcyclus
 - [x] vitest, typecheck en eslint groen
-- [ ] Dave bekijkt de kopregel in de browser (zichtbaar resultaat, wacht op zijn woord)
+- [x] Dave heeft het in de browser bekeken en gaf het woord "merge"
 
 ### DEPLOY: feat/trackregister-sort
 
