@@ -7,6 +7,7 @@ import {
   applyArtistIdsFromSnapshot,
   applyLibraryIdsFromSnapshot,
   artistPrefix,
+  fillAlbumArtists,
   fillPrimaryArtists,
   formatArtistId,
   planArtistIds,
@@ -162,6 +163,22 @@ describe("applyArtistIdsFromSnapshot", () => {
     expect(getTrack(db, "MAR01-AMY01-01")?.dkj_artist).toBe("Amy Winehouse");
     expect(getTrack(db, "LOS01-01")?.dkj_artist).toBeNull();
     expect(fillPrimaryArtists(db)).toBe(0);
+  });
+
+  it("zet in dkj_albumartiest alle artiesten in Spotify-volgorde, en laat een zelf ingevulde staan", () => {
+    const db = memoryDb();
+    applyLibraryIdsFromSnapshot(db, snap);
+    expect(getTrack(db, "MAR01-BRU01-01")?.dkj_albumartiest).toBe("Mark Ronson, Bruno Mars");
+    upsertTracks(db, [
+      { dkj_track_id: "MAR01-BRU01-01", dkj_albumartiest: null },
+      { dkj_track_id: "MAR01-AMY01-01", dkj_albumartiest: "Mark Ronson feat. Amy Winehouse" },
+      { dkj_track_id: "LOS01-01", artists: [] },
+    ]);
+    expect(fillAlbumArtists(db)).toBe(1);
+    expect(getTrack(db, "MAR01-BRU01-01")?.dkj_albumartiest).toBe("Mark Ronson, Bruno Mars");
+    expect(getTrack(db, "MAR01-AMY01-01")?.dkj_albumartiest).toBe("Mark Ronson feat. Amy Winehouse");
+    expect(getTrack(db, "LOS01-01")?.dkj_albumartiest).toBeNull();
+    expect(fillAlbumArtists(db)).toBe(0);
   });
 
   it("nummert oude T-ID's om zodra de artiesten bekend zijn", () => {
