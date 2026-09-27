@@ -83,6 +83,7 @@ describe("TrackRegister", () => {
     expect(screen.getByTitle(dkjTitle).className).toContain("register-oneline");
     expect(screen.queryByTitle(file)).toBeNull();
     expect(screen.queryByRole("button", { name: /dkj_file/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /^dkj_artist/ })).toBeNull();
   });
 
   it("zet één artiest-ID als chip, en meer in een menu met de namen", () => {

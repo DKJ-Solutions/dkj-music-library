@@ -196,7 +196,7 @@ Ook dit veld wordt alleen gevuld zolang het leeg is. De regels staan in `src/lib
 `dkj_title` is alleen de titel, in dezelfde vorm als in `dkj_file` na de artiesten: `Higher - David Penn
 Remix` wordt `Higher (David Penn Remix)`. Het is geen bestandsnaam, dus tekens als `?` en `:` blijven
 staan. Ook dit veld wordt alleen gevuld zolang het leeg is. Het trackregister toont `dkj_title` en niet
-`dkj_file`; op `dkj_file` zoeken kan nog wel.
+`dkj_file`, en ook `dkj_artist` niet (`dkj_albumartiest` staat er wel); op beide zoeken kan nog wel.
 
 ### De playlists: `spotify_playlist`
 
