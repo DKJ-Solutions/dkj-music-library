@@ -2,8 +2,9 @@
 // beschrijving van een Spotify-playlist -- `Tech House · Red Light (m) · Vol. 6 · 20260615`, zie
 // mixes/mixDescription.ts voor het formaat.
 //
-// DIT IS DE ENIGE ROUTE DIE NAAR SPOTIFY SCHRIJFT. De andere schrijf-routes (world, bpm, done) raken
-// uitsluitend lokale JSON-bestanden; deze verandert data in Dave's Spotify-account. Vandaar drie grenzen
+// DIT IS EEN VAN DE TWEE ROUTES DIE NAAR SPOTIFY SCHRIJVEN, naast playlist-name (de naam). De andere
+// schrijf-routes (world, bpm, done) raken uitsluitend lokale JSON-bestanden; deze verandert data in
+// Dave's Spotify-account. Vandaar drie grenzen
 // bovenop de gebruikelijke same-origin-guard:
 //   1. alleen het `description`-veld gaat mee (zie playlistApi.ts) -- naam en openbaarheid blijven buiten;
 //   2. **de client stuurt geen vrije tekst mee, alleen een mix-ID.** De nieuwe beschrijving wordt hier
