@@ -47,15 +47,17 @@ describe("TrackRegister", () => {
     expect(screen.getByText("1 van 150 nummers")).toBeTruthy();
   });
 
-  it("toont elke playlist als link, en na drie een +N dat de rest opent", () => {
-    const playlists = ["Een", "Twee", "Drie", "Vier", "Vijf"].map((name, i) => ({ id: `p${i}`, name }));
-    render(<TrackRegister rows={[row(1, { playlists })]} artistCount={1} />);
-    const link = screen.getByRole("link", { name: "Een" });
-    expect(link.getAttribute("href")).toBe("https://open.spotify.com/playlist/p0");
-    expect(link.getAttribute("target")).toBe("_blank");
-    expect(screen.queryByRole("link", { name: "Vier" })).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: "+2" }));
-    expect(screen.getByRole("link", { name: "Vijf" })).toBeTruthy();
+  it("toont één playlist als link, en meer dan één als menu", () => {
+    const playlists = ["Een", "Twee", "Drie"].map((name, i) => ({ id: `p${i}`, name }));
+    render(<TrackRegister rows={[row(1, { playlists: [playlists[0]] }), row(2, { playlists })]} artistCount={1} />);
+    const single = screen.getByRole("link", { name: "Een" });
+    expect(single.getAttribute("href")).toBe("https://open.spotify.com/playlist/p0");
+    expect(single.getAttribute("target")).toBe("_blank");
+    expect(screen.queryByRole("link", { name: "Drie" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /3 playlists/ }));
+    expect(screen.getByRole("link", { name: "Drie" }).getAttribute("href")).toBe("https://open.spotify.com/playlist/p2");
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("link", { name: "Drie" })).toBeNull();
   });
 
   it("meldt het als niets past", () => {

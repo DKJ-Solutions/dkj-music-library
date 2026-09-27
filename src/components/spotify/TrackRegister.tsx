@@ -2,7 +2,7 @@
 // De tabel van /spotify/trackregister: zoeken, filteren op dkj_bpm en dkj_album, en bladeren per
 // 100 rijen (12.000+ rijen in één keer renderen maakt de pagina traag). Alle logica die geen React is
 // zit in register.ts; hier alleen de weergave en de filterstand.
-import { useDeferredValue, useMemo, useRef, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { DKJ_ALBUM_COLOURS, DKJ_BPM_OPTIONS } from "@/lib/library/fields";
 import { playlistUrl, type PlaylistLink } from "@/lib/library/playlistLink";
 import {
@@ -15,8 +15,6 @@ import {
 } from "@/lib/library/register";
 
 const PAGE_SIZE = 100;
-/** Zoveel playlist-labels staan er direct; de rest achter "+N". */
-const PLAYLISTS_SHOWN = 3;
 const ALBUM_VARIANTS = ["Light (f)", "Full (f)", "Light (m)", "Full (m)"] as const;
 const nf = new Intl.NumberFormat("nl-NL");
 
@@ -56,29 +54,64 @@ function AlbumTag({ album, term }: { album: string; term: string }) {
   );
 }
 
+function PlaylistLabel({ playlist, term, className }: { playlist: PlaylistLink; term: string; className: string }) {
+  return (
+    <a
+      className={className}
+      href={playlistUrl(playlist.id)}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={`Open "${playlist.name}" op Spotify`}
+    >
+      <Highlight text={playlist.name} term={term} />
+    </a>
+  );
+}
+
+/** Eén playlist: een label dat hem opent. Meer dan één: een knop met een menu van links. Het menu sluit
+ *  bij een klik ernaast of met Escape. */
 function PlaylistLabels({ playlists, term }: { playlists: PlaylistLink[]; term: string }) {
   const [open, setOpen] = useState(false);
+  const menu = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (event: MouseEvent | KeyboardEvent) => {
+      if (event instanceof KeyboardEvent ? event.key === "Escape" : !menu.current?.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", close);
+    document.addEventListener("keydown", close);
+    return () => {
+      document.removeEventListener("mousedown", close);
+      document.removeEventListener("keydown", close);
+    };
+  }, [open]);
+
   if (playlists.length === 0) return <Empty />;
-  const shown = open ? playlists : playlists.slice(0, PLAYLISTS_SHOWN);
-  const hidden = playlists.length - shown.length;
+  if (playlists.length === 1) return <PlaylistLabel playlist={playlists[0]} term={term} className="register-playlist" />;
+  // Zoekt iemand op een playlistnaam, dan staat die treffer op de knop, zodat je ziet waarom de rij er staat.
+  const hit = term ? playlists.find((playlist) => fold(playlist.name).includes(term)) : undefined;
   return (
-    <div className="register-playlists">
-      {shown.map((playlist) => (
-        <a
-          key={playlist.id}
-          className="register-playlist"
-          href={playlistUrl(playlist.id)}
-          target="_blank"
-          rel="noopener noreferrer"
-          title={`Open "${playlist.name}" op Spotify`}
-        >
-          <Highlight text={playlist.name} term={term} />
-        </a>
-      ))}
-      {hidden > 0 && (
-        <button type="button" className="register-playlist-more" onClick={() => setOpen(true)}>
-          +{hidden}
-        </button>
+    <div className="register-playlist-menu" ref={menu}>
+      <button
+        type="button"
+        className="register-playlist register-playlist-toggle"
+        aria-expanded={open}
+        aria-haspopup="true"
+        onClick={() => setOpen(!open)}
+      >
+        {hit ? <Highlight text={hit.name} term={term} /> : `${playlists.length} playlists`}
+        {hit && <span className="register-playlist-count"> +{playlists.length - 1}</span>}
+        <span aria-hidden="true"> ▾</span>
+      </button>
+      {open && (
+        <div className="register-playlist-list">
+          {playlists.map((playlist) => (
+            <PlaylistLabel key={playlist.id} playlist={playlist} term={term} className="register-playlist-item" />
+          ))}
+        </div>
       )}
     </div>
   );
