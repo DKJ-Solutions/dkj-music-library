@@ -44,7 +44,8 @@
 ### CREATE
 
 - [x] Kolommen als data (veld, breedte, cel) in twee sets: `VISIBLE_COLUMNS` en `HIDDEN_COLUMNS`.
-- [x] Switch "Zichtbare kolommen / Verborgen kolommen" in de filterbalk (`pill-toggle`, `aria-pressed`); wisselen zet de sortering en de pagina terug.
+- [x] Switch "Zichtbare kolommen / Verborgen kolommen" in de filterbalk; wisselen zet de sortering en de pagina terug.
+- [x] Na Dave's "knop werkt niet": één `role="switch"`-knop in plaats van twee losse knoppen, zodat ook een klik op de helft die al aan staat wisselt (die deed eerst niets). Nagelopen in headless Chrome tegen de dev-server.
 - [x] `ArtistIds` (chip, of menu bij meer ID's) en de bijbehorende stijlen terug.
 
 ### TEST
@@ -55,7 +56,7 @@
 
 ### DEPLOY: feat/register-column-switch
 
-Het trackregister heeft een switch in de filterbalk: **Zichtbare kolommen** toont de gewone tabel en **Verborgen kolommen** toont de vier kolommen die daar bewust uit zijn gelaten: `dkj_track_id`, `dkj_file`, `dkj_artist` en `dkj_artist_id` (als chip, of als menu met de namen bij meer artiesten). Zoeken, filters en bladeren werken in beide sets. Wisselen zet de sortering terug, omdat die bij een kop hoorde die dan verdwenen is.
+Het trackregister heeft een switch in de filterbalk die bij elke klik wisselt: **Zichtbare kolommen** toont de gewone tabel en **Verborgen kolommen** toont de vier kolommen die daar bewust uit zijn gelaten: `dkj_track_id`, `dkj_file`, `dkj_artist` en `dkj_artist_id` (als chip, of als menu met de namen bij meer artiesten). Zoeken, filters en bladeren werken in beide sets. Wisselen zet de sortering terug, omdat die bij een kop hoorde die dan verdwenen is.
 
 **Score:** 3
 

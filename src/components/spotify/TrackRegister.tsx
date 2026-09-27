@@ -400,10 +400,9 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
     goTo(0);
   };
   const columns = COLUMN_SETS[columnSet];
-  // Een andere set kolommen: de sortering hoort bij een kop die nu weg is, dus die vervalt.
-  const switchColumns = (next: ColumnSet) => {
-    if (next === columnSet) return;
-    setColumnSet(next);
+  // Eén switch: elke klik wisselt van set. De sortering hoort bij een kop die dan weg is, dus die vervalt.
+  const toggleColumns = () => {
+    setColumnSet(columnSet === "visible" ? "hidden" : "visible");
     setSort(null);
     goTo(0);
   };
@@ -464,26 +463,18 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
             <option value={EMPTY_FILTER}>{label("Leeg", groupCounts.get(EMPTY_FILTER))}</option>
           </select>
         </label>
-        <div className="register-column-switch" role="group" aria-label="Kolommen">
-          <button
-            type="button"
-            className="pill-toggle"
-            aria-pressed={columnSet === "visible"}
-            data-active={columnSet === "visible"}
-            onClick={() => switchColumns("visible")}
-          >
-            Zichtbare kolommen
-          </button>
-          <button
-            type="button"
-            className="pill-toggle"
-            aria-pressed={columnSet === "hidden"}
-            data-active={columnSet === "hidden"}
-            onClick={() => switchColumns("hidden")}
-          >
-            Verborgen kolommen
-          </button>
-        </div>
+        <button
+          type="button"
+          role="switch"
+          className="register-column-switch"
+          aria-checked={columnSet === "hidden"}
+          aria-label="Verborgen kolommen tonen"
+          title="Wissel tussen de zichtbare en de verborgen kolommen"
+          onClick={toggleColumns}
+        >
+          <span className="pill-toggle" data-active={columnSet === "visible"}>Zichtbare kolommen</span>
+          <span className="pill-toggle" data-active={columnSet === "hidden"}>Verborgen kolommen</span>
+        </button>
         <span className="register-count" aria-live="polite">
           {list.length === rows.length
             ? `${nf.format(rows.length)} nummers`

@@ -92,18 +92,19 @@ describe("TrackRegister", () => {
     const headers = () => [...document.querySelectorAll(".register-table thead code")].map((c) => c.textContent);
     const file = "Airdraw, Jo.E & Aaren - Bryde's Whale";
     render(<TrackRegister rows={[row(1, { file })]} artistCount={1} />);
-    const visible = screen.getByRole("button", { name: "Zichtbare kolommen" });
-    const hidden = screen.getByRole("button", { name: "Verborgen kolommen" });
-    expect(visible.getAttribute("aria-pressed")).toBe("true");
+    const toggle = screen.getByRole("switch", { name: "Verborgen kolommen tonen" });
+    expect(toggle.getAttribute("aria-checked")).toBe("false");
     expect(headers()).toContain("dkj_title");
 
-    fireEvent.click(hidden);
-    expect(hidden.getAttribute("aria-pressed")).toBe("true");
+    // Ook een klik op de helft die al aan staat wisselt: het is één switch.
+    fireEvent.click(screen.getByText("Zichtbare kolommen"));
+    expect(toggle.getAttribute("aria-checked")).toBe("true");
     expect(headers()).toEqual(["dkj_track_id", "dkj_file", "dkj_artist", "dkj_artist_id"]);
     expect(screen.getByTitle(file)).toBeTruthy();
     expect(screen.getByText("ART01-001")).toBeTruthy();
 
-    fireEvent.click(visible);
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute("aria-checked")).toBe("false");
     expect(headers()).not.toContain("dkj_file");
     expect(headers()).toContain("dkj_title");
   });
@@ -118,7 +119,7 @@ describe("TrackRegister", () => {
         artistCount={4}
       />
     );
-    fireEvent.click(screen.getByRole("button", { name: "Verborgen kolommen" }));
+    fireEvent.click(screen.getByRole("switch"));
     expect(screen.getByTitle("Aa").textContent).toBe("AAA01");
     expect(screen.queryByText("EEE01")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: /3 artists/ }));
@@ -130,8 +131,8 @@ describe("TrackRegister", () => {
     render(<TrackRegister rows={[row(1), row(2)]} artistCount={1} />);
     fireEvent.click(screen.getByRole("button", { name: /dkj_title/ }));
     expect(screen.getByRole("button", { name: /dkj_title/ }).closest("th")?.getAttribute("aria-sort")).toBe("ascending");
-    fireEvent.click(screen.getByRole("button", { name: "Verborgen kolommen" }));
-    fireEvent.click(screen.getByRole("button", { name: "Zichtbare kolommen" }));
+    fireEvent.click(screen.getByRole("switch"));
+    fireEvent.click(screen.getByRole("switch"));
     expect(screen.getByRole("button", { name: /dkj_title/ }).closest("th")?.getAttribute("aria-sort")).toBe("none");
   });
 
