@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**27 / 35 minor entries** <!-- pending-tally -->
+**27 / 36 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/sort-ignore-articles · 20260927-211617Z
+
+Alfabetisch sorteren slaat een Engels lidwoord vooraan over: `The Beatles` staat bij de B, `A Tribe Called Quest` bij de T. Het geldt als los woord (`Abba`, `A-ha` en `Theory of a Deadman` blijven waar ze stonden) en een titel die alleen uit een lidwoord bestaat (`The The`) sorteert op zichzelf. Het zit in de gedeelde `compareText`, dus alle sorteerbare tabellen en het trackregister doen het gelijk.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+N/A -- een lokale app zonder abonnees; alleen de eigenaar ziet de sortering.
+
+**Score:** N/A
+
+#### Pull Request
+
+Lidwoorden (A, An, The) tellen niet mee bij alfabetisch sorteren
+
+[PR #39](https://github.com/DKJ-Solutions/dkj-music-library/pull/39)
+
+---
 
 ### DEPLOY: feat/hide-artist-id-column · 20260927-211144Z
 
