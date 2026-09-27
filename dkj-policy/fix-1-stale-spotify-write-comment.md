@@ -39,19 +39,37 @@
 
 ### PLAN
 
+Issue #1: the header of the mix-tag route still called itself the only route that writes to Spotify,
+while playlist-name calls itself the second. Verified against the code: `updatePlaylistDescription` and
+`updatePlaylistName` are the two writers, each called by exactly one route. A search for the same claim
+elsewhere found it in `src/lib/spotify/config.ts` too (the scope explanation). `playlistApi.ts` ("the
+only place that writes back") and `httpClient.ts` ("`spotifyPut` is the only write path") still hold and
+stay as they are.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] mix-tag route header: one of the two routes that write to Spotify, beside playlist-name
+- [x] config.ts scope note: the hub uses description and name, via the two functions in playlistApi.ts
 
 ### TEST
 
+- [x] Comment-only change; no behaviour to test. The gates run in ship-pr.
+
 ### DEPLOY: fix/1-stale-spotify-write-comment
 
-**Score:**
+The comments in the mix-tag route and in the Spotify scope configuration no longer claim that the
+playlist description is the only thing the hub writes to Spotify; they name both writers, the
+description (mix-tag) and the name (playlist-name). Resolves #1.
+
+Prevents a later reader from trusting the stale claim when judging what the Spotify scopes are used for.
+
+**Score:** 1
 
 #### What makes this deploy extra special
 
-**Score:**
+A subscriber of a service never sees a source comment.
+
+**Score:** N/A
 
 #### Pull Request
 
