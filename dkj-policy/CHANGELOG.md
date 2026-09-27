@@ -2,7 +2,31 @@
 
 ## [Unreleased]
 
-**23 / 28 minor entries** <!-- pending-tally -->
+**24 / 29 minor entries** <!-- pending-tally -->
+
+### DEPLOY: style/trackregister-fits-screen · 20260927-201130Z
+
+De tabel in het Trackregister wordt nooit hoger dan het venster: de pagina is zo hoog als het scherm en
+het scrollvak van de tabel vult wat er overblijft, dus er is nog maar één verticale scrollbalk. Vorige en
+Volgende staan daaronder altijd in beeld, dus je hoeft niet meer naar beneden te scrollen om te bladeren. De kop van elke
+pagina met een masthead heeft onderaan minder ruimte: 12px in plaats van 28px.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Wie door het register bladert, ziet de knoppen Vorige en Volgende altijd, zonder eerst naar beneden te
+scrollen.
+
+**Score:** 3
+
+#### Pull Request
+
+Trackregister past in het scherm, bladerknoppen altijd zichtbaar
+
+[PR #31](https://github.com/DKJ-Solutions/dkj-music-library/pull/31)
+
+---
 
 ### DEPLOY: feat/dedupe-live-variants · 20260927-192739Z
 
