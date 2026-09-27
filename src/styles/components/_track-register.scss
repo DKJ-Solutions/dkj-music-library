@@ -409,3 +409,37 @@ a.register-menu-item:hover {
   opacity: 0.45;
   cursor: default;
 }
+
+// De switch tussen de gewone kolommen en de kolommen die daar bewust uit zijn gelaten (Dave). De knoppen
+// zelf zijn .pill-toggle (playlist-toolbar.scss); hier alleen dat ze als één paar naast elkaar staan.
+.register-column-switch {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.register-column-switch .pill-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+// De cellen van de verborgen kolommen: ID en artiest-ID's als chips, en het menu met ID + naam.
+.register-chips {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.register-chip {
+  font-size: 11.5px;
+  white-space: nowrap;
+  color: var(--ink);
+  cursor: default;
+}
+
+.register-menu-id {
+  display: inline-block;
+  min-width: 64px;
+  font-size: 11.5px;
+  color: var(--ink-soft);
+}

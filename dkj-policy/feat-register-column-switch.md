@@ -39,19 +39,31 @@
 
 ### PLAN
 
+- [x] De verborgen kolommen zijn `dkj_track_id`, `dkj_file`, `dkj_artist` en `dkj_artist_id`; hun oude celweergave uit de git-geschiedenis terughalen.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Kolommen als data (veld, breedte, cel) in twee sets: `VISIBLE_COLUMNS` en `HIDDEN_COLUMNS`.
+- [x] Switch "Zichtbare kolommen / Verborgen kolommen" in de filterbalk (`pill-toggle`, `aria-pressed`); wisselen zet de sortering en de pagina terug.
+- [x] `ArtistIds` (chip, of menu bij meer ID's) en de bijbehorende stijlen terug.
 
 ### TEST
 
+- [x] Tests: wisselen en terug, de artiest-ID-chip en het menu in de verborgen set, sortering vervalt bij wisselen.
+- [x] vitest (791), tsc en eslint groen.
+- [~] Visuele controle: dat doet Dave vóór de merge; een gate kan niet beoordelen hoe het eruitziet.
+
 ### DEPLOY: feat/register-column-switch
 
-**Score:**
+Het trackregister heeft een switch in de filterbalk: **Zichtbare kolommen** toont de gewone tabel en **Verborgen kolommen** toont de vier kolommen die daar bewust uit zijn gelaten: `dkj_track_id`, `dkj_file`, `dkj_artist` en `dkj_artist_id` (als chip, of als menu met de namen bij meer artiesten). Zoeken, filters en bladeren werken in beide sets. Wisselen zet de sortering terug, omdat die bij een kop hoorde die dan verdwenen is.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A -- een lokale app zonder abonnees; alleen de eigenaar gebruikt het register.
+
+**Score:** N/A
 
 #### Pull Request
 
