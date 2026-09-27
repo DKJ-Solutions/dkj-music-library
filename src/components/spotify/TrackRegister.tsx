@@ -24,12 +24,11 @@ const ALBUM_VARIANTS = ["Light (f)", "Full (f)", "Light (m)", "Full (m)"] as con
 const nf = new Intl.NumberFormat("nl-NL");
 const GROUP_OPTIONS: readonly string[] = TRACK_FIELDS.find((field) => field.key === "dkj_group")?.options ?? [];
 
-/** De kolommen van de tabel, in volgorde: het veld en waarop hij sorteert. dkj_track_id, dkj_file en
- *  dkj_artist staan er niet in (Dave); op alle drie zoeken kan nog steeds. */
+/** De kolommen van de tabel, in volgorde: het veld en waarop hij sorteert. dkj_track_id, dkj_file,
+ *  dkj_artist en dkj_artist_id staan er niet in (Dave); op alle vier zoeken kan nog steeds. */
 const COLUMNS: readonly { key: SortKey; field: string }[] = [
   { key: "dkjTitle", field: "dkj_title" },
   { key: "albumArtist", field: "dkj_albumartiest" },
-  { key: "artistIds", field: "dkj_artist_id" },
   { key: "playlists", field: "spotify_playlist" },
   { key: "mixes", field: "djcylow_mix" },
   { key: "bpm", field: "dkj_bpm" },
@@ -199,41 +198,6 @@ function OutLinkLabels({ links, site, noun, term }: { links: OutLink[]; site: st
     >
       {links.map((link) => (
         <OutLinkLabel key={link.key} link={link} site={site} term={term} className="register-menu-item" />
-      ))}
-    </Dropdown>
-  );
-}
-
-/** Zoveel artiest-ID's staan er als chip; bij meer wordt het een menu, net als bij de playlists (Dave). */
-const ARTIST_IDS_INLINE = 1;
-
-function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term: string }) {
-  const chip = (id: string, i: number) => (
-    <span key={id} className="register-chip" title={names[i]}>
-      <Highlight text={id} term={term} />
-    </span>
-  );
-  if (ids.length <= ARTIST_IDS_INLINE) return <div className="register-chips">{ids.map(chip)}</div>;
-  // Net als bij de playlists: "3 artists", en bij een zoekopdracht de treffer op de knop.
-  const hit = term ? ids.findIndex((id, i) => fold(`${id} ${names[i]}`).includes(term)) : -1;
-  return (
-    <Dropdown
-      label={
-        hit >= 0 ? (
-          <>
-            <Highlight text={ids[hit]} term={term} />
-            <span className="register-menu-count">+{ids.length - 1}</span>
-          </>
-        ) : (
-          `${ids.length} artists`
-        )
-      }
-    >
-      {ids.map((id, i) => (
-        <span key={id} className="register-menu-item register-menu-item--static">
-          <span className="register-menu-id"><Highlight text={id} term={term} /></span>
-          <Highlight text={names[i]} term={term} />
-        </span>
       ))}
     </Dropdown>
   );
@@ -412,9 +376,8 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
         <table className="register-table">
           {/* Vaste verdeling van de breedte (table-layout: fixed), zodat alle kolommen altijd passen. */}
           <colgroup>
-            <col style={{ width: "23%" }} />
-            <col style={{ width: "15%" }} />
-            <col style={{ width: "9%" }} />
+            <col style={{ width: "28%" }} />
+            <col style={{ width: "19%" }} />
             <col style={{ width: "14%" }} />
             <col style={{ width: "13%" }} />
             <col style={{ width: "7%" }} />
@@ -453,7 +416,6 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
                 <tr key={row.id}>
                   <td><OneLine text={row.dkjTitle} term={term} className="register-title" /></td>
                   <td><OneLine text={row.albumArtist} term={term} className="register-album-artist" /></td>
-                  <td><ArtistIds ids={row.artistIds} names={row.artistNames} term={term} /></td>
                   <td className="register-playlists-cell">
                     <OutLinkLabels
                       links={row.playlists.map((p) => ({ key: p.id, name: p.name, href: playlistUrl(p.id) }))}

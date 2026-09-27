@@ -76,7 +76,7 @@ describe("TrackRegister", () => {
     );
   });
 
-  it("kapt dkj_title af, met de volledige titel als tooltip, en toont dkj_file, dkj_artist en dkj_track_id niet", () => {
+  it("kapt dkj_title af, met de volledige titel als tooltip, en toont dkj_file, dkj_artist, dkj_track_id en dkj_artist_id niet", () => {
     const dkjTitle = "Bryde's Whale (New Ordinance Edit) (Extended Mix)";
     const file = `Airdraw, Jo.E & Aaren - ${dkjTitle}`;
     render(<TrackRegister rows={[row(1, { dkjTitle, file })]} artistCount={1} />);
@@ -85,26 +85,7 @@ describe("TrackRegister", () => {
     expect(screen.queryByRole("button", { name: /dkj_file/ })).toBeNull();
     expect(screen.queryByRole("button", { name: /^dkj_artist/ })).toBeNull();
     expect(screen.queryByRole("button", { name: /dkj_track_id/ })).toBeNull();
-    expect(screen.getByRole("button", { name: /dkj_artist_id/ })).toBeTruthy();
-  });
-
-  it("zet één artiest-ID als chip, en meer in een menu met de namen", () => {
-    render(
-      <TrackRegister
-        rows={[
-          row(1, { artistIds: ["AAA01"], artistNames: ["Aa"] }),
-          row(2, { artistIds: ["CCC01", "DDD01", "EEE01"], artistNames: ["Cc", "Dd", "Ee"] }),
-          row(3, { artistIds: ["FFF01", "GGG01"], artistNames: ["Ff", "Gg"] }),
-        ]}
-        artistCount={6}
-      />
-    );
-    expect(screen.getByTitle("Aa").textContent).toBe("AAA01");
-    expect(screen.getByRole("button", { name: /2 artists/ })).toBeTruthy();
-    expect(screen.queryByText("EEE01")).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: /3 artists/ }));
-    expect(screen.getByText("EEE01")).toBeTruthy();
-    expect(screen.getByText("Ee")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /dkj_artist_id/ })).toBeNull();
   });
 
   it("toont één groep als label en meer groepen als menu, en filtert op elk van de groepen", () => {

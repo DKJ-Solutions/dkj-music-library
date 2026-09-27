@@ -39,19 +39,30 @@
 
 ### PLAN
 
+- [x] Zelfde aanpak als bij dkj_track_id (ae9e5f2): kolom uit `COLUMNS` en de rij, breedte herverdeeld
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Kolom `dkj_artist_id` uit `TrackRegister.tsx`, met de `ArtistIds`-cel en de stijlen die alleen die cel gebruikte
+- [x] De vrijgekomen 9% naar dkj_title (28%) en dkj_albumartiest (19%)
 
 ### TEST
 
+- [x] Componenttest: de kop dkj_artist_id staat er niet meer; vitest, tsc en eslint zijn groen, en de dev-server rendert de zeven overige koppen
+
 ### DEPLOY: feat/hide-artist-id-column
 
-**Score:**
+Het trackregister toont de kolom `dkj_artist_id` niet meer, net als eerder `dkj_track_id`. Zoeken op een
+artiest-ID werkt nog steeds. De ruimte gaat naar `dkj_title` en `dkj_albumartiest`. De cel met de
+artiest-chips en zijn menu, en de stijlen die alleen die cel gebruikte, zijn weg.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Het register is rustiger: geen kolom met artiest-codes meer, en er is meer ruimte voor de titel en de artiest.
+
+**Score:** 2
 
 #### Pull Request
 
