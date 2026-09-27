@@ -48,6 +48,7 @@ Na `dkj_artist_id` (PR #9) vroeg de eigenaar om ook `track_id` te hernoemen naar
 
 - [x] Nieuwe tests: oude database migreert met data, oude export zet terug, import met `track_id`-kop werkt
 - [x] Vitest 689/689, `tsc --noEmit` en `eslint` schoon
+- [x] Review Victor: geen bevindingen; elke weg naar `tracks` en `spotify_track_ids` hernoemt vóór de eerste query, `spotify_track_id` ongemoeid
 - [x] Echte data: aantallen gelijk (12.471 / 13.140 / 6.951), verse database via `LIBRARY_DB_PATH` uit de nieuwe export opgebouwd
 
 ### DEPLOY: refactor/dkj-track-id
