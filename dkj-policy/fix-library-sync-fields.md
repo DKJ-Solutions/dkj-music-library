@@ -32,11 +32,22 @@
 
 ### PLAN
 
+Gevonden bij het bouwen van de playlist-labels (#19): `dkj_playlists` stond in de export, maar bij alle
+12.471 tracks leeg in de database, terwijl de hash in `library_meta` precies gelijk was aan die van de
+export. Een restore neemt alleen velden over die in `fields.ts` staan; draaide die met een oudere
+veldenlijst (vrijwel zeker de draaiende dev-server tijdens het mergen), dan valt een veld weg en noteert
+hij toch "gelijk". Zonder iets in de hash dat de velden beschrijft, herstelt dat zich nooit vanzelf --
+op elke machine na een `git pull` met een nieuw veld.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `syncStamp()` in `libraryFile.ts`: `library_meta` onthoudt de exporthash plus een vingerafdruk van de veldenlijst; een andere veldenlijst leidt tot een nieuwe restore
+- [x] Bestaande databases hebben de oude vorm en bouwen zich bij de eerste opening één keer opnieuw op (de export is de bron, dus dat is veilig)
 
 ### TEST
+
+- [x] typecheck, eslint en vitest groen, met een test die een restore met een oudere veldenlijst naspeelt
+- [x] Echte database: `library:sync` bouwde opnieuw op, `dkj_playlists` weer bij 12.471 tracks gevuld; tweede run "gelijk"
 
 ### DEPLOY: fix/library-sync-fields
 
@@ -44,7 +55,12 @@
 
 ##### Tier 0
 
-**Score:**
+De bibliotheek bouwt zich nu opnieuw op uit de export als hij eerder met een andere veldenlijst gelezen
+werd. Daarvoor kon een nieuw veld na een `git pull` voorgoed leeg blijven in de database, terwijl de
+export het wel had: zo was `dkj_playlists` bij alle 12.471 tracks leeg. Elke bestaande database bouwt
+zich bij de eerste opening één keer opnieuw op.
+
+**Score:** 3
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +69,9 @@
 
 ##### Tier 1
 
-**Score:**
+Intern; management merkt hier niets van.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +80,9 @@
 
 ##### Tier 2
 
-**Score:**
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
 
 #### Pull Request
 
