@@ -177,6 +177,18 @@ describe("applyArtistIdsFromSnapshot", () => {
     expect(getTrack(db, id)?.dkj_artist).toBe("Bruno Mars");
   });
 
+  it("vult dkj_album uit de playlists als die één album noemen, en laat het anders leeg", () => {
+    const db = memoryDb();
+    const eenduidig = { ...snapshot(track("t1", "Uptown Funk", [["a2", "Mark Ronson"], ["a3", "Bruno Mars"]])).playlists[0], id: "p1", name: "Green Full (f) 🟢 128BPM EDM" };
+    const tweede = { ...eenduidig, id: "p2", name: "Green Full (f) 🟢 Top 100" };
+    const anders = { ...snapshot(track("t3", "Valerie", [["a2", "Mark Ronson"], ["a5", "Amy Winehouse"]])).playlists[0], id: "p3", name: "Cyan Light (m) 🧊 ALT" };
+    const ookAnders = { ...anders, id: "p4", name: "Red Full (m) 🔴 ALT" };
+    const result = applyLibraryIdsFromSnapshot(db, { syncedAt: "x", playlists: [eenduidig, tweede, anders, ookAnders] });
+    expect(result.albumsFilled).toBe(1);
+    expect(getTrack(db, "MAR01-BRU01-01")?.dkj_album).toBe("Green Full (f)");
+    expect(getTrack(db, "MAR01-AMY01-01")?.dkj_album).toBeNull();
+  });
+
   it("zet in dkj_albumartiest alle artiesten in Spotify-volgorde, en laat een zelf ingevulde staan", () => {
     const db = memoryDb();
     applyLibraryIdsFromSnapshot(db, snap);

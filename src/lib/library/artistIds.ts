@@ -26,7 +26,8 @@
 import type { DatabaseSync } from "node:sqlite";
 import type { Snapshot } from "@/lib/spotify/types";
 import { TRACKS_TABLE } from "./db";
-import { ALBUM_ARTIST_KEY, ARTIST_IDS_KEY, FILE_KEY, PRIMARY_ARTIST_KEY, TRACK_ID_KEY, albumArtistOf } from "./fields";
+import { ALBUM_ARTIST_KEY, ALBUM_KEY, ARTIST_IDS_KEY, FILE_KEY, PLAYLISTS_KEY, PRIMARY_ARTIST_KEY, TRACK_ID_KEY, albumArtistOf } from "./fields";
+import { albumFromPlaylists } from "./albumFromPlaylists";
 import { fileNameOf } from "./fileName";
 import { applyPlaylistLinks } from "./playlistLinks";
 import { primaryArtistOf } from "./primaryArtist";
@@ -209,14 +210,37 @@ export function readArtistIdMap(db: DatabaseSync): Map<string, string> {
 }
 
 /** De rijen van tracks waar `key` nog leeg is, met hun titel en artiestnamen. */
-function tracksMissing(db: DatabaseSync, key: string): { id: string; title: string | null; names: string[] }[] {
+interface MissingTrack {
+  id: string;
+  title: string | null;
+  /** Artiestnamen uit `artists`. */
+  names: string[];
+  /** Namen van de playlists uit `dkj_playlists`. */
+  playlists: string[];
+}
+
+function tracksMissing(db: DatabaseSync, key: string): MissingTrack[] {
   const rows = db
-    .prepare(`SELECT ${TRACK_ID_KEY}, title, artists FROM ${TRACKS_TABLE} WHERE "${key}" IS NULL AND json_valid(artists)`)
-    .all() as { dkj_track_id: string; title: string | null; artists: string }[];
+    .prepare(
+      `SELECT ${TRACK_ID_KEY}, title, artists, "${PLAYLISTS_KEY}" AS playlists FROM ${TRACKS_TABLE} ` +
+        `WHERE "${key}" IS NULL AND json_valid(artists)`
+    )
+    .all() as { dkj_track_id: string; title: string | null; artists: string; playlists: string | null }[];
   return rows.map((row) => {
     const parsed: unknown = JSON.parse(row.artists);
     const names = Array.isArray(parsed) ? parsed.filter((name): name is string => typeof name === "string") : [];
-    return { id: row.dkj_track_id, title: row.title, names };
+    let playlists: string[] = [];
+    try {
+      const list: unknown = row.playlists ? JSON.parse(row.playlists) : [];
+      if (Array.isArray(list)) {
+        playlists = list
+          .map((p) => (typeof p === "object" && p !== null ? (p as { name?: unknown }).name : null))
+          .filter((name): name is string => typeof name === "string");
+      }
+    } catch {
+      // met de hand in de database gezet; dan geen playlists
+    }
+    return { id: row.dkj_track_id, title: row.title, names, playlists };
   });
 }
 
@@ -225,7 +249,7 @@ function tracksMissing(db: DatabaseSync, key: string): { id: string; title: stri
 function fillMissing(
   db: DatabaseSync,
   key: string,
-  value: (track: { title: string | null; names: string[] }) => string | null
+  value: (track: MissingTrack) => string | null
 ): number {
   const tracks = tracksMissing(db, key);
   const fill = db.prepare(`UPDATE ${TRACKS_TABLE} SET "${key}" = ?, updated_at = ? WHERE ${TRACK_ID_KEY} = ?`);
@@ -264,8 +288,16 @@ export function fillFileNames(db: DatabaseSync): number {
   return fillMissing(db, FILE_KEY, (track) => fileNameOf(track.title, track.names));
 }
 
+/** Vult `dkj_album` uit de playlists (albumFromPlaylists.ts) bij elke track waar het nog leeg is en de
+ *  playlists één album noemen. Geeft het aantal gevulde tracks terug. */
+export function fillAlbumsFromPlaylists(db: DatabaseSync): number {
+  return fillMissing(db, ALBUM_KEY, (track) => albumFromPlaylists(track.playlists));
+}
+
 export interface LibraryIdResult {
   artists: ArtistIdResult;
+  /** Tracks die in deze run hun `dkj_album` uit de playlists kregen. */
+  albumsFilled: number;
   /** Tracks die in deze run hun `dkj_file` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
   fileNamesFilled: number;
   /** Tracks waarvan `dkj_playlists` in deze run veranderde (playlistLinks.ts). */
@@ -291,5 +323,7 @@ export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot
   const albumArtistsFilled = fillAlbumArtists(db);
   const fileNamesFilled = fillFileNames(db);
   const playlistsChanged = applyPlaylistLinks(db, snapshot);
-  return { albumArtistsFilled, artists, fileNamesFilled, playlistsChanged, primaryArtistsFilled, renumbered, tracks };
+  // Na de playlists: het album wordt uit hun namen afgeleid.
+  const albumsFilled = fillAlbumsFromPlaylists(db);
+  return { albumArtistsFilled, albumsFilled, artists, fileNamesFilled, playlistsChanged, primaryArtistsFilled, renumbered, tracks };
 }
