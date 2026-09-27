@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**24 / 29 minor entries** <!-- pending-tally -->
+**24 / 30 minor entries** <!-- pending-tally -->
+
+### DEPLOY: style/dropdown-over-table · 20260927-201346Z
+
+De dropdownmenu's in het Trackregister (playlists, artiest-ID's, groepen) liggen nu altijd over de tabel
+heen in plaats van afgekapt te worden door het scrollvak. Het menu staat in een portal met
+`position: fixed` naast zijn knop, en klapt onderin beeld naar boven open.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+N/A -- de Trackregister is een intern beheerscherm; geen abonnee ziet het.
+
+**Score:** N/A
+
+#### Pull Request
+
+Dropdownmenu's in het Trackregister vallen altijd over de tabel heen
+
+[PR #33](https://github.com/DKJ-Solutions/dkj-music-library/pull/33)
+
+---
 
 ### DEPLOY: style/trackregister-fits-screen · 20260927-201130Z
 
