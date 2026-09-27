@@ -122,7 +122,8 @@ export interface ArtistIdResult {
 }
 
 /** Kent eigen ID's toe aan elke nieuwe artiest in de snapshot en vult `dkj_artist_ids` bij tracks waar
- *  dat nog leeg is. Draai dit ná applyTrackIdsFromSnapshot(): een track moet zijn eigen ID al hebben. */
+ *  dat nog leeg is. Draai dit vóór de track-ID's (zoals applyLibraryIdsFromSnapshot() doet): nieuwe tracks krijgen hun
+ *  dkj_artist_ids dan al bij het aanmaken, en dit vult alleen oudere tracks aan. */
 export function applyArtistIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot): ArtistIdResult {
   ensureArtistsTable(db);
   ensureSpotifyLinkTable(db);
@@ -207,7 +208,8 @@ export interface LibraryIdResult {
 
 /** Alle eigen ID's uit de snapshot, in de volgorde die nodig is: eerst de artiesten (en `dkj_artist_ids`
  *  bij bestaande tracks), dan het eenmalig omnummeren van oude track-ID's, dan de nieuwe nummers --
- *  een track-ID begint met het artiest-ID van zijn hoofdartiest. */
+ *  een track-ID begint met het artiest-ID van zijn hoofdartiest. Elke stap is een eigen transactie en
+ *  kan veilig opnieuw draaien: valt een latere stap om, dan maakt de volgende run het af. */
 export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot): LibraryIdResult {
   const artists = applyArtistIdsFromSnapshot(db, snapshot);
   const renumbered = renumberLegacyTrackIds(db);

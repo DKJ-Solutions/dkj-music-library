@@ -53,6 +53,7 @@ omgenummerd in de volgorde van hun T-nummer.
 
 - [x] Tests herschreven voor het nieuwe formaat, plus: doorgroeien na 99, `XXX00`, omnummeren (volgorde, bestaande nieuwe ID's, koppelingen, tweede keer niets), eenmalig omnummeren via de orchestrator
 - [x] Vitest 693/693, `tsc --noEmit` en `eslint` schoon
+- [x] Review Victor: geen logische fouten (handmatige ID's met streepjes getest); verouderde docstring over de volgorde gecorrigeerd, en vastgelegd dat de drie stappen elk een eigen transactie zijn en zichzelf herstellen
 - [x] Echte data: 0 ID's in het oude of een verkeerd formaat, 0 koppelingen naar een onbekend ID, alle 12.471 ID's beginnen met hun hoofdartiest; verse database uit de export opgebouwd
 
 ### DEPLOY: feat/track-id-format
