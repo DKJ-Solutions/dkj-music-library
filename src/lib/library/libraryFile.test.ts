@@ -1,6 +1,7 @@
 import fs from "fs";
 import os from "os";
 import path from "path";
+import { DatabaseSync } from "node:sqlite";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { openLibraryDb } from "./db";
 import { exportHash, exportLibrary, openLibrary, restoreLibrary, syncWithExport, withLibrary } from "./libraryFile";
@@ -25,11 +26,11 @@ const memoryDb = () => openLibraryDb(":memory:").db;
 
 function seed(db: ReturnType<typeof memoryDb>) {
   upsertTracks(db, [
-    { track_id: "T000002", title: "Rehab", artists: ["Amy Winehouse"], bpm: 72 },
-    { track_id: "T000001", title: "No One", artists: ["Alicia Keys"], tags: ["soul"] },
+    { dkj_track_id: "T000002", title: "Rehab", artists: ["Amy Winehouse"], bpm: 72 },
+    { dkj_track_id: "T000001", title: "No One", artists: ["Alicia Keys"], tags: ["soul"] },
   ]);
   ensureSpotifyLinkTable(db);
-  const link = db.prepare("INSERT INTO spotify_track_ids (spotify_track_id, track_id, song_key) VALUES (?, ?, ?)");
+  const link = db.prepare("INSERT INTO spotify_track_ids (spotify_track_id, dkj_track_id, song_key) VALUES (?, ?, ?)");
   link.run("sp-b", "T000001", "no one|a");
   link.run("sp-a", "T000001", "no one|a");
   link.run("sp-c", "T000002", "rehab|b");
@@ -46,7 +47,7 @@ describe("exportLibrary / restoreLibrary", () => {
     const tracks = fs.readFileSync(path.join(exportDir, "tracks.ndjson"), "utf8");
     const links = fs.readFileSync(path.join(exportDir, "spotify_track_ids.ndjson"), "utf8");
 
-    expect(tracks.trim().split("\n").map((line) => JSON.parse(line).track_id)).toEqual(["T000001", "T000002"]);
+    expect(tracks.trim().split("\n").map((line) => JSON.parse(line).dkj_track_id)).toEqual(["T000001", "T000002"]);
     expect(links.trim().split("\n").map((line) => JSON.parse(line).spotify_track_id)).toEqual(["sp-a", "sp-b", "sp-c"]);
     expect(JSON.parse(tracks.split("\n")[0]).artists).toEqual(["Alicia Keys"]);
 
@@ -71,7 +72,7 @@ describe("exportLibrary / restoreLibrary", () => {
     exportLibrary(source, exportDir);
 
     const target = memoryDb();
-    upsertTracks(target, [{ track_id: "T999999", title: "Weg ermee" }]);
+    upsertTracks(target, [{ dkj_track_id: "T999999", title: "Weg ermee" }]);
     restoreLibrary(target, exportDir);
     expect(getTrack(target, "T999999")).toBeNull();
   });
@@ -97,8 +98,8 @@ describe("syncWithExport / openLibrary / withLibrary", () => {
     expect(() =>
       withLibrary(
         (db) => {
-          upsertTracks(db, [{ track_id: "T000003", title: "Valerie" }]);
-          fs.appendFileSync(path.join(exportDir, "tracks.ndjson"), '{"track_id":"T000099"}\n');
+          upsertTracks(db, [{ dkj_track_id: "T000003", title: "Valerie" }]);
+          fs.appendFileSync(path.join(exportDir, "tracks.ndjson"), '{"dkj_track_id":"T000099"}\n');
           throw new Error("proces valt om");
         },
         dbPath,
@@ -111,17 +112,17 @@ describe("syncWithExport / openLibrary / withLibrary", () => {
     expect(getTrack(db, "T000003")?.title).toBe("Valerie");
     db.close();
     const ids = fs.readFileSync(path.join(exportDir, "tracks.ndjson"), "utf8").trim().split("\n");
-    expect(ids.map((line) => JSON.parse(line).track_id)).toEqual(["T000001", "T000002", "T000003"]);
+    expect(ids.map((line) => JSON.parse(line).dkj_track_id)).toEqual(["T000001", "T000002", "T000003"]);
   });
 
   it("weigert een export-regel zonder verplicht veld, zonder iets te wissen", () => {
     const db = memoryDb();
     seed(db);
     exportLibrary(db, exportDir);
-    fs.appendFileSync(path.join(exportDir, "spotify_track_ids.ndjson"), '{"track_id":"T000009"}\n');
+    fs.appendFileSync(path.join(exportDir, "spotify_track_ids.ndjson"), '{"dkj_track_id":"T000009"}\n');
 
     const target = memoryDb();
-    upsertTracks(target, [{ track_id: "T000042", title: "Blijft staan" }]);
+    upsertTracks(target, [{ dkj_track_id: "T000042", title: "Blijft staan" }]);
     expect(() => restoreLibrary(target, exportDir)).toThrow(/spotify_track_id/);
     expect(getTrack(target, "T000042")?.title).toBe("Blijft staan");
   });
@@ -147,7 +148,7 @@ describe("syncWithExport / openLibrary / withLibrary", () => {
     // Een andere machine voegde een nummer toe en pushte de export.
     const other = memoryDb();
     restoreLibrary(other, exportDir);
-    upsertTracks(other, [{ track_id: "T000003", title: "Valerie" }]);
+    upsertTracks(other, [{ dkj_track_id: "T000003", title: "Valerie" }]);
     exportLibrary(other, exportDir);
 
     const { db, sync } = openLibrary(dbPath, exportDir);
@@ -175,12 +176,49 @@ describe("syncWithExport / openLibrary / withLibrary", () => {
 
   it("exporteert na elke schrijvende stap, zodat de volgende opening niets hoeft te doen", () => {
     withLibrary((db) => seed(db), dbPath, exportDir);
-    withLibrary((db) => upsertTracks(db, [{ track_id: "T000001", notes: "opener" }]), dbPath, exportDir);
+    withLibrary((db) => upsertTracks(db, [{ dkj_track_id: "T000001", notes: "opener" }]), dbPath, exportDir);
 
     const lines = fs.readFileSync(path.join(exportDir, "tracks.ndjson"), "utf8").trim().split("\n");
     expect(JSON.parse(lines[0]).notes).toBe("opener");
     const { db, sync } = openLibrary(dbPath, exportDir);
     expect(sync).toBe("in-sync");
     db.close();
+  });
+});
+
+describe("de hernoeming track_id -> dkj_track_id", () => {
+  it("hernoemt de kolom in een bestaande database, met de data erin", () => {
+    const old = new DatabaseSync(dbPath);
+    old.exec("CREATE TABLE tracks (track_id TEXT PRIMARY KEY NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL, title TEXT)");
+    old.exec("INSERT INTO tracks VALUES ('T000001', 'x', 'x', 'No One')");
+    old.exec("CREATE TABLE spotify_track_ids (spotify_track_id TEXT PRIMARY KEY NOT NULL, track_id TEXT NOT NULL, song_key TEXT NOT NULL)");
+    old.exec("INSERT INTO spotify_track_ids VALUES ('sp-a', 'T000001', 'no one|a')");
+    old.close();
+
+    const { db } = openLibraryDb(dbPath);
+    ensureSpotifyLinkTable(db);
+    expect(getTrack(db, "T000001")?.title).toBe("No One");
+    expect(readLinks(db)).toEqual([{ spotify_track_id: "sp-a", dkj_track_id: "T000001", song_key: "no one|a" }]);
+    db.close();
+  });
+
+  it("zet een export van vóór de hernoeming gewoon terug", () => {
+    fs.mkdirSync(exportDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(exportDir, "tracks.ndjson"),
+      '{"track_id":"T000001","created_at":"x","updated_at":"x","title":"No One"}\n'
+    );
+    fs.writeFileSync(path.join(exportDir, "spotify_track_ids.ndjson"), '{"track_id":"T000001","spotify_track_id":"sp-a","song_key":"k"}\n');
+
+    const db = memoryDb();
+    restoreLibrary(db, exportDir);
+    expect(getTrack(db, "T000001")?.title).toBe("No One");
+    expect(readLinks(db)[0].dkj_track_id).toBe("T000001");
+  });
+
+  it("accepteert in een import nog de oude kolomkop track_id", () => {
+    const db = memoryDb();
+    expect(upsertTracks(db, [{ track_id: "T000001", bpm: "128" }])).toEqual({ inserted: 1, updated: 0 });
+    expect(getTrack(db, "T000001")?.bpm).toBe(128);
   });
 });

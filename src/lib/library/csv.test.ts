@@ -35,7 +35,7 @@ describe("parseCsvRows", () => {
 
 describe("parseCsvRecords", () => {
   it("koppelt cellen aan de kopregel", () => {
-    expect(parseCsvRecords("track_id;title\ndkj-1;Levels")).toEqual([{ track_id: "dkj-1", title: "Levels" }]);
+    expect(parseCsvRecords("dkj_track_id;title\ndkj-1;Levels")).toEqual([{ dkj_track_id: "dkj-1", title: "Levels" }]);
   });
 
   it("weigert een rij met meer cellen dan de kopregel", () => {

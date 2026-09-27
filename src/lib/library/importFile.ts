@@ -1,6 +1,6 @@
 // Leest een importbestand (CSV of JSON) als lijst track-records voor upsertTracks() (trackStore.ts).
 //
-//   - CSV:  de kopregel zijn de veldnamen uit fields.ts (plus `track_id`). Een lege cel betekent
+//   - CSV:  de kopregel zijn de veldnamen uit fields.ts (plus `dkj_track_id`). Een lege cel betekent
 //           "niet bekend" en laat de bestaande waarde in de database staan.
 //   - JSON: een lijst objecten, of { "tracks": [...] }. Hier betekent `null` wél "maak leeg".
 //

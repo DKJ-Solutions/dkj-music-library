@@ -32,11 +32,23 @@
 
 ### PLAN
 
+#### Keuze van de eigenaar
+
+Na `dkj_artist_id` (PR #9) vroeg de eigenaar om ook `track_id` te hernoemen naar `dkj_track_id` (27 september
+2026), zodat duidelijk is dat het een eigen veld is.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `TRACK_ID_KEY` = `dkj_track_id` overal; `LEGACY_TRACK_ID_KEY` = `track_id` voor de overgang
+- [x] `renameLegacyColumn()` in `db.ts`: `tracks` (syncSchema) en `spotify_track_ids` (ensureSpotifyLinkTable) hernoemen de kolom zelf
+- [x] `restoreLibrary()` leest een oude export met `track_id`; `upsertTracks()` accepteert de oude kolomkop in een import
+- [x] Echte bibliotheek gemigreerd en opnieuw geëxporteerd; in de export komt `track_id` niet meer voor
 
 ### TEST
+
+- [x] Nieuwe tests: oude database migreert met data, oude export zet terug, import met `track_id`-kop werkt
+- [x] Vitest 689/689, `tsc --noEmit` en `eslint` schoon
+- [x] Echte data: aantallen gelijk (12.471 / 13.140 / 6.951), verse database via `LIBRARY_DB_PATH` uit de nieuwe export opgebouwd
 
 ### DEPLOY: refactor/dkj-track-id
 
@@ -44,7 +56,12 @@
 
 ##### Tier 0
 
-**Score:**
+`track_id` heet nu `dkj_track_id`: in de database, in de export en als kolomkop voor
+`npm run library:import`. Er is niets te doen: een bestaande database hernoemt de kolom de eerste keer dat
+hij opent, een oude export wordt nog gewoon gelezen, en een importbestand met `track_id` als kolomkop werkt
+nog.
+
+**Score:** 2
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +70,9 @@
 
 ##### Tier 1
 
-**Score:**
+Een persoonlijke tool zonder opdrachtgever; niemand buiten de ontwikkelaar merkt dit.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +81,9 @@
 
 ##### Tier 2
 
-**Score:**
+Er is geen dienst met abonnees.
+
+**Score:** N/A
 
 #### Pull Request
 

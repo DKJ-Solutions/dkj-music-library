@@ -112,13 +112,13 @@ describe("applyTrackIdsFromSnapshot", () => {
 
     const later = applyTrackIdsFromSnapshot(db, snapshot([track("s5", "Song A"), track("s6", "Song C")]));
     expect(later).toEqual({ newTracks: 1, newLinks: 2, totalLinks: 3 });
-    expect(listTracks(db).map((t) => t.track_id)).toEqual(["T000001", "T000002"]);
+    expect(listTracks(db).map((t) => t.dkj_track_id)).toEqual(["T000001", "T000002"]);
   });
 
   it("laat zelf ingevulde velden van een bestaande track staan", () => {
     const db = memoryDb();
     applyTrackIdsFromSnapshot(db, snapshot([track("s1", "Song A")]));
-    upsertTracks(db, [{ track_id: "T000001", title: "Mijn eigen titel", bpm: 128 }]);
+    upsertTracks(db, [{ dkj_track_id: "T000001", title: "Mijn eigen titel", bpm: 128 }]);
     applyTrackIdsFromSnapshot(db, snapshot([track("s1", "Song A"), track("s2", "Song A")]));
     expect(getTrack(db, "T000001")).toMatchObject({ title: "Mijn eigen titel", bpm: 128 });
   });

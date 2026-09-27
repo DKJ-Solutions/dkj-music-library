@@ -18,8 +18,8 @@
 // voert het plan uit, in één transactie.
 import type { DatabaseSync } from "node:sqlite";
 import type { Snapshot, Track } from "@/lib/spotify/types";
-import { TRACKS_TABLE } from "./db";
-import { TRACK_FIELDS, TRACK_ID_KEY } from "./fields";
+import { TRACKS_TABLE, renameLegacyColumn } from "./db";
+import { LEGACY_TRACK_ID_KEY, TRACK_FIELDS, TRACK_ID_KEY } from "./fields";
 import { toSqlValue, type TrackValue } from "./trackStore";
 
 export const SPOTIFY_LINK_TABLE = "spotify_track_ids";
@@ -98,6 +98,7 @@ export function planTrackIds(
 
 /** Maakt de koppeltabel als die er nog niet is. */
 export function ensureSpotifyLinkTable(db: DatabaseSync): void {
+  renameLegacyColumn(db, SPOTIFY_LINK_TABLE, LEGACY_TRACK_ID_KEY, TRACK_ID_KEY);
   db.exec(`
     CREATE TABLE IF NOT EXISTS ${SPOTIFY_LINK_TABLE} (
       spotify_track_id TEXT PRIMARY KEY NOT NULL,
@@ -111,8 +112,8 @@ export function ensureSpotifyLinkTable(db: DatabaseSync): void {
 function readLinks(db: DatabaseSync): SpotifyLink[] {
   const rows = db
     .prepare(`SELECT spotify_track_id, ${TRACK_ID_KEY}, song_key FROM ${SPOTIFY_LINK_TABLE}`)
-    .all() as { spotify_track_id: string; track_id: string; song_key: string }[];
-  return rows.map((row) => ({ spotifyTrackId: row.spotify_track_id, trackId: row.track_id, songKey: row.song_key }));
+    .all() as { spotify_track_id: string; dkj_track_id: string; song_key: string }[];
+  return rows.map((row) => ({ spotifyTrackId: row.spotify_track_id, trackId: row.dkj_track_id, songKey: row.song_key }));
 }
 
 /** De Spotify-metadata waarmee een nieuw nummer in `tracks` komt. */
@@ -139,8 +140,8 @@ export interface TrackIdResult {
  *  draaien op dezelfde snapshot doet niets. */
 export function applyTrackIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot): TrackIdResult {
   ensureSpotifyLinkTable(db);
-  const existingIds = (db.prepare(`SELECT ${TRACK_ID_KEY} FROM ${TRACKS_TABLE}`).all() as { track_id: string }[]).map(
-    (row) => row.track_id
+  const existingIds = (db.prepare(`SELECT ${TRACK_ID_KEY} FROM ${TRACKS_TABLE}`).all() as { dkj_track_id: string }[]).map(
+    (row) => row.dkj_track_id
   );
   const links = readLinks(db);
   const plan = planTrackIds(snapshot, links, existingIds);
