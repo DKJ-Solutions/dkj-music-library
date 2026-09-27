@@ -74,6 +74,10 @@ export interface Mix {
    *  is de naam op SPOTIFY ("EDM 128BPM 🔴 Red Light (m) 🔴 Vol. 6"). Twee verschillende velden in de
    *  bron, twee verschillende plekken waar ze verschijnen. */
   spotifyTitle: string | null;
+  /** De URL-slug van de mixpagina op djcylow.com (`/luister/mix/<slug>`), afgeleid uit `permalink` zoals
+   *  de website het zelf doet (mixSlug in djcylow-react, src/data/mixes/all.ts). `null` = geen permalink,
+   *  en dan heeft de mix geen pagina. */
+  slug: string | null;
   genre: string | null;
   subgenre: string | null;
   color: PlutchikColor | null;

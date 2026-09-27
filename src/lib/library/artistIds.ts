@@ -19,7 +19,8 @@
 // anders de eerste uit `artists` (primaryArtist.ts), ook weer alleen zolang dat veld leeg is -- zie
 // fillPrimaryArtists(). En in `dkj_albumartiest` de hele rij
 // artiesten als één tekst, in de volgorde van Spotify ("A, B, C") -- zie fillAlbumArtists(). En in
-// `dkj_file` de bestandsnaam zoals op de desktop (fileName.ts) -- zie fillFileNames().
+// `dkj_file` de bestandsnaam zoals op de desktop (fileName.ts) -- zie fillFileNames(). En in `dkj_title`
+// alleen de titel, in de vorm van dkj_file -- zie fillTitles().
 //
 // planArtistIds() is puur (geen database) en daardoor los te testen; applyArtistIdsFromSnapshot()
 // voert het plan uit, in één transactie.
@@ -33,13 +34,14 @@ import {
   BPM_KEY,
   FILE_KEY,
   PLAYLISTS_KEY,
+  TITLE_KEY,
   PRIMARY_ARTIST_KEY,
   TRACK_ID_KEY,
   albumArtistOf,
 } from "./fields";
 import { albumFromPlaylists } from "./albumFromPlaylists";
 import { bpmFromPlaylists } from "./bpmFromPlaylists";
-import { fileNameOf } from "./fileName";
+import { fileNameOf, titleNameOf } from "./fileName";
 import { mergeLiveVariants, type LiveMergeResult } from "./liveVariants";
 import { applyPlaylistLinks } from "./playlistLinks";
 import { primaryArtistOf } from "./primaryArtist";
@@ -310,6 +312,11 @@ export function fillFileNames(db: DatabaseSync): number {
   return fillMissing(db, FILE_KEY, (track) => fileNameOf(track.title, track.names));
 }
 
+/** Vult `dkj_title` (fileName.ts) bij elke track waar het nog leeg is. Geeft het aantal gevulde tracks terug. */
+export function fillTitles(db: DatabaseSync): number {
+  return fillMissing(db, TITLE_KEY, (track) => titleNameOf(track.title));
+}
+
 /** Vult `dkj_album` uit de playlists (albumFromPlaylists.ts) bij elke track waar het nog leeg is en de
  *  playlists één album noemen. Geeft het aantal gevulde tracks terug. */
 export function fillAlbumsFromPlaylists(db: DatabaseSync): number {
@@ -330,6 +337,8 @@ export interface LibraryIdResult {
   albumsFilled: number;
   /** Tracks die in deze run hun `dkj_file` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
   fileNamesFilled: number;
+  /** Tracks die in deze run hun `dkj_title` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
+  titlesFilled: number;
   /** Tracks waarvan `spotify_playlist` in deze run veranderde (playlistLinks.ts). */
   playlistsChanged: number;
   /** Tracks die in deze run hun `dkj_albumartiest` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
@@ -356,9 +365,10 @@ export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot
   const primaryArtistsFilled = fillPrimaryArtists(db);
   const albumArtistsFilled = fillAlbumArtists(db);
   const fileNamesFilled = fillFileNames(db);
+  const titlesFilled = fillTitles(db);
   const playlistsChanged = applyPlaylistLinks(db, snapshot);
   // Na de playlists: het album en de BPM worden uit hun namen afgeleid.
   const albumsFilled = fillAlbumsFromPlaylists(db);
   const bpmsFilled = fillBpmsFromPlaylists(db);
-  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, live, playlistsChanged, primaryArtistsFilled, renumbered, tracks };
+  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, live, playlistsChanged, primaryArtistsFilled, renumbered, titlesFilled, tracks };
 }

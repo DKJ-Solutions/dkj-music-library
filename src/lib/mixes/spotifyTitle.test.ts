@@ -22,6 +22,7 @@ function makeMix(over: Partial<Mix> = {}): Mix {
     volume: 1,
     date: "2026-03-03",
     bpm: 128,
+    slug: null,
     topArtists: [],
     tracks: [],
     ...over,

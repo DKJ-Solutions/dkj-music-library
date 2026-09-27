@@ -15,7 +15,9 @@ function stored(over: Partial<StoredTrack> = {}): StoredTrack {
     dkj_album: null,
     dkj_file: "Mark Ronson - Uptown Funk",
     dkj_group: ["MMC"],
+    dkj_title: "Uptown Funk",
     spotify_playlist: [{ id: "p1", name: "Funk" }, { bad: true }],
+    djcylow_mix: [{ slug: "red-light-m-edm-128bpm-20260615", name: "Red Mix" }, { slug: 1 }],
     ...over,
   };
 }
@@ -34,8 +36,10 @@ describe("toRegisterRow", () => {
       album: null,
       albumCandidates: [],
       file: "Mark Ronson - Uptown Funk",
+      dkjTitle: "Uptown Funk",
       groups: ["MMC"],
       playlists: [{ id: "p1", name: "Funk" }],
+      mixes: [{ slug: "red-light-m-edm-128bpm-20260615", name: "Red Mix" }],
     });
   });
 

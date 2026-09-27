@@ -89,6 +89,13 @@ function toBpm(entry: RawMixEntry): number | null {
   return DNB_TOKEN.test(bron) ? DNB_BPM : null;
 }
 
+/** De slug van de mixpagina, zoals de website hem uit `permalink` afleidt (mixSlug in djcylow-react):
+ *  `luister/mix/red-light-m-EDM-128BPM-20260615.html` -> `red-light-m-edm-128bpm-20260615`. */
+export function mixSlugOf(permalink: string | undefined): string | null {
+  const file = (permalink ?? "").split("/").pop() ?? "";
+  return file.split(".html")[0].toLowerCase().trim() || null;
+}
+
 /** Pure normalisatie van één JSON-entry naar de app-vorm. Ontbrekende/legacy-velden worden `null`
  *  i.p.v. een fout: de bestanden dragen bewust nog oude entries (zie "Known Inconsistencies" in
  *  src/data/mixes/README.md), en die mogen de hub niet laten omvallen. */
@@ -99,6 +106,7 @@ export function normalizeMix(entry: RawMixEntry, file: string): Mix {
     spotifyId: normalizeSpotifyId(entry.id_spotify),
     title: entry.title ?? "",
     spotifyTitle: normalizeSpotifyTitle(entry.title_spotify),
+    slug: mixSlugOf(entry.permalink),
     genre: entry.genre?.trim() || null,
     subgenre: entry.subgenre?.trim() || null,
     color: toColor(entry.color),

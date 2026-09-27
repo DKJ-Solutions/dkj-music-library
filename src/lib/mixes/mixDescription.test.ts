@@ -32,6 +32,7 @@ function makeMix(over: Partial<Mix> = {}): Mix {
     volume: 6,
     date: "2026-06-15",
     bpm: 128,
+    slug: null,
     topArtists: ["Chris Lake"],
     tracks: ["Chris Lake - Turn Off The Lights"],
     ...over,

@@ -193,6 +193,11 @@ Penn wordt `Abel Ramos - Higher (David Penn Remix)`.
 
 Ook dit veld wordt alleen gevuld zolang het leeg is. De regels staan in `src/lib/library/fileName.ts`.
 
+`dkj_title` is alleen de titel, in dezelfde vorm als in `dkj_file` na de artiesten: `Higher - David Penn
+Remix` wordt `Higher (David Penn Remix)`. Het is geen bestandsnaam, dus tekens als `?` en `:` blijven
+staan. Ook dit veld wordt alleen gevuld zolang het leeg is. Het trackregister toont `dkj_title` en niet
+`dkj_file`; op `dkj_file` zoeken kan nog wel.
+
 ### De playlists: `spotify_playlist`
 
 `spotify_playlist` (tot 27 september 2026 `dkj_playlists`) is de lijst Spotify-playlists waarin een track staat, elk met ID en naam, in de volgorde
@@ -200,6 +205,16 @@ van je playlists. Anders dan de andere eigen velden wordt dit veld bij elke sync
 een feit van Spotify, geen keuze van jou. Let op: de playlistnamen staan daarmee in de publieke export,
 ook die uit de wereld Privé. Daarvoor is bewust gekozen, zodat het register ze op elke machine toont. De
 regels staan in `src/lib/library/playlistLinks.ts`.
+
+### De mixen: `djcylow_mix`
+
+`djcylow_mix` is de lijst mixen op djcylow.com waarin een track zit, elk met de slug van de mixpagina en
+de titel van de mix; in het register linkt elke naam naar `https://djcylow.com/luister/mix/<slug>`. De
+koppeling loopt via Spotify, net als bij `spotify_playlist`: de brug koppelt elke mix aan zijn eigen
+MMC-playlist, en een track zit in een mix als hij in die playlist staat. Een mix die alleen in een grote
+kleur-emmer is teruggevonden, telt niet. Ook dit veld wordt bij elke sync opnieuw gezet, maar alleen als
+de mix-bron (`djcylow-react`, zie `MIXES_DATA_DIR`) op deze machine te vinden is; zonder bron blijft het
+staan zoals het was. De regels staan in `src/lib/library/djcylowMixes.ts`.
 
 ### Velden met vaste keuzes
 

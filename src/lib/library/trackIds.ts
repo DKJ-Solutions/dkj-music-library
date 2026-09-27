@@ -45,13 +45,14 @@ import {
   ALBUM_ARTIST_KEY,
   ARTIST_IDS_KEY,
   FILE_KEY,
+  TITLE_KEY,
   LEGACY_TRACK_ID_KEY,
   PRIMARY_ARTIST_KEY,
   TRACK_FIELDS,
   TRACK_ID_KEY,
   albumArtistOf,
 } from "./fields";
-import { fileNameOf } from "./fileName";
+import { fileNameOf, titleNameOf } from "./fileName";
 import { isLiveTitle, studioTitleOf } from "./liveTitle";
 import { primaryArtistOf } from "./primaryArtist";
 import { toSqlValue, type TrackValue } from "./trackStore";
@@ -212,6 +213,7 @@ function metadataOf(track: Track, artistIdOf: ArtistIdMap): Record<string, Track
     [PRIMARY_ARTIST_KEY]: primaryArtistOf(title, track.artists.map((a) => a.name)),
     [ALBUM_ARTIST_KEY]: albumArtistOf(track.artists.map((a) => a.name)),
     [FILE_KEY]: fileNameOf(title, track.artists.map((a) => a.name)),
+    [TITLE_KEY]: titleNameOf(title),
   };
 }
 

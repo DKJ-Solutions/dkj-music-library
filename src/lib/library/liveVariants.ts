@@ -19,8 +19,8 @@
 // Een tweede keer doet niets: er staat dan geen live-titel en geen live-sleutel meer in.
 import type { DatabaseSync, SQLInputValue } from "node:sqlite";
 import { TRACKS_TABLE } from "./db";
-import { FILE_KEY, GROUP_KEY, PLAYLISTS_KEY, PRIMARY_ARTIST_KEY, TRACK_FIELDS, TRACK_ID_KEY } from "./fields";
-import { fileNameOf } from "./fileName";
+import { FILE_KEY, GROUP_KEY, PLAYLISTS_KEY, PRIMARY_ARTIST_KEY, TITLE_KEY, TRACK_FIELDS, TRACK_ID_KEY } from "./fields";
+import { fileNameOf, titleNameOf } from "./fileName";
 import { isLiveTitle, studioTitleOf } from "./liveTitle";
 import { primaryArtistOf } from "./primaryArtist";
 import { SPOTIFY_LINK_TABLE, compareTrackIds, ensureSpotifyLinkTable, trackIdPrefix } from "./trackIds";
@@ -73,7 +73,7 @@ function mergeRows(rows: Row[]): Row {
   return merged;
 }
 
-/** Zet de titel schoon, en `dkj_file`/`dkj_artist` mee als die nog van de oude titel afgeleid waren. */
+/** Zet de titel schoon, en `dkj_file`/`dkj_title`/`dkj_artist` mee als die nog van de oude titel afgeleid waren. */
 function retitle(row: Row): Row {
   const title = titleOf(row);
   const clean = studioTitleOf(title);
@@ -81,6 +81,7 @@ function retitle(row: Row): Row {
   const artists = parseList(row.artists ?? null).filter((name): name is string => typeof name === "string");
   const next: Row = { ...row, title: clean };
   if (row[FILE_KEY] === fileNameOf(title, artists)) next[FILE_KEY] = fileNameOf(clean, artists);
+  if (row[TITLE_KEY] === titleNameOf(title)) next[TITLE_KEY] = titleNameOf(clean);
   if (row[PRIMARY_ARTIST_KEY] === primaryArtistOf(title, artists)) next[PRIMARY_ARTIST_KEY] = primaryArtistOf(clean, artists);
   return next;
 }
