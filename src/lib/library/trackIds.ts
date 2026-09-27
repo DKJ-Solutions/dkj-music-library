@@ -45,6 +45,7 @@ import {
   TRACK_ID_KEY,
   albumArtistOf,
 } from "./fields";
+import { primaryArtistOf } from "./primaryArtist";
 import { toSqlValue, type TrackValue } from "./trackStore";
 
 export const SPOTIFY_LINK_TABLE = "spotify_track_ids";
@@ -189,7 +190,7 @@ function metadataOf(track: Track, artistIdOf: ArtistIdMap): Record<string, Track
     album: track.album.name,
     duration_ms: track.durationMs,
     [ARTIST_IDS_KEY]: ownIds.length > 0 ? ownIds : null,
-    [PRIMARY_ARTIST_KEY]: track.artists[0]?.name ?? null,
+    [PRIMARY_ARTIST_KEY]: primaryArtistOf(track.name, track.artists.map((a) => a.name)),
     [ALBUM_ARTIST_KEY]: albumArtistOf(track.artists.map((a) => a.name)),
   };
 }

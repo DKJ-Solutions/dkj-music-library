@@ -165,6 +165,17 @@ describe("applyArtistIdsFromSnapshot", () => {
     expect(fillPrimaryArtists(db)).toBe(0);
   });
 
+  it("geeft in dkj_artist de remixer voorrang, ook bij het aanvullen van bestaande tracks", () => {
+    const remix = snapshot(track("t9", "Uptown Funk - Bruno Mars Remix", [["a2", "Mark Ronson"], ["a3", "Bruno Mars"]]));
+    const db = memoryDb();
+    applyLibraryIdsFromSnapshot(db, remix);
+    const id = listTracks(db)[0].dkj_track_id;
+    expect(getTrack(db, id)?.dkj_artist).toBe("Bruno Mars");
+    upsertTracks(db, [{ dkj_track_id: id, dkj_artist: null }]);
+    expect(fillPrimaryArtists(db)).toBe(1);
+    expect(getTrack(db, id)?.dkj_artist).toBe("Bruno Mars");
+  });
+
   it("zet in dkj_albumartiest alle artiesten in Spotify-volgorde, en laat een zelf ingevulde staan", () => {
     const db = memoryDb();
     applyLibraryIdsFromSnapshot(db, snap);
