@@ -2,7 +2,40 @@
 
 ## [Unreleased]
 
-**19 patch entries** <!-- pending-tally -->
+**20 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/dkj-bpm-from-playlists · 20260927-183838Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+`dkj_bpm` wordt nu uit de Spotify-playlists afgeleid: een BPM in de playlistnaam (`128BPM EDM`), House
+Mix is 128, Drum & Bass en D&B/DNB zijn 176. Noemen de playlists verschillende BPM's, dan wint de meest
+genoemde; bij een gelijke stand blijft het leeg. 7.454 van de 12.471 tracks hebben zo hun BPM gekregen;
+de sync doet het voortaan bij elke nieuwe track.
+
+**Score:** 4
+
+##### Tier 1
+
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
+
+##### Tier 2
+
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
+
+#### Pull Request
+
+dkj_bpm wordt afgeleid uit de playlists
+
+[PR #23](https://github.com/DKJ-Solutions/dkj-music-library/pull/23)
+
+---
 
 ### DEPLOY: feat/rename-spotify-playlist · 20260927-183106Z
 
