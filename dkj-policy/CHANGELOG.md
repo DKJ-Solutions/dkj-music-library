@@ -2,7 +2,39 @@
 
 ## [Unreleased]
 
-**20 patch entries** <!-- pending-tally -->
+**21 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/dkj-group-field · 20260927-184320Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+Het Trackregister krijgt de kolom `dkj_group`, met als enige toegestane waarden MMC, DJ CYLOW, Prive en
+Overige. Een andere waarde breekt de import af; hoofdletters en spaties tellen niet mee. Het veld staat
+nog bij elke track leeg.
+
+**Score:** 2
+
+##### Tier 1
+
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
+
+##### Tier 2
+
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
+
+#### Pull Request
+
+Trackregister krijgt de kolom dkj_group (MMC, DJ CYLOW, Prive, Overige)
+
+[PR #24](https://github.com/DKJ-Solutions/dkj-music-library/pull/24)
+
+---
 
 ### DEPLOY: feat/dkj-bpm-from-playlists · 20260927-183838Z
 
