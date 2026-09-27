@@ -2,7 +2,40 @@
 
 ## [Unreleased]
 
-**3 patch entries** <!-- pending-tally -->
+**4 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feature/track-library-db · 20260927-075255Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+The app now has a local track database. The collection of about 6000 tracks (your own track ID plus the
+Spotify metadata) goes into one SQLite file with `npm run library:import`, from a CSV or JSON file. A
+new data field is one line in `src/lib/library/fields.ts`, and the database adds the column itself.
+Removing a field never deletes data.
+
+**Score:** 4
+
+##### Tier 1
+
+Not relevant: the app is local and has no subscribers.
+
+**Score:** N/A
+
+##### Tier 2
+
+Not relevant: see Tier 1.
+
+**Score:** N/A
+
+#### Pull Request
+
+Trackdatabase voor de muziekcollectie
+
+[PR #5](https://github.com/DKJ-Solutions/dkj-music-library/pull/5)
+
+---
 
 ### DEPLOY: feat/distinct-artist-count · 20260927-075152Z
 
