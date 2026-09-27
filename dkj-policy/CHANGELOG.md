@@ -2,7 +2,41 @@
 
 ## [Unreleased]
 
-**6 patch entries** <!-- pending-tally -->
+**7 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/artist-ids · 20260927-152121Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+Elke Spotify-artiest krijgt een eigen ID van drie letters plus een nummer (The Prodigy wordt `PRO02`,
+Amy Winehouse `AMY01`). De letters zijn de eerste drie van de naam, zonder lidwoord en zonder accenten;
+het nummer is het laagste dat nog vrij is en groeit voorbij 99 door als dat nodig is. De ID's staan in de
+nieuwe tabel `artists` en in de export als `artists.ndjson`. Elke track heeft nu `dkj_artist_ids`, met de
+hoofdartiest eerst. Dat gebeurt na elke sync op `/spotify` en met `npm run library:assign-ids`.
+
+**Score:** 3
+
+##### Tier 1
+
+Een persoonlijke tool zonder opdrachtgever; niemand buiten de ontwikkelaar merkt dit.
+
+**Score:** N/A
+
+##### Tier 2
+
+Er is geen dienst met abonnees.
+
+**Score:** N/A
+
+#### Pull Request
+
+Every Spotify artist gets its own ID: three letters of the name plus a number (PRO01)
+
+[PR #9](https://github.com/DKJ-Solutions/dkj-music-library/pull/9)
+
+---
 
 ### DEPLOY: feat/library-export · 20260927-150712Z
 
