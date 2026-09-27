@@ -152,7 +152,7 @@
 }
 
 // DRIE VORMEN, ZODAT JE ZONDER KLIKKEN ZIET WAT IETS DOET (Dave):
-//   - een LINK (één playlist) is onderstreepte tekst in de accentkleur, met ↗: hij opent Spotify;
+//   - een LINK (één playlist) is tekst in de accentkleur, met ↗, zonder rand of vlak: hij opent Spotify;
 //   - een MENU ("3 playlists ▾", "3 artists ▾") is een knop met een gevulde lichte accentachtergrond en
 //     een rand: hij opent hier een lijst;
 //   - STATISCHE informatie (artiest-ID, BPM, album) is een grijs vlak zonder rand.
@@ -170,19 +170,15 @@
   font-size: 12.5px;
   font-weight: 500;
   color: var(--accent-ink);
-  text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--accent) 50%, transparent);
-  text-underline-offset: 3px;
+  text-decoration: none;
 }
 
 .register-playlist::after {
   content: " ↗";
-  text-decoration: none;
 }
 
 .register-playlist:hover {
-  text-decoration-color: var(--accent-ink);
-  text-decoration-thickness: 2px;
+  color: var(--accent);
 }
 
 .register-menu-toggle {
