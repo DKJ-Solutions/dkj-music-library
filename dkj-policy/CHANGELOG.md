@@ -2,7 +2,41 @@
 
 ## [Unreleased]
 
-**12 patch entries** <!-- pending-tally -->
+**13 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/dkj-artist-remixer · 20260927-172858Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+`dkj_artist` volgt nu Dave's regel: de artiest die de remix of edit maakte, gaat voor. Staat een van de
+artiesten van de track in het versiedeel van de titel (`Filmic - CRi Remix`, `Falling (JORDAZ Radio
+Mix)`), dan is die het; anders blijft het de hoofdartiest. Een naam die alleen in de titel staat en niet
+bij de track, telt niet. Bij 1.214 bestaande tracks is `dkj_artist` daarmee veranderd, bijvoorbeeld
+`New Rules - Alison Wonderland Remix` → Alison Wonderland.
+
+**Score:** 3
+
+##### Tier 1
+
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
+
+##### Tier 2
+
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
+
+#### Pull Request
+
+dkj_artist: de remixer of editor gaat voor
+
+[PR #16](https://github.com/DKJ-Solutions/dkj-music-library/pull/16)
+
+---
 
 ### DEPLOY: feat/dkj-albumartiest-field · 20260927-170519Z
 

@@ -15,8 +15,9 @@
 // Elke track krijgt in `dkj_artist_ids` de lijst eigen artiest-ID's, hoofdartiest eerst, maar alleen
 // zolang dat veld nog leeg is: wat je zelf invult, blijft staan.
 //
-// En elke track krijgt in `dkj_artist` één artiest: de eerste uit `artists` (de hoofdartiest), ook
-// weer alleen zolang dat veld leeg is -- zie fillPrimaryArtists(). En in `dkj_albumartiest` de hele rij
+// En elke track krijgt in `dkj_artist` één artiest: de remixer of editor als de titel er een noemt,
+// anders de eerste uit `artists` (primaryArtist.ts), ook weer alleen zolang dat veld leeg is -- zie
+// fillPrimaryArtists(). En in `dkj_albumartiest` de hele rij
 // artiesten als één tekst, in de volgorde van Spotify ("A, B, C") -- zie fillAlbumArtists().
 //
 // planArtistIds() is puur (geen database) en daardoor los te testen; applyArtistIdsFromSnapshot()
@@ -25,6 +26,7 @@ import type { DatabaseSync } from "node:sqlite";
 import type { Snapshot } from "@/lib/spotify/types";
 import { TRACKS_TABLE } from "./db";
 import { ALBUM_ARTIST_KEY, ARTIST_IDS_KEY, PRIMARY_ARTIST_KEY, TRACK_ID_KEY, albumArtistOf } from "./fields";
+import { primaryArtistOf } from "./primaryArtist";
 import {
   SPOTIFY_LINK_TABLE,
   applyTrackIdsFromSnapshot,
@@ -213,36 +215,35 @@ export function readArtistIdMap(db: DatabaseSync): Map<string, string> {
   return new Map(rows.map((row) => [row.spotify_artist_id, row.dkj_artist_id]));
 }
 
-/** Vult `dkj_artist` met de eerste naam uit `artists`, bij elke track waar het nog leeg is. Geeft het
- *  aantal gevulde tracks terug. Een track zonder artiesten blijft leeg. */
-export function fillPrimaryArtists(db: DatabaseSync): number {
-  const first = `json_extract(artists, '$[0]')`;
-  const result = db
-    .prepare(
-      `UPDATE ${TRACKS_TABLE} SET "${PRIMARY_ARTIST_KEY}" = ${first}, updated_at = ? ` +
-        `WHERE "${PRIMARY_ARTIST_KEY}" IS NULL AND json_valid(artists) AND json_type(artists, '$[0]') = 'text'`
-    )
-    .run(new Date().toISOString());
-  return Number(result.changes);
+/** De rijen van tracks waar `key` nog leeg is, met hun titel en artiestnamen. */
+function tracksMissing(db: DatabaseSync, key: string): { id: string; title: string | null; names: string[] }[] {
+  const rows = db
+    .prepare(`SELECT ${TRACK_ID_KEY}, title, artists FROM ${TRACKS_TABLE} WHERE "${key}" IS NULL AND json_valid(artists)`)
+    .all() as { dkj_track_id: string; title: string | null; artists: string }[];
+  return rows.map((row) => {
+    const parsed: unknown = JSON.parse(row.artists);
+    const names = Array.isArray(parsed) ? parsed.filter((name): name is string => typeof name === "string") : [];
+    return { id: row.dkj_track_id, title: row.title, names };
+  });
 }
 
-/** Vult `dkj_albumartiest` met alle namen uit `artists`, in die volgorde (de volgorde van Spotify), bij
- *  elke track waar het nog leeg is. Geeft het aantal gevulde tracks terug. */
-export function fillAlbumArtists(db: DatabaseSync): number {
-  const rows = db
-    .prepare(`SELECT ${TRACK_ID_KEY}, artists FROM ${TRACKS_TABLE} WHERE "${ALBUM_ARTIST_KEY}" IS NULL AND json_valid(artists)`)
-    .all() as { dkj_track_id: string; artists: string }[];
-  const fill = db.prepare(`UPDATE ${TRACKS_TABLE} SET "${ALBUM_ARTIST_KEY}" = ?, updated_at = ? WHERE ${TRACK_ID_KEY} = ?`);
+/** Zet `value(track)` in `key` bij elke track waar dat veld nog leeg is, in één transactie. Een track
+ *  waarvoor `value` null geeft, blijft leeg. Geeft het aantal gevulde tracks terug. */
+function fillMissing(
+  db: DatabaseSync,
+  key: string,
+  value: (track: { title: string | null; names: string[] }) => string | null
+): number {
+  const tracks = tracksMissing(db, key);
+  const fill = db.prepare(`UPDATE ${TRACKS_TABLE} SET "${key}" = ?, updated_at = ? WHERE ${TRACK_ID_KEY} = ?`);
   const now = new Date().toISOString();
   let filled = 0;
   db.exec("BEGIN");
   try {
-    for (const row of rows) {
-      const parsed: unknown = JSON.parse(row.artists);
-      const names = Array.isArray(parsed) ? parsed.filter((name): name is string => typeof name === "string") : [];
-      const value = albumArtistOf(names);
-      if (value === null) continue;
-      fill.run(value, now, row.dkj_track_id);
+    for (const track of tracks) {
+      const v = value(track);
+      if (v === null) continue;
+      fill.run(v, now, track.id);
       filled++;
     }
     db.exec("COMMIT");
@@ -251,6 +252,18 @@ export function fillAlbumArtists(db: DatabaseSync): number {
     throw err;
   }
   return filled;
+}
+
+/** Vult `dkj_artist` (primaryArtist.ts: de remixer, anders de eerste artiest) bij elke track waar het nog
+ *  leeg is. Geeft het aantal gevulde tracks terug. Een track zonder artiesten blijft leeg. */
+export function fillPrimaryArtists(db: DatabaseSync): number {
+  return fillMissing(db, PRIMARY_ARTIST_KEY, (track) => primaryArtistOf(track.title, track.names));
+}
+
+/** Vult `dkj_albumartiest` met alle namen uit `artists`, in die volgorde (de volgorde van Spotify), bij
+ *  elke track waar het nog leeg is. Geeft het aantal gevulde tracks terug. */
+export function fillAlbumArtists(db: DatabaseSync): number {
+  return fillMissing(db, ALBUM_ARTIST_KEY, (track) => albumArtistOf(track.names));
 }
 
 export interface LibraryIdResult {
