@@ -125,6 +125,23 @@ npm run library:assign-ids
 
 De regels staan bovenaan `src/lib/library/trackIds.ts`.
 
+### Eigen artiest-ID's
+
+Elke artiest krijgt bij dezelfde stap een eigen ID: drie letters en een nummer, bijvoorbeeld `PRO01`.
+De ID's staan in de tabel `artists` (en in de export als `artists.ndjson`). Elke track krijgt in
+`dkj_artist_ids` de lijst ID's van zijn artiesten, met de hoofdartiest eerst.
+
+- **De letters zijn de eerste drie van de naam.** Een lidwoord vooraan telt niet mee: The Prodigy wordt
+  `PRO`, De Dijk `DIJ`. Accenten gaan eraf (Röyksopp → `ROY`), en tekens die geen letter zijn tellen niet
+  mee. Een naam met minder dan drie letters wordt aangevuld met `X`: U2 → `UXX01`.
+- **Het nummer is het laagste dat nog vrij is** voor die letters: `MAR01`, `MAR02`, … Raakt een groep
+  vol, dan gaat het door met `MAR100`, zodat elke artiest een ID krijgt.
+- **Eén ID per Spotify-artiest.** Twee artiesten met dezelfde naam houden elk hun eigen ID, en een
+  artiest die op Spotify van naam verandert, houdt zijn ID.
+- **Een zelf ingevulde `dkj_artist_ids` blijft staan.**
+
+De regels staan bovenaan `src/lib/library/artistIds.ts`.
+
 ### Een veld toevoegen
 
 Voeg in `src/lib/library/fields.ts` één regel toe aan `TRACK_FIELDS`:

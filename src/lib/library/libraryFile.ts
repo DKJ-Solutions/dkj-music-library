@@ -5,6 +5,8 @@
 //   - tracks.ndjson             één regel per nummer (track_id, created_at, updated_at + fields.ts),
 //                               gesorteerd op track_id
 //   - spotify_track_ids.ndjson  de koppeltabel uit trackIds.ts, gesorteerd op track_id en Spotify-ID
+//   - artists.ndjson            de artiesten uit artistIds.ts, gesorteerd op dkj_artist_id (ontbreekt in
+//                               een export van vóór de artiest-ID's; dan is de tabel gewoon leeg)
 // Eén rij per regel en een vaste volgorde, dus een diff laat precies zien wat er veranderde.
 //
 // DE EXPORT IS DE BRON, DE DATABASE IS EEN KOPIE. openLibrary() vergelijkt bij het openen de hash
@@ -31,6 +33,7 @@ import fs from "fs";
 import path from "path";
 import type { DatabaseSync, SQLInputValue } from "node:sqlite";
 import { TRACKS_TABLE, openLibraryDb } from "./db";
+import { ARTISTS_TABLE, ensureArtistsTable } from "./artistIds";
 import { TRACK_FIELDS, TRACK_ID_KEY, type FieldDef } from "./fields";
 import { SPOTIFY_LINK_TABLE, ensureSpotifyLinkTable } from "./trackIds";
 import { countTracks, listTracks, toSqlValue, type TrackValue } from "./trackStore";
@@ -38,6 +41,7 @@ import { countTracks, listTracks, toSqlValue, type TrackValue } from "./trackSto
 const DEFAULT_EXPORT_DIR = path.join(process.cwd(), "data", "library", "export");
 const TRACKS_FILE = "tracks.ndjson";
 const LINKS_FILE = "spotify_track_ids.ndjson";
+const ARTISTS_FILE = "artists.ndjson";
 const META_TABLE = "library_meta";
 const HASH_KEY = "export_hash";
 /** Staat als hash in library_meta zolang de database wijzigingen heeft die nog niet geëxporteerd zijn. */
@@ -67,8 +71,10 @@ function writeHash(db: DatabaseSync, hash: string): void {
 
 /** De hash van de export zoals hij op schijf staat, of null als er (nog) geen export is. */
 export function exportHash(dir: string): string | null {
-  const files = [TRACKS_FILE, LINKS_FILE].map((name) => path.join(dir, name));
-  if (!files.every((file) => fs.existsSync(file))) return null;
+  const required = [TRACKS_FILE, LINKS_FILE].map((name) => path.join(dir, name));
+  if (!required.every((file) => fs.existsSync(file))) return null;
+  const artists = path.join(dir, ARTISTS_FILE);
+  const files = fs.existsSync(artists) ? [...required, artists] : required;
   const hash = crypto.createHash("sha256");
   // Regeleinden gelijktrekken: git kan op Windows CRLF uitchecken, en dat is geen andere data.
   for (const file of files) hash.update(fs.readFileSync(file, "utf8").replace(/\r\n/g, "\n")).update("\0");
@@ -91,13 +97,14 @@ function markPending(db: DatabaseSync): void {
   writeHash(db, PENDING);
 }
 
-/** Schrijft beide tabellen naar `dir` en onthoudt de hash in de database. Geeft de hash terug. */
+/** Schrijft de tabellen naar `dir` en onthoudt de hash in de database. Geeft de hash terug. */
 export function exportLibrary(
   db: DatabaseSync,
   dir: string = getLibraryExportDir(),
   fields: readonly FieldDef[] = TRACK_FIELDS
 ): string {
   ensureSpotifyLinkTable(db);
+  ensureArtistsTable(db);
   markPending(db);
   fs.mkdirSync(dir, { recursive: true });
 
@@ -119,9 +126,14 @@ export function exportLibrary(
     )
     .all()
     .map((row) => ({ ...row }));
+  const artists = db
+    .prepare(`SELECT dkj_artist_id, spotify_artist_id, name, created_at FROM ${ARTISTS_TABLE} ORDER BY dkj_artist_id`)
+    .all()
+    .map((row) => ({ ...row }));
 
   writeAtomic(path.join(dir, TRACKS_FILE), toLines(tracks));
   writeAtomic(path.join(dir, LINKS_FILE), toLines(links));
+  writeAtomic(path.join(dir, ARTISTS_FILE), toLines(artists));
 
   const hash = exportHash(dir)!;
   writeHash(db, hash);
@@ -148,19 +160,22 @@ function requireText(row: Record<string, unknown>, key: string, where: string): 
   return value;
 }
 
-/** Vervangt de inhoud van beide tabellen door de export in `dir`, in één transactie. */
+/** Vervangt de inhoud van de tabellen door de export in `dir`, in één transactie. */
 export function restoreLibrary(
   db: DatabaseSync,
   dir: string = getLibraryExportDir(),
   fields: readonly FieldDef[] = TRACK_FIELDS
-): { tracks: number; links: number } {
+): { tracks: number; links: number; artists: number } {
   const hash = exportHash(dir);
   if (!hash) throw new Error(`geen volledige export in ${dir}`);
   ensureSpotifyLinkTable(db);
+  ensureArtistsTable(db);
   ensureMetaTable(db);
 
   const tracks = readLines(path.join(dir, TRACKS_FILE));
   const links = readLines(path.join(dir, LINKS_FILE));
+  const artistsFile = path.join(dir, ARTISTS_FILE);
+  const artists = fs.existsSync(artistsFile) ? readLines(artistsFile) : [];
   // Alleen velden die (nog) in fields.ts staan; een veld dat intussen weg is, valt stil weg.
   const known = fields.filter((field) => tracks.some((track) => field.key in track));
   const columns = [TRACK_ID_KEY, "created_at", "updated_at", ...known.map((field) => field.key)];
@@ -171,11 +186,15 @@ export function restoreLibrary(
   const insertLink = db.prepare(
     `INSERT INTO ${SPOTIFY_LINK_TABLE} (spotify_track_id, ${TRACK_ID_KEY}, song_key) VALUES (?, ?, ?)`
   );
+  const insertArtist = db.prepare(
+    `INSERT INTO ${ARTISTS_TABLE} (dkj_artist_id, spotify_artist_id, name, created_at) VALUES (?, ?, ?, ?)`
+  );
 
   db.exec("BEGIN");
   try {
     db.exec(`DELETE FROM ${TRACKS_TABLE}`);
     db.exec(`DELETE FROM ${SPOTIFY_LINK_TABLE}`);
+    db.exec(`DELETE FROM ${ARTISTS_TABLE}`);
     tracks.forEach((track, index) => {
       const where = `${TRACKS_FILE} regel ${index + 1}`;
       const values: SQLInputValue[] = [
@@ -194,13 +213,22 @@ export function restoreLibrary(
         requireText(link, "song_key", where)
       );
     });
+    artists.forEach((artist, index) => {
+      const where = `${ARTISTS_FILE} regel ${index + 1}`;
+      insertArtist.run(
+        requireText(artist, "dkj_artist_id", where),
+        requireText(artist, "spotify_artist_id", where),
+        requireText(artist, "name", where),
+        requireText(artist, "created_at", where)
+      );
+    });
     writeHash(db, hash);
     db.exec("COMMIT");
   } catch (err) {
     db.exec("ROLLBACK");
     throw err;
   }
-  return { tracks: tracks.length, links: links.length };
+  return { tracks: tracks.length, links: links.length, artists: artists.length };
 }
 
 /** Wat openLibrary() deed om database en export gelijk te trekken. */

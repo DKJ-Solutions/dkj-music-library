@@ -10,6 +10,7 @@ import { archiveCurrentSnapshot, readSnapshot, writeSnapshot } from "@/lib/spoti
 import { SpotifyReauthRequiredError } from "@/lib/spotify/errors";
 import { sameOriginGuard } from "@/lib/http/sameOrigin";
 import { withLibrary } from "@/lib/library/libraryFile";
+import { applyArtistIdsFromSnapshot, type ArtistIdResult } from "@/lib/library/artistIds";
 import { applyTrackIdsFromSnapshot, type TrackIdResult } from "@/lib/library/trackIds";
 
 // fs/de Spotify-token-laag vereisen de Node-runtime, niet de edge-runtime. Een volledige sync van
@@ -42,12 +43,17 @@ export async function POST(request: Request) {
     archiveCurrentSnapshot();
     writeSnapshot(snapshot);
 
-    // Elk nummer in de nieuwe snapshot een eigen ID geven (trackIds.ts) en de export in
+    // Elk nummer en elke artiest in de nieuwe snapshot een eigen ID geven (trackIds.ts, artistIds.ts)
+    // en de export in
     // data/library/export/ bijwerken (libraryFile.ts). Lukt dat niet, dan is de sync zelf nog steeds
     // geslaagd: de snapshot staat er, en `npm run library:assign-ids` haalt het in.
     let trackIds: TrackIdResult | null = null;
+    let artistIds: ArtistIdResult | null = null;
     try {
-      trackIds = withLibrary((db) => applyTrackIdsFromSnapshot(db, snapshot));
+      [trackIds, artistIds] = withLibrary((db) => [
+        applyTrackIdsFromSnapshot(db, snapshot),
+        applyArtistIdsFromSnapshot(db, snapshot),
+      ] as const);
     } catch (err) {
       console.error("[api/spotify/sync] eigen track-ID's toekennen mislukt:", err);
     }
@@ -59,6 +65,7 @@ export async function POST(request: Request) {
       trackCount,
       failedPlaylistCount,
       trackIds,
+      artistIds,
     });
   } catch (err) {
     if (err instanceof SpotifyReauthRequiredError) {

@@ -60,7 +60,7 @@ describe("exportLibrary / restoreLibrary", () => {
     exportLibrary(source, exportDir);
 
     const target = memoryDb();
-    expect(restoreLibrary(target, exportDir)).toEqual({ tracks: 2, links: 3 });
+    expect(restoreLibrary(target, exportDir)).toEqual({ tracks: 2, links: 3, artists: 0 });
     expect(listTracks(target)).toEqual(listTracks(source));
     expect(readLinks(target)).toEqual(readLinks(source));
   });

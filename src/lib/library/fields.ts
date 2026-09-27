@@ -48,6 +48,7 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
   { key: "genre", type: "text", label: "Genre" },
   { key: "tags", type: "json", label: "Eigen tags, als lijst" },
   { key: "notes", type: "text", label: "Vrije notities" },
+  { key: "dkj_artist_ids", type: "json", label: "Eigen artiest-ID's (tabel artists, zie artistIds.ts), hoofdartiest eerst" },
   // Nieuw veld? Voeg het hier toe, bv.:
   // { key: "energy", type: "integer", label: "Energie 1-10" },
 ];
