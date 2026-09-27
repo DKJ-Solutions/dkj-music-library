@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EMPTY_FILTER, countBy, filterRegister, searchText, toRegisterRow, type RegisterRow } from "./register";
+import { EMPTY_FILTER, countBy, filterRegister, searchText, sortRegister, toRegisterRow, type RegisterRow } from "./register";
 import type { StoredTrack } from "./trackStore";
 
 function stored(over: Partial<StoredTrack> = {}): StoredTrack {
@@ -76,5 +76,30 @@ describe("filterRegister", () => {
 
   it("telt per waarde, leeg onder EMPTY_FILTER", () => {
     expect(countBy(rows, "bpm")).toEqual(new Map([["128BPM", 1], [EMPTY_FILTER, 1]]));
+  });
+});
+
+describe("sortRegister", () => {
+  const base = toRegisterRow(stored(), {});
+  const rows: RegisterRow[] = [
+    { ...base, id: "A", bpm: "112BPM", groups: ["MMC"] },
+    { ...base, id: "B", bpm: null, groups: [] },
+    { ...base, id: "C", bpm: "96BPM", groups: ["DJ CYLOW"] },
+  ];
+  const ids = (list: RegisterRow[]) => list.map((row) => row.id);
+
+  it("sorteert numeriek, met lege cellen onderaan in beide richtingen", () => {
+    expect(ids(sortRegister(rows, { key: "bpm", dir: "asc" }))).toEqual(["C", "A", "B"]);
+    expect(ids(sortRegister(rows, { key: "bpm", dir: "desc" }))).toEqual(["A", "C", "B"]);
+  });
+
+  it("sorteert een lijstkolom op zijn waarden", () => {
+    expect(ids(sortRegister(rows, { key: "groups", dir: "asc" }))).toEqual(["C", "A", "B"]);
+  });
+
+  it("laat de volgorde staan zonder sortering, en verandert de invoer niet", () => {
+    expect(ids(sortRegister(rows, null))).toEqual(["A", "B", "C"]);
+    sortRegister(rows, { key: "id", dir: "desc" });
+    expect(ids(rows)).toEqual(["A", "B", "C"]);
   });
 });
