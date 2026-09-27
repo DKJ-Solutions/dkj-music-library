@@ -80,6 +80,27 @@ en alleen de kolommen in het bestand worden aangeraakt. Klopt er één rij niet 
 kolomnaam, `12.5` in een geheel-getalveld), dan wordt er niets geschreven en meldt het script welke
 rij het is.
 
+### Eigen track-ID's uit Spotify
+
+Elk nummer dat in je Spotify-playlists voorkomt, krijgt een eigen, oplopend ID: `T000001`, `T000002`,
+enzovoort. Dat gebeurt na elke sync op `/spotify` automatisch. Voor een snapshot die er al ligt, draai je:
+
+```sh
+npm run library:assign-ids
+```
+
+- **Eén ID per nummer, niet per Spotify-track.** Dezelfde opname staat vaak meerdere keren op Spotify
+  (single, album, compilatie). Twee tracks met dezelfde titel (hoofdletters en randspaties tellen niet
+  mee) en precies dezelfde artiesten krijgen hetzelfde ID. Een remix of "Radio Edit" heeft een andere
+  titel en blijft dus een eigen nummer.
+- **Een ID verandert nooit.** De tabel `spotify_track_ids` onthoudt welk Spotify-ID bij welk eigen ID
+  hoort. Een nieuwe variant van een bekend nummer krijgt het bestaande ID, ook als de oude variant niet
+  meer in je playlists staat.
+- **Wat je zelf invult, blijft staan.** Een nieuw nummer krijgt bij het aanmaken titel, artiesten, album
+  en duur van Spotify. Daarna past de toekenning die rij niet meer aan.
+
+De regels staan bovenaan `src/lib/library/trackIds.ts`.
+
 ### Een veld toevoegen
 
 Voeg in `src/lib/library/fields.ts` één regel toe aan `TRACK_FIELDS`:
