@@ -77,8 +77,13 @@
   overscroll-behavior: contain;
 }
 
+// De tabel past altijd in de breedte die er is: een vaste verdeling per kolom (<colgroup> in
+// TrackRegister.tsx) en alles in een cel afgekapt. Pas onder 900px, waar acht kolommen niet meer te lezen
+// zijn, komt er een horizontale scrollbalk.
 .register-table {
   width: 100%;
+  min-width: 900px;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: 13.5px;
 }
@@ -93,6 +98,8 @@
 }
 
 .register-table th {
+  overflow: hidden;
+  text-overflow: ellipsis;
   position: sticky;
   top: 0;
   z-index: 1;
@@ -121,17 +128,12 @@
   font-family: var(--font-mono);
   font-size: 12px;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .register-album-artist {
-  width: 240px;
-  max-width: 28vw;
   color: var(--ink-soft);
-}
-
-.register-artist {
-  width: 160px;
-  max-width: 20vw;
 }
 
 // ELKE RIJ IS PRECIES ÉÉN REGEL (Dave). Tekst wordt afgekapt met … en staat volledig in de tooltip
@@ -146,8 +148,6 @@
 
 // dkj_file is de hoofdkolom (hij verving de titel): volle inktkleur.
 .register-file {
-  width: 360px;
-  max-width: 40vw;
   color: var(--ink);
 }
 
@@ -156,13 +156,9 @@
 //   - een MENU ("3 playlists ▾", "3 artists ▾") is een knop met een gevulde lichte accentachtergrond en
 //     een rand: hij opent hier een lijst;
 //   - STATISCHE informatie (artiest-ID, BPM, album) is een grijs vlak zonder rand.
-.register-playlists-cell {
-  min-width: 200px;
-}
-
 .register-playlist {
   display: inline-block;
-  max-width: 280px;
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -184,7 +180,7 @@
 .register-menu-toggle {
   display: inline-flex;
   align-items: center;
-  max-width: 280px;
+  max-width: 100%;
   overflow: hidden;
   white-space: nowrap;
   vertical-align: top;
@@ -218,6 +214,7 @@
 .register-menu {
   position: relative;
   display: inline-block;
+  max-width: 100%;
 }
 
 .register-menu-count {
@@ -292,6 +289,7 @@ a.register-menu-item:hover {
   display: flex;
   flex-wrap: nowrap;
   gap: 4px;
+  overflow: hidden;
 }
 
 .register-chip,
@@ -310,6 +308,9 @@ a.register-menu-item:hover {
 }
 
 .register-tag {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   display: inline-flex;
   align-items: center;
   gap: 6px;

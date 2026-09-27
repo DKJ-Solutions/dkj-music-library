@@ -263,6 +263,17 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
 
       <div className="register-table-box" ref={box}>
         <table className="register-table">
+          {/* Vaste verdeling van de breedte (table-layout: fixed), zodat alle kolommen altijd passen. */}
+          <colgroup>
+            <col style={{ width: "11%" }} />
+            <col style={{ width: "23%" }} />
+            <col style={{ width: "11%" }} />
+            <col style={{ width: "14%" }} />
+            <col style={{ width: "10%" }} />
+            <col style={{ width: "14%" }} />
+            <col style={{ width: "7%" }} />
+            <col style={{ width: "10%" }} />
+          </colgroup>
           <thead>
             <tr>
               <th><code>dkj_track_id</code></th>

@@ -53,6 +53,7 @@ kan het niet. De app wel: de export staat in git en de bibliotheek bouwt zich op
 - [x] Elke rij is precies één regel (Dave): tekstcellen afgekapt met tooltip, meer dan twee artiest-ID's in een menu met de namen; één gedeeld menu voor playlists en ID's
 - [x] Interactief versus statisch (Dave): links en menuknoppen in de accentkleur met rand en ↗/▾, statische chips en labels grijs zonder rand
 - [x] Link en menu ook onderling verschillend (Dave): een link is tekst in de accentkleur met ↗ (zonder onderstreping, Dave), een menu een gevulde knop met ▾
+- [x] De tabel past altijd (Dave): `table-layout: fixed` met een vaste verdeling per kolom, alles in een cel afgekapt; pas onder 900px een horizontale scrollbalk
 
 ### TEST
 
