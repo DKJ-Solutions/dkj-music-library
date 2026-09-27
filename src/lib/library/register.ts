@@ -21,7 +21,8 @@ export interface RegisterRow {
   bpm: string | null;
   album: string | null;
   file: string | null;
-  group: string | null;
+  /** De eigen groepen (dkj_group), in de volgorde van de options. */
+  groups: string[];
   /** De Spotify-playlists waarin de track staat (spotify_playlist). */
   playlists: PlaylistLink[];
 }
@@ -54,7 +55,7 @@ export function toRegisterRow(track: StoredTrack, artistNames: Record<string, st
     bpm: text(track.dkj_bpm),
     album: text(track.dkj_album),
     file: text(track.dkj_file),
-    group: text(track.dkj_group),
+    groups: Array.isArray(track.dkj_group) ? track.dkj_group.filter((g): g is string => typeof g === "string") : [],
     playlists: Array.isArray(track.spotify_playlist)
       ? track.spotify_playlist.filter(
           (p): p is PlaylistLink =>
@@ -72,7 +73,7 @@ export function fold(value: string): string {
 /** Alles waarop gezocht wordt, in één gevouwen string. */
 export function searchText(row: RegisterRow): string {
   return fold(
-    [row.id, row.title, ...row.artistIds, ...row.artistNames, row.artist, row.albumArtist, row.bpm, row.album, row.group, row.file, ...row.playlists.map((p) => p.name)]
+    [row.id, row.title, ...row.artistIds, ...row.artistNames, row.artist, row.albumArtist, row.bpm, row.album, ...row.groups, row.file, ...row.playlists.map((p) => p.name)]
       .filter(Boolean)
       .join(" ")
   );
@@ -80,6 +81,10 @@ export function searchText(row: RegisterRow): string {
 
 const matches = (value: string | null, want: string) =>
   want === "" || (want === EMPTY_FILTER ? value === null : value === want);
+
+/** Een lijst past als hij de gekozen waarde bevat; EMPTY_FILTER past bij een lege lijst. */
+const matchesList = (values: readonly string[], want: string) =>
+  want === "" || (want === EMPTY_FILTER ? values.length === 0 : values.includes(want));
 
 /** De rijen die bij het filter passen. `haystacks` is searchText() per rij, vooraf berekend. */
 export function filterRegister(
@@ -92,16 +97,17 @@ export function filterRegister(
     (row, i) =>
       (term === "" || haystacks[i].includes(term)) && matches(row.bpm, filter.bpm) &&
       matches(row.album, filter.album) &&
-      matches(row.group, filter.group ?? "")
+      matchesList(row.groups, filter.group ?? "")
   );
 }
 
 /** Hoe vaak elke waarde van `key` voorkomt; lege waarden tellen onder EMPTY_FILTER. */
-export function countBy(rows: readonly RegisterRow[], key: "bpm" | "album" | "group"): Map<string, number> {
+export function countBy(rows: readonly RegisterRow[], key: "bpm" | "album" | "groups"): Map<string, number> {
   const counts = new Map<string, number>();
   for (const row of rows) {
-    const value = row[key] ?? EMPTY_FILTER;
-    counts.set(value, (counts.get(value) ?? 0) + 1);
+    // Bij een lijst telt de rij mee bij elk van zijn waarden.
+    const values = key === "groups" ? (row.groups.length > 0 ? row.groups : [EMPTY_FILTER]) : [row[key] ?? EMPTY_FILTER];
+    for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
   }
   return counts;
 }

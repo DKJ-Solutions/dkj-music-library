@@ -17,7 +17,7 @@ function row(n: number, over: Partial<RegisterRow> = {}): RegisterRow {
     bpm: null,
     album: null,
     file: `Artiest - Nummer ${n}`,
-    group: null,
+    groups: [],
     playlists: [],
     ...over,
   };
@@ -84,6 +84,16 @@ describe("TrackRegister", () => {
     fireEvent.click(screen.getByRole("button", { name: /3 artists/ }));
     expect(screen.getByText("EEE01")).toBeTruthy();
     expect(screen.getByText("Ee")).toBeTruthy();
+  });
+
+  it("toont één groep als label en meer groepen als menu, en filtert op elk van de groepen", () => {
+    render(
+      <TrackRegister rows={[row(1, { groups: ["Prive"] }), row(2, { groups: ["MMC", "DJ CYLOW"] })]} artistCount={1} />
+    );
+    fireEvent.click(screen.getByRole("button", { name: /2 groups/ }));
+    expect(screen.getByText("DJ CYLOW", { selector: ".register-menu-item" })).toBeTruthy();
+    fireEvent.change(screen.getByLabelText(/dkj_group/), { target: { value: "MMC" } });
+    expect(screen.getByText("1 van 2 nummers")).toBeTruthy();
   });
 
   it("meldt het als niets past", () => {

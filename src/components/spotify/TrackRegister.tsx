@@ -168,6 +168,39 @@ function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term:
   );
 }
 
+/** Eén groep: een label. Meer groepen: een menu "N groups", net als bij playlists en artiesten. */
+function Groups({ groups, term }: { groups: string[]; term: string }) {
+  if (groups.length === 0) return <Empty />;
+  if (groups.length === 1) {
+    return (
+      <span className="register-tag">
+        <Highlight text={groups[0]} term={term} />
+      </span>
+    );
+  }
+  const hit = term ? groups.find((group) => fold(group).includes(term)) : undefined;
+  return (
+    <Dropdown
+      label={
+        hit ? (
+          <>
+            <Highlight text={hit} term={term} />
+            <span className="register-menu-count">+{groups.length - 1}</span>
+          </>
+        ) : (
+          `${groups.length} groups`
+        )
+      }
+    >
+      {groups.map((group) => (
+        <span key={group} className="register-menu-item register-menu-item--static">
+          <Highlight text={group} term={term} />
+        </span>
+      ))}
+    </Dropdown>
+  );
+}
+
 /** Tekst die op één regel afgekapt wordt, met de volledige tekst als tooltip. */
 function OneLine({ text, term, className }: { text: string | null; term: string; className: string }) {
   if (!text) return <Empty />;
@@ -194,7 +227,7 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
   const haystacks = useMemo(() => rows.map(searchText), [rows]);
   const bpmCounts = useMemo(() => countBy(rows, "bpm"), [rows]);
   const albumCounts = useMemo(() => countBy(rows, "album"), [rows]);
-  const groupCounts = useMemo(() => countBy(rows, "group"), [rows]);
+  const groupCounts = useMemo(() => countBy(rows, "groups"), [rows]);
   const list = useMemo(
     () => filterRegister(rows, haystacks, { term: deferredQuery, bpm, album, group }),
     [rows, haystacks, deferredQuery, bpm, album, group]
@@ -317,7 +350,7 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
                   <td className="register-playlists-cell"><PlaylistLabels playlists={row.playlists} term={term} /></td>
                   <td>{row.bpm ? <span className="register-tag"><Highlight text={row.bpm} term={term} /></span> : <Empty />}</td>
                   <td>{row.album ? <AlbumTag album={row.album} term={term} /> : <Empty />}</td>
-                  <td>{row.group ? <span className="register-tag"><Highlight text={row.group} term={term} /></span> : <Empty />}</td>
+                  <td><Groups groups={row.groups} term={term} /></td>
                 </tr>
               ))
             )}

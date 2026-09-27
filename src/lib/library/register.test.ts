@@ -14,7 +14,7 @@ function stored(over: Partial<StoredTrack> = {}): StoredTrack {
     dkj_bpm: null,
     dkj_album: null,
     dkj_file: "Mark Ronson - Uptown Funk",
-    dkj_group: "MMC",
+    dkj_group: ["MMC"],
     spotify_playlist: [{ id: "p1", name: "Funk" }, { bad: true }],
     ...over,
   };
@@ -33,7 +33,7 @@ describe("toRegisterRow", () => {
       bpm: "112BPM",
       album: null,
       file: "Mark Ronson - Uptown Funk",
-      group: "MMC",
+      groups: ["MMC"],
       playlists: [{ id: "p1", name: "Funk" }],
     });
   });
