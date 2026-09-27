@@ -1,7 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { openLibraryDb } from "./db";
 import { getTrack, listTracks, upsertTracks } from "./trackStore";
-import { applyTrackIdsFromSnapshot, formatTrackId, planTrackIds, renumberLegacyTrackIds, songKey } from "./trackIds";
+import {
+  applyTrackIdsFromSnapshot,
+  formatTrackId,
+  planTrackIds,
+  renumberLegacyTrackIds,
+  renumberTrackIds,
+  songKey,
+} from "./trackIds";
 import type { Playlist, Snapshot, Track } from "@/lib/spotify/types";
 
 function track(id: string, name: string, artistIds: string[] = ["a1"]): Track {
@@ -61,7 +68,7 @@ describe("formatTrackId / songKey", () => {
 });
 
 describe("planTrackIds", () => {
-  it("nummert per hoofdartiest, in volgorde van eerste voorkomen, en voegt releasevarianten samen", () => {
+  it("zet alle artiest-ID's in volgorde voor het nummer, telt per combinatie en voegt releasevarianten samen", () => {
     const plan = planTrackIds(
       snapshot(
         [track("s1", "Song A"), track("s2", "Song B", ["a2", "a1"]), track("s4", "Song C")],
@@ -73,12 +80,12 @@ describe("planTrackIds", () => {
     );
     expect(plan.newTracks.map((t) => [t.trackId, t.track.id])).toEqual([
       ["ART01-01", "s1"],
-      ["ART02-01", "s2"],
+      ["ART02-ART01-01", "s2"],
       ["ART01-02", "s4"],
     ]);
     expect(plan.newLinks.map((l) => [l.spotifyTrackId, l.trackId])).toEqual([
       ["s1", "ART01-01"],
-      ["s2", "ART02-01"],
+      ["s2", "ART02-ART01-01"],
       ["s4", "ART01-02"],
       ["s3", "ART01-01"],
     ]);
@@ -146,7 +153,7 @@ describe("applyTrackIdsFromSnapshot", () => {
 });
 
 describe("renumberLegacyTrackIds", () => {
-  it("nummert oude T-ID's per hoofdartiest om in de volgorde van het oude nummer, koppelingen incluis", () => {
+  it("nummert oude T-ID's per artiestencombinatie om in de volgorde van het oude nummer, koppelingen incluis", () => {
     const db = memoryDb();
     upsertTracks(db, [
       { dkj_track_id: "T000002", title: "Tweede", dkj_artist_ids: ["PRO02"] },
@@ -164,12 +171,30 @@ describe("renumberLegacyTrackIds", () => {
     expect(listTracks(db).map((t) => [t.dkj_track_id, t.title])).toEqual([
       ["AMY01-01", "Valerie"],
       ["PRO02-01", "Al nieuw"],
-      ["PRO02-02", "Eerste"],
-      ["PRO02-03", "Tweede"],
+      ["PRO02-02", "Tweede"],
+      ["PRO02-AMY01-01", "Eerste"],
       ["XXX00-01", "Zonder artiest"],
     ]);
     const links = db.prepare("SELECT dkj_track_id FROM spotify_track_ids").all().map((r) => r.dkj_track_id);
-    expect(links).toEqual(["PRO02-02", "PRO02-02"]);
+    expect(links).toEqual(["PRO02-AMY01-01", "PRO02-AMY01-01"]);
     expect(renumberLegacyTrackIds(db)).toBe(0);
+  });
+
+  it("zet met renumberTrackIds alleen om wat het predicaat aanwijst, in de volgorde van het oude ID", () => {
+    const db = memoryDb();
+    upsertTracks(db, [
+      { dkj_track_id: "MAR01-10", title: "Later", dkj_artist_ids: ["MAR01", "BRU01"] },
+      { dkj_track_id: "MAR01-09", title: "Eerder", dkj_artist_ids: ["MAR01", "BRU01"] },
+      { dkj_track_id: "MAR01-01", title: "Solo", dkj_artist_ids: ["MAR01"] },
+    ]);
+    // Het tussenformaat: alleen de hoofdartiest, bij een nummer met meer artiesten.
+    const onlyMain = (id: string, artists: readonly string[]) => artists.length > 1 && id.startsWith(`${artists[0]}-`) && /^[A-Z]{3}\d+-\d+$/.test(id);
+    expect(renumberTrackIds(db, onlyMain)).toBe(2);
+    expect(listTracks(db).map((t) => [t.dkj_track_id, t.title])).toEqual([
+      ["MAR01-01", "Solo"],
+      ["MAR01-BRU01-01", "Eerder"],
+      ["MAR01-BRU01-02", "Later"],
+    ]);
+    expect(renumberTrackIds(db, onlyMain)).toBe(0);
   });
 });

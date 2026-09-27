@@ -32,11 +32,32 @@
 
 ### PLAN
 
+#### Keuze van de eigenaar (27 september 2026)
+
+PR #11 bouwde `<dkj_artist_id van de hoofdartiest>-<NN>`. De eigenaar verduidelijkte daarna dat alle
+artiest-ID's erin horen, met een streepje ertussen: `<dkj_artist_id[1]>-<dkj_artist_id[2]>-...-<NN>`. Het
+volgnummer telt per artiestencombinatie. Gemeten vóór de bouw: 7.125 combinaties, één boven de 99
+(Immediate, 143), mediaan 13 tekens, 95% ≤ 18, langste 78 tekens (15 artiesten).
+
+#### Eenmalige omzetting van de echte bibliotheek
+
+Uitgevoerd met `renumberTrackIds()`, met het predicaat "meer dan één artiest en een ID in het formaat
+`<hoofdartiest>-NN`", via een script dat bewust niet in de repo staat. Het mag niet nog eens draaien: na
+de omzetting zou het een ID raken waarvan de eigenaar `dkj_artist_ids` later zelf heeft uitgebreid. Er
+werden 4.692 tracks omgezet, precies het aantal nummers met meer dan één artiest.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `trackIds.ts`: `artistPart()` = alle eigen artiest-ID's met streepjes; nieuwe nummers en omnummering tellen per combinatie
+- [x] `renumberTrackIds(db, isStale)`: generieke omnummering in de volgorde van het oude ID; `renumberLegacyTrackIds()` gebruikt hem voor T-ID's
+- [x] README: formaat met alle artiesten
+- [x] Echte bibliotheek omgezet (zie hierboven)
 
 ### TEST
+
+- [x] Tests bijgewerkt voor het nieuwe formaat, plus `renumberTrackIds` met het predicaat van het tussenformaat (volgorde van het oude ID, nummers met één artiest ongemoeid, tweede keer niets)
+- [x] Vitest 694/694, `tsc --noEmit` en `eslint` schoon
+- [x] Echte data: alle 12.471 ID's = alle artiesten + volgnummer, alle uniek, 0 koppelingen naar een onbekend ID; verse database uit de export opgebouwd; `library:assign-ids` daarna doet niets
 
 ### DEPLOY: fix/track-id-all-artists
 
@@ -44,7 +65,12 @@
 
 ##### Tier 0
 
-**Score:**
+`dkj_track_id` bevat nu de ID's van alle artiesten van een nummer, in volgorde en met een streepje ertussen,
+en daarachter een volgnummer per artiestencombinatie. Cobra Dance van Billy Esteban en Cafe De Anatolia is
+`BIL09-CAF01-03`. Nummers met één artiest hebben hetzelfde ID als eerst (Firestarter blijft `PRO02-21`).
+De 4.692 nummers met meer dan één artiest zijn één keer omgenummerd, ook in de koppeltabel.
+
+**Score:** 3
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +79,9 @@
 
 ##### Tier 1
 
-**Score:**
+Een persoonlijke tool zonder opdrachtgever; niemand buiten de ontwikkelaar merkt dit.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +90,9 @@
 
 ##### Tier 2
 
-**Score:**
+Er is geen dienst met abonnees.
+
+**Score:** N/A
 
 #### Pull Request
 
