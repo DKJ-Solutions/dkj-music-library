@@ -2,7 +2,40 @@
 
 ## [Unreleased]
 
-**11 patch entries** <!-- pending-tally -->
+**12 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/dkj-albumartiest-field · 20260927-170519Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+Het Trackregister krijgt de kolom `dkj_albumartiest`: alle artiesten van een track als één tekst, in de
+volgorde van Spotify, met komma's ertussen (`Aaron Smith, Indiblu, JORDAZ`). Nieuwe tracks krijgen hem bij
+het aanmaken, bestaande bij elke sync zolang het veld leeg is; wat je zelf invult, blijft staan. Alle
+12.471 tracks in de export zijn meteen gevuld.
+
+**Score:** 3
+
+##### Tier 1
+
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
+
+##### Tier 2
+
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
+
+#### Pull Request
+
+Trackregister krijgt de kolom dkj_albumartiest (alle artiesten in Spotify-volgorde)
+
+[PR #14](https://github.com/DKJ-Solutions/dkj-music-library/pull/14)
+
+---
 
 ### DEPLOY: feat/dkj-bpm-field · 20260927-170230Z
 
