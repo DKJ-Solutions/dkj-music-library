@@ -2,7 +2,43 @@
 
 ## [Unreleased]
 
-**10 patch entries** <!-- pending-tally -->
+**11 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/dkj-bpm-field · 20260927-170230Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+Het Trackregister krijgt drie kolommen. `dkj_bpm` en `dkj_album` hebben een vaste lijst keuzes
+(`FieldDef.options`, nieuw): `dkj_bpm` kent 128BPM, 112BPM, 176BPM, 144BPM en 96BPM, `dkj_album` de 32
+combinaties van acht kleuren (Green, Yellow, Red, Purple, Cyan, Blue, Orange, Magenta) met Light/Full en
+(f)/(m), bijvoorbeeld `Green Light (f)`. Een andere waarde breekt de import af; hoofdletters en spaties
+tellen niet mee. `dkj_artist` bevat precies één artiest: de eerste uit `artists`. Nieuwe tracks krijgen hem
+bij het aanmaken, bestaande bij elke sync zolang het veld leeg is; alle 12.471 tracks in de export zijn
+meteen gevuld.
+
+**Score:** 3
+
+##### Tier 1
+
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
+
+##### Tier 2
+
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
+
+#### Pull Request
+
+Trackregister krijgt de kolommen dkj_bpm, dkj_album en dkj_artist
+
+[PR #13](https://github.com/DKJ-Solutions/dkj-music-library/pull/13)
+
+---
 
 ### DEPLOY: fix/track-id-all-artists · 20260927-160019Z
 
