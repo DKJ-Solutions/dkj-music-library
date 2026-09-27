@@ -2,7 +2,39 @@
 
 ## [Unreleased]
 
-**18 patch entries** <!-- pending-tally -->
+**19 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/rename-spotify-playlist · 20260927-183106Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+Het veld met de Spotify-playlists van een track heet nu `spotify_playlist` in plaats van `dkj_playlists`.
+Een bestaande database hernoemt de kolom zelf, en een export met de oude naam zet nog gewoon terug; dat
+laatste geldt voortaan voor elk hernoemd veld.
+
+**Score:** 2
+
+##### Tier 1
+
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
+
+##### Tier 2
+
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
+
+#### Pull Request
+
+dkj_playlists heet voortaan spotify_playlist
+
+[PR #22](https://github.com/DKJ-Solutions/dkj-music-library/pull/22)
+
+---
 
 ### DEPLOY: feat/dkj-album-from-playlists · 20260927-182815Z
 
