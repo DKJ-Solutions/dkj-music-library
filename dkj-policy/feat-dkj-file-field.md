@@ -32,11 +32,23 @@
 
 ### PLAN
 
+Dave wil een kolom `dkj_file`: de bestandsnaam zoals op zijn desktop. Zijn voorbeelden: `Abel Ramos -
+Higher (David Penn Remix)`, `Airdraw, Jo.E & Aaren - Bryde's Whale (New Ordinance Edit)`, `Jaded - Can You
+Feel It (Luttrell Remix)`. Alleen de eerste staat in de bibliotheek; de regels zijn uit de vorm van alle
+drie afgeleid.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `fileName.ts`: artiesten zonder remixers en featurings, `A, B & C`, elk ` - stuk` tussen haakjes, Windows-veilig
+- [x] `artistsNamedIn()` in `primaryArtist.ts`, gedeeld met de remixer-regel
+- [x] `dkj_file` in `fields.ts`, gevuld bij het aanmaken (`metadataOf`) en bij elke sync (`fillFileNames`)
+- [x] Alle 12.471 tracks gevuld
+- [x] README bijgewerkt
 
 ### TEST
+
+- [x] typecheck, eslint en vitest groen, met `fileName.test.ts` op Dave's voorbeelden en de randgevallen
+- [x] Steekproef op de hele bibliotheek; drie fouten gevonden en gerepareerd vóór het vullen (twee remixers, een remixer die de titel korter noemt, featuring zonder haakjes)
 
 ### DEPLOY: feat/dkj-file-field
 
@@ -44,7 +56,12 @@
 
 ##### Tier 0
 
-**Score:**
+Het Trackregister krijgt de kolom `dkj_file`: de bestandsnaam zoals op de desktop, zonder extensie.
+`Higher - David Penn Remix` van Abel Ramos en David Penn wordt `Abel Ramos - Higher (David Penn Remix)`.
+Remixers en featurings staan alleen in de titel, niet nog eens bij de artiesten; elk stuk na ` - ` komt
+tussen haakjes, en tekens die Windows weigert, gaan eruit. Alle 12.471 tracks zijn gevuld.
+
+**Score:** 3
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +70,9 @@
 
 ##### Tier 1
 
-**Score:**
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +81,9 @@
 
 ##### Tier 2
 
-**Score:**
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
 
 #### Pull Request
 

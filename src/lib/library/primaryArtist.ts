@@ -53,6 +53,12 @@ function normalize(value: string): string {
   return ` ${words} `;
 }
 
+/** De artiesten die in `text` genoemd worden, vergeleken zoals remixArtistOf() dat doet. */
+export function artistsNamedIn(text: string, artists: readonly string[]): string[] {
+  const haystack = normalize(text);
+  return artists.filter((name) => normalize(name).trim() !== "" && haystack.includes(normalize(name)));
+}
+
 /** Alle versiedelen van een titel, de laatste eerst (daar staat de remix meestal). */
 export function versionParts(title: string): string[] {
   return [...title.matchAll(VERSION_PART)].map((match) => match[1]).reverse();
