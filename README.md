@@ -194,6 +194,9 @@ Hoofdletters en spaties tellen niet mee (`128 bpm` wordt `128BPM`).
 - **`dkj_bpm`**: `128BPM`, `112BPM`, `176BPM`, `144BPM`, `96BPM`.
 - **`dkj_album`**: een kleur met `Light (f)`, `Full (f)`, `Light (m)` of `Full (m)`, bijvoorbeeld
   `Green Light (f)`. De acht kleuren zijn Green, Yellow, Red, Purple, Cyan, Blue, Orange en Magenta.
+  Het veld wordt bij elke sync uit de playlists afgeleid zolang het leeg is: noemen alle playlists van
+  een track (`Magenta Light (m) ♦️ 128BPM EDM`) hetzelfde album, dan wordt dat het album. Noemen ze
+  verschillende albums, dan blijft het leeg en kies je zelf (`src/lib/library/albumFromPlaylists.ts`).
 
 ### Een veld toevoegen
 

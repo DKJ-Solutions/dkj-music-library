@@ -68,6 +68,9 @@ export function albumArtistOf(names: readonly string[]): string | null {
   return names.length > 0 ? names.join(ALBUM_ARTIST_SEPARATOR) : null;
 }
 
+/** Het veld met het eigen album (zie albumFromPlaylists.ts). */
+export const ALBUM_KEY = "dkj_album";
+
 /** De acht kleuren van de eigen albums. */
 export const DKJ_ALBUM_COLOURS = ["Green", "Yellow", "Red", "Purple", "Cyan", "Blue", "Orange", "Magenta"] as const;
 

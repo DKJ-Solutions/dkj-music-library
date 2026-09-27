@@ -32,11 +32,21 @@
 
 ### PLAN
 
+Dave vroeg of `dkj_album` uit de Spotify-playlists te achterhalen is. Gemeten: 281 van de 347 playlists
+noemen een compleet album (kleur, Light/Full, f/m); per track 8.257 eenduidig, 2.452 met meerdere
+verschillende albums, 1.762 zonder album-playlist. Dave koos: alleen de eenduidige vullen, de rest leeg
+laten om zelf te kiezen.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `albumFromPlaylists.ts`: album per playlistnaam via `parsePlaylistName`, en per track alleen als alle album-playlists hetzelfde noemen
+- [x] `fillAlbumsFromPlaylists()` in de sync, na het verversen van `dkj_playlists`; alleen zolang `dkj_album` leeg is
+- [x] Echte data: 8.257 tracks gevuld
+- [x] README bijgewerkt
 
 ### TEST
+
+- [x] typecheck, eslint en vitest groen, met `albumFromPlaylists.test.ts` en een sync-test in `artistIds.test.ts`
 
 ### DEPLOY: feat/dkj-album-from-playlists
 
@@ -44,7 +54,12 @@
 
 ##### Tier 0
 
-**Score:**
+`dkj_album` wordt nu uit de Spotify-playlists afgeleid: noemen alle playlists van een track hetzelfde
+album (`Magenta Light (m) ♦️ 128BPM EDM` → Magenta Light (m)), dan krijgt de track dat album. Noemen ze
+verschillende albums, of geen, dan blijft het leeg om zelf te kiezen. 8.257 van de 12.471 tracks hebben
+zo hun album gekregen; de sync doet het voortaan bij elke nieuwe track.
+
+**Score:** 4
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +68,9 @@
 
 ##### Tier 1
 
-**Score:**
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +79,9 @@
 
 ##### Tier 2
 
-**Score:**
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
 
 #### Pull Request
 
