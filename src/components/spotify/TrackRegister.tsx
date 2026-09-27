@@ -270,6 +270,34 @@ function Groups({ groups, term }: { groups: string[]; term: string }) {
   );
 }
 
+/** Het eigen album als label. Is het leeg omdat de playlists verschillende albums noemen, dan een menu
+ *  "N albums" met die kandidaten, net als bij playlists en groepen (Dave). */
+function Album({ album, candidates, term }: { album: string | null; candidates: string[]; term: string }) {
+  if (album) return <AlbumTag album={album} term={term} />;
+  if (candidates.length < 2) return <Empty />;
+  const hit = term ? candidates.find((candidate) => fold(candidate).includes(term)) : undefined;
+  return (
+    <Dropdown
+      label={
+        hit ? (
+          <>
+            <Highlight text={hit} term={term} />
+            <span className="register-menu-count">+{candidates.length - 1}</span>
+          </>
+        ) : (
+          `${candidates.length} albums`
+        )
+      }
+    >
+      {candidates.map((candidate) => (
+        <span key={candidate} className="register-menu-item register-menu-item--static">
+          <AlbumTag album={candidate} term={term} />
+        </span>
+      ))}
+    </Dropdown>
+  );
+}
+
 /** Tekst die op één regel afgekapt wordt, met de volledige tekst als tooltip. */
 function OneLine({ text, term, className }: { text: string | null; term: string; className: string }) {
   if (!text) return <Empty />;
@@ -429,7 +457,7 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
                   <td><ArtistIds ids={row.artistIds} names={row.artistNames} term={term} /></td>
                   <td className="register-playlists-cell"><PlaylistLabels playlists={row.playlists} term={term} /></td>
                   <td>{row.bpm ? <span className="register-tag"><Highlight text={row.bpm} term={term} /></span> : <Empty />}</td>
-                  <td>{row.album ? <AlbumTag album={row.album} term={term} /> : <Empty />}</td>
+                  <td><Album album={row.album} candidates={row.albumCandidates} term={term} /></td>
                   <td><Groups groups={row.groups} term={term} /></td>
                 </tr>
               ))

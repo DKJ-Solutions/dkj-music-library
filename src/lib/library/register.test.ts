@@ -32,6 +32,7 @@ describe("toRegisterRow", () => {
       albumArtist: "Mark Ronson, Bruno Mars",
       bpm: "112BPM",
       album: null,
+      albumCandidates: [],
       file: "Mark Ronson - Uptown Funk",
       groups: ["MMC"],
       playlists: [{ id: "p1", name: "Funk" }],

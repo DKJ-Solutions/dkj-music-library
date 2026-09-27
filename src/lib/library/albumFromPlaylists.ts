@@ -22,9 +22,15 @@ export function albumOfPlaylist(name: string): string | null {
   return DKJ_ALBUM_OPTIONS.includes(album) ? album : null;
 }
 
+/** Alle albums die de playlists van een track noemen, elk één keer, in de volgorde van DKJ_ALBUM_OPTIONS. */
+export function albumsOfPlaylists(playlistNames: readonly string[]): string[] {
+  const albums = new Set(playlistNames.map(albumOfPlaylist));
+  return DKJ_ALBUM_OPTIONS.filter((album) => albums.has(album));
+}
+
 /** Het album van een track: het ene album dat al zijn album-playlists noemen, of null als ze er geen
  *  of verschillende noemen. */
 export function albumFromPlaylists(playlistNames: readonly string[]): string | null {
-  const albums = new Set(playlistNames.map(albumOfPlaylist).filter((album): album is string => album !== null));
-  return albums.size === 1 ? [...albums][0] : null;
+  const albums = albumsOfPlaylists(playlistNames);
+  return albums.length === 1 ? albums[0] : null;
 }
