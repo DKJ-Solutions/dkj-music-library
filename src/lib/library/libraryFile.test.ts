@@ -5,6 +5,7 @@ import { DatabaseSync } from "node:sqlite";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { openLibraryDb } from "./db";
 import { exportHash, exportLibrary, openLibrary, restoreLibrary, syncWithExport, withLibrary } from "./libraryFile";
+import { TRACK_FIELDS } from "./fields";
 import { ensureSpotifyLinkTable } from "./trackIds";
 import { getTrack, listTracks, upsertTracks } from "./trackStore";
 
@@ -155,6 +156,23 @@ describe("syncWithExport / openLibrary / withLibrary", () => {
     expect(sync).toBe("restored");
     expect(getTrack(db, "T000003")?.title).toBe("Valerie");
     db.close();
+  });
+
+  it("bouwt opnieuw op als de database met een andere veldenlijst gelezen werd, ook bij een kloppende hash", () => {
+    withLibrary((db) => seed(db), dbPath, exportDir);
+
+    // Een proces met een oudere fields.ts (zonder `tags`) zette de export terug: `tags` valt weg.
+    const stale = new DatabaseSync(dbPath);
+    restoreLibrary(stale, exportDir, TRACK_FIELDS.filter((field) => field.key !== "tags"));
+    stale.close();
+
+    const { db, sync } = openLibrary(dbPath, exportDir);
+    expect(sync).toBe("restored");
+    expect(getTrack(db, "T000001")?.tags).toEqual(["soul"]);
+    db.close();
+    const again = openLibrary(dbPath, exportDir);
+    expect(again.sync).toBe("in-sync");
+    again.db.close();
   });
 
   it("schrijft de export als er wel data is maar nog geen export", () => {
