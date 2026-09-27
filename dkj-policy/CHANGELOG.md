@@ -2,7 +2,40 @@
 
 ## [Unreleased]
 
-**13 patch entries** <!-- pending-tally -->
+**14 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/dkj-artist-title-credit · 20260927-173538Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+`dkj_artist` neemt nu ook een remixer die alleen in de titel staat: `The Wolves - Lenzman Remix` →
+Lenzman, `Good Times - Martin Sharp Remix` → Martin Sharp. Een stijl leest daarbij als naam (`Techno
+Mix` → Techno), zoals gekozen; jaartallen, plaatformaten en woorden als `Radio` of `Original` tellen niet.
+Bij 209 bestaande tracks is `dkj_artist` daarmee veranderd.
+
+**Score:** 2
+
+##### Tier 1
+
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
+
+##### Tier 2
+
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
+
+#### Pull Request
+
+dkj_artist: ook een remixer die alleen in de titel staat gaat voor
+
+[PR #17](https://github.com/DKJ-Solutions/dkj-music-library/pull/17)
+
+---
 
 ### DEPLOY: feat/dkj-artist-remixer · 20260927-172858Z
 
