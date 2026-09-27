@@ -32,11 +32,18 @@
 
 ### PLAN
 
+Dave: een nieuwe kolom `dkj_group` met maximaal vier opties: MMC, DJ CYLOW, Prive en Overige. Alleen het
+veld; het wordt (nog) niet afgeleid, want daar is niet om gevraagd.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `dkj_group` in `fields.ts`, met `options` (spelling zoals Dave hem gaf: "Prive" zonder accent)
+- [x] Export bijgewerkt: elke track heeft `dkj_group` leeg
+- [x] README bijgewerkt
 
 ### TEST
+
+- [x] typecheck, eslint en vitest groen, met een test op de vier opties
 
 ### DEPLOY: feat/dkj-group-field
 
@@ -44,7 +51,11 @@
 
 ##### Tier 0
 
-**Score:**
+Het Trackregister krijgt de kolom `dkj_group`, met als enige toegestane waarden MMC, DJ CYLOW, Prive en
+Overige. Een andere waarde breekt de import af; hoofdletters en spaties tellen niet mee. Het veld staat
+nog bij elke track leeg.
+
+**Score:** 2
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +64,9 @@
 
 ##### Tier 1
 
-**Score:**
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +75,9 @@
 
 ##### Tier 2
 
-**Score:**
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
 
 #### Pull Request
 
