@@ -171,6 +171,7 @@ describe("applyArtistIdsFromSnapshot", () => {
     applyLibraryIdsFromSnapshot(db, remix);
     const id = listTracks(db)[0].dkj_track_id;
     expect(getTrack(db, id)?.dkj_artist).toBe("Bruno Mars");
+    expect(getTrack(db, id)?.dkj_file).toBe("Mark Ronson - Uptown Funk (Bruno Mars Remix)");
     upsertTracks(db, [{ dkj_track_id: id, dkj_artist: null }]);
     expect(fillPrimaryArtists(db)).toBe(1);
     expect(getTrack(db, id)?.dkj_artist).toBe("Bruno Mars");
