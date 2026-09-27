@@ -143,12 +143,13 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
               <th><code>dkj_artist_ids</code></th>
               <th><code>dkj_bpm</code></th>
               <th><code>dkj_album</code></th>
+              <th><code>dkj_file</code></th>
             </tr>
           </thead>
           <tbody>
             {slice.length === 0 ? (
               <tr>
-                <td colSpan={7} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
+                <td colSpan={8} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
               </tr>
             ) : (
               slice.map((row) => (
@@ -170,6 +171,7 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
                   </td>
                   <td>{row.bpm ? <span className="register-tag"><Highlight text={row.bpm} term={term} /></span> : <Empty />}</td>
                   <td>{row.album ? <AlbumTag album={row.album} term={term} /> : <Empty />}</td>
+                  <td className="register-file">{row.file ? <Highlight text={row.file} term={term} /> : <Empty />}</td>
                 </tr>
               ))
             )}

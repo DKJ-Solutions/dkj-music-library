@@ -19,6 +19,7 @@ export interface RegisterRow {
   albumArtist: string | null;
   bpm: string | null;
   album: string | null;
+  file: string | null;
 }
 
 /** Filterwaarde voor "geen waarde ingevuld"; geen geldige optie van dkj_bpm of dkj_album. */
@@ -46,6 +47,7 @@ export function toRegisterRow(track: StoredTrack, artistNames: Record<string, st
     albumArtist: text(track.dkj_albumartiest),
     bpm: text(track.dkj_bpm),
     album: text(track.dkj_album),
+    file: text(track.dkj_file),
   };
 }
 
@@ -57,7 +59,7 @@ export function fold(value: string): string {
 /** Alles waarop gezocht wordt, in één gevouwen string. */
 export function searchText(row: RegisterRow): string {
   return fold(
-    [row.id, row.title, ...row.artistIds, ...row.artistNames, row.artist, row.albumArtist, row.bpm, row.album]
+    [row.id, row.title, ...row.artistIds, ...row.artistNames, row.artist, row.albumArtist, row.bpm, row.album, row.file]
       .filter(Boolean)
       .join(" ")
   );

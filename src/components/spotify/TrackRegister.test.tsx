@@ -16,6 +16,7 @@ function row(n: number, over: Partial<RegisterRow> = {}): RegisterRow {
     albumArtist: "Artiest",
     bpm: null,
     album: null,
+    file: `Artiest - Nummer ${n}`,
     ...over,
   };
 }

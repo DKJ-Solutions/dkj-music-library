@@ -13,6 +13,7 @@ function stored(over: Partial<StoredTrack> = {}): StoredTrack {
     dkj_albumartiest: "Mark Ronson, Bruno Mars",
     dkj_bpm: null,
     dkj_album: null,
+    dkj_file: "Mark Ronson - Uptown Funk",
     ...over,
   };
 }
@@ -29,6 +30,7 @@ describe("toRegisterRow", () => {
       albumArtist: "Mark Ronson, Bruno Mars",
       bpm: "112BPM",
       album: null,
+      file: "Mark Ronson - Uptown Funk",
     });
   });
 

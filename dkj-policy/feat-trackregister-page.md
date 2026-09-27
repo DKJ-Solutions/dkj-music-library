@@ -45,6 +45,7 @@ kan het niet. De app wel: de export staat in git en de bibliotheek bouwt zich op
 - [x] Link in de kop van `/spotify`, buiten de snapshot-secties, zodat hij ook zonder sync zichtbaar is
 - [x] README: hoe je het register opent
 - [x] Titel en `dkj_albumartiest` elk een eigen kolom (Dave, na het eerste bekijken)
+- [x] Kolom `dkj_file` erbij, na #18; ook doorzoekbaar
 
 ### TEST
 
@@ -59,8 +60,8 @@ kan het niet. De app wel: de export staat in git en de bibliotheek bouwt zich op
 ##### Tier 0
 
 Het Trackregister is nu een pagina in de app: `/spotify/trackregister`, met een link bovenaan `/spotify`.
-Je ziet elk nummer met `dkj_track_id`, `dkj_artist`, `dkj_albumartiest`, `dkj_artist_ids`, `dkj_bpm` en
-`dkj_album`, zoekt zonder op accenten te letten en filtert op `dkj_bpm` en `dkj_album` (ook op "leeg"). De
+Je ziet elk nummer met `dkj_track_id`, `dkj_artist`, `dkj_albumartiest`, `dkj_artist_ids`, `dkj_bpm`,
+`dkj_album` en `dkj_file`, zoekt zonder op accenten te letten en filtert op `dkj_bpm` en `dkj_album` (ook op "leeg"). De
 pagina leest de bibliotheek uit de export in git, dus hij werkt op elke kloon, zonder Spotify-login, sync
 of Claude-account.
 
