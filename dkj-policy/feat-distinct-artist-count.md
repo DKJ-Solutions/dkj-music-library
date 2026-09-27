@@ -32,11 +32,19 @@
 
 ### PLAN
 
+- [x] Tellen op artist.id (zelfde sleutel als computeTopArtists), over alle playlists, featured artiesten inbegrepen
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `countDistinctArtists` in `src/lib/spotify/dashboardStats.ts`
+- [x] Stat-tegel "artiesten" naast "playlists" op /spotify (`PlaylistManager`, optionele prop `artistCount`)
+- [x] Totaal boven de ranglijst in de sectie Top-artiesten op /spotify/dashboard
 
 ### TEST
+
+- [x] Unit-tests voor `countDistinctArtists` (dedup, samenwerkingen, naamgenoten, lege snapshot)
+- [x] Volledige suite (620 tests), typecheck en lint groen
+- [x] Gerenderde pagina's gecontroleerd tegen de echte snapshot: 389 playlists, 6.951 artiesten
 
 ### DEPLOY: feat/distinct-artist-count
 
@@ -44,7 +52,14 @@
 
 ##### Tier 0
 
-**Score:**
+De Spotify-mirror toont nu hoeveel verschillende artiesten er in de bibliotheek zitten: als stat-tegel
+naast het aantal playlists op `/spotify`, en boven de top-artiesten op het dashboard. Er wordt geteld op
+Spotify-artist-id, over alle playlists, met featured artiesten inbegrepen. De telling zit in een nieuwe
+pure functie `countDistinctArtists` (`src/lib/spotify/dashboardStats.ts`). `/spotify` leest de snapshot
+nu zelf in en geeft hem door aan `getEnrichedSnapshot()`, omdat de verrijkte playlists geen tracks meer
+bevatten. De snapshot wordt nog steeds maar één keer gelezen.
+
+**Score:** 2
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +68,9 @@
 
 ##### Tier 1
 
-**Score:**
+Een lokale, persoonlijke tool: er is geen management of opdrachtgever die hier iets aan heeft.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +79,9 @@
 
 ##### Tier 2
 
-**Score:**
+De app heeft geen abonnees: hij draait alleen op de eigen machine.
+
+**Score:** N/A
 
 #### Pull Request
 

@@ -10,6 +10,7 @@ import { getEnrichedSnapshot } from "@/lib/spotify/enrichedPlaylists";
 import {
   computeDedupSummary,
   computeTopArtists,
+  countDistinctArtists,
   sumTracksByColor,
   sumTracksByMmcBpm,
   sumTracksByWorld,
@@ -61,6 +62,7 @@ export default function SpotifyDashboardPage() {
           dedup={dedup}
           duplicateArtists={topDuplicateArtists(dedup.allDuplicates)}
           topArtists={computeTopArtists(snapshot)}
+          distinctArtists={countDistinctArtists(snapshot)}
           worldTracks={sumTracksByWorld(enriched.playlists)}
           bpmTracks={sumTracksByMmcBpm(enriched.playlists)}
           colorDistribution={sumTracksByColor(enriched.playlists)}
