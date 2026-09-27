@@ -43,6 +43,10 @@ parts 1 to 3) in this repo, as one change.
 - [x] Part 2: the 12 `copy` seam functions placed in `scripts/repo-config.ps1`
 - [x] Part 3: fold-on-merge, verify-resolved, repo-settings and merge-on-green runners
 - [x] Branch prefix table filled in `scripts/lib/branch-info.ps1`
+- [x] Local lint gate `scripts/lint/lint.ps1` (same steps as CI)
+- [x] `mixStore.test.ts`: the override path is absolute on every OS -- CI on `main` was already red on
+      it, and with `lint-en-tests` now required this PR cannot merge without it. Carried here rather
+      than on its own branch because `main` has no workflow libs yet, so `new-branch` cannot run there.
 
 ### TEST
 
@@ -55,7 +59,8 @@ parts 1 to 3) in this repo, as one change.
 ##### Tier 0
 
 The repo now runs the shared specialist team and the dkj-policy branch/PR/fold workflow: every PR
-carries a branch document, is gated in CI, and is folded into `dkj-policy/CHANGELOG.md` at the merge.
+carries a branch document, is gated in CI, and is folded into `dkj-policy/CHANGELOG.md` at the merge. `lint-en-tests` is now a required check on
+`main`, and the one test that failed only on Linux CI (the mix-dir override path) is fixed.
 
 **Score:** 4
 
