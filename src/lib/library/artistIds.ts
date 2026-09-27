@@ -28,6 +28,7 @@ import type { Snapshot } from "@/lib/spotify/types";
 import { TRACKS_TABLE } from "./db";
 import { ALBUM_ARTIST_KEY, ARTIST_IDS_KEY, FILE_KEY, PRIMARY_ARTIST_KEY, TRACK_ID_KEY, albumArtistOf } from "./fields";
 import { fileNameOf } from "./fileName";
+import { applyPlaylistLinks } from "./playlistLinks";
 import { primaryArtistOf } from "./primaryArtist";
 import {
   SPOTIFY_LINK_TABLE,
@@ -277,6 +278,8 @@ export interface LibraryIdResult {
   artists: ArtistIdResult;
   /** Tracks die in deze run hun `dkj_file` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
   fileNamesFilled: number;
+  /** Tracks waarvan `dkj_playlists` in deze run veranderde (playlistLinks.ts). */
+  playlistsChanged: number;
   /** Tracks die in deze run hun `dkj_albumartiest` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
   albumArtistsFilled: number;
   /** Tracks die in deze run hun `dkj_artist` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
@@ -297,5 +300,6 @@ export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot
   const primaryArtistsFilled = fillPrimaryArtists(db);
   const albumArtistsFilled = fillAlbumArtists(db);
   const fileNamesFilled = fillFileNames(db);
-  return { albumArtistsFilled, artists, fileNamesFilled, primaryArtistsFilled, renumbered, tracks };
+  const playlistsChanged = applyPlaylistLinks(db, snapshot);
+  return { albumArtistsFilled, artists, fileNamesFilled, playlistsChanged, primaryArtistsFilled, renumbered, tracks };
 }
