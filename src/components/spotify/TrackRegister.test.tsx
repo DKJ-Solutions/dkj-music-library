@@ -66,17 +66,19 @@ describe("TrackRegister", () => {
     expect(screen.getByTitle(file).className).toContain("register-oneline");
   });
 
-  it("zet tot twee artiest-ID's naast elkaar, en meer in een menu met de namen", () => {
+  it("zet één artiest-ID als chip, en meer in een menu met de namen", () => {
     render(
       <TrackRegister
         rows={[
-          row(1, { artistIds: ["AAA01", "BBB01"], artistNames: ["Aa", "Bb"] }),
+          row(1, { artistIds: ["AAA01"], artistNames: ["Aa"] }),
           row(2, { artistIds: ["CCC01", "DDD01", "EEE01"], artistNames: ["Cc", "Dd", "Ee"] }),
+          row(3, { artistIds: ["FFF01", "GGG01"], artistNames: ["Ff", "Gg"] }),
         ]}
-        artistCount={5}
+        artistCount={6}
       />
     );
-    expect(screen.getByTitle("Bb").textContent).toBe("BBB01");
+    expect(screen.getByTitle("Aa").textContent).toBe("AAA01");
+    expect(screen.getByRole("button", { name: /2 artists/ })).toBeTruthy();
     expect(screen.queryByText("EEE01")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: /3 artists/ }));
     expect(screen.getByText("EEE01")).toBeTruthy();

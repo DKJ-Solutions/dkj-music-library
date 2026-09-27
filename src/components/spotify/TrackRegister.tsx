@@ -132,8 +132,8 @@ function PlaylistLabels({ playlists, term }: { playlists: PlaylistLink[]; term: 
   );
 }
 
-/** Zoveel artiest-ID's staan er naast elkaar; bij meer wordt het een menu, zodat de rij één regel blijft. */
-const ARTIST_IDS_INLINE = 2;
+/** Zoveel artiest-ID's staan er als chip; bij meer wordt het een menu, net als bij de playlists (Dave). */
+const ARTIST_IDS_INLINE = 1;
 
 function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term: string }) {
   const chip = (id: string, i: number) => (
