@@ -20,14 +20,17 @@ if (!snapshot) {
 }
 
 try {
-  const { tracks, artists, primaryArtistsFilled, albumArtistsFilled, fileNamesFilled, playlistsChanged, albumsFilled, bpmsFilled, groupsFilled, renumbered, total } = withLibrary((db) => ({
+  const { tracks, artists, primaryArtistsFilled, albumArtistsFilled, fileNamesFilled, playlistsChanged, albumsFilled, bpmsFilled, groupsFilled, live, renumbered, total } = withLibrary((db) => ({
     ...applyLibraryIdsFromSnapshot(db, snapshot),
     // De werelden (met je handmatige correcties) voor dkj_group; zie groupFromWorlds.ts.
     groupsFilled: fillGroupsFromWorlds(db, getEnrichedSnapshot(snapshot)?.playlists ?? []),
     total: countTracks(db),
   }));
-  const { newTracks, newLinks, totalLinks } = tracks;
+  const { newTracks, newLinks, studioReplaced, totalLinks } = tracks;
   if (renumbered > 0) console.log(`${renumbered} tracks van een oud ID (T000001) naar het nieuwe formaat omgenummerd`);
+  if (live.merged > 0) console.log(`${live.merged} live-varianten opgegaan in hun studioversie`);
+  if (live.retitled > 0) console.log(`${live.retitled} live-titels schoongemaakt`);
+  if (studioReplaced > 0) console.log(`${studioReplaced} nummers kregen de Spotify-gegevens van hun studioversie`);
   console.log(
     `${newTracks} nieuwe nummers, ${newLinks} Spotify-ID's gekoppeld -- ` +
       `${total} tracks, ${totalLinks} Spotify-ID's in totaal`

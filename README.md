@@ -134,6 +134,13 @@ npm run library:assign-ids
   (single, album, compilatie). Twee tracks met dezelfde titel (hoofdletters en randspaties tellen niet
   mee) en precies dezelfde artiesten krijgen hetzelfde ID. Een remix of "Radio Edit" heeft een andere
   titel en blijft dus een eigen nummer.
+- **Nooit een live-variant.** Een live-opname ("Clocks - Live", "Neon - Live at the Nokia Theatre, …")
+  is hetzelfde nummer als de studioversie en krijgt dus hetzelfde ID. De rij houdt de titel en de
+  Spotify-gegevens van de studioversie. Staat een nummer alleen live in je playlists, dan krijgt het de
+  titel zonder live-aanduiding. Komt de studioversie later binnen, dan neemt die zijn plaats in. Live
+  wordt alleen aan de titel herkend: "Live Forever" blijft gewoon "Live Forever". Op 27 september 2026
+  is de bestaande bibliotheek één keer rechtgezet, en daarbij kreeg de samengevoegde rij het laagste ID
+  van de groep. De regels staan in `src/lib/library/liveTitle.ts` en `liveVariants.ts`.
 - **Een ID verandert niet meer.** De tabel `spotify_track_ids` onthoudt welk Spotify-ID bij welk eigen ID
   hoort. Een nieuwe variant van een bekend nummer krijgt het bestaande ID, ook als de oude variant niet
   meer in je playlists staat. Pas je `dkj_artist_ids` later zelf aan, dan blijft het ID ook staan. De

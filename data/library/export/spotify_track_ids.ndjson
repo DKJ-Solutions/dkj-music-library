@@ -42,7 +42,8 @@
 {"dkj_track_id":"ABS01-PON02-KIK02-01","spotify_track_id":"4BdWsg62MSO9jeimML1P5l","song_key":"abyss toward hope - kiko remix|40AV3mbN9E0GfZBImkSn5Q,4vQwRCAEjGlq5szn3MyG2N,5D388zoKRirYZPNPwHzXYM"}
 {"dkj_track_id":"ACA01-01","spotify_track_id":"3FY8k4gJLuQaGdJxmeJUjZ","song_key":"faceless man|3CyPCJfCslSLudx9hobXI0"}
 {"dkj_track_id":"ACD01-01","spotify_track_id":"2zYzyRzz6pRmhPzyfMEC8s","song_key":"highway to hell|711MCceyCBcFnzjGY4Q7Un"}
-{"dkj_track_id":"ACD01-02","spotify_track_id":"778MsQxm8FaGUpZH6jttfr","song_key":"you shook me all night long - live at river plate stadium, buenos aires, argentina - december 2009|711MCceyCBcFnzjGY4Q7Un"}
+{"dkj_track_id":"ACD01-02","spotify_track_id":"2SiXAy7TuUkycRVbbWDEpo","song_key":"you shook me all night long|711MCceyCBcFnzjGY4Q7Un"}
+{"dkj_track_id":"ACD01-02","spotify_track_id":"778MsQxm8FaGUpZH6jttfr","song_key":"you shook me all night long|711MCceyCBcFnzjGY4Q7Un"}
 {"dkj_track_id":"ACD01-03","spotify_track_id":"57bgtoPSgt236HzfBOd8kj","song_key":"thunderstruck|711MCceyCBcFnzjGY4Q7Un"}
 {"dkj_track_id":"ACD01-04","spotify_track_id":"0qKMZuEM8aejK1wz6Dmn8M","song_key":"landslide|711MCceyCBcFnzjGY4Q7Un"}
 {"dkj_track_id":"ACD01-05","spotify_track_id":"0DZwrC4QQOYqpcxCeZzwDg","song_key":"riff raff|711MCceyCBcFnzjGY4Q7Un"}
@@ -70,7 +71,7 @@
 {"dkj_track_id":"ACD01-27","spotify_track_id":"0oIox8T3bdGZnhQKnaDK2a","song_key":"flick of the switch|711MCceyCBcFnzjGY4Q7Un"}
 {"dkj_track_id":"ACD01-28","spotify_track_id":"31F5kR9fPxI7lBV0Stfl4V","song_key":"guns for hire|711MCceyCBcFnzjGY4Q7Un"}
 {"dkj_track_id":"ACD01-29","spotify_track_id":"7LRMbd3LEoV5wZJvXT1Lwb","song_key":"t.n.t.|711MCceyCBcFnzjGY4Q7Un"}
-{"dkj_track_id":"ACD01-30","spotify_track_id":"7ks1X6WVC5RI52ljlbG66p","song_key":"that's the way i wanna rock 'n' roll - live - 1991|711MCceyCBcFnzjGY4Q7Un"}
+{"dkj_track_id":"ACD01-30","spotify_track_id":"7ks1X6WVC5RI52ljlbG66p","song_key":"that's the way i wanna rock 'n' roll|711MCceyCBcFnzjGY4Q7Un"}
 {"dkj_track_id":"ACD01-31","spotify_track_id":"2vyae4DvSU2gs8OMOGwXF2","song_key":"rock or bust|711MCceyCBcFnzjGY4Q7Un"}
 {"dkj_track_id":"ACD01-32","spotify_track_id":"5YnNWHKCJaJKwbagXDb5Uf","song_key":"war machine|711MCceyCBcFnzjGY4Q7Un"}
 {"dkj_track_id":"ACD01-33","spotify_track_id":"2P884dqfjksDMSzUZksfrS","song_key":"hells bells|711MCceyCBcFnzjGY4Q7Un"}
@@ -79,7 +80,6 @@
 {"dkj_track_id":"ACD01-35","spotify_track_id":"4s0zx7jUjCe2qOswnEmQur","song_key":"danger|711MCceyCBcFnzjGY4Q7Un"}
 {"dkj_track_id":"ACD01-36","spotify_track_id":"69MwNXryg6NT1lV7buN7U7","song_key":"gone shootin'|711MCceyCBcFnzjGY4Q7Un"}
 {"dkj_track_id":"ACD01-37","spotify_track_id":"1KBuhAHzia2qoD4u6YhvER","song_key":"stiff upper lip|711MCceyCBcFnzjGY4Q7Un"}
-{"dkj_track_id":"ACD01-38","spotify_track_id":"2SiXAy7TuUkycRVbbWDEpo","song_key":"you shook me all night long|711MCceyCBcFnzjGY4Q7Un"}
 {"dkj_track_id":"ACD01-39","spotify_track_id":"7nemcVsXVFZF01iqpIIo2Y","song_key":"it's a long way to the top (if you wanna rock 'n' roll)|711MCceyCBcFnzjGY4Q7Un"}
 {"dkj_track_id":"ACD01-40","spotify_track_id":"4wYq5wugZDzQiMZQYG4wVB","song_key":"whole lotta rosie|711MCceyCBcFnzjGY4Q7Un"}
 {"dkj_track_id":"ACD01-41","spotify_track_id":"08mG3Y1vljYA6bvDt4Wqkj","song_key":"back in black|711MCceyCBcFnzjGY4Q7Un"}
@@ -513,8 +513,8 @@
 {"dkj_track_id":"AND13-01","spotify_track_id":"4L2xU84Wbc37In2KXQdQMO","song_key":"het laatste rondje|04MtOUkmIDC4LAxDDBjrOY"}
 {"dkj_track_id":"AND13-02","spotify_track_id":"5ZLkc5RY1NM4FtGWEd6HOE","song_key":"bloed, zweet en tranen|04MtOUkmIDC4LAxDDBjrOY"}
 {"dkj_track_id":"AND13-03","spotify_track_id":"0uCGho2Tyzcq3vTKerkWiQ","song_key":"uit m'n bol|04MtOUkmIDC4LAxDDBjrOY"}
-{"dkj_track_id":"AND13-04","spotify_track_id":"4TuIZQYLVAQMUorEEH0FOm","song_key":"buona sera / oh marie - live|04MtOUkmIDC4LAxDDBjrOY"}
-{"dkj_track_id":"AND13-05","spotify_track_id":"3nIeaSvK0yvhTdMM8Bv6Yv","song_key":"buona sera / oh marie|04MtOUkmIDC4LAxDDBjrOY"}
+{"dkj_track_id":"AND13-04","spotify_track_id":"3nIeaSvK0yvhTdMM8Bv6Yv","song_key":"buona sera / oh marie|04MtOUkmIDC4LAxDDBjrOY"}
+{"dkj_track_id":"AND13-04","spotify_track_id":"4TuIZQYLVAQMUorEEH0FOm","song_key":"buona sera / oh marie|04MtOUkmIDC4LAxDDBjrOY"}
 {"dkj_track_id":"AND13-06","spotify_track_id":"2f8rXpUhlKYsK1zUnHeSJj","song_key":"bedankt mijn vriend|04MtOUkmIDC4LAxDDBjrOY"}
 {"dkj_track_id":"AND14-01","spotify_track_id":"64SrjlzaFU3FeGxdOlpa7p","song_key":"wie kan mij vertellen…|5l2Xy4aUoJDRSpsYHyOumD"}
 {"dkj_track_id":"AND14-02","spotify_track_id":"3pBPHHC2zKRAnSG5mKAcHC","song_key":"leef|5l2Xy4aUoJDRSpsYHyOumD"}
@@ -1116,13 +1116,13 @@
 {"dkj_track_id":"BET05-01","spotify_track_id":"6TgqY8Vfm4StBe8hsxi3Ti","song_key":"beast of burden|13y0kncDD4J9wxCyfKr10W"}
 {"dkj_track_id":"BET06-01","spotify_track_id":"644oQEcMNmA3ABAOrfY7k3","song_key":"i'll take care of you|5n1XQGBfQhNsALjJs0APL5"}
 {"dkj_track_id":"BET07-05","spotify_track_id":"4hxbBi3XqJgowkTxyQwMeq","song_key":"oceans (where feet may fail)|26T4yOaOoFJvUvxR87Y9HO"}
-{"dkj_track_id":"BET07-AMA08-01","spotify_track_id":"345RHjiEdIVedsxtiwGG7t","song_key":"you make me brave (live)|26T4yOaOoFJvUvxR87Y9HO,53Gnd3lGlcL8ua9Yyu9xDP"}
+{"dkj_track_id":"BET07-AMA08-01","spotify_track_id":"345RHjiEdIVedsxtiwGG7t","song_key":"you make me brave|26T4yOaOoFJvUvxR87Y9HO,53Gnd3lGlcL8ua9Yyu9xDP"}
 {"dkj_track_id":"BET07-JEN06-01","spotify_track_id":"1O6OPFAXdTdjHtT7Z2Hlt8","song_key":"goodness of god|0cuW2lF0YWb9VUyHOnvnsO,26T4yOaOoFJvUvxR87Y9HO"}
 {"dkj_track_id":"BET07-JON26-MEL12-01","spotify_track_id":"37sWianweYMt42ZoSABn6y","song_key":"no longer slaves (radio version) [feat. jonathan david helser & melissa helser]|0cng44S55pPu1nDrtFFy7r,26T4yOaOoFJvUvxR87Y9HO,7vKyyJZVFb16NTWrUV1fGp"}
 {"dkj_track_id":"BET07-JON26-MEL12-02","spotify_track_id":"6CdzB6ZB5Af8wfAfAAQwaq","song_key":"raise a hallelujah|0cng44S55pPu1nDrtFFy7r,26T4yOaOoFJvUvxR87Y9HO,7vKyyJZVFb16NTWrUV1fGp"}
-{"dkj_track_id":"BET07-KAL06-01","spotify_track_id":"5A4oOhoMLbc5cTXXZ7IWN3","song_key":"spirit move (live)|1VfUR2Su5Ags5Im3mZGnPo,26T4yOaOoFJvUvxR87Y9HO"}
-{"dkj_track_id":"BET07-MEL12-JON26-01","spotify_track_id":"63SF10lPoWA71bDYYzxfUs","song_key":"no longer slaves (live)|0cng44S55pPu1nDrtFFy7r,26T4yOaOoFJvUvxR87Y9HO,7vKyyJZVFb16NTWrUV1fGp"}
-{"dkj_track_id":"BET07-MOL04-01","spotify_track_id":"4zSHWESIWNVgkL9fcbbn2k","song_key":"ain’t no grave - live|0cW4RaDqeYZ5YSP2AtRanL,26T4yOaOoFJvUvxR87Y9HO"}
+{"dkj_track_id":"BET07-KAL06-01","spotify_track_id":"5A4oOhoMLbc5cTXXZ7IWN3","song_key":"spirit move|1VfUR2Su5Ags5Im3mZGnPo,26T4yOaOoFJvUvxR87Y9HO"}
+{"dkj_track_id":"BET07-MEL12-JON26-01","spotify_track_id":"63SF10lPoWA71bDYYzxfUs","song_key":"no longer slaves|0cng44S55pPu1nDrtFFy7r,26T4yOaOoFJvUvxR87Y9HO,7vKyyJZVFb16NTWrUV1fGp"}
+{"dkj_track_id":"BET07-MOL04-01","spotify_track_id":"4zSHWESIWNVgkL9fcbbn2k","song_key":"ain’t no grave|0cW4RaDqeYZ5YSP2AtRanL,26T4yOaOoFJvUvxR87Y9HO"}
 {"dkj_track_id":"BEY01-01","spotify_track_id":"6RX5iL93VZ5fKmyvNXvF1r","song_key":"irreplaceable|6vWDO969PvNqNYHIOW5v0m"}
 {"dkj_track_id":"BEY01-04","spotify_track_id":"1z6WtY7X4HQJvzxC4UgkSf","song_key":"love on top|6vWDO969PvNqNYHIOW5v0m"}
 {"dkj_track_id":"BEY01-05","spotify_track_id":"1uXbwHHfgsXcUKfSZw5ZJ0","song_key":"run the world (girls)|6vWDO969PvNqNYHIOW5v0m"}
@@ -1540,9 +1540,9 @@
 {"dkj_track_id":"BOB03-05","spotify_track_id":"52vA3CYKZqZVdQnzRrdZt6","song_key":"the times they are a-changin'|74ASZWbe4lXaubB36ztrGX"}
 {"dkj_track_id":"BOB04-01","spotify_track_id":"5EOoMWIB9iK4ZpcSex9Ec7","song_key":"old time rock & roll|485uL27bPomh29R4JmQehQ"}
 {"dkj_track_id":"BOB07-01","spotify_track_id":"6JRLFiX9NJSoRRKxowlBYr","song_key":"is this love|2QsynagSdAqZj3U9HgDzjD"}
-{"dkj_track_id":"BOB07-02","spotify_track_id":"0b4rtFdsj7JnNDaZLvNTLE","song_key":"stir it up - live at the pavillon de paris, 1977|2QsynagSdAqZj3U9HgDzjD"}
+{"dkj_track_id":"BOB07-02","spotify_track_id":"0b4rtFdsj7JnNDaZLvNTLE","song_key":"stir it up|2QsynagSdAqZj3U9HgDzjD"}
 {"dkj_track_id":"BOB07-03","spotify_track_id":"2BSwGHTh4kmckqXQfaCaAp","song_key":"one love / people get ready|2QsynagSdAqZj3U9HgDzjD"}
-{"dkj_track_id":"BOB07-04","spotify_track_id":"423hwXFgoN8RYmqLoLuVvY","song_key":"no woman, no cry - live at the lyceum, london/1975|2QsynagSdAqZj3U9HgDzjD"}
+{"dkj_track_id":"BOB07-04","spotify_track_id":"423hwXFgoN8RYmqLoLuVvY","song_key":"no woman, no cry|2QsynagSdAqZj3U9HgDzjD"}
 {"dkj_track_id":"BOB07-05","spotify_track_id":"26PwuMotZqcczKLHi4Htz3","song_key":"redemption song|2QsynagSdAqZj3U9HgDzjD"}
 {"dkj_track_id":"BOB07-06","spotify_track_id":"7vggqxNKwd6xdRoYS0pQtM","song_key":"three little birds|2QsynagSdAqZj3U9HgDzjD"}
 {"dkj_track_id":"BOB07-07","spotify_track_id":"5O4erNlJ74PIF6kGol1ZrC","song_key":"could you be loved|2QsynagSdAqZj3U9HgDzjD"}
@@ -1566,10 +1566,10 @@
 {"dkj_track_id":"BON02-04","spotify_track_id":"2RChe0r2cMoyOvuKobZy44","song_key":"always|58lV9VcRSjABbAbfWS6skp"}
 {"dkj_track_id":"BON02-04","spotify_track_id":"7o10Pto0YFchZl1zL4dLPH","song_key":"always|58lV9VcRSjABbAbfWS6skp"}
 {"dkj_track_id":"BON02-05","spotify_track_id":"0vTKR5TQD03kASmEGlyDF3","song_key":"in these arms|58lV9VcRSjABbAbfWS6skp"}
-{"dkj_track_id":"BON02-06","spotify_track_id":"47CDb4e3yCtukZeuBJpBjs","song_key":"wanted dead or alive - nms live / 2010|58lV9VcRSjABbAbfWS6skp"}
+{"dkj_track_id":"BON02-06","spotify_track_id":"0oerlffJSzhRVvtDfLcp3N","song_key":"wanted dead or alive|58lV9VcRSjABbAbfWS6skp"}
+{"dkj_track_id":"BON02-06","spotify_track_id":"47CDb4e3yCtukZeuBJpBjs","song_key":"wanted dead or alive|58lV9VcRSjABbAbfWS6skp"}
 {"dkj_track_id":"BON02-07","spotify_track_id":"0rmGAIH9LNJewFw7nKzZnc","song_key":"you give love a bad name|58lV9VcRSjABbAbfWS6skp"}
 {"dkj_track_id":"BON02-08","spotify_track_id":"5EWtBjCLy21d1hY9zdaEe8","song_key":"keep the faith|58lV9VcRSjABbAbfWS6skp"}
-{"dkj_track_id":"BON02-09","spotify_track_id":"0oerlffJSzhRVvtDfLcp3N","song_key":"wanted dead or alive|58lV9VcRSjABbAbfWS6skp"}
 {"dkj_track_id":"BON02-10","spotify_track_id":"0v1XpBHnsbkCn7iJ9Ucr1l","song_key":"it's my life|58lV9VcRSjABbAbfWS6skp"}
 {"dkj_track_id":"BON03-MAY01-01","spotify_track_id":"1X5YI3QrqrnRqmyGT7GuP0","song_key":"manshivaan - mayro remix|291rTuAllKQRkUBvkM7dFY,3JeSThHneYmzj1785rx0fV"}
 {"dkj_track_id":"BON04-01","spotify_track_id":"5lWSa1rmuSL6OBPOnkAqoa","song_key":"rasputin|54R6Y0I7jGUCveDTtI21nb"}
@@ -1743,11 +1743,11 @@
 {"dkj_track_id":"BRU01-03","spotify_track_id":"56lhDZNQ5J47aog6mGKeGk","song_key":"thunder road|3eqjTLE0HfPfh78zjh6TqT"}
 {"dkj_track_id":"BRU01-04","spotify_track_id":"7vIyudiO2Tr9hZ2yzfwQmx","song_key":"waitin' on a sunny day|3eqjTLE0HfPfh78zjh6TqT"}
 {"dkj_track_id":"BRU01-05","spotify_track_id":"6ZOdsfgq6ygEPnG3nCIY8L","song_key":"ghosts|3eqjTLE0HfPfh78zjh6TqT"}
-{"dkj_track_id":"BRU01-06","spotify_track_id":"0WD7EMd8ExHXFjaikOaBsj","song_key":"jungleland - live at madison square garden, new york, ny - june/july 2000|3eqjTLE0HfPfh78zjh6TqT"}
+{"dkj_track_id":"BRU01-06","spotify_track_id":"0WD7EMd8ExHXFjaikOaBsj","song_key":"jungleland|3eqjTLE0HfPfh78zjh6TqT"}
 {"dkj_track_id":"BRU01-07","spotify_track_id":"3PzsbWSQdLCKDLxn7YZfkM","song_key":"i'm on fire|3eqjTLE0HfPfh78zjh6TqT"}
 {"dkj_track_id":"BRU01-08","spotify_track_id":"0dOg1ySSI7NkpAe89Zo0b9","song_key":"born in the u.s.a.|3eqjTLE0HfPfh78zjh6TqT"}
 {"dkj_track_id":"BRU01-09","spotify_track_id":"6hTcuIQa0sxrrByu9wTD7s","song_key":"born to run|3eqjTLE0HfPfh78zjh6TqT"}
-{"dkj_track_id":"BRU01-10","spotify_track_id":"7lqDKfbqbWpDvoPPxz6xTN","song_key":"fire - live at the winterland, san francisco, ca - december 1978|3eqjTLE0HfPfh78zjh6TqT"}
+{"dkj_track_id":"BRU01-10","spotify_track_id":"7lqDKfbqbWpDvoPPxz6xTN","song_key":"fire|3eqjTLE0HfPfh78zjh6TqT"}
 {"dkj_track_id":"BRU01-11","spotify_track_id":"7i0VrdLCDhvgWXfcT6EQJG","song_key":"tougher than the rest|3eqjTLE0HfPfh78zjh6TqT"}
 {"dkj_track_id":"BRU01-12","spotify_track_id":"0nqbZ17t9v52SCemAm1QP0","song_key":"brilliant disguise|3eqjTLE0HfPfh78zjh6TqT"}
 {"dkj_track_id":"BRU01-13","spotify_track_id":"7FwBtcecmlpc1sLySPXeGE","song_key":"dancing in the dark|3eqjTLE0HfPfh78zjh6TqT"}
@@ -2102,7 +2102,7 @@
 {"dkj_track_id":"CHE10-02","spotify_track_id":"0fXeXGfHHtq1JYElFmIMIC","song_key":"funk on|1OHlpIsY1bcW2ySE97PPeq"}
 {"dkj_track_id":"CHE12-01","spotify_track_id":"6xcBMOmgBFFCPIV1TC4Yhc","song_key":"wanna get high|3neju4j8u80IBvGawKA3dv"}
 {"dkj_track_id":"CHE14-CAL01-01","spotify_track_id":"2lU2L5owN5Cyb1nTj3cKN3","song_key":"she rock i roll - calibre remix|0sklgkoO5JeS7YNhHS5EmH,2RwfRD2vlkdztGtVXENShq"}
-{"dkj_track_id":"CHE15-01","spotify_track_id":"6hnCx2jmD0RPkbtzUXSBn4","song_key":"i want you to want me - live at nippon budokan, tokyo, jpn - april 1978|1LB8qB5BPb3MHQrfkvifXU"}
+{"dkj_track_id":"CHE15-01","spotify_track_id":"6hnCx2jmD0RPkbtzUXSBn4","song_key":"i want you to want me|1LB8qB5BPb3MHQrfkvifXU"}
 {"dkj_track_id":"CHE18-02","spotify_track_id":"33IQnmtJYjCcrvUUMQgi80","song_key":"fight for this love|3NyNPJaemMYsL14DK2tO01"}
 {"dkj_track_id":"CHE18-WIL01-01","spotify_track_id":"1oVW2OSHLFo01CUih7sonk","song_key":"3 words|085pc2PYOi8bGKj0PNjekA,3NyNPJaemMYsL14DK2tO01"}
 {"dkj_track_id":"CHE19-01","spotify_track_id":"2hxdofcXRRprDttD4INEyr","song_key":"lamento di tristano and la rotta|4WZQjddfkBTqhMxJ3LJM8K"}
@@ -2170,7 +2170,7 @@
 {"dkj_track_id":"CHR36-01","spotify_track_id":"3fqwjXwUGN6vbzIwvyFMhx","song_key":"tennessee whiskey|4YLtscXsxbVgi031ovDDdh"}
 {"dkj_track_id":"CHR37-SAM31-AUD08-01","spotify_track_id":"4FDgJk6Jj4F5QRSkw7gbXh","song_key":"waiting room (audicid remix)|1TkMGcP0gZtEDkyX3wa1zh,2wqF6dCN8bQp7TN0eNDSsc,4cRZTgXsG1S8tR5vtkUqxP"}
 {"dkj_track_id":"CHR40-01","spotify_track_id":"7j1e730A8K1my1mM4knYmr","song_key":"i will rise|6pRi6EIPXz4QJEOEsBaA0m"}
-{"dkj_track_id":"CHR40-LAU10-01","spotify_track_id":"6YCCHnSCcJYWenamiJfLWh","song_key":"noel - live|40LHVA5BTQp9RxHOQ9JPYj,6pRi6EIPXz4QJEOEsBaA0m"}
+{"dkj_track_id":"CHR40-LAU10-01","spotify_track_id":"6YCCHnSCcJYWenamiJfLWh","song_key":"noel|40LHVA5BTQp9RxHOQ9JPYj,6pRi6EIPXz4QJEOEsBaA0m"}
 {"dkj_track_id":"CHU01-01","spotify_track_id":"22HYEJveCvykVDHDiEEmjZ","song_key":"tubthumping|0TcYeHEK9sBtv7xPbKhzHz"}
 {"dkj_track_id":"CHU04-01","spotify_track_id":"1INWPr855fwWdAOeecbu0W","song_key":"let's twist again|7qQJQ3YtcGlqaLg5tcypN2"}
 {"dkj_track_id":"CHU05-JED02-01","spotify_track_id":"2oBIQvaNKweUu4MwUXgy0l","song_key":"shining in the dark - original mix|2Y9zCCi37CxYNApUuzxori,60owYmlEdCHkWnvx9hqp0k"}
@@ -2271,13 +2271,13 @@
 {"dkj_track_id":"COL02-12","spotify_track_id":"1yqMgZNrevsWMLWfO2PRp5","song_key":"charlie brown|4gzpq5DPGxSnKTe4SA8HAU"}
 {"dkj_track_id":"COL02-13","spotify_track_id":"7clUVcSOtkNWa58Gw5RfD4","song_key":"speed of sound|4gzpq5DPGxSnKTe4SA8HAU"}
 {"dkj_track_id":"COL02-14","spotify_track_id":"4wzt5Rrk3W98pHXAqutuJw","song_key":"talk|4gzpq5DPGxSnKTe4SA8HAU"}
-{"dkj_track_id":"COL02-15","spotify_track_id":"7LIQNY8P7ZGxilKVX88MF1","song_key":"clocks - live|4gzpq5DPGxSnKTe4SA8HAU"}
+{"dkj_track_id":"COL02-15","spotify_track_id":"0BCPKOYdS2jbQ8iyB56Zns","song_key":"clocks|4gzpq5DPGxSnKTe4SA8HAU"}
+{"dkj_track_id":"COL02-15","spotify_track_id":"7LIQNY8P7ZGxilKVX88MF1","song_key":"clocks|4gzpq5DPGxSnKTe4SA8HAU"}
 {"dkj_track_id":"COL02-16","spotify_track_id":"0u35Dpz37TY2M2j20RUdMf","song_key":"politik|4gzpq5DPGxSnKTe4SA8HAU"}
 {"dkj_track_id":"COL02-17","spotify_track_id":"2nvC4i2aMo4CzRjRflysah","song_key":"in my place|4gzpq5DPGxSnKTe4SA8HAU"}
 {"dkj_track_id":"COL02-19","spotify_track_id":"4fzyvSu73BhGvi96p2zwjL","song_key":"christmas lights|4gzpq5DPGxSnKTe4SA8HAU"}
 {"dkj_track_id":"COL02-20","spotify_track_id":"3AJwUDP919kvQ9QcozQPxg","song_key":"yellow|4gzpq5DPGxSnKTe4SA8HAU"}
 {"dkj_track_id":"COL02-21","spotify_track_id":"75JFxkI2RXiU7L9VXzMkle","song_key":"the scientist|4gzpq5DPGxSnKTe4SA8HAU"}
-{"dkj_track_id":"COL02-22","spotify_track_id":"0BCPKOYdS2jbQ8iyB56Zns","song_key":"clocks|4gzpq5DPGxSnKTe4SA8HAU"}
 {"dkj_track_id":"COL02-23","spotify_track_id":"0R8P9KfGJCDULmlEoBagcO","song_key":"trouble|4gzpq5DPGxSnKTe4SA8HAU"}
 {"dkj_track_id":"COL02-24","spotify_track_id":"3RiPr603aXAoi4GHyXx0uy","song_key":"hymn for the weekend|4gzpq5DPGxSnKTe4SA8HAU"}
 {"dkj_track_id":"COL02-BTS01-01","spotify_track_id":"3FeVmId7tL5YN8B7R3imoM","song_key":"my universe|3Nrfpe0tUJi4K4DXYWgMUX,4gzpq5DPGxSnKTe4SA8HAU"}
@@ -2726,7 +2726,7 @@
 {"dkj_track_id":"DAR17-01","spotify_track_id":"756CJtQRFSxEx9jV4P9hpA","song_key":"i believe in a thing called love|5r1bdqzhgRoHC3YcCV6N5a"}
 {"dkj_track_id":"DAR18-01","spotify_track_id":"6Sy9BUbgFse0n0LPA5lwy5","song_key":"sandstorm|0LhHRmSd1EYM5QdNeNnCoQ"}
 {"dkj_track_id":"DAR19-01","spotify_track_id":"46pF1zFimM582ss1PrMy68","song_key":"christmas (baby please come home)|391oLRVmoTkumiN79HkTWu"}
-{"dkj_track_id":"DAR20-01","spotify_track_id":"1C1cV8Xa7LjrgE29Pez7yp","song_key":"victor's crown - live|6ZLy8YFk7VbamsI5qbYXtw"}
+{"dkj_track_id":"DAR20-01","spotify_track_id":"1C1cV8Xa7LjrgE29Pez7yp","song_key":"victor's crown|6ZLy8YFk7VbamsI5qbYXtw"}
 {"dkj_track_id":"DAT02-01","spotify_track_id":"0rq01k16HAZlDEar2rVD1x","song_key":"azote - original mix|2UKkkmM0m511t1lAkQdqGe"}
 {"dkj_track_id":"DAT02-02","spotify_track_id":"6bxlVMyi9EA8epoOkfNv60","song_key":"azote|2UKkkmM0m511t1lAkQdqGe"}
 {"dkj_track_id":"DAT03-KEA03-01","spotify_track_id":"2G0XaQfac2c4YalbBrRODo","song_key":"my friend|2Yb3Wq5bwK9HNXvrLKsnVC,5VMNMirz3Mq2EGpeoDbZwB"}
@@ -2779,7 +2779,7 @@
 {"dkj_track_id":"DAV08-SIA03-01","spotify_track_id":"0TDLuuLlV54CkRRUOahJb4","song_key":"titanium (feat. sia)|1Cs0zKBU1kc0i8ypK3B9ai,5WUlDfRSoLAfcVSX1WnrxN"}
 {"dkj_track_id":"DAV08-USH01-01","spotify_track_id":"3UN6cIn3VIyg0z1LCuFSum","song_key":"without you (feat. usher)|1Cs0zKBU1kc0i8ypK3B9ai,23zg3TcAtWQy7J6upgbUnj"}
 {"dkj_track_id":"DAV08-WIL01-01","spotify_track_id":"4O2FKTkt3ST7ARIcdI69NI","song_key":"nothing really matters (feat. will.i.am)|085pc2PYOi8bGKj0PNjekA,1Cs0zKBU1kc0i8ypK3B9ai"}
-{"dkj_track_id":"DAV11-01","spotify_track_id":"0M8rrUcBYXa24y3AIKQ19z","song_key":"comfortably numb - live at pompeii 2016|2FcC4sDMXme2ziI7tGKMK8"}
+{"dkj_track_id":"DAV11-01","spotify_track_id":"0M8rrUcBYXa24y3AIKQ19z","song_key":"comfortably numb|2FcC4sDMXme2ziI7tGKMK8"}
 {"dkj_track_id":"DAV12-01","spotify_track_id":"282eOXY1rnj6BWTEBmCdVM","song_key":"don't stop|3fzRb5i8Wn7ao2KPDxEiTR"}
 {"dkj_track_id":"DAV15-01","spotify_track_id":"3bdEtobvgxJNoV8kiNGObK","song_key":"rebel rebel|0oSGxfWSnnOXhD2fKuz2Gy"}
 {"dkj_track_id":"DAV15-02","spotify_track_id":"7Jh1bpe76CNTCgdgAdBw4Z","song_key":"\"heroes\" - 2017 remaster|0oSGxfWSnnOXhD2fKuz2Gy"}
@@ -2974,7 +2974,7 @@
 {"dkj_track_id":"DEO01-CHR03-01","spotify_track_id":"6YwLgicpvVuMt1eE2OldwQ","song_key":"five more hours|6VD4UEUPvtsemqD3mmTqCR,7bXgB6jMjp9ATFy66eO08Z"}
 {"dkj_track_id":"DEO01-ELV02-01","spotify_track_id":"45sGyAtAxD6efaN0bJAFgh","song_key":"bailar (feat. elvis crespo) - radio edit|1c22GXH30ijlOfXhfLz9Df,6VD4UEUPvtsemqD3mmTqCR"}
 {"dkj_track_id":"DEP02-FAI04-JIG01-01","spotify_track_id":"3W6DbDIB06nDsBwnACj9W3","song_key":"all night - jiggler remix|36N6pddt92f5CEbbbNGqAE,4NTdQxDkzxJl3IwfWHVnh5,7Bed2C59KlPn3PjwpznTz7"}
-{"dkj_track_id":"DEP03-01","spotify_track_id":"68OKGv6gxjAXEQVhLXfbEV","song_key":"just can't get enough - live|762310PdDnwsDxAQxzQkfX"}
+{"dkj_track_id":"DEP03-01","spotify_track_id":"68OKGv6gxjAXEQVhLXfbEV","song_key":"just can't get enough|762310PdDnwsDxAQxzQkfX"}
 {"dkj_track_id":"DEP03-02","spotify_track_id":"6WK9dVrRABMkUXFLNlgWFh","song_key":"enjoy the silence|762310PdDnwsDxAQxzQkfX"}
 {"dkj_track_id":"DEP03-03","spotify_track_id":"4UCTgh5jvtqoaMX6MAhUNn","song_key":"personal jesus - single version|762310PdDnwsDxAQxzQkfX"}
 {"dkj_track_id":"DER03-01","spotify_track_id":"47ogxQVGPzZnMSNU5eH36h","song_key":"med cezir|7DaUdudIwcfgSzFJX1VEVo"}
@@ -3116,7 +3116,7 @@
 {"dkj_track_id":"DIR01-06","spotify_track_id":"0PNt5WTw092eED0ru9SuIp","song_key":"romeo and juliet|0WwSkZ7LtFUFjGjMZBMt6T"}
 {"dkj_track_id":"DIR01-06","spotify_track_id":"2fF7mQOxo1SZuIMHTQgQD8","song_key":"romeo and juliet|0WwSkZ7LtFUFjGjMZBMt6T"}
 {"dkj_track_id":"DIR01-07","spotify_track_id":"12beKjEPNbzxLCCGjBsR2I","song_key":"tunnel of love - intro/the carousel waltz|0WwSkZ7LtFUFjGjMZBMt6T"}
-{"dkj_track_id":"DIR01-08","spotify_track_id":"4Wz0wHZzDkhhPgtA4pOjMp","song_key":"what's the matter baby? - live at the bbc|0WwSkZ7LtFUFjGjMZBMt6T"}
+{"dkj_track_id":"DIR01-08","spotify_track_id":"4Wz0wHZzDkhhPgtA4pOjMp","song_key":"what's the matter baby?|0WwSkZ7LtFUFjGjMZBMt6T"}
 {"dkj_track_id":"DIR01-09","spotify_track_id":"0lFnN31Rw1x5Mx1kojwQQY","song_key":"single handed sailor|0WwSkZ7LtFUFjGjMZBMt6T"}
 {"dkj_track_id":"DIR01-10","spotify_track_id":"33EAXRL27QIjSVA5x6zEMq","song_key":"so far away - full version|0WwSkZ7LtFUFjGjMZBMt6T"}
 {"dkj_track_id":"DIR01-11","spotify_track_id":"0vlCOzte4bru0gK74lfUIJ","song_key":"once upon a time in the west|0WwSkZ7LtFUFjGjMZBMt6T"}
@@ -3255,7 +3255,7 @@
 {"dkj_track_id":"DJK01-06","spotify_track_id":"3tPugt6F0sn3Yme0YmXR6T","song_key":"homecoming|1EgqENj52m5illoi0UJndy"}
 {"dkj_track_id":"DJK01-DAN24-01","spotify_track_id":"26vFf83Ijj08Sja0agZPCj","song_key":"good for you|1EgqENj52m5illoi0UJndy,1gYh0cCpelAaq4i7Q6pIKa"}
 {"dkj_track_id":"DJK01-JAY05-01","spotify_track_id":"1cMKd9m6Xv70mxTfyHatKh","song_key":"homecoming - jay vegas remix|1EgqENj52m5illoi0UJndy,4KJr0U6w9jItvF3ypmQLjw"}
-{"dkj_track_id":"DJK02-01","spotify_track_id":"4QyGhmhTBR56upH5u5fAYX","song_key":"let me clear my throat - live|1SWGyp2nxNSyQkRX1eqoUp"}
+{"dkj_track_id":"DJK02-01","spotify_track_id":"4QyGhmhTBR56upH5u5fAYX","song_key":"let me clear my throat|1SWGyp2nxNSyQkRX1eqoUp"}
 {"dkj_track_id":"DJK03-01","spotify_track_id":"4I6uhZSa8LvlManDOReIQE","song_key":"the root doctor's tricks|4zGZQys7KXOQFvw1nDg8H6"}
 {"dkj_track_id":"DJL01-DRA02-01","spotify_track_id":"7rJquEIw5kJgxThinjyaij","song_key":"rich girl (feat. dragonette)|30SUNrTLW7OZeDALH3sWzH,4GLJPBj5Cdr9AgLKvLWM4n"}
 {"dkj_track_id":"DJL02-01","spotify_track_id":"0bR51Qe4ZWALkKADEFSk8o","song_key":"deep in my soul|01T6q2E3WgnmDU08QVivp5"}
@@ -3865,14 +3865,14 @@
 {"dkj_track_id":"ERA01-ZAR01-01","spotify_track_id":"14qdl6sg7lWAGn5zPNVLuU","song_key":"stay - zardonic remix|0BklWaMxYE43FqSGJs2nSA,7BqEidErPMNiUXCRE0dV2n"}
 {"dkj_track_id":"ERI02-01","spotify_track_id":"5jcLZhvMnneMfN20fiQSoO","song_key":"catch the beat|5cXI4zNdW46aXVKhBoXspu"}
 {"dkj_track_id":"ERI03-01","spotify_track_id":"349PT8jfi7RxXB7DZM0NMX","song_key":"forever man - 2015 remaster|6PAt558ZEZl0DmdXlnjMgD"}
-{"dkj_track_id":"ERI03-02","spotify_track_id":"3BEZCNZSmVv30vsMNSOCri","song_key":"layla - acoustic; live at mtv unplugged, bray film studios, windsor, england, uk, 1/16/1992; 2013 remaster|6PAt558ZEZl0DmdXlnjMgD"}
-{"dkj_track_id":"ERI03-03","spotify_track_id":"612VcBshQcy4mpB2utGc3H","song_key":"tears in heaven - acoustic; live at mtv unplugged, bray film studios, windsor, england, uk, 1/16/1992; 2013 remaster|6PAt558ZEZl0DmdXlnjMgD"}
+{"dkj_track_id":"ERI03-02","spotify_track_id":"0zxj7dVhYZq5ACyaDx5XIo","song_key":"layla|6PAt558ZEZl0DmdXlnjMgD"}
+{"dkj_track_id":"ERI03-02","spotify_track_id":"3BEZCNZSmVv30vsMNSOCri","song_key":"layla|6PAt558ZEZl0DmdXlnjMgD"}
+{"dkj_track_id":"ERI03-03","spotify_track_id":"1kgdslQYmeTR4thk9whoRw","song_key":"tears in heaven|6PAt558ZEZl0DmdXlnjMgD"}
+{"dkj_track_id":"ERI03-03","spotify_track_id":"612VcBshQcy4mpB2utGc3H","song_key":"tears in heaven|6PAt558ZEZl0DmdXlnjMgD"}
 {"dkj_track_id":"ERI03-04","spotify_track_id":"4qmHeQBYieqj3VMAPascsE","song_key":"wonderful tonight|6PAt558ZEZl0DmdXlnjMgD"}
 {"dkj_track_id":"ERI03-04","spotify_track_id":"6zC0mpGYwbNTpk9SKwh08f","song_key":"wonderful tonight|6PAt558ZEZl0DmdXlnjMgD"}
 {"dkj_track_id":"ERI03-05","spotify_track_id":"7zXqmgoZNRHNFgFAOoxhx6","song_key":"my father's eyes|6PAt558ZEZl0DmdXlnjMgD"}
 {"dkj_track_id":"ERI03-07","spotify_track_id":"2udGjDmpK1dH9VGyw7nrei","song_key":"cocaine|6PAt558ZEZl0DmdXlnjMgD"}
-{"dkj_track_id":"ERI03-08","spotify_track_id":"1kgdslQYmeTR4thk9whoRw","song_key":"tears in heaven|6PAt558ZEZl0DmdXlnjMgD"}
-{"dkj_track_id":"ERI03-09","spotify_track_id":"0zxj7dVhYZq5ACyaDx5XIo","song_key":"layla - acoustic live|6PAt558ZEZl0DmdXlnjMgD"}
 {"dkj_track_id":"ERI03-10","spotify_track_id":"6x7jcl21wMqyt5R2bAxPyP","song_key":"forever man - 1999 remaster|6PAt558ZEZl0DmdXlnjMgD"}
 {"dkj_track_id":"ERI03-11","spotify_track_id":"27mdmXNcO0gNpXlrWi9DPZ","song_key":"after midnight|6PAt558ZEZl0DmdXlnjMgD"}
 {"dkj_track_id":"ERI03-12","spotify_track_id":"0UOxp1BpnD8uPQMKU4wKjz","song_key":"i shot the sheriff|6PAt558ZEZl0DmdXlnjMgD"}
@@ -4301,7 +4301,7 @@
 {"dkj_track_id":"FOO02-04","spotify_track_id":"3KsatAMRt1a7iryhWt5I8U","song_key":"wheels|7jy3rLJdDQY21OgRLCZ9sD"}
 {"dkj_track_id":"FOO02-05","spotify_track_id":"7x8dCjCr0x6x2lXKujYD34","song_key":"the pretender|7jy3rLJdDQY21OgRLCZ9sD"}
 {"dkj_track_id":"FOO02-06","spotify_track_id":"2kN05N1AQQplsgFweFAqYb","song_key":"these days|7jy3rLJdDQY21OgRLCZ9sD"}
-{"dkj_track_id":"FOO02-07","spotify_track_id":"6rlLQPXSkhTlcDgUkCfqOr","song_key":"my hero - live at studio 606 west, northridge, ca - september 2007|7jy3rLJdDQY21OgRLCZ9sD"}
+{"dkj_track_id":"FOO02-07","spotify_track_id":"6rlLQPXSkhTlcDgUkCfqOr","song_key":"my hero|7jy3rLJdDQY21OgRLCZ9sD"}
 {"dkj_track_id":"FOO02-08","spotify_track_id":"6tsojOQ5wHaIjKqIryLZK6","song_key":"all my life|7jy3rLJdDQY21OgRLCZ9sD"}
 {"dkj_track_id":"FOO02-09","spotify_track_id":"76Je5Wklky23mVoxiRszcN","song_key":"walk|7jy3rLJdDQY21OgRLCZ9sD"}
 {"dkj_track_id":"FOO02-10","spotify_track_id":"5UWwZ5lm5PKu6eKsHAGxOk","song_key":"everlong|7jy3rLJdDQY21OgRLCZ9sD"}
@@ -4317,7 +4317,7 @@
 {"dkj_track_id":"FOR01-HOL01-JON01-01","spotify_track_id":"7pAT4dOUzjq8Ziap5ShIqC","song_key":"where'd you go (feat. holly brook & jonah matranga)|3Ztgr9y1L9ZfoIOEsCrZEb,62gL3RAdJAPUmjrYudnVjy,7dWYWUbO68rXJOcyA7SpJk"}
 {"dkj_track_id":"FOR01-STY01-01","spotify_track_id":"6ndmKwWqMozN2tcZqzCX4K","song_key":"remember the name (feat. styles of beyond)|5bf6yYgHODBW5EreBZshpX,7dWYWUbO68rXJOcyA7SpJk"}
 {"dkj_track_id":"FOR02-SCA01-GAN01-01","spotify_track_id":"7zK68ecpYStkcjQhYnSjgi","song_key":"abyss - gancher & ruin remix|0FHXyAFKLg02mIUpNApPgo,27qG899eLldfpYtPr3S3NJ,6IzjY421I2xp5UR4dkMDsU"}
-{"dkj_track_id":"FOR03-01","spotify_track_id":"02hls2g3GlOqUFazZOb8Y6","song_key":"i want to know what love is - live|6IRouO5mvvfcyxtPDKMYFN"}
+{"dkj_track_id":"FOR03-01","spotify_track_id":"02hls2g3GlOqUFazZOb8Y6","song_key":"i want to know what love is|6IRouO5mvvfcyxtPDKMYFN"}
 {"dkj_track_id":"FOR03-02","spotify_track_id":"1JLn8RhQzHz3qDqsChcmBl","song_key":"i want to know what love is - 1999 remaster|6IRouO5mvvfcyxtPDKMYFN"}
 {"dkj_track_id":"FOR03-03","spotify_track_id":"7vidktgNZFQylTgH1GEnMs","song_key":"cold as ice|6IRouO5mvvfcyxtPDKMYFN"}
 {"dkj_track_id":"FOR03-04","spotify_track_id":"4nwUQZbmWMkYzKrXgWRIEw","song_key":"that was yesterday|6IRouO5mvvfcyxtPDKMYFN"}
@@ -4827,8 +4827,8 @@
 {"dkj_track_id":"GOL01-04","spotify_track_id":"6RGmi17H0xpHb7hpMxFwip","song_key":"when the lady smiles|1iTlOqIrZy8DlvCPJY2sjS"}
 {"dkj_track_id":"GOL01-05","spotify_track_id":"4CwgZ5RmLvJzBf1f48mGML","song_key":"another 45 miles|1iTlOqIrZy8DlvCPJY2sjS"}
 {"dkj_track_id":"GOL01-06","spotify_track_id":"4fL4pBXaN76ERHoGYoA01M","song_key":"going to the run|1iTlOqIrZy8DlvCPJY2sjS"}
-{"dkj_track_id":"GOL01-07","spotify_track_id":"4iPPKbubuyxP2J1oXXzL6i","song_key":"pouring my heart out again - live|1iTlOqIrZy8DlvCPJY2sjS"}
-{"dkj_track_id":"GOL01-08","spotify_track_id":"4VUycAekQ39AXPiEQDGCbh","song_key":"i can't sleep without you - live|1iTlOqIrZy8DlvCPJY2sjS"}
+{"dkj_track_id":"GOL01-07","spotify_track_id":"4iPPKbubuyxP2J1oXXzL6i","song_key":"pouring my heart out again|1iTlOqIrZy8DlvCPJY2sjS"}
+{"dkj_track_id":"GOL01-08","spotify_track_id":"4VUycAekQ39AXPiEQDGCbh","song_key":"i can't sleep without you|1iTlOqIrZy8DlvCPJY2sjS"}
 {"dkj_track_id":"GOL01-09","spotify_track_id":"0AZWoNkYdu31rhQZfBQBM1","song_key":"long blond animal|1iTlOqIrZy8DlvCPJY2sjS"}
 {"dkj_track_id":"GOL01-10","spotify_track_id":"0vHLnBlZoqeogzqyCOT6mL","song_key":"the devil made me do it|1iTlOqIrZy8DlvCPJY2sjS"}
 {"dkj_track_id":"GOL01-10","spotify_track_id":"4o8L1f6yH1kiCSNYAXAVWW","song_key":"the devil made me do it|1iTlOqIrZy8DlvCPJY2sjS"}
@@ -5186,7 +5186,7 @@
 {"dkj_track_id":"HIL04-NOV02-03","spotify_track_id":"74bkPBEsRXMYM0Yn4JcoJg","song_key":"lucid dreams - radio edit|0wbu9zmXkPsx9LRMxjeOMx,4IpADpqxGeBjGbftwJurhe"}
 {"dkj_track_id":"HIL04-SOL14-01","spotify_track_id":"3HazlutcUhPhWBRlRXkghk","song_key":"can't lie|3YqvkghJFRueaZPBh2PdwU,4IpADpqxGeBjGbftwJurhe"}
 {"dkj_track_id":"HIL06-AUG03-01","spotify_track_id":"72dbst7UcuIbGu2xZRijpn","song_key":"o frondens virga|2xt1t3lfZ5FGaEKrs0jp0d,7yf4UTd5fK3buVu0WOMn2d"}
-{"dkj_track_id":"HIL07-01","spotify_track_id":"0SmgCz5PpxHigrRD9ziZlM","song_key":"alive (live)|7m4gF38CPATtHrk5HS42WZ"}
+{"dkj_track_id":"HIL07-01","spotify_track_id":"0SmgCz5PpxHigrRD9ziZlM","song_key":"alive|7m4gF38CPATtHrk5HS42WZ"}
 {"dkj_track_id":"HIL07-02","spotify_track_id":"6UTPlT3hLjwtw6IUEhUW0v","song_key":"this is living (feat. lecrae)|7m4gF38CPATtHrk5HS42WZ"}
 {"dkj_track_id":"HIL07-HIL10-01","spotify_track_id":"4L8bKo41Z0zH6muJ52xUPd","song_key":"indescriptible|3phVKYqeq84Ai91CHTQfNq,7m4gF38CPATtHrk5HS42WZ"}
 {"dkj_track_id":"HIL08-01","spotify_track_id":"1y1PcCXTaw4AJbRSDZAE5P","song_key":"the greatness of our god|3SgHzT552wy2W8pNLaLk24"}
@@ -5196,10 +5196,10 @@
 {"dkj_track_id":"HIL08-05","spotify_track_id":"5Y5MVx1Gcsz1Q5vjzScYCq","song_key":"grace abounds|3SgHzT552wy2W8pNLaLk24"}
 {"dkj_track_id":"HIL08-06","spotify_track_id":"48w4QDwFrPlPlTHSBmGIzP","song_key":"hope of the world|3SgHzT552wy2W8pNLaLk24"}
 {"dkj_track_id":"HIL08-07","spotify_track_id":"3hcyWUdjYoBiKHn6Ou6cYT","song_key":"what a beautiful name|3SgHzT552wy2W8pNLaLk24"}
-{"dkj_track_id":"HIL08-BRO12-01","spotify_track_id":"5OMpZa1m8amJy7ICItG1Sc","song_key":"new wine - live|3SgHzT552wy2W8pNLaLk24,7iETGaxJ4crz3qaljDPCKC"}
+{"dkj_track_id":"HIL08-BRO12-01","spotify_track_id":"5OMpZa1m8amJy7ICItG1Sc","song_key":"new wine|3SgHzT552wy2W8pNLaLk24,7iETGaxJ4crz3qaljDPCKC"}
 {"dkj_track_id":"HIL08-BRO12-02","spotify_track_id":"6AvQ48ohekN6f2eqZCYICX","song_key":"awake my soul|3SgHzT552wy2W8pNLaLk24,7iETGaxJ4crz3qaljDPCKC"}
 {"dkj_track_id":"HIL08-HIL10-BRO12-01","spotify_track_id":"1otazeWaKgfTnlmBxOyte6","song_key":"despierta mi alma|3SgHzT552wy2W8pNLaLk24,3phVKYqeq84Ai91CHTQfNq,7iETGaxJ4crz3qaljDPCKC"}
-{"dkj_track_id":"HIL08-TAY04-01","spotify_track_id":"3ebqpN2hFJNeTuTTI5G0nd","song_key":"so will i (100 billion x) - live|3D04fb59z3ANxVaeHBfxtW,3SgHzT552wy2W8pNLaLk24"}
+{"dkj_track_id":"HIL08-TAY04-01","spotify_track_id":"3ebqpN2hFJNeTuTTI5G0nd","song_key":"so will i (100 billion x)|3D04fb59z3ANxVaeHBfxtW,3SgHzT552wy2W8pNLaLk24"}
 {"dkj_track_id":"HIL09-01","spotify_track_id":"4sVaN6vnj7Y4ROClK7vzMd","song_key":"hosanna|74cb3MG0x0BOnYNW1uXYnM"}
 {"dkj_track_id":"HIL09-HIL10-01","spotify_track_id":"6fZJwVu9LcQwnZfG3sy12T","song_key":"por su gracia|3phVKYqeq84Ai91CHTQfNq,74cb3MG0x0BOnYNW1uXYnM"}
 {"dkj_track_id":"HIL09-TAY04-01","spotify_track_id":"0edRu7QyT84CMzSChX0g91","song_key":"not today|3D04fb59z3ANxVaeHBfxtW,74cb3MG0x0BOnYNW1uXYnM"}
@@ -5674,7 +5674,7 @@
 {"dkj_track_id":"IRO01-04","spotify_track_id":"5YBRbCkuzxkxA3e5BfetdI","song_key":"can i play with madness - 2015 remaster|6mdiAmATAx73kdxrNrnlao"}
 {"dkj_track_id":"IRO01-05","spotify_track_id":"2SrVGpjv0mqCR6j9EZPSm2","song_key":"2 minutes to midnight - 2015 remaster|6mdiAmATAx73kdxrNrnlao"}
 {"dkj_track_id":"IRO01-06","spotify_track_id":"4Zc7TCHzuNwL0AFBlyLdyr","song_key":"run to the hills - 2015 remaster|6mdiAmATAx73kdxrNrnlao"}
-{"dkj_track_id":"IRO01-07","spotify_track_id":"2PQEUOi3I0cfJhy5cc5H8O","song_key":"fear of the dark - live; 1998 remastered version|6mdiAmATAx73kdxrNrnlao"}
+{"dkj_track_id":"IRO01-07","spotify_track_id":"2PQEUOi3I0cfJhy5cc5H8O","song_key":"fear of the dark|6mdiAmATAx73kdxrNrnlao"}
 {"dkj_track_id":"IRO03-01","spotify_track_id":"41TqRBgF4Ahyr4vGmZVk8b","song_key":"in-a-gadda-da-vida - single version|3cdvlbCYf4WoBdy89RWkNS"}
 {"dkj_track_id":"ISA02-01","spotify_track_id":"1LUXzkeqs7GRjvL4eofEyt","song_key":"just fine!|0mxa4JzMvYVnNjxdqk4tsj"}
 {"dkj_track_id":"ISE01-01","spotify_track_id":"7FWAPwRhXsfEMqK7oShobX","song_key":"circles|3yWCAtesP5BFtJnBbgfv8b"}
@@ -5910,8 +5910,8 @@
 {"dkj_track_id":"JES06-01","spotify_track_id":"6dY9RfzUjNogMOl3L4StG0","song_key":"cry for you|2lHCL6yjrnkU87mpTKgLuZ"}
 {"dkj_track_id":"JES08-01","spotify_track_id":"2hdq9LtTfwNmANdsNgGZwH","song_key":"one last hoochie|28tbqi7xhIZs8RRGdeCy8d"}
 {"dkj_track_id":"JES11-FRA38-01","spotify_track_id":"7zthdBWe8AUP730iCyOahN","song_key":"ecco la primavera|3SD6u8y8I74U62Dzb05FuE,4yvZ9OueU8lXBhmon7qswI"}
-{"dkj_track_id":"JES12-CHR41-01","spotify_track_id":"1gwdqVUY5cQWI87CUeBmPc","song_key":"let it echo (heaven fall) - live|0Onvkz1Nbs4wHXXUwOIGk8,45HXIkMqrQerbaPuw6FgKD"}
-{"dkj_track_id":"JES12-KAT21-01","spotify_track_id":"11Tyn4sBff3e4RVielv61S","song_key":"set me ablaze - live|0Onvkz1Nbs4wHXXUwOIGk8,6AXIMz03907VRnxzPsRiW6"}
+{"dkj_track_id":"JES12-CHR41-01","spotify_track_id":"1gwdqVUY5cQWI87CUeBmPc","song_key":"let it echo (heaven fall)|0Onvkz1Nbs4wHXXUwOIGk8,45HXIkMqrQerbaPuw6FgKD"}
+{"dkj_track_id":"JES12-KAT21-01","spotify_track_id":"11Tyn4sBff3e4RVielv61S","song_key":"set me ablaze|0Onvkz1Nbs4wHXXUwOIGk8,6AXIMz03907VRnxzPsRiW6"}
 {"dkj_track_id":"JET01-01","spotify_track_id":"6pu2gTRVKKCbl1JiH0iBCy","song_key":"get me outta here|5ypxebeHEIXjMtJb17uJlI"}
 {"dkj_track_id":"JET01-02","spotify_track_id":"305WCRhhS10XUcH6AEwZk6","song_key":"are you gonna be my girl|5ypxebeHEIXjMtJb17uJlI"}
 {"dkj_track_id":"JET03-01","spotify_track_id":"7zO6KQDrxDwhJqE6goQ5s7","song_key":"rewind|6p2LDcKxYGWM4azuOXNPHJ"}
@@ -6003,8 +6003,8 @@
 {"dkj_track_id":"JOE02-01","spotify_track_id":"2NT2E1VmcgjdnbLvjQchP7","song_key":"be my number two|6KOqPxwfNAmZPkiCnDE9yT"}
 {"dkj_track_id":"JOE02-01","spotify_track_id":"5UFBEYaigXPoScwPOK4Wft","song_key":"be my number two|6KOqPxwfNAmZPkiCnDE9yT"}
 {"dkj_track_id":"JOE02-02","spotify_track_id":"17GEcOhfo7rRr3wKumLHV2","song_key":"is she really going out with him?|6KOqPxwfNAmZPkiCnDE9yT"}
+{"dkj_track_id":"JOE02-02","spotify_track_id":"3Hf0AfuQSZFNUEQXtTELCs","song_key":"is she really going out with him?|6KOqPxwfNAmZPkiCnDE9yT"}
 {"dkj_track_id":"JOE02-03","spotify_track_id":"5ImoRAws2ni1qYWrLR7sqi","song_key":"real men|6KOqPxwfNAmZPkiCnDE9yT"}
-{"dkj_track_id":"JOE02-04","spotify_track_id":"3Hf0AfuQSZFNUEQXtTELCs","song_key":"is she really going out with him? - live|6KOqPxwfNAmZPkiCnDE9yT"}
 {"dkj_track_id":"JOE03-01","spotify_track_id":"0YZ3J8xzGwLOg4yEgST1YK","song_key":"with a little help from my friends|3pFCERyEiP5xeN2EsPXhjI"}
 {"dkj_track_id":"JOE03-01","spotify_track_id":"4pU7ed71DOZozQrBQzqkdw","song_key":"with a little help from my friends|3pFCERyEiP5xeN2EsPXhjI"}
 {"dkj_track_id":"JOE03-03","spotify_track_id":"1x9iOd3K1JC6tdjGZJpFgZ","song_key":"you can leave your hat on|3pFCERyEiP5xeN2EsPXhjI"}
@@ -6028,17 +6028,18 @@
 {"dkj_track_id":"JOH01-01","spotify_track_id":"5imShWWzwqfAJ9gXFpGAQh","song_key":"waiting on the world to change|0hEurMDQu99nJRq8pTxO14"}
 {"dkj_track_id":"JOH01-02","spotify_track_id":"77Y57qRJBvkGCUw9qs0qMg","song_key":"in the blood|0hEurMDQu99nJRq8pTxO14"}
 {"dkj_track_id":"JOH01-03","spotify_track_id":"1RywwImkBFUEVcRTBmw7vL","song_key":"the age of worry|0hEurMDQu99nJRq8pTxO14"}
-{"dkj_track_id":"JOH01-04","spotify_track_id":"7AtsEX4pJqmAaIajlMwaPU","song_key":"neon - live at the nokia theatre, los angeles, ca - december 2007|0hEurMDQu99nJRq8pTxO14"}
-{"dkj_track_id":"JOH01-05","spotify_track_id":"2Rvhjn78vg0rnuBHCdtz9P","song_key":"why georgia - live at the nokia theatre, los angeles, ca - december 2007|0hEurMDQu99nJRq8pTxO14"}
-{"dkj_track_id":"JOH01-06","spotify_track_id":"4OT8GH9u9Gx7ydJ49ULunN","song_key":"slow dancing in a burning room - live at the nokia theatre, los angeles, ca - december 2007|0hEurMDQu99nJRq8pTxO14"}
-{"dkj_track_id":"JOH01-07","spotify_track_id":"15Ev5G9uLhXqjBH4t16GQq","song_key":"the heart of life - live at the nokia theatre, los angeles, ca - december 2007|0hEurMDQu99nJRq8pTxO14"}
+{"dkj_track_id":"JOH01-04","spotify_track_id":"7AtsEX4pJqmAaIajlMwaPU","song_key":"neon|0hEurMDQu99nJRq8pTxO14"}
+{"dkj_track_id":"JOH01-05","spotify_track_id":"2Rvhjn78vg0rnuBHCdtz9P","song_key":"why georgia|0hEurMDQu99nJRq8pTxO14"}
+{"dkj_track_id":"JOH01-06","spotify_track_id":"2jdAk8ATWIL3dwT47XpRfu","song_key":"slow dancing in a burning room|0hEurMDQu99nJRq8pTxO14"}
+{"dkj_track_id":"JOH01-06","spotify_track_id":"4OT8GH9u9Gx7ydJ49ULunN","song_key":"slow dancing in a burning room|0hEurMDQu99nJRq8pTxO14"}
+{"dkj_track_id":"JOH01-07","spotify_track_id":"15Ev5G9uLhXqjBH4t16GQq","song_key":"the heart of life|0hEurMDQu99nJRq8pTxO14"}
 {"dkj_track_id":"JOH01-08","spotify_track_id":"7EZpBtIWGm0eFuMPWd9NsQ","song_key":"perfectly lonely|0hEurMDQu99nJRq8pTxO14"}
 {"dkj_track_id":"JOH01-09","spotify_track_id":"0HLWvLKQWpFdPhgk6ym58n","song_key":"who says|0hEurMDQu99nJRq8pTxO14"}
 {"dkj_track_id":"JOH01-10","spotify_track_id":"4gs07VlJST4bdxGbBsXVue","song_key":"heartbreak warfare|0hEurMDQu99nJRq8pTxO14"}
 {"dkj_track_id":"JOH01-10","spotify_track_id":"5iRst8148dBtzpGcK9JUXP","song_key":"heartbreak warfare|0hEurMDQu99nJRq8pTxO14"}
 {"dkj_track_id":"JOH01-11","spotify_track_id":"0QTCTu0CXv4X1JEE4gNpGv","song_key":"wildfire|0hEurMDQu99nJRq8pTxO14"}
 {"dkj_track_id":"JOH01-12","spotify_track_id":"2c4FRqXnna2YeC4lShVONV","song_key":"call me the breeze|0hEurMDQu99nJRq8pTxO14"}
-{"dkj_track_id":"JOH01-13","spotify_track_id":"4LloVtxNZpeh7q7xdi1DQc","song_key":"free fallin' - live at the nokia theatre, los angeles, ca - december 2007|0hEurMDQu99nJRq8pTxO14"}
+{"dkj_track_id":"JOH01-13","spotify_track_id":"4LloVtxNZpeh7q7xdi1DQc","song_key":"free fallin'|0hEurMDQu99nJRq8pTxO14"}
 {"dkj_track_id":"JOH01-14","spotify_track_id":"7cpCU3Denug5NGZsSpQl8v","song_key":"xo|0hEurMDQu99nJRq8pTxO14"}
 {"dkj_track_id":"JOH01-15","spotify_track_id":"3SktMqZmo3M9zbB7oKMIF7","song_key":"gravity|0hEurMDQu99nJRq8pTxO14"}
 {"dkj_track_id":"JOH01-15","spotify_track_id":"6OBZ78p8YaRPzKnQsZOggH","song_key":"gravity|0hEurMDQu99nJRq8pTxO14"}
@@ -6050,7 +6051,6 @@
 {"dkj_track_id":"JOH01-20","spotify_track_id":"3E6iea9uEmB7gRru4lyP6h","song_key":"stop this train|0hEurMDQu99nJRq8pTxO14"}
 {"dkj_track_id":"JOH01-21","spotify_track_id":"6wZI4mdT8JwXgkGURnBQiq","song_key":"say|0hEurMDQu99nJRq8pTxO14"}
 {"dkj_track_id":"JOH01-22","spotify_track_id":"4T6FWA703h6H7zk1FoSARw","song_key":"new light|0hEurMDQu99nJRq8pTxO14"}
-{"dkj_track_id":"JOH01-23","spotify_track_id":"2jdAk8ATWIL3dwT47XpRfu","song_key":"slow dancing in a burning room|0hEurMDQu99nJRq8pTxO14"}
 {"dkj_track_id":"JOH01-24","spotify_track_id":"0tgBtQ0ISnMQOKorrN9HLX","song_key":"last train home|0hEurMDQu99nJRq8pTxO14"}
 {"dkj_track_id":"JOH02-01","spotify_track_id":"2IPgxg2c1jk45Ay32Cqz33","song_key":"i'm alive|31NJDSG3JJ4oZ978LICSGi"}
 {"dkj_track_id":"JOH03-01","spotify_track_id":"161nSMdnYYUTEOhipcA7JF","song_key":"come and get it|34v5MVKeQnIo0CWYMbbrPf"}
@@ -6095,8 +6095,8 @@
 {"dkj_track_id":"JOH30-03","spotify_track_id":"28cnXtME493VX9NOw9cIUh","song_key":"hurt|6kACVPfCOnqzgfEF5ryl0x"}
 {"dkj_track_id":"JOH30-04","spotify_track_id":"5eReKc1D8ZQAg9kzQeHRdH","song_key":"one|6kACVPfCOnqzgfEF5ryl0x"}
 {"dkj_track_id":"JOH30-05","spotify_track_id":"6YffUZJ2R06kyxyK6onezL","song_key":"ring of fire|6kACVPfCOnqzgfEF5ryl0x"}
-{"dkj_track_id":"JOH30-06","spotify_track_id":"2fDHuS1PTkHBbCWWZF1ph9","song_key":"folsom prison blues - live at folsom state prison, folsom, ca - january 1968|6kACVPfCOnqzgfEF5ryl0x"}
-{"dkj_track_id":"JOH30-07","spotify_track_id":"2g34T4Zs54pTRR1AYTjobc","song_key":"san quentin - live at san quentin state prison, san quentin, ca - february 1969|6kACVPfCOnqzgfEF5ryl0x"}
+{"dkj_track_id":"JOH30-06","spotify_track_id":"2fDHuS1PTkHBbCWWZF1ph9","song_key":"folsom prison blues|6kACVPfCOnqzgfEF5ryl0x"}
+{"dkj_track_id":"JOH30-07","spotify_track_id":"2g34T4Zs54pTRR1AYTjobc","song_key":"san quentin|6kACVPfCOnqzgfEF5ryl0x"}
 {"dkj_track_id":"JOH31-01","spotify_track_id":"7pKfPomDEeI4TPT6EOYjn9","song_key":"imagine - remastered 2010|4x1nvY2FN8jxqAFA0DA02H"}
 {"dkj_track_id":"JOH31-YOK01-01","spotify_track_id":"27RYrbL6S02LNVhDWVl38b","song_key":"happy xmas (war is over) - remastered 2010|2s4tjL6W3qrblOe0raIzwJ,4x1nvY2FN8jxqAFA0DA02H"}
 {"dkj_track_id":"JOH32-01","spotify_track_id":"50ExtKr8j9cHTY3OEw282G","song_key":"sunshine (adagio in d minor)|4UGoqrmNHDJ166XD6DtZni"}
@@ -6387,7 +6387,7 @@
 {"dkj_track_id":"KAR09-AND31-CRA03-01","spotify_track_id":"5K91dazZRdy6QhEKGU91L5","song_key":"stand by me - radio mix|2BGaTlVAaNtSSQS8T3Es1S,5Ww5WLDr9XJdl6jycC0LQF,7gLis8CQkAQ7fJJNTWQNU1"}
 {"dkj_track_id":"KAR10-MAD13-01","spotify_track_id":"3gbbwC93cE7WkQwBVjuTDo","song_key":"disfruto|4BThBqcTzRGFRvbddMykk7,4yVpSZpTSoXXOHMvNy8BFf"}
 {"dkj_track_id":"KAR12-01","spotify_track_id":"4Onl0PWGsviCq4GG9wT8JK","song_key":"for me|1tRsdSvjwp34PDvcmix6SJ"}
-{"dkj_track_id":"KAR14-01","spotify_track_id":"1z5xgcRgxxGEKrXUCEFpA9","song_key":"forever - live|3VTWrobRnI633EBuUSfyw3"}
+{"dkj_track_id":"KAR14-01","spotify_track_id":"1z5xgcRgxxGEKrXUCEFpA9","song_key":"forever|3VTWrobRnI633EBuUSfyw3"}
 {"dkj_track_id":"KAS01-04","spotify_track_id":"1d4LKOubKKEJHqoxoUe4vR","song_key":"4 am - adam k & soha mix|6TQj5BFPooTa08A7pk8AQ1"}
 {"dkj_track_id":"KAS01-CID01-DEL01-01","spotify_track_id":"2a94cBw8Xcn9zIPeCbzs7L","song_key":"us - delta heavy remix|4FCzCS0KEgb0rgySWINItO,6TQj5BFPooTa08A7pk8AQ1,7GvVTb8yFV0ZrdI30Qce6T"}
 {"dkj_track_id":"KAS01-PRO08-01","spotify_track_id":"5fGzPMN2xj7vU01qcJOFRy","song_key":"chains chilled (with project 46)|2RhRT6DNOVoDTfS0rG31pZ,6TQj5BFPooTa08A7pk8AQ1"}
@@ -6535,7 +6535,7 @@
 {"dkj_track_id":"KEL05-SAM11-01","spotify_track_id":"5NWRdre3LrjUqu219gGspZ","song_key":"searching|1hhCo32XBkw8H0iqTSnkx0,7nZJ6x2Wj2suztg4H53GSf"}
 {"dkj_track_id":"KEL06-JIG01-01","spotify_track_id":"0iQgSNowc4uoCJiV6pICnW","song_key":"move me - jiggler remix|36N6pddt92f5CEbbbNGqAE,4GYQytEFxnzqH96O6QywsA"}
 {"dkj_track_id":"KEL07-01","spotify_track_id":"3B3A4mqiRhspnA3VCyfEbb","song_key":"acapella|0IF46mUS8NXjgHabxk2MCM"}
-{"dkj_track_id":"KEN01-01","spotify_track_id":"2j20OrgBgDjKxICHLrFlD9","song_key":"conviction of the heart - live|3Y3xIwWyq5wnNHPp5gPjOW"}
+{"dkj_track_id":"KEN01-01","spotify_track_id":"2j20OrgBgDjKxICHLrFlD9","song_key":"conviction of the heart|3Y3xIwWyq5wnNHPp5gPjOW"}
 {"dkj_track_id":"KEN02-01","spotify_track_id":"2T5ihhffxmrgqePASag6E2","song_key":"bridges|5hHcAWKNV84BEbkRnbQ6A7"}
 {"dkj_track_id":"KEN02-01","spotify_track_id":"5HLaHrXyCZr1DetFJQx38L","song_key":"bridges|5hHcAWKNV84BEbkRnbQ6A7"}
 {"dkj_track_id":"KEN02-02","spotify_track_id":"49V0H287ahQ5v3dWJaa3Tv","song_key":"fiji|5hHcAWKNV84BEbkRnbQ6A7"}
@@ -6631,7 +6631,7 @@
 {"dkj_track_id":"KIN13-03","spotify_track_id":"0umDVf77ygI5RiVp9OvNDj","song_key":"pyro|2qk9voo8llSGYcZ6xrBzKx"}
 {"dkj_track_id":"KIN14-01","spotify_track_id":"4Tjs8b6jL1s18sjURJtswp","song_key":"lola (2020 stereo remaster)|1SQRv42e4PjEYfPhS0Tk9E"}
 {"dkj_track_id":"KIN14-02","spotify_track_id":"4qSk2aeaE2dh5ZOP0JdaV3","song_key":"waterloo sunset|1SQRv42e4PjEYfPhS0Tk9E"}
-{"dkj_track_id":"KIN14-03","spotify_track_id":"73to6f7ijVZnzieu66LTkt","song_key":"lola - live|1SQRv42e4PjEYfPhS0Tk9E"}
+{"dkj_track_id":"KIN14-03","spotify_track_id":"73to6f7ijVZnzieu66LTkt","song_key":"lola|1SQRv42e4PjEYfPhS0Tk9E"}
 {"dkj_track_id":"KIR01-SEB01-01","spotify_track_id":"0zLtlhG9ael9NXiugonW7k","song_key":"face to face again (the joy) - seba remix|2tJIQxQM0X4lCYERyANSdT,3ac1UBV3aHTPZ94T0PhfvS"}
 {"dkj_track_id":"KIS01-01","spotify_track_id":"3YSfGJNDtF8KrHlwCAaVns","song_key":"crazy crazy nights|07XSN3sPlIlB2L2XNcTwJw"}
 {"dkj_track_id":"KIS01-02","spotify_track_id":"1HBDWCrQVjrALiOA5rILnE","song_key":"sure know something|07XSN3sPlIlB2L2XNcTwJw"}
@@ -6875,7 +6875,7 @@
 {"dkj_track_id":"KYO01-01","spotify_track_id":"2KH7KAN67ZlGGMLcK0B3h4","song_key":"angry ai|1U0YvBTRafwyOr2GjiyCMm"}
 {"dkj_track_id":"KYR01-01","spotify_track_id":"3D7Ae2AGZFYCV0mKaL8Oel","song_key":"fly away|32bDJQfDxpOb8W6xmw7LL5"}
 {"dkj_track_id":"KYR03-DOC01-01","spotify_track_id":"4oxKmBoyxwud8IqzSQyZpw","song_key":"move this way|70E0CLEf2H8hCo06gHJ7tu,7yr3XMGUy9WwHmk90NMRsN"}
-{"dkj_track_id":"KYT01-01","spotify_track_id":"6hc64mekJCLdJuRkPHggG6","song_key":"sorry - live @ lowlands 2009|1t0yREjD6veswRoDdXp4cK"}
+{"dkj_track_id":"KYT01-01","spotify_track_id":"6hc64mekJCLdJuRkPHggG6","song_key":"sorry|1t0yREjD6veswRoDdXp4cK"}
 {"dkj_track_id":"LAC03-01","spotify_track_id":"3L3IFFJAs0A1OmbeFWkOlA","song_key":"not your fight|09LCTrVGnMsGbxexUFJoap"}
 {"dkj_track_id":"LAD01-01","spotify_track_id":"1QV6tiMFM6fSOKOGLMHYYg","song_key":"poker face|1HY2Jd0NmPuamShAr6KMms"}
 {"dkj_track_id":"LAD01-02","spotify_track_id":"7yBbV2k2S2uhaQc24NF2xt","song_key":"stupid love|1HY2Jd0NmPuamShAr6KMms"}
@@ -7793,7 +7793,7 @@
 {"dkj_track_id":"MEA01-03","spotify_track_id":"3y9GvgeNVJRqdFCFLIj34K","song_key":"i'd lie for you (and thats the truth)|7dnB1wSxbYa8CejeVg98hz"}
 {"dkj_track_id":"MEA01-04","spotify_track_id":"0BhAgu3p85JlNbg6Mh4bvZ","song_key":"i'd do anything for love (but i won't do that)|7dnB1wSxbYa8CejeVg98hz"}
 {"dkj_track_id":"MEA01-04","spotify_track_id":"4UrgDocbHywDZv2f3mBhCq","song_key":"i'd do anything for love (but i won't do that)|7dnB1wSxbYa8CejeVg98hz"}
-{"dkj_track_id":"MEA01-05","spotify_track_id":"6fqLce5TNAmNgbFwXD2DdG","song_key":"i'd do anything for love (but i won't do that) - live from the beacon theatre, new york, u.s.a./1995|7dnB1wSxbYa8CejeVg98hz"}
+{"dkj_track_id":"MEA01-04","spotify_track_id":"6fqLce5TNAmNgbFwXD2DdG","song_key":"i'd do anything for love (but i won't do that)|7dnB1wSxbYa8CejeVg98hz"}
 {"dkj_track_id":"MEA01-06","spotify_track_id":"2g7gviEeJr6pyxO7G35EWQ","song_key":"paradise by the dashboard light|7dnB1wSxbYa8CejeVg98hz"}
 {"dkj_track_id":"MEA01-07","spotify_track_id":"3mCeeoBvTTpg8Xy2Wuvirw","song_key":"bat out of hell|7dnB1wSxbYa8CejeVg98hz"}
 {"dkj_track_id":"MEA01-08","spotify_track_id":"7wawEkN4nhPqSBWleGvdxa","song_key":"you took the words right out of my mouth (hot summer night)|7dnB1wSxbYa8CejeVg98hz"}
@@ -8280,7 +8280,7 @@
 {"dkj_track_id":"MOL02-GLA01-01","spotify_track_id":"5GRqG2vmcHMdqe65cpqy1y","song_key":"quit that love (feat. glacier baby)|3UcsmXGGJfwT7F8VgWF7ES,5MGgLwsKBivm7H5lJn5xRu"}
 {"dkj_track_id":"MOL02-RUT01-01","spotify_track_id":"1bCl2ys5OAbgoEw3vE0B57","song_key":"remedies|5MGgLwsKBivm7H5lJn5xRu,68mfV6tyHCTHZrNWNbVXmu"}
 {"dkj_track_id":"MOL03-01","spotify_track_id":"1v2jFLpXe18CqSMhoCTwzN","song_key":"hymn|29k6IUtkDp9ErAaJrh1Tlg"}
-{"dkj_track_id":"MOM01-TOM28-01","spotify_track_id":"5ZU2QNlHqxgm8P6PChzkCd","song_key":"10,000 reasons - live|5FqFNak9zZVBQhd12ZVFI2,7o1e43rIAeAxGthtoDJY0r"}
+{"dkj_track_id":"MOM01-TOM28-01","spotify_track_id":"5ZU2QNlHqxgm8P6PChzkCd","song_key":"10,000 reasons|5FqFNak9zZVBQhd12ZVFI2,7o1e43rIAeAxGthtoDJY0r"}
 {"dkj_track_id":"MON01-01","spotify_track_id":"1CSLeVCXmetBh8IkTPMFdL","song_key":"i'm a believer|320EPCSEezHt1rtbfwH6Ck"}
 {"dkj_track_id":"MON05-01","spotify_track_id":"4S3mu6EDwXuAU2RYTOWtKk","song_key":"the inevitable|6SZvMOzWVSx6cWYGRrZh6d"}
 {"dkj_track_id":"MON05-03","spotify_track_id":"3FtOLFXtOSXZb0to7ap5Wl","song_key":"fleeting love|6SZvMOzWVSx6cWYGRrZh6d"}
@@ -8762,7 +8762,7 @@
 {"dkj_track_id":"NIG02-01","spotify_track_id":"0MQtMtaxoXE5ybt6pOgqnw","song_key":"hotspot|1Yybte8g5co6ZQaFZdhMQH"}
 {"dkj_track_id":"NIG04-RED07-01","spotify_track_id":"26LL9NbZ57ApGDi5jXOwK0","song_key":"love u better|54Ir6AIDoasN4z2OZZNFaM,6v4utMFf6tizLfCjw1Z91v"}
 {"dkj_track_id":"NIG05-01","spotify_track_id":"5oAvb7LpUBwQfBtQ6hmS4Q","song_key":"élan|2NPduAUeLVsfIauhRwuft1"}
-{"dkj_track_id":"NIG05-02","spotify_track_id":"6Paon2GSO2btqO6qmS6hSE","song_key":"ghost love score - live, at wacken, 2013|2NPduAUeLVsfIauhRwuft1"}
+{"dkj_track_id":"NIG05-02","spotify_track_id":"6Paon2GSO2btqO6qmS6hSE","song_key":"ghost love score|2NPduAUeLVsfIauhRwuft1"}
 {"dkj_track_id":"NII01-EXP01-01","spotify_track_id":"0a20CrlIIDIAQUZJwIBqag","song_key":"memory lane|0lWYOJs5X95dmqPl9Oc5dO,5EoS1JzWR4LfTMWq8etwta"}
 {"dkj_track_id":"NIK01-01","spotify_track_id":"4DFHOaiMTmqtrSffaJa89c","song_key":"the riddle|7kCL98rPFsNKjAHDmWrMac"}
 {"dkj_track_id":"NIK02-MAX04-01","spotify_track_id":"6icQFD2MPoQUNhFd0OusaU","song_key":"sphinx|4vMz3OTFcyIvn1XG8zfRAf,56o67v1y8iWYDYnXE6kAdE"}
@@ -8780,8 +8780,8 @@
 {"dkj_track_id":"NIR01-01","spotify_track_id":"4CeeEOM32jQcH3eN9Q2dGj","song_key":"smells like teen spirit|6olE6TJLqED3rqDCT0FyPh"}
 {"dkj_track_id":"NIR01-02","spotify_track_id":"2RsAajgo0g7bMCHxwH3Sk0","song_key":"come as you are|6olE6TJLqED3rqDCT0FyPh"}
 {"dkj_track_id":"NIR01-03","spotify_track_id":"5vHLwhxxlGzmClMcxRRFPr","song_key":"lithium|6olE6TJLqED3rqDCT0FyPh"}
-{"dkj_track_id":"NIR01-04","spotify_track_id":"48YkpE5enOln5c7jXSTuHL","song_key":"about a girl - live|6olE6TJLqED3rqDCT0FyPh"}
-{"dkj_track_id":"NIR01-05","spotify_track_id":"15VRO9CQwMpbqUYA7e6Hwg","song_key":"the man who sold the world - live|6olE6TJLqED3rqDCT0FyPh"}
+{"dkj_track_id":"NIR01-04","spotify_track_id":"48YkpE5enOln5c7jXSTuHL","song_key":"about a girl|6olE6TJLqED3rqDCT0FyPh"}
+{"dkj_track_id":"NIR01-05","spotify_track_id":"15VRO9CQwMpbqUYA7e6Hwg","song_key":"the man who sold the world|6olE6TJLqED3rqDCT0FyPh"}
 {"dkj_track_id":"NIR01-06","spotify_track_id":"2mvffzYUJ9Ld9xhsF5DUjU","song_key":"in bloom|6olE6TJLqED3rqDCT0FyPh"}
 {"dkj_track_id":"NIT01-01","spotify_track_id":"7JLjdk1PX5LMBxM5zfYCQV","song_key":"in the dutch mountains|0UNaofxGb2voAeeZrU38SW"}
 {"dkj_track_id":"NIT01-02","spotify_track_id":"0xwCmhv3fFTgdX2IDZE4ai","song_key":"nescio|0UNaofxGb2voAeeZrU38SW"}
@@ -9075,8 +9075,8 @@
 {"dkj_track_id":"OPP01-SEF01-GER07-01","spotify_track_id":"3Fr6KveeuBJcJUFpJHJgUX","song_key":"broodje bakpao|23951Pg9PiLB8Uza3k12g6,5AvkVClT6JuPL4LFy7liYN,5VGhS6nHpXPbXGhku9RRB0"}
 {"dkj_track_id":"OPP02-01","spotify_track_id":"4E7YefclVHd8pFSTVHYml5","song_key":"ultralight|5sUWkQLRbLKvpnpzVj410F"}
 {"dkj_track_id":"OPT01-BTK01-GYD01-01","spotify_track_id":"1j1Z2JsOKwwPolQkBG3tVn","song_key":"inception - gydra remix|1Vdk9S1mbO9mlyFE5N3Fkd,4eujb0S8BP4Oy9suTA04mE,5DAUnt6HfjopWIIHuJhnYe"}
+{"dkj_track_id":"OPU01-01","spotify_track_id":"3EflfkTW9dgn7cjximjZp1","song_key":"live is life|5pf1217gT8zcjOFc7oMi47"}
 {"dkj_track_id":"OPU01-01","spotify_track_id":"76pyWH7ZLr6q4kJZS3MmEE","song_key":"live is life|5pf1217gT8zcjOFc7oMi47"}
-{"dkj_track_id":"OPU01-02","spotify_track_id":"3EflfkTW9dgn7cjximjZp1","song_key":"live is life - live|5pf1217gT8zcjOFc7oMi47"}
 {"dkj_track_id":"OPW01-01","spotify_track_id":"7JaHPdAJtMexBwcQ57fT2c","song_key":"joy (900)|4xFGtK82ouiHEMuO1WfEUJ"}
 {"dkj_track_id":"ORC01-01","spotify_track_id":"2RKRJ63BU2LCB1G30dAa6P","song_key":"joan of arc (maid of orleans)|7wJ9NwdRWtN92NunmXuwBk"}
 {"dkj_track_id":"ORC01-02","spotify_track_id":"7bJSbd2Upa4iYVHlbRKEJm","song_key":"enola gay|7wJ9NwdRWtN92NunmXuwBk"}
@@ -9283,7 +9283,7 @@
 {"dkj_track_id":"PAS06-01","spotify_track_id":"4bxQOsjovVVbfdXsmqve3j","song_key":"the rigga-ding-dong-song - radio mix|3Pkks563I2KpMhxNARDfBO"}
 {"dkj_track_id":"PAT02-OFF01-01","spotify_track_id":"3rrfb6zTafJ2bgm9RcKapj","song_key":"aftershock|0NFuUdvG5TWPgtesoGPzBN,4uy37qDec5upfJbg6ZfnLW"}
 {"dkj_track_id":"PAT04-01","spotify_track_id":"3XIEWK1V9n25PS9Vb6axj5","song_key":"born to be alive - the original|1CcEgi464SWZsKY5579u7z"}
-{"dkj_track_id":"PAT05-02","spotify_track_id":"3Rp6MWojq3iMHWxAKGUHX5","song_key":"lady marmalade - live (1998 hammerstein ballroom)|0ty0xha1dbprYIUAQufkFn"}
+{"dkj_track_id":"PAT05-02","spotify_track_id":"3Rp6MWojq3iMHWxAKGUHX5","song_key":"lady marmalade|0ty0xha1dbprYIUAQufkFn"}
 {"dkj_track_id":"PAT05-LAB01-01","spotify_track_id":"3GGcwG519BTMdvMeFy7meT","song_key":"lady marmalade|0ty0xha1dbprYIUAQufkFn,3DznKagEU8yMQZR9z33Da5"}
 {"dkj_track_id":"PAT09-01","spotify_track_id":"5JR4anC1pdRv1hPYhL8bJP","song_key":"hela hola - tut hola|5Wx0laye9jwDsOQDOPmnWl"}
 {"dkj_track_id":"PAT10-01","spotify_track_id":"4wYqPn3Kg3vZrkVgW2oqAG","song_key":"love is a battlefield|43mhFhQ4JAknA7Ik1bOZuV"}
@@ -9394,8 +9394,8 @@
 {"dkj_track_id":"PER05-ASH04-MAD02-ANI08-01","spotify_track_id":"4tGxw04cTJfpoDesFdIYbl","song_key":"good lovin - maduk remix|0AbN0DpBeG0Ugper4EUXKx,1U3ZzeFSbIqfycdvGcGAPR,5ZH3ADznCGt5IWQ0yi9Vjn,6TaaqqCMRMSpvNHClfnbEL"}
 {"dkj_track_id":"PER06-01","spotify_track_id":"7z7WfdoT4qI16aXfWoNRlj","song_key":"the musty scent of fresh pâté|4vATWjWf6AYUj0tyKD6sDM"}
 {"dkj_track_id":"PES01-STE37-01","spotify_track_id":"6nYYVmIhtl590fGciXZBtD","song_key":"red sun|07ogfrunSUmnsEsPQdRQUB,2tNkGhVcQFvG9hP43HTTsL"}
+{"dkj_track_id":"PET01-01","spotify_track_id":"5uS8HGp7VfuU5fDarEbNi7","song_key":"show me the way|0543y7yrvny4KymoaneT4W"}
 {"dkj_track_id":"PET01-01","spotify_track_id":"70TFMI0nyPsAM5rqId6khb","song_key":"show me the way|0543y7yrvny4KymoaneT4W"}
-{"dkj_track_id":"PET01-02","spotify_track_id":"5uS8HGp7VfuU5fDarEbNi7","song_key":"show me the way - live|0543y7yrvny4KymoaneT4W"}
 {"dkj_track_id":"PET02-02","spotify_track_id":"2wqaWejDpZHj4tddTcbg6t","song_key":"troubles|6FgtU463qtDrvUsL5b3Ael"}
 {"dkj_track_id":"PET02-08","spotify_track_id":"2lGHiaCRXk8UyIc5CUrl0V","song_key":"i'm gonna hold on|6FgtU463qtDrvUsL5b3Ael"}
 {"dkj_track_id":"PET02-09","spotify_track_id":"2a4Mui3pgeGvt7oW4w6iGn","song_key":"samba soul - radio edit|6FgtU463qtDrvUsL5b3Ael"}
@@ -10044,7 +10044,7 @@
 {"dkj_track_id":"RED10-20","spotify_track_id":"43khiAjVYp8XK8yB4pMfOk","song_key":"pieces|01crEa9G3pNpXZ5m7wuHOk"}
 {"dkj_track_id":"RED12-01","spotify_track_id":"4wzjNqjKAKDU82e8uMhzmr","song_key":"face down|1SImpQO0GbjRgvlwCcCtFo"}
 {"dkj_track_id":"RED12-02","spotify_track_id":"2ZICF8SFI5tHttaLJKMY1X","song_key":"false pretense|1SImpQO0GbjRgvlwCcCtFo"}
-{"dkj_track_id":"RED13-01","spotify_track_id":"10Akq9wk9NP2IyiwiaDHWU","song_key":"good plans / doxology - live|48AVv3cw03WdSB5b4qmNCr"}
+{"dkj_track_id":"RED13-01","spotify_track_id":"10Akq9wk9NP2IyiwiaDHWU","song_key":"good plans / doxology|48AVv3cw03WdSB5b4qmNCr"}
 {"dkj_track_id":"REE01-TOR01-01","spotify_track_id":"12sFaqiJ4wyvjp3ycpB9wk","song_key":"like me|2cUSgme8otbeKGRDl6xm1t,3DaX9l3f0lsiPjgyJ454wI"}
 {"dkj_track_id":"REE03-01","spotify_track_id":"5Ly6YEoFdR4pLhFXNc9sHK","song_key":"stay|2Tn294K6dTne1gLRrXFVZ9"}
 {"dkj_track_id":"REE04-MAD11-01","spotify_track_id":"2E5b2xmbfZylF4j8Rw1lPe","song_key":"i like to move it|2rC7eyIFrDIYnFsxsbSxF5,4AXX8UN3xaPrxHSqrgE3Ta"}
@@ -10105,7 +10105,7 @@
 {"dkj_track_id":"REX01-PIL02-01","spotify_track_id":"6KjKsOTfHaFPXKIVyurqCp","song_key":"anywhere|3ssYaK748UoelLJBctaKWL,4c29y8GbknsXEZc6hgRIkC"}
 {"dkj_track_id":"REY01-01","spotify_track_id":"60fc88sTFS3na6kz18VQv5","song_key":"bamboleo|0bFwEG7LUFseuZvjlhW8cG"}
 {"dkj_track_id":"REY02-02","spotify_track_id":"4zcKSTjdVevKR2KgZNWLFd","song_key":"life|54UJV3OPkBfR4V92nsYs1Z"}
-{"dkj_track_id":"REY02-03","spotify_track_id":"0oizWVLq63s8Go43VnBmcZ","song_key":"maranatha - live|54UJV3OPkBfR4V92nsYs1Z"}
+{"dkj_track_id":"REY02-03","spotify_track_id":"0oizWVLq63s8Go43VnBmcZ","song_key":"maranatha|54UJV3OPkBfR4V92nsYs1Z"}
 {"dkj_track_id":"REY02-04","spotify_track_id":"61TXTgogkNP2jiYPXpeYQG","song_key":"uw ogen|54UJV3OPkBfR4V92nsYs1Z"}
 {"dkj_track_id":"REY02-07","spotify_track_id":"0yMZgeInG59KPA83Oc2NbG","song_key":"voor eeuwig dicht bij u|54UJV3OPkBfR4V92nsYs1Z"}
 {"dkj_track_id":"REY02-JAN07-01","spotify_track_id":"0BGQl5Tmu6s8nVL420WCoj","song_key":"in hem|0i1T4MutNoNOJAjoHNAfUh,54UJV3OPkBfR4V92nsYs1Z"}
@@ -10355,7 +10355,7 @@
 {"dkj_track_id":"ROW01-01","spotify_track_id":"6tnoslnA1yZPHjeZdrbdMn","song_key":"disco train|7MW3lTs9G10C55or1KZrwQ"}
 {"dkj_track_id":"ROW01-02","spotify_track_id":"5zPEXOA8JjX3J3yR4NLXGa","song_key":"disco train - extended mix|7MW3lTs9G10C55or1KZrwQ"}
 {"dkj_track_id":"ROW02-01","spotify_track_id":"2AywBIJIDBNfoKTxNt2Ule","song_key":"brazil calling|5FAf6js6Hmt431QlsWzfmV"}
-{"dkj_track_id":"ROW03-01","spotify_track_id":"65VVNuiRSu8ygJ8rwCOgfm","song_key":"limburg - live|5icZHFQjI6SRsvXNOKUXZ1"}
+{"dkj_track_id":"ROW03-01","spotify_track_id":"65VVNuiRSu8ygJ8rwCOgfm","song_key":"limburg|5icZHFQjI6SRsvXNOKUXZ1"}
 {"dkj_track_id":"ROX01-01","spotify_track_id":"67wewfYRTUs6OxfmgGfRho","song_key":"sugardaddy|6YznhKZUZFVr418x7OUi3z"}
 {"dkj_track_id":"ROX04-01","spotify_track_id":"5JvsxPAHsGxwNq4xto2HtM","song_key":"listen to your heart|2SHhfs4BiDxGQ3oxqf0UHY"}
 {"dkj_track_id":"ROX05-01","spotify_track_id":"61y28QdZIXzVtNIs3xZuaT","song_key":"avalon|3fhOTtm0LBJ3Ojn4hIljLo"}
@@ -11637,8 +11637,8 @@
 {"dkj_track_id":"SWI02-31","spotify_track_id":"7FF5jII1xr2fYcoc0VrC5h","song_key":"the day that i found god|6S58b0fr8TkWrEHOH4tRVu"}
 {"dkj_track_id":"SWI02-32","spotify_track_id":"0SxC1EX6alk6y8POhm7KNR","song_key":"shake this feeling|6S58b0fr8TkWrEHOH4tRVu"}
 {"dkj_track_id":"SWI02-33","spotify_track_id":"6JwesEKLzyjaAI1hjEHB4q","song_key":"holy water|6S58b0fr8TkWrEHOH4tRVu"}
-{"dkj_track_id":"SWI02-34","spotify_track_id":"386uhiddmZIMU1al8xx4vW","song_key":"mess of me - live [bonus track]|6S58b0fr8TkWrEHOH4tRVu"}
-{"dkj_track_id":"SWI02-35","spotify_track_id":"76l8XH3YEP3UK9hX2Owf4Q","song_key":"the sound (john m. perkins' blues) - live [bonus track]|6S58b0fr8TkWrEHOH4tRVu"}
+{"dkj_track_id":"SWI02-34","spotify_track_id":"386uhiddmZIMU1al8xx4vW","song_key":"mess of me|6S58b0fr8TkWrEHOH4tRVu"}
+{"dkj_track_id":"SWI02-35","spotify_track_id":"76l8XH3YEP3UK9hX2Owf4Q","song_key":"the sound (john m. perkins' blues)|6S58b0fr8TkWrEHOH4tRVu"}
 {"dkj_track_id":"SWI02-36","spotify_track_id":"2F3y48nulAenvhF7Yr61VS","song_key":"float|6S58b0fr8TkWrEHOH4tRVu"}
 {"dkj_track_id":"SWI02-37","spotify_track_id":"4sQPg3SDVDKdJShxzRlCbI","song_key":"if the house burns down tonight|6S58b0fr8TkWrEHOH4tRVu"}
 {"dkj_track_id":"SWI02-38","spotify_track_id":"728aNpYwEJOYYxMp0TZTCC","song_key":"live it well|6S58b0fr8TkWrEHOH4tRVu"}
@@ -11721,7 +11721,7 @@
 {"dkj_track_id":"TAL06-02","spotify_track_id":"03d3DCqwvt65Orfdomjs6e","song_key":"living in another world - 1997 remaster|7Fo8TAyGJr4VmhE68QamMf"}
 {"dkj_track_id":"TAL06-03","spotify_track_id":"4BixGe6AcqJU2etTzeh2cN","song_key":"such a shame|7Fo8TAyGJr4VmhE68QamMf"}
 {"dkj_track_id":"TAL06-04","spotify_track_id":"4jhsuQCUCJKA5f0bXb6XdJ","song_key":"it's my life - 1997 remaster|7Fo8TAyGJr4VmhE68QamMf"}
-{"dkj_track_id":"TAL07-01","spotify_track_id":"2WDvW3o8WeGN4v4cpsYVhT","song_key":"slippery people - live|2x9SpqnPi8rlE9pjHBwmSC"}
+{"dkj_track_id":"TAL07-01","spotify_track_id":"2WDvW3o8WeGN4v4cpsYVhT","song_key":"slippery people|2x9SpqnPi8rlE9pjHBwmSC"}
 {"dkj_track_id":"TAL07-02","spotify_track_id":"38Ngied9rBORlAbLYNCl4k","song_key":"once in a lifetime - 2005 remaster|2x9SpqnPi8rlE9pjHBwmSC"}
 {"dkj_track_id":"TAL07-03","spotify_track_id":"1i6N76fftMZhijOzFQ5ZtL","song_key":"psycho killer - 2005 remaster|2x9SpqnPi8rlE9pjHBwmSC"}
 {"dkj_track_id":"TAL07-04","spotify_track_id":"2co8fDyaVmxv8xruQWORnC","song_key":"road to nowhere - 2005 remaster|2x9SpqnPi8rlE9pjHBwmSC"}
@@ -12196,7 +12196,7 @@
 {"dkj_track_id":"TOR09-01","spotify_track_id":"11cM33H4S1YN6iSjB7uAvQ","song_key":"joy comes|2lDf4hYD0RvgNtYgblvb4i"}
 {"dkj_track_id":"TOS01-01","spotify_track_id":"52LAp4hOVypeOcHA0YYOwx","song_key":"行け行けナルト|78JmbZfna6DOfhSoxccZZw"}
 {"dkj_track_id":"TOT01-01","spotify_track_id":"73bzcsDjx9FqzqKWcPLMiH","song_key":"stop loving you|0PFtn5NtBbbUNbU9EAmIWF"}
-{"dkj_track_id":"TOT01-02","spotify_track_id":"6QnMZudOZtzRFBOHgkSAIJ","song_key":"while my guitar gently weeps - live|0PFtn5NtBbbUNbU9EAmIWF"}
+{"dkj_track_id":"TOT01-02","spotify_track_id":"6QnMZudOZtzRFBOHgkSAIJ","song_key":"while my guitar gently weeps|0PFtn5NtBbbUNbU9EAmIWF"}
 {"dkj_track_id":"TOT01-03","spotify_track_id":"5EylpNRraIHpOAWjdahNUp","song_key":"only the children|0PFtn5NtBbbUNbU9EAmIWF"}
 {"dkj_track_id":"TOT01-04","spotify_track_id":"3X32uxLcEyhHq1TXSyVJ1l","song_key":"straight for the heart|0PFtn5NtBbbUNbU9EAmIWF"}
 {"dkj_track_id":"TOT01-05","spotify_track_id":"6t7eN8rt5dPqgfNYuRKUEN","song_key":"home of the brave|0PFtn5NtBbbUNbU9EAmIWF"}
@@ -12261,7 +12261,7 @@
 {"dkj_track_id":"TRI03-05","spotify_track_id":"2wUlWLwQ13RITb0StDwKJJ","song_key":"hiera|2T6mOFQ2RGAypMuKtIg9ic"}
 {"dkj_track_id":"TRI03-ESQ01-01","spotify_track_id":"77a4iUk7a9Rtzqzd4gHuTz","song_key":"to the end|2T6mOFQ2RGAypMuKtIg9ic,2tt85A7WbWxONFCiC925VQ"}
 {"dkj_track_id":"TRI12-01","spotify_track_id":"4JMl6POnS2IPBpVVwDl06P","song_key":"if i had a hammer|5FlTKgucbhHvlJVf0pnvOv"}
-{"dkj_track_id":"TRI13-01","spotify_track_id":"6v00zlqM60HsbYcQTwepEX","song_key":"i follow rivers - bonus track - live @ giel vara/3fm|3UhIlk54Oe4ja06V962ptU"}
+{"dkj_track_id":"TRI13-01","spotify_track_id":"6v00zlqM60HsbYcQTwepEX","song_key":"i follow rivers - bonus track|3UhIlk54Oe4ja06V962ptU"}
 {"dkj_track_id":"TRI14-02","spotify_track_id":"4wLFYjW5SOPAdbVXAJill7","song_key":"we are born|3SDefVlv5kSzaP5QYZTSMx"}
 {"dkj_track_id":"TRI14-ROB36-XON01-GID02-01","spotify_track_id":"1W0MC9n7X7JirtOsOqXFtY","song_key":"a tu lado|1j4W3yOBthwGj4wWrGPtfA,3SDefVlv5kSzaP5QYZTSMx,4jpyLwY88iZc65WHKxderI,5j47wVZTF78MENjG6338zz"}
 {"dkj_track_id":"TRO01-01","spotify_track_id":"1kT6fqaDmxqMjEMjoBqYRy","song_key":"vaia|0ugRi4v3utREAUASuPhlJz"}
@@ -12447,7 +12447,7 @@
 {"dkj_track_id":"UXX01-14","spotify_track_id":"3pUWV5hvXsI9diJ9TeNeCh","song_key":"walk on|51Blml2LZPmy7TTiAg47vQ"}
 {"dkj_track_id":"UXX01-16","spotify_track_id":"4BC2WQKrZdqMX6rHsvVbUy","song_key":"elevation|51Blml2LZPmy7TTiAg47vQ"}
 {"dkj_track_id":"UXX01-17","spotify_track_id":"4D01oA1mGouaAT7fubvKRT","song_key":"desire|51Blml2LZPmy7TTiAg47vQ"}
-{"dkj_track_id":"UXX01-18","spotify_track_id":"6sPhFkiaV0HNM7daKybHpe","song_key":"i will follow - live|51Blml2LZPmy7TTiAg47vQ"}
+{"dkj_track_id":"UXX01-18","spotify_track_id":"6sPhFkiaV0HNM7daKybHpe","song_key":"i will follow|51Blml2LZPmy7TTiAg47vQ"}
 {"dkj_track_id":"UXX01-19","spotify_track_id":"6C4LXC9UFH1IKiHYOp0BiJ","song_key":"sunday bloody sunday - remastered 2008|51Blml2LZPmy7TTiAg47vQ"}
 {"dkj_track_id":"UXX01-20","spotify_track_id":"1gVVSmhWjci8l9Vrsl6HaS","song_key":"vertigo|51Blml2LZPmy7TTiAg47vQ"}
 {"dkj_track_id":"UXX01-21","spotify_track_id":"0T702y9ndzZTnPq1bqiAM2","song_key":"i will follow - remastered 2008|51Blml2LZPmy7TTiAg47vQ"}

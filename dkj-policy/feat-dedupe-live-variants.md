@@ -39,19 +39,41 @@
 
 ### PLAN
 
+Dave's regel: nooit een live-variant in de collectie. Keuzes (27 september 2026): de studio-rij neemt
+het laagste ID van de groep over, een nummer dat alleen live bestaat blijft met een schone titel, en live
+wordt alleen aan de titel herkend, niet aan het album.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `liveTitle.ts`: de titelregel (live-stuk na " - " en alles erachter, live tussen haakjes behalve aan het begin), gemeten tegen alle 12.471 titels
+- [x] `songKey()` negeert live; een nieuw nummer krijgt de schone titel; een later binnenkomende studioversie neemt de Spotify-gegevens van een live-rij over
+- [x] `liveVariants.ts`: eenmalige samenvoeging van de bestaande bibliotheek, ingehaakt in `applyLibraryIdsFromSnapshot()`
+- [x] Samenvoeging gedraaid op de bibliotheek: 11 rijen opgegaan, 51 titels schoongemaakt; export bijgewerkt
+- [x] README bijgewerkt
 
 ### TEST
 
+- [x] Tests voor de titelregel, de sleutel, de samenvoeging en de studio-overname; `npm test` (769 groen), `tsc` en `eslint` schoon
+
 ### DEPLOY: feat/dedupe-live-variants
 
-**Score:**
+Een live-opname is geen eigen nummer meer. Hij krijgt het ID van zijn studioversie, en de rij houdt de
+titel en de Spotify-gegevens van de studioversie. Zo is ACD01-02 nu "You Shook Me All Night Long" van
+*Back In Black*, en is ACD01-38 vrijgekomen. Een nummer dat alleen live in je playlists staat, blijft
+bestaan onder de titel zonder "- Live". Komt de studioversie later binnen, dan neemt die zijn plaats in.
+De bestaande bibliotheek is één keer rechtgezet: 11 live-rijen zijn opgegaan in hun studioversie, en 51
+titels zijn schoongemaakt. Live wordt alleen aan de titel herkend, dus "Live Forever" en het album
+"I Live, I Learn" blijven buiten schot. Dit is een bewuste, eenmalige uitzondering op "een ID verandert
+niet meer": de samengevoegde rij krijgt het laagste ID van de groep.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie het Trackregister opent, ziet elk nummer nog maar één keer, en nergens meer een live-titel. Elf
+dubbele rijen zijn weg.
+
+**Score:** 3
 
 #### Pull Request
 

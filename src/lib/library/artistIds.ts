@@ -40,6 +40,7 @@ import {
 import { albumFromPlaylists } from "./albumFromPlaylists";
 import { bpmFromPlaylists } from "./bpmFromPlaylists";
 import { fileNameOf } from "./fileName";
+import { mergeLiveVariants, type LiveMergeResult } from "./liveVariants";
 import { applyPlaylistLinks } from "./playlistLinks";
 import { primaryArtistOf } from "./primaryArtist";
 import {
@@ -337,16 +338,20 @@ export interface LibraryIdResult {
   primaryArtistsFilled: number;
   /** Tracks die in deze run van een oud ID (T000001) naar het nieuwe formaat gingen. */
   renumbered: number;
+  /** Live-varianten die in deze run in hun studioversie opgingen of een schone titel kregen (liveVariants.ts). */
+  live: LiveMergeResult;
   tracks: TrackIdResult;
 }
 
 /** Alle eigen ID's uit de snapshot, in de volgorde die nodig is: eerst de artiesten (en `dkj_artist_ids`
- *  bij bestaande tracks), dan het eenmalig omnummeren van oude track-ID's, dan de nieuwe nummers --
+ *  bij bestaande tracks), dan het eenmalig omnummeren van oude track-ID's en het samenvoegen van
+ *  live-varianten (zodat de koppeltabel de sleutels zonder live kent), dan de nieuwe nummers --
  *  een track-ID begint met het artiest-ID van zijn hoofdartiest. Elke stap is een eigen transactie en
  *  kan veilig opnieuw draaien: valt een latere stap om, dan maakt de volgende run het af. */
 export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot): LibraryIdResult {
   const artists = applyArtistIdsFromSnapshot(db, snapshot);
   const renumbered = renumberLegacyTrackIds(db);
+  const live = mergeLiveVariants(db);
   const tracks = applyTrackIdsFromSnapshot(db, snapshot, readArtistIdMap(db));
   const primaryArtistsFilled = fillPrimaryArtists(db);
   const albumArtistsFilled = fillAlbumArtists(db);
@@ -355,5 +360,5 @@ export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot
   // Na de playlists: het album en de BPM worden uit hun namen afgeleid.
   const albumsFilled = fillAlbumsFromPlaylists(db);
   const bpmsFilled = fillBpmsFromPlaylists(db);
-  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, playlistsChanged, primaryArtistsFilled, renumbered, tracks };
+  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, live, playlistsChanged, primaryArtistsFilled, renumbered, tracks };
 }

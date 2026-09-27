@@ -61,6 +61,11 @@ describe("formatTrackId / songKey", () => {
     expect(songKey(track("x", " Song A ", ["b", "a"]))).toBe(songKey(track("y", "song a", ["a", "b"])));
   });
 
+  it("laat een live-aanduiding in de titel niet meetellen", () => {
+    expect(songKey(track("x", "Clocks - Live"))).toBe(songKey(track("y", "Clocks")));
+    expect(songKey(track("x", "Alive (Live)"))).toBe(songKey(track("y", "alive")));
+  });
+
   it("houdt een andere titel of andere artiesten apart", () => {
     expect(songKey(track("x", "Song A"))).not.toBe(songKey(track("y", "Song A - Radio Edit")));
     expect(songKey(track("x", "Song A", ["a1"]))).not.toBe(songKey(track("y", "Song A", ["a2"])));
@@ -118,7 +123,7 @@ describe("applyTrackIdsFromSnapshot", () => {
   it("maakt tracks met Spotify-metadata en eigen artiest-ID's, en koppelt elke Spotify-ID", () => {
     const db = memoryDb();
     const result = applyTrackIdsFromSnapshot(db, snapshot([track("s1", "Song A"), track("s2", "song a")]), ARTISTS);
-    expect(result).toEqual({ newTracks: 1, newLinks: 2, totalLinks: 2 });
+    expect(result).toEqual({ newTracks: 1, newLinks: 2, studioReplaced: 0, totalLinks: 2 });
     expect(getTrack(db, "ART01-01")).toMatchObject({
       spotify_track_id: "s1",
       title: "Song A",
@@ -135,11 +140,12 @@ describe("applyTrackIdsFromSnapshot", () => {
     expect(applyTrackIdsFromSnapshot(db, snapshot([track("s1", "Song A")]), ARTISTS)).toEqual({
       newTracks: 0,
       newLinks: 0,
+      studioReplaced: 0,
       totalLinks: 1,
     });
 
     const later = applyTrackIdsFromSnapshot(db, snapshot([track("s5", "Song A"), track("s6", "Song C")]), ARTISTS);
-    expect(later).toEqual({ newTracks: 1, newLinks: 2, totalLinks: 3 });
+    expect(later).toEqual({ newTracks: 1, newLinks: 2, studioReplaced: 0, totalLinks: 3 });
     expect(listTracks(db).map((t) => t.dkj_track_id)).toEqual(["ART01-01", "ART01-02"]);
   });
 
@@ -149,6 +155,30 @@ describe("applyTrackIdsFromSnapshot", () => {
     upsertTracks(db, [{ dkj_track_id: "ART01-01", title: "Mijn eigen titel", bpm: 128 }]);
     applyTrackIdsFromSnapshot(db, snapshot([track("s1", "Song A"), track("s2", "Song A")]), ARTISTS);
     expect(getTrack(db, "ART01-01")).toMatchObject({ title: "Mijn eigen titel", bpm: 128 });
+  });
+});
+
+describe("live-varianten", () => {
+  it("geeft een live-opname het ID van de studioversie, en een nieuw live-nummer de schone titel", () => {
+    const db = memoryDb();
+    applyTrackIdsFromSnapshot(
+      db,
+      snapshot([track("s1", "Song A"), track("s2", "Song A - Live at Wembley"), track("s3", "Song B (Live)")]),
+      ARTISTS
+    );
+    expect(listTracks(db).map((t) => [t.dkj_track_id, t.title, t.spotify_track_id])).toEqual([
+      ["ART01-01", "Song A", "s1"],
+      ["ART01-02", "Song B", "s3"],
+    ]);
+  });
+
+  it("geeft een live-rij de Spotify-gegevens van de studioversie zodra die binnenkomt", () => {
+    const db = memoryDb();
+    const live = { ...track("s1", "Song A - Live"), album: { id: "al2", name: "Live Album", images: [] }, durationMs: 250000 };
+    applyTrackIdsFromSnapshot(db, snapshot([live]), ARTISTS);
+    const result = applyTrackIdsFromSnapshot(db, snapshot([live, track("s2", "Song A")]), ARTISTS);
+    expect(result.studioReplaced).toBe(1);
+    expect(getTrack(db, "ART01-01")).toMatchObject({ title: "Song A", spotify_track_id: "s2", album: "Album", duration_ms: 180000 });
   });
 });
 
