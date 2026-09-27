@@ -178,6 +178,14 @@ Penn wordt `Abel Ramos - Higher (David Penn Remix)`.
 
 Ook dit veld wordt alleen gevuld zolang het leeg is. De regels staan in `src/lib/library/fileName.ts`.
 
+### De playlists: `dkj_playlists`
+
+`dkj_playlists` is de lijst Spotify-playlists waarin een track staat, elk met ID en naam, in de volgorde
+van je playlists. Anders dan de andere eigen velden wordt dit veld bij elke sync opnieuw gezet: het is
+een feit van Spotify, geen keuze van jou. Let op: de playlistnamen staan daarmee in de publieke export,
+ook die uit de wereld Privé. Daarvoor is bewust gekozen, zodat het register ze op elke machine toont. De
+regels staan in `src/lib/library/playlistLinks.ts`.
+
 ### Velden met vaste keuzes
 
 `dkj_bpm` en `dkj_album` accepteren alleen hun eigen opties; elke andere waarde breekt de import af.

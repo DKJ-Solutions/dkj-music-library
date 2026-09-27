@@ -57,6 +57,9 @@ export const ALBUM_ARTIST_KEY = "dkj_albumartiest";
 /** Het veld met de bestandsnaam zoals op de desktop (zie fileName.ts). */
 export const FILE_KEY = "dkj_file";
 
+/** Het veld met de Spotify-playlists waarin een track staat (zie playlistLinks.ts). */
+export const PLAYLISTS_KEY = "dkj_playlists";
+
 /** Hoe de namen in `dkj_albumartiest` aan elkaar staan. */
 export const ALBUM_ARTIST_SEPARATOR = ", ";
 
@@ -96,6 +99,7 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
   { key: "dkj_artist", type: "text", label: "Eén artiest: de remixer/editor, anders de eerste uit artists, tenzij zelf ingevuld" },
   { key: "dkj_albumartiest", type: "text", label: "Alle artiesten in Spotify-volgorde, met komma's, tenzij zelf ingevuld" },
   { key: "dkj_file", type: "text", label: "Bestandsnaam zoals op de desktop, zonder extensie (fileName.ts), tenzij zelf ingevuld" },
+  { key: "dkj_playlists", type: "json", label: "Spotify-playlists waarin de track staat, als { id, name }; bij elke sync ververst (playlistLinks.ts)" },
   // Nieuw veld? Voeg het hier toe, bv.:
   // { key: "energy", type: "integer", label: "Energie 1-10" },
 ];

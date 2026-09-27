@@ -18,7 +18,7 @@ if (!snapshot) {
 }
 
 try {
-  const { tracks, artists, primaryArtistsFilled, albumArtistsFilled, fileNamesFilled, renumbered, total } = withLibrary((db) => ({
+  const { tracks, artists, primaryArtistsFilled, albumArtistsFilled, fileNamesFilled, playlistsChanged, renumbered, total } = withLibrary((db) => ({
     ...applyLibraryIdsFromSnapshot(db, snapshot),
     total: countTracks(db),
   }));
@@ -35,6 +35,7 @@ try {
   if (primaryArtistsFilled > 0) console.log(`dkj_artist gevuld bij ${primaryArtistsFilled} bestaande tracks`);
   if (albumArtistsFilled > 0) console.log(`dkj_albumartiest gevuld bij ${albumArtistsFilled} bestaande tracks`);
   if (fileNamesFilled > 0) console.log(`dkj_file gevuld bij ${fileNamesFilled} bestaande tracks`);
+  if (playlistsChanged > 0) console.log(`dkj_playlists bijgewerkt bij ${playlistsChanged} tracks`);
   console.log("Export bijgewerkt in data/library/export/ -- commit die map om hem op je andere machines te hebben.");
 } catch (err) {
   console.error(`Toekennen mislukt: ${err instanceof Error ? err.message : String(err)}`);
