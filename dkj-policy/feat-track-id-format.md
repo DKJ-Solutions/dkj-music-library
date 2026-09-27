@@ -32,11 +32,28 @@
 
 ### PLAN
 
+#### Keuze van de eigenaar (27 september 2026)
+
+De eigenaar vroeg om `dkj_track_id` = `<dkj_artist_id><XX>`. Van de 4.333 hoofdartiesten had er één meer
+dan 99 nummers (Immediate, 143). Omdat een doorgroeiend volgnummer achter een doorgroeiend artiest-ID niet
+eenduidig te splitsen is, koos de eigenaar voor een scheidingsteken: `PRO02-01`. Standaarden die de
+eigenaar zijn voorgelegd: de hoofdartiest is de eerste die Spotify noemt, en de oude ID's worden één keer
+omgenummerd in de volgorde van hun T-nummer.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `trackIds.ts`: `formatTrackId(artistId, n)`, per-artiest laagste vrije volgnummer, `XXX00` zonder artiest-ID, `dkj_artist_ids` direct bij het aanmaken, `renumberLegacyTrackIds()`
+- [x] `artistIds.ts`: `applyLibraryIdsFromSnapshot()` = artiesten, dan omnummeren, dan nummers; `readArtistIdMap()`
+- [x] `fields.ts`: `ARTIST_IDS_KEY` (gedeeld door trackIds en artistIds zonder importcirkel)
+- [x] Sync-endpoint en `library:assign-ids` via `applyLibraryIdsFromSnapshot()`
+- [x] README: formaat en de eenmalige omnummering
+- [x] Echte bibliotheek: 12.471 tracks omgenummerd
 
 ### TEST
+
+- [x] Tests herschreven voor het nieuwe formaat, plus: doorgroeien na 99, `XXX00`, omnummeren (volgorde, bestaande nieuwe ID's, koppelingen, tweede keer niets), eenmalig omnummeren via de orchestrator
+- [x] Vitest 693/693, `tsc --noEmit` en `eslint` schoon
+- [x] Echte data: 0 ID's in het oude of een verkeerd formaat, 0 koppelingen naar een onbekend ID, alle 12.471 ID's beginnen met hun hoofdartiest; verse database uit de export opgebouwd
 
 ### DEPLOY: feat/track-id-format
 
@@ -44,7 +61,13 @@
 
 ##### Tier 0
 
-**Score:**
+`dkj_track_id` bestaat nu uit het artiest-ID van de hoofdartiest, een streepje en een volgnummer per
+artiest: Firestarter van The Prodigy is `PRO02-21`, Rehab van Amy Winehouse `AMY01-01`. Het volgnummer
+heeft minstens twee cijfers en groeit na 99 door (`IMM01-143`). De bestaande `T000001`-ID's zijn één keer
+omgenummerd, per artiest in hun oude volgorde, en in de koppeltabel mee aangepast. Een nieuw nummer krijgt
+bij het aanmaken meteen ook zijn `dkj_artist_ids`.
+
+**Score:** 4
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +76,9 @@
 
 ##### Tier 1
 
-**Score:**
+Een persoonlijke tool zonder opdrachtgever; niemand buiten de ontwikkelaar merkt dit.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +87,9 @@
 
 ##### Tier 2
 
-**Score:**
+Er is geen dienst met abonnees.
+
+**Score:** N/A
 
 #### Pull Request
 

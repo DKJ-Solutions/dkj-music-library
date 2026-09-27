@@ -10,8 +10,8 @@ import { archiveCurrentSnapshot, readSnapshot, writeSnapshot } from "@/lib/spoti
 import { SpotifyReauthRequiredError } from "@/lib/spotify/errors";
 import { sameOriginGuard } from "@/lib/http/sameOrigin";
 import { withLibrary } from "@/lib/library/libraryFile";
-import { applyArtistIdsFromSnapshot, type ArtistIdResult } from "@/lib/library/artistIds";
-import { applyTrackIdsFromSnapshot, type TrackIdResult } from "@/lib/library/trackIds";
+import { applyLibraryIdsFromSnapshot, type ArtistIdResult } from "@/lib/library/artistIds";
+import type { TrackIdResult } from "@/lib/library/trackIds";
 
 // fs/de Spotify-token-laag vereisen de Node-runtime, niet de edge-runtime. Een volledige sync van
 // honderden playlists kan een tijd duren -- force-dynamic voorkomt dat Next.js dit probeert te
@@ -50,10 +50,9 @@ export async function POST(request: Request) {
     let trackIds: TrackIdResult | null = null;
     let artistIds: ArtistIdResult | null = null;
     try {
-      [trackIds, artistIds] = withLibrary((db) => [
-        applyTrackIdsFromSnapshot(db, snapshot),
-        applyArtistIdsFromSnapshot(db, snapshot),
-      ] as const);
+      const ids = withLibrary((db) => applyLibraryIdsFromSnapshot(db, snapshot));
+      trackIds = ids.tracks;
+      artistIds = ids.artists;
     } catch (err) {
       console.error("[api/spotify/sync] eigen track-ID's toekennen mislukt:", err);
     }

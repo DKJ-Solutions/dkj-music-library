@@ -41,6 +41,10 @@ export const TRACK_ID_KEY = "dkj_track_id";
  *  importbestand met de kolomkop `track_id` werkt nog (trackStore.ts). Geschreven wordt alleen de nieuwe. */
 export const LEGACY_TRACK_ID_KEY = "track_id";
 
+/** Het veld met de eigen artiest-ID's van een track (zie artistIds.ts). Hier en niet in artistIds.ts,
+ *  omdat trackIds.ts het ook nodig heeft en artistIds.ts trackIds.ts al importeert. */
+export const ARTIST_IDS_KEY = "dkj_artist_ids";
+
 export const TRACK_FIELDS: readonly FieldDef[] = [
   { key: "spotify_track_id", type: "text", label: "Spotify-track-ID (het deel na spotify:track:)" },
   { key: "title", type: "text", label: "Titel" },
