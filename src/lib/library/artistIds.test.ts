@@ -3,10 +3,16 @@ import os from "os";
 import path from "path";
 import { describe, expect, it } from "vitest";
 import { openLibraryDb } from "./db";
-import { applyArtistIdsFromSnapshot, artistPrefix, formatArtistId, planArtistIds } from "./artistIds";
+import {
+  applyArtistIdsFromSnapshot,
+  applyLibraryIdsFromSnapshot,
+  artistPrefix,
+  formatArtistId,
+  planArtistIds,
+} from "./artistIds";
 import { exportLibrary, restoreLibrary } from "./libraryFile";
 import { applyTrackIdsFromSnapshot } from "./trackIds";
-import { getTrack, upsertTracks } from "./trackStore";
+import { getTrack, listTracks, upsertTracks } from "./trackStore";
 import type { Playlist, Snapshot, Track } from "@/lib/spotify/types";
 
 function track(id: string, name: string, artists: [string, string][]): Track {
@@ -115,29 +121,47 @@ describe("applyArtistIdsFromSnapshot", () => {
     track("t3", "Valerie", [["a2", "Mark Ronson"], ["a5", "Amy Winehouse"]])
   );
 
-  it("vult dkj_artist_ids per track, hoofdartiest eerst, en doet bij opnieuw draaien niets", () => {
+  it("geeft nieuwe tracks hun ID en dkj_artist_ids in één keer, en doet bij opnieuw draaien niets", () => {
     const db = memoryDb();
-    applyTrackIdsFromSnapshot(db, snap);
-    expect(applyArtistIdsFromSnapshot(db, snap)).toEqual({ newArtists: 3, tracksFilled: 2, totalArtists: 3 });
-    expect(getTrack(db, "T000001")?.dkj_artist_ids).toEqual(["MAR01", "BRU01"]);
-    expect(getTrack(db, "T000002")?.dkj_artist_ids).toEqual(["MAR01", "AMY01"]);
-    expect(applyArtistIdsFromSnapshot(db, snap)).toEqual({ newArtists: 0, tracksFilled: 0, totalArtists: 3 });
+    const first = applyLibraryIdsFromSnapshot(db, snap);
+    expect(first.artists).toEqual({ newArtists: 3, tracksFilled: 0, totalArtists: 3 });
+    expect(first.tracks.newTracks).toBe(2);
+    expect(getTrack(db, "MAR01-01")?.dkj_artist_ids).toEqual(["MAR01", "BRU01"]);
+    expect(getTrack(db, "MAR01-02")?.dkj_artist_ids).toEqual(["MAR01", "AMY01"]);
+    const again = applyLibraryIdsFromSnapshot(db, snap);
+    expect([again.artists.newArtists, again.renumbered, again.tracks.newTracks]).toEqual([0, 0, 0]);
+  });
+
+  it("vult dkj_artist_ids bij bestaande tracks die het nog niet hadden, hoofdartiest eerst", () => {
+    const db = memoryDb();
+    applyTrackIdsFromSnapshot(db, snap, new Map()); // tracks van vóór de artiest-ID's: XXX00-NN
+    expect(applyArtistIdsFromSnapshot(db, snap).tracksFilled).toBe(2);
+    expect(getTrack(db, "XXX00-01")?.dkj_artist_ids).toEqual(["MAR01", "BRU01"]);
   });
 
   it("laat een zelf ingevulde dkj_artist_ids staan", () => {
     const db = memoryDb();
-    applyTrackIdsFromSnapshot(db, snap);
-    upsertTracks(db, [{ dkj_track_id: "T000001", dkj_artist_ids: ["ZZZ01"] }]);
+    applyTrackIdsFromSnapshot(db, snap, new Map());
+    upsertTracks(db, [{ dkj_track_id: "XXX00-01", dkj_artist_ids: ["ZZZ01"] }]);
     applyArtistIdsFromSnapshot(db, snap);
-    expect(getTrack(db, "T000001")?.dkj_artist_ids).toEqual(["ZZZ01"]);
+    expect(getTrack(db, "XXX00-01")?.dkj_artist_ids).toEqual(["ZZZ01"]);
+  });
+
+  it("nummert oude T-ID's om zodra de artiesten bekend zijn", () => {
+    const db = memoryDb();
+    applyTrackIdsFromSnapshot(db, snap, new Map());
+    db.exec("UPDATE spotify_track_ids SET dkj_track_id = REPLACE(dkj_track_id, 'XXX00-0', 'T00000')");
+    db.exec("UPDATE tracks SET dkj_track_id = REPLACE(dkj_track_id, 'XXX00-0', 'T00000')");
+    const result = applyLibraryIdsFromSnapshot(db, snap);
+    expect(result.renumbered).toBe(2);
+    expect(listTracks(db).map((t) => t.dkj_track_id)).toEqual(["MAR01-01", "MAR01-02"]);
   });
 
   it("gaat mee in de export, en een export van vóór de artiesten zet gewoon terug", () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "artist-ids-"));
     try {
       const db = memoryDb();
-      applyTrackIdsFromSnapshot(db, snap);
-      applyArtistIdsFromSnapshot(db, snap);
+      applyLibraryIdsFromSnapshot(db, snap);
       exportLibrary(db, dir);
       expect(fs.readFileSync(path.join(dir, "artists.ndjson"), "utf8").trim().split("\n")).toHaveLength(3);
 

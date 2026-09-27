@@ -6,9 +6,8 @@
 // De sync op /spotify doet dit na elke run zelf; dit script is er voor een bestaande snapshot, of om
 // het los na te lopen. Opnieuw draaien is veilig: wat al een ID heeft, houdt dat. Hoe het werkt staat
 // in src/lib/library/trackIds.ts; hoe de ID's met de repo meereizen in src/lib/library/libraryFile.ts.
-import { applyArtistIdsFromSnapshot } from "../../src/lib/library/artistIds";
+import { applyLibraryIdsFromSnapshot } from "../../src/lib/library/artistIds";
 import { withLibrary } from "../../src/lib/library/libraryFile";
-import { applyTrackIdsFromSnapshot } from "../../src/lib/library/trackIds";
 import { countTracks } from "../../src/lib/library/trackStore";
 import { readSnapshot } from "../../src/lib/spotify/snapshotStore";
 
@@ -19,11 +18,12 @@ if (!snapshot) {
 }
 
 try {
-  const { newTracks, newLinks, totalLinks, total, artists } = withLibrary((db) => ({
-    ...applyTrackIdsFromSnapshot(db, snapshot),
-    artists: applyArtistIdsFromSnapshot(db, snapshot),
+  const { tracks, artists, renumbered, total } = withLibrary((db) => ({
+    ...applyLibraryIdsFromSnapshot(db, snapshot),
     total: countTracks(db),
   }));
+  const { newTracks, newLinks, totalLinks } = tracks;
+  if (renumbered > 0) console.log(`${renumbered} tracks van een oud ID (T000001) naar het nieuwe formaat omgenummerd`);
   console.log(
     `${newTracks} nieuwe nummers, ${newLinks} Spotify-ID's gekoppeld -- ` +
       `${total} tracks, ${totalLinks} Spotify-ID's in totaal`

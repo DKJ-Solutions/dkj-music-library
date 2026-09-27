@@ -20,11 +20,17 @@
 import type { DatabaseSync } from "node:sqlite";
 import type { Snapshot } from "@/lib/spotify/types";
 import { TRACKS_TABLE } from "./db";
-import { TRACK_ID_KEY } from "./fields";
-import { SPOTIFY_LINK_TABLE, ensureSpotifyLinkTable } from "./trackIds";
+import { ARTIST_IDS_KEY, TRACK_ID_KEY } from "./fields";
+import {
+  SPOTIFY_LINK_TABLE,
+  applyTrackIdsFromSnapshot,
+  ensureSpotifyLinkTable,
+  renumberLegacyTrackIds,
+  type TrackIdResult,
+} from "./trackIds";
 
 export const ARTISTS_TABLE = "artists";
-export const ARTIST_IDS_FIELD = "dkj_artist_ids";
+export const ARTIST_IDS_FIELD = ARTIST_IDS_KEY;
 
 const PREFIX_LENGTH = 3;
 const NUMBER_DIGITS = 2;
@@ -116,7 +122,8 @@ export interface ArtistIdResult {
 }
 
 /** Kent eigen ID's toe aan elke nieuwe artiest in de snapshot en vult `dkj_artist_ids` bij tracks waar
- *  dat nog leeg is. Draai dit ná applyTrackIdsFromSnapshot(): een track moet zijn eigen ID al hebben. */
+ *  dat nog leeg is. Draai dit vóór de track-ID's (zoals applyLibraryIdsFromSnapshot() doet): nieuwe tracks krijgen hun
+ *  dkj_artist_ids dan al bij het aanmaken, en dit vult alleen oudere tracks aan. */
 export function applyArtistIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot): ArtistIdResult {
   ensureArtistsTable(db);
   ensureSpotifyLinkTable(db);
@@ -180,4 +187,32 @@ export function applyArtistIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot)
 
   const total = db.prepare(`SELECT COUNT(*) AS n FROM ${ARTISTS_TABLE}`).get() as { n: number };
   return { newArtists: plan.length, tracksFilled, totalArtists: Number(total.n) };
+}
+
+/** Spotify-artist-id -> eigen artiest-ID, voor trackIds.ts. */
+export function readArtistIdMap(db: DatabaseSync): Map<string, string> {
+  ensureArtistsTable(db);
+  const rows = db.prepare(`SELECT spotify_artist_id, dkj_artist_id FROM ${ARTISTS_TABLE}`).all() as {
+    spotify_artist_id: string;
+    dkj_artist_id: string;
+  }[];
+  return new Map(rows.map((row) => [row.spotify_artist_id, row.dkj_artist_id]));
+}
+
+export interface LibraryIdResult {
+  artists: ArtistIdResult;
+  /** Tracks die in deze run van een oud ID (T000001) naar het nieuwe formaat gingen. */
+  renumbered: number;
+  tracks: TrackIdResult;
+}
+
+/** Alle eigen ID's uit de snapshot, in de volgorde die nodig is: eerst de artiesten (en `dkj_artist_ids`
+ *  bij bestaande tracks), dan het eenmalig omnummeren van oude track-ID's, dan de nieuwe nummers --
+ *  een track-ID begint met het artiest-ID van zijn hoofdartiest. Elke stap is een eigen transactie en
+ *  kan veilig opnieuw draaien: valt een latere stap om, dan maakt de volgende run het af. */
+export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot): LibraryIdResult {
+  const artists = applyArtistIdsFromSnapshot(db, snapshot);
+  const renumbered = renumberLegacyTrackIds(db);
+  const tracks = applyTrackIdsFromSnapshot(db, snapshot, readArtistIdMap(db));
+  return { artists, renumbered, tracks };
 }
