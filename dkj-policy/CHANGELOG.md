@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**27 / 37 minor entries** <!-- pending-tally -->
+**27 / 38 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/orphan-column-warning-once · 20260927-223242Z
+
+De serverconsole herhaalt niet meer bij elke paginalading dat `dkj_artist_ids` en `dkj_playlists` in de database staan maar niet in `fields.ts`. Die melding komt nu één keer per kolom per serverproces. De kolommen zelf en hun data blijven staan, en het schemarapport voor scripts noemt ze nog steeds.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+N/A -- alleen de serverconsole van de eigen dev-server verandert.
+
+**Score:** N/A
+
+#### Pull Request
+
+Waarschuwing over verweesde databasekolommen één keer per serverproces
+
+[PR #41](https://github.com/DKJ-Solutions/dkj-music-library/pull/41)
+
+---
 
 ### DEPLOY: feat/register-column-switch · 20260927-222544Z
 
