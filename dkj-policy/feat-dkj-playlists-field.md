@@ -32,11 +32,24 @@
 
 ### PLAN
 
+Dave wil in het Trackregister per track een link naar de Spotify-playlist, als label met de naam. 5.031
+van de 12.471 tracks staan in meer dan één playlist (tot 12); gekozen: een label per playlist. De
+playlists komen uit de snapshot, en die staat niet in git; om het register op elke machine te laten
+werken, komen ze als veld in de bibliotheek. De repo is publiek en `private-rules.json` houdt namen van
+mensen en gelegenheden juist buiten git; Dave koos er bewust voor alle playlistnamen in de export te
+zetten, ook die uit de wereld Privé.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `playlistLinks.ts`: per track de playlists `{ id, name }` in snapshot-volgorde, zonder dubbelen; bij elke sync ververst, alleen wat verandert
+- [x] `dkj_playlists` in `fields.ts`, aangesloten op `applyLibraryIdsFromSnapshot`
+- [x] Alle 12.471 tracks gevuld uit de snapshot (`npm run library:assign-ids`)
+- [x] README, met de waarschuwing dat de namen publiek zijn
 
 ### TEST
+
+- [x] typecheck, eslint en vitest groen, met `playlistLinks.test.ts`
+- [x] Tweede run van `library:assign-ids` verandert niets
 
 ### DEPLOY: feat/dkj-playlists-field
 
@@ -44,7 +57,12 @@
 
 ##### Tier 0
 
-**Score:**
+Elke track krijgt `dkj_playlists`: de Spotify-playlists waarin hij staat, met ID en naam. Het veld
+wordt bij elke sync ververst, en staat in de export in git, dus het register kan de playlists op elke
+machine als link tonen. De playlistnamen zijn daarmee publiek, ook die uit de wereld Privé; daar is
+bewust voor gekozen.
+
+**Score:** 3
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +71,9 @@
 
 ##### Tier 1
 
-**Score:**
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +82,9 @@
 
 ##### Tier 2
 
-**Score:**
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
 
 #### Pull Request
 
