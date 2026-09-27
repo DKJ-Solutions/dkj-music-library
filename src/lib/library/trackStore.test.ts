@@ -1,4 +1,7 @@
-import { describe, expect, it } from "vitest";
+import fs from "fs";
+import os from "os";
+import path from "path";
+import { describe, expect, it, vi } from "vitest";
 import { openLibraryDb, syncSchema } from "./db";
 import { DKJ_ALBUM_OPTIONS, TRACK_FIELDS, validateFields, type FieldDef } from "./fields";
 import { parseImportText } from "./importFile";
@@ -67,6 +70,25 @@ describe("syncSchema", () => {
   it("laat een weggehaald veld en zijn data staan, en meldt het", () => {
     const db = memoryDb([...base, { key: "oud", type: "text", label: "" }]);
     expect(syncSchema(db, base).orphaned).toEqual(["oud"]);
+  });
+
+  it("meldt een verweesde kolom één keer per proces, niet bij elke opening", () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "library-db-"));
+    const file = path.join(dir, "library.db");
+    const column = `verweesd_${Date.now()}`;
+    openLibraryDb(file, [...base, { key: column, type: "text", label: "" }]).db.close();
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      for (let i = 0; i < 3; i++) {
+        const { db, schema } = openLibraryDb(file, base);
+        expect(schema.orphaned).toEqual([column]); // het rapport blijft het elke keer noemen
+        db.close();
+      }
+      expect(warn.mock.calls.filter(([message]) => String(message).includes(column))).toHaveLength(1);
+    } finally {
+      warn.mockRestore();
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
   });
 });
 

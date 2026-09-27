@@ -39,19 +39,28 @@
 
 ### PLAN
 
+- [x] Oorzaak nagelezen: `openLibraryDb()` waarschuwt bij elke opening, en elke request op `/spotify/trackregister` opent de database; de oude kolommen `dkj_artist_ids` en `dkj_playlists` blijven bewust staan (syncSchema verwijdert nooit).
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `db.ts`: één melding per verweesde kolom per proces; `schema.orphaned` blijft elke opening volledig, zodat scripts het nog steeds kunnen melden.
 
 ### TEST
 
+- [x] Test in `trackStore.test.ts`: drie openingen van één database, één waarschuwing, het rapport noemt de kolom elke keer.
+- [x] vitest (792), tsc en eslint groen.
+
 ### DEPLOY: fix/orphan-column-warning-once
 
-**Score:**
+De serverconsole herhaalt niet meer bij elke paginalading dat `dkj_artist_ids` en `dkj_playlists` in de database staan maar niet in `fields.ts`. Die melding komt nu één keer per kolom per serverproces. De kolommen zelf en hun data blijven staan, en het schemarapport voor scripts noemt ze nog steeds.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A -- alleen de serverconsole van de eigen dev-server verandert.
+
+**Score:** N/A
 
 #### Pull Request
 
