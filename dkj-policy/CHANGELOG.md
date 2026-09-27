@@ -2,7 +2,40 @@
 
 ## [Unreleased]
 
-**15 patch entries** <!-- pending-tally -->
+**16 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/dkj-playlists-field · 20260927-175945Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+Elke track krijgt `dkj_playlists`: de Spotify-playlists waarin hij staat, met ID en naam. Het veld
+wordt bij elke sync ververst, en staat in de export in git, dus het register kan de playlists op elke
+machine als link tonen. De playlistnamen zijn daarmee publiek, ook die uit de wereld Privé; daar is
+bewust voor gekozen.
+
+**Score:** 3
+
+##### Tier 1
+
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
+
+##### Tier 2
+
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
+
+#### Pull Request
+
+Trackregister krijgt de kolom dkj_playlists (de playlists waarin een track staat)
+
+[PR #19](https://github.com/DKJ-Solutions/dkj-music-library/pull/19)
+
+---
 
 ### DEPLOY: feat/dkj-file-field · 20260927-174510Z
 
