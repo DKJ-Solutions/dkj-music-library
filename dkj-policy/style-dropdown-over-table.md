@@ -39,19 +39,33 @@
 
 ### PLAN
 
+Oorzaak: `.register-menu-list` stond `absolute` binnen `.register-table-box`, dat `overflow: auto` heeft, dus
+het menu werd afgekapt door de rand van het scrollvak. Een hogere `z-index` lost dat niet op.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `Dropdown` (TrackRegister.tsx) rendert de lijst via een portal op `<body>` met `position: fixed`, geplaatst naast de knop; klapt naar boven open als er onder te weinig ruimte is
+- [x] Sluit bij scrollen van tabel of pagina en bij een andere venstermaat (de plek klopt dan niet meer); scrollen in het menu zelf laat het open
+- [x] `_track-register.scss`: `.register-menu-list` op `position: fixed; z-index: 100`
 
 ### TEST
 
+- [x] `tsc --noEmit`, eslint en vitest (769) groen
+- [~] Visuele controle in de browser -- de browserextensie was niet verbonden; Dave beoordeelt het zelf (zichtbaar resultaat, PR wacht op zijn woord)
+
 ### DEPLOY: style/dropdown-over-table
 
-**Score:**
+De dropdownmenu's in het Trackregister (playlists, artiest-ID's, groepen) liggen nu altijd over de tabel
+heen in plaats van afgekapt te worden door het scrollvak. Het menu staat in een portal met
+`position: fixed` naast zijn knop, en klapt onderin beeld naar boven open.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A -- de Trackregister is een intern beheerscherm; geen abonnee ziet het.
+
+**Score:** N/A
 
 #### Pull Request
 
