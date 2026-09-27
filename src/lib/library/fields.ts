@@ -30,6 +30,9 @@ export interface FieldDef {
   label: string;
   /** Vorige naam van dit veld, als het hernoemd is (zie de regels hierboven). */
   renamedFrom?: string;
+  /** Alleen bij type text: de enige toegestane waarden. Een andere waarde is een invoerfout; hoofdletters
+   *  en spaties tellen niet mee ("128 bpm" wordt "128BPM"). Opgeslagen wordt altijd de spelling hier. */
+  options?: readonly string[];
 }
 
 /** De sleutel van elke track: jouw eigen gegenereerde ID. Geen apart veld in TRACK_FIELDS, omdat hij
@@ -45,6 +48,17 @@ export const LEGACY_TRACK_ID_KEY = "track_id";
  *  omdat trackIds.ts het ook nodig heeft en artistIds.ts trackIds.ts al importeert. */
 export const ARTIST_IDS_KEY = "dkj_artist_ids";
 
+/** Het veld met precies één artiest: de eerste uit `artists` (zie fillPrimaryArtists in artistIds.ts). */
+export const PRIMARY_ARTIST_KEY = "dkj_artist";
+
+/** De acht kleuren van de eigen albums. */
+export const DKJ_ALBUM_COLOURS = ["Green", "Yellow", "Red", "Purple", "Cyan", "Blue", "Orange", "Magenta"] as const;
+
+/** Elk eigen album: een kleur, Light of Full, en (f) of (m) -- bv. "Green Light (f)". */
+export const DKJ_ALBUM_OPTIONS: readonly string[] = DKJ_ALBUM_COLOURS.flatMap((colour) =>
+  ["Light (f)", "Full (f)", "Light (m)", "Full (m)"].map((variant) => `${colour} ${variant}`)
+);
+
 export const TRACK_FIELDS: readonly FieldDef[] = [
   { key: "spotify_track_id", type: "text", label: "Spotify-track-ID (het deel na spotify:track:)" },
   { key: "title", type: "text", label: "Titel" },
@@ -58,11 +72,24 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
   { key: "tags", type: "json", label: "Eigen tags, als lijst" },
   { key: "notes", type: "text", label: "Vrije notities" },
   { key: "dkj_artist_ids", type: "json", label: "Eigen artiest-ID's (tabel artists, zie artistIds.ts), hoofdartiest eerst" },
+  {
+    key: "dkj_bpm",
+    type: "text",
+    label: "Eigen BPM-groep",
+    options: ["128BPM", "112BPM", "176BPM", "144BPM", "96BPM"],
+  },
+  { key: "dkj_album", type: "text", label: "Eigen album (kleur, Light/Full, f/m)", options: DKJ_ALBUM_OPTIONS },
+  { key: "dkj_artist", type: "text", label: "Eén artiest: de eerste uit artists, tenzij zelf ingevuld" },
   // Nieuw veld? Voeg het hier toe, bv.:
   // { key: "energy", type: "integer", label: "Energie 1-10" },
 ];
 
 const KEY_SHAPE = /^[a-z][a-z0-9_]*$/;
+
+/** Hoe een invoerwaarde met een optie vergeleken wordt: zonder spaties en hoofdletterongevoelig. */
+export function optionKey(value: string): string {
+  return value.replace(/\s+/g, "").toUpperCase();
+}
 
 /** Kolommen die de database zelf bijhoudt; die mogen niet als veld gedefinieerd worden. */
 export const SYSTEM_COLUMNS = [TRACK_ID_KEY, "created_at", "updated_at"] as const;
@@ -81,6 +108,15 @@ export function validateFields(fields: readonly FieldDef[]): void {
     seen.add(field.key);
     if (field.renamedFrom !== undefined && !KEY_SHAPE.test(field.renamedFrom)) {
       throw new Error(`renamedFrom ${JSON.stringify(field.renamedFrom)} is geen geldige veldnaam`);
+    }
+    if (field.options !== undefined) {
+      if (field.type !== "text") {
+        throw new Error(`veld ${JSON.stringify(field.key)}: options kan alleen bij type text`);
+      }
+      const keys = field.options.map(optionKey);
+      if (keys.length === 0 || keys.includes("") || new Set(keys).size !== keys.length) {
+        throw new Error(`veld ${JSON.stringify(field.key)}: options moet gevuld zijn, zonder lege of dubbele waarden`);
+      }
     }
   }
 }

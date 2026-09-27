@@ -15,12 +15,15 @@
 // Elke track krijgt in `dkj_artist_ids` de lijst eigen artiest-ID's, hoofdartiest eerst, maar alleen
 // zolang dat veld nog leeg is: wat je zelf invult, blijft staan.
 //
+// En elke track krijgt in `dkj_artist` één artiest: de eerste uit `artists` (de hoofdartiest), ook
+// weer alleen zolang dat veld leeg is -- zie fillPrimaryArtists().
+//
 // planArtistIds() is puur (geen database) en daardoor los te testen; applyArtistIdsFromSnapshot()
 // voert het plan uit, in één transactie.
 import type { DatabaseSync } from "node:sqlite";
 import type { Snapshot } from "@/lib/spotify/types";
 import { TRACKS_TABLE } from "./db";
-import { ARTIST_IDS_KEY, TRACK_ID_KEY } from "./fields";
+import { ARTIST_IDS_KEY, PRIMARY_ARTIST_KEY, TRACK_ID_KEY } from "./fields";
 import {
   SPOTIFY_LINK_TABLE,
   applyTrackIdsFromSnapshot,
@@ -199,8 +202,23 @@ export function readArtistIdMap(db: DatabaseSync): Map<string, string> {
   return new Map(rows.map((row) => [row.spotify_artist_id, row.dkj_artist_id]));
 }
 
+/** Vult `dkj_artist` met de eerste naam uit `artists`, bij elke track waar het nog leeg is. Geeft het
+ *  aantal gevulde tracks terug. Een track zonder artiesten blijft leeg. */
+export function fillPrimaryArtists(db: DatabaseSync): number {
+  const first = `json_extract(artists, '$[0]')`;
+  const result = db
+    .prepare(
+      `UPDATE ${TRACKS_TABLE} SET "${PRIMARY_ARTIST_KEY}" = ${first}, updated_at = ? ` +
+        `WHERE "${PRIMARY_ARTIST_KEY}" IS NULL AND json_valid(artists) AND json_type(artists, '$[0]') = 'text'`
+    )
+    .run(new Date().toISOString());
+  return Number(result.changes);
+}
+
 export interface LibraryIdResult {
   artists: ArtistIdResult;
+  /** Tracks die in deze run hun `dkj_artist` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
+  primaryArtistsFilled: number;
   /** Tracks die in deze run van een oud ID (T000001) naar het nieuwe formaat gingen. */
   renumbered: number;
   tracks: TrackIdResult;
@@ -214,5 +232,6 @@ export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot
   const artists = applyArtistIdsFromSnapshot(db, snapshot);
   const renumbered = renumberLegacyTrackIds(db);
   const tracks = applyTrackIdsFromSnapshot(db, snapshot, readArtistIdMap(db));
-  return { artists, renumbered, tracks };
+  const primaryArtistsFilled = fillPrimaryArtists(db);
+  return { artists, primaryArtistsFilled, renumbered, tracks };
 }

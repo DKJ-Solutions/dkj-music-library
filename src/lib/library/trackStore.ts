@@ -9,7 +9,7 @@
 // SERVER-ONLY: werkt op een DatabaseSync uit db.ts.
 import type { DatabaseSync, SQLInputValue } from "node:sqlite";
 import { TRACKS_TABLE } from "./db";
-import { LEGACY_TRACK_ID_KEY, TRACK_FIELDS, TRACK_ID_KEY, type FieldDef } from "./fields";
+import { LEGACY_TRACK_ID_KEY, TRACK_FIELDS, TRACK_ID_KEY, optionKey, type FieldDef } from "./fields";
 
 export type TrackValue = string | number | boolean | null | unknown[] | Record<string, unknown>;
 
@@ -37,10 +37,17 @@ export function toSqlValue(field: FieldDef, value: TrackValue | undefined): SQLI
   if (typeof value === "string" && value.trim() === "") return null;
 
   switch (field.type) {
-    case "text":
-      if (typeof value === "string") return value;
-      if (typeof value === "number" || typeof value === "boolean") return String(value);
-      break;
+    case "text": {
+      const text =
+        typeof value === "string" ? value : typeof value === "number" || typeof value === "boolean" ? String(value) : null;
+      if (text === null) break;
+      if (field.options === undefined) return text;
+      const match = field.options.find((option) => optionKey(option) === optionKey(text));
+      if (match !== undefined) return match;
+      throw new TrackInputError(
+        `veld "${field.key}" kent alleen ${field.options.join(", ")}, kreeg ${JSON.stringify(value)}`
+      );
+    }
     case "integer":
     case "real": {
       const n = typeof value === "string" ? Number(value.trim().replace(",", ".")) : value;

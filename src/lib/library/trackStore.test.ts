@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { openLibraryDb, syncSchema } from "./db";
-import { TRACK_FIELDS, validateFields, type FieldDef } from "./fields";
+import { DKJ_ALBUM_OPTIONS, TRACK_FIELDS, validateFields, type FieldDef } from "./fields";
 import { parseImportText } from "./importFile";
 import {
   countTracks,
@@ -23,6 +23,18 @@ describe("het schema in fields.ts", () => {
     expect(() => validateFields([{ key: "bpm", type: "real", label: "" }, { key: "bpm", type: "real", label: "" }])).toThrow();
     expect(() => validateFields([{ key: "dkj_track_id", type: "text", label: "" }])).toThrow();
     expect(() => validateFields([{ key: "Mijn Veld", type: "text", label: "" }])).toThrow();
+  });
+
+  it("kent 32 eigen albums: 8 kleuren, elk Light/Full en f/m", () => {
+    expect(DKJ_ALBUM_OPTIONS).toHaveLength(32);
+    expect(DKJ_ALBUM_OPTIONS.slice(0, 4)).toEqual(["Green Light (f)", "Green Full (f)", "Green Light (m)", "Green Full (m)"]);
+    expect(DKJ_ALBUM_OPTIONS).toContain("Magenta Full (m)");
+  });
+
+  it("weigert options buiten type text, en lege of dubbele options", () => {
+    expect(() => validateFields([{ key: "x", type: "real", label: "", options: ["1"] }])).toThrow();
+    expect(() => validateFields([{ key: "x", type: "text", label: "", options: [] }])).toThrow();
+    expect(() => validateFields([{ key: "x", type: "text", label: "", options: ["96BPM", "96 bpm"] }])).toThrow();
   });
 });
 
@@ -124,6 +136,15 @@ describe("toSqlValue", () => {
     expect(() => toSqlValue(field("integer"), "12.5")).toThrow(TrackInputError);
     expect(() => toSqlValue(field("real"), "snel")).toThrow(TrackInputError);
     expect(() => toSqlValue(field("boolean"), "misschien")).toThrow(TrackInputError);
+  });
+
+  it("houdt een veld met options aan die lijst, in de spelling van de lijst", () => {
+    const bpm: FieldDef = { key: "dkj_bpm", type: "text", label: "", options: ["128BPM", "96BPM"] };
+    expect(toSqlValue(bpm, "128BPM")).toBe("128BPM");
+    expect(toSqlValue(bpm, " 96 bpm ")).toBe("96BPM");
+    expect(toSqlValue(bpm, "")).toBeNull();
+    expect(() => toSqlValue(bpm, "130BPM")).toThrow(TrackInputError);
+    expect(() => toSqlValue(bpm, 128)).toThrow(TrackInputError);
   });
 });
 
