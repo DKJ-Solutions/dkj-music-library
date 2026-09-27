@@ -199,7 +199,10 @@ regels staan in `src/lib/library/playlistLinks.ts`.
 `dkj_bpm` en `dkj_album` accepteren alleen hun eigen opties; elke andere waarde breekt de import af.
 Hoofdletters en spaties tellen niet mee (`128 bpm` wordt `128BPM`).
 
-- **`dkj_bpm`**: `128BPM`, `112BPM`, `176BPM`, `144BPM`, `96BPM`.
+- **`dkj_bpm`**: `128BPM`, `112BPM`, `176BPM`, `144BPM`, `96BPM`. Het veld wordt bij elke sync uit de
+  playlists afgeleid zolang het leeg is: een BPM in de naam (`128BPM EDM`), House Mix is 128, Drum &
+  Bass en D&B/DNB zijn 176. Noemen de playlists verschillende BPM's, dan wint de meest genoemde; bij
+  een gelijke stand blijft het leeg (`src/lib/library/bpmFromPlaylists.ts`).
 - **`dkj_album`**: een kleur met `Light (f)`, `Full (f)`, `Light (m)` of `Full (m)`, bijvoorbeeld
   `Green Light (f)`. De acht kleuren zijn Green, Yellow, Red, Purple, Cyan, Blue, Orange en Magenta.
   Het veld wordt bij elke sync uit de playlists afgeleid zolang het leeg is: noemen alle playlists van

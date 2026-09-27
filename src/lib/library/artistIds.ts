@@ -26,8 +26,19 @@
 import type { DatabaseSync } from "node:sqlite";
 import type { Snapshot } from "@/lib/spotify/types";
 import { TRACKS_TABLE } from "./db";
-import { ALBUM_ARTIST_KEY, ALBUM_KEY, ARTIST_IDS_KEY, FILE_KEY, PLAYLISTS_KEY, PRIMARY_ARTIST_KEY, TRACK_ID_KEY, albumArtistOf } from "./fields";
+import {
+  ALBUM_ARTIST_KEY,
+  ALBUM_KEY,
+  ARTIST_IDS_KEY,
+  BPM_KEY,
+  FILE_KEY,
+  PLAYLISTS_KEY,
+  PRIMARY_ARTIST_KEY,
+  TRACK_ID_KEY,
+  albumArtistOf,
+} from "./fields";
 import { albumFromPlaylists } from "./albumFromPlaylists";
+import { bpmFromPlaylists } from "./bpmFromPlaylists";
 import { fileNameOf } from "./fileName";
 import { applyPlaylistLinks } from "./playlistLinks";
 import { primaryArtistOf } from "./primaryArtist";
@@ -304,8 +315,16 @@ export function fillAlbumsFromPlaylists(db: DatabaseSync): number {
   return fillMissing(db, ALBUM_KEY, (track) => albumFromPlaylists(track.playlists));
 }
 
+/** Vult `dkj_bpm` uit de playlists (bpmFromPlaylists.ts) bij elke track waar het nog leeg is. Geeft het
+ *  aantal gevulde tracks terug. */
+export function fillBpmsFromPlaylists(db: DatabaseSync): number {
+  return fillMissing(db, BPM_KEY, (track) => bpmFromPlaylists(track.playlists));
+}
+
 export interface LibraryIdResult {
   artists: ArtistIdResult;
+  /** Tracks die in deze run hun `dkj_bpm` uit de playlists kregen. */
+  bpmsFilled: number;
   /** Tracks die in deze run hun `dkj_album` uit de playlists kregen. */
   albumsFilled: number;
   /** Tracks die in deze run hun `dkj_file` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
@@ -333,7 +352,8 @@ export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot
   const albumArtistsFilled = fillAlbumArtists(db);
   const fileNamesFilled = fillFileNames(db);
   const playlistsChanged = applyPlaylistLinks(db, snapshot);
-  // Na de playlists: het album wordt uit hun namen afgeleid.
+  // Na de playlists: het album en de BPM worden uit hun namen afgeleid.
   const albumsFilled = fillAlbumsFromPlaylists(db);
-  return { albumArtistsFilled, albumsFilled, artists, fileNamesFilled, playlistsChanged, primaryArtistsFilled, renumbered, tracks };
+  const bpmsFilled = fillBpmsFromPlaylists(db);
+  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, playlistsChanged, primaryArtistsFilled, renumbered, tracks };
 }
