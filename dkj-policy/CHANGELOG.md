@@ -2,7 +2,44 @@
 
 ## [Unreleased]
 
-**4 patch entries** <!-- pending-tally -->
+**5 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/track-ids · 20260927-093930Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+Elk nummer uit de Spotify-snapshot krijgt een eigen, oplopend ID (`T000001`) in de trackdatabase.
+Releasevarianten met dezelfde titel en precies dezelfde artiesten krijgen hetzelfde ID. De nieuwe
+koppeltabel `spotify_track_ids` houdt de ID's stabiel over syncs heen: een nieuwe variant van een bekend
+nummer krijgt het bestaande ID, en alleen een echt nieuw nummer krijgt het volgende vrije nummer. Een
+nieuw nummer wordt aangemaakt met titel, artiesten, album en duur van Spotify. Bestaande rijen worden
+daarna nooit meer overschreven. Dit gebeurt na elke sync op `/spotify`, en los via
+`npm run library:assign-ids`. Op de huidige snapshot levert dat 12.471 nummers op, uit 13.140
+Spotify-ID's.
+
+**Score:** 3
+
+##### Tier 1
+
+Een lokale, persoonlijke tool: er is geen management of opdrachtgever die hier iets aan heeft.
+
+**Score:** N/A
+
+##### Tier 2
+
+De app heeft geen abonnees: hij draait alleen op de eigen machine.
+
+**Score:** N/A
+
+#### Pull Request
+
+Give every Spotify track its own ID (T000001), one per song
+
+[PR #7](https://github.com/DKJ-Solutions/dkj-music-library/pull/7)
+
+---
 
 ### DEPLOY: feature/track-library-db · 20260927-075255Z
 
