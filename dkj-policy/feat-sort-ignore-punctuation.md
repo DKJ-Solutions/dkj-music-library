@@ -39,19 +39,31 @@
 
 ### PLAN
 
+- [x] Vinden waar tekst alfabetisch gesorteerd wordt: `src/lib/sortRows.ts` (playlists, ontbrekende mixen) en `src/lib/library/register.ts` (trackregister)
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `compareText` in `sortRows.ts`: leestekens (`\p{P}`, dus ook `'`, `...` en `(`) weg voor de collatie, spaties blijven staan
+- [x] Het trackregister gebruikt dezelfde `compareText` in plaats van een eigen collator
 
 ### TEST
 
+- [x] Tests in `register.test.ts`: `'`, `...` en `(` tellen niet mee, spaties wel; de hele vitest-suite en `tsc` zijn groen
+
 ### DEPLOY: feat/sort-ignore-punctuation
 
-**Score:**
+Bij het sorteren van A naar Z tellen leestekens niet meer mee. `'Til Tuesday` staat bij de T,
+`...Baby One More Time` bij de B en `(Here I Am)` bij de H. Dat geldt voor het trackregister en de
+tabellen op /spotify, die nu één vergelijkingsfunctie delen (`compareText` in `src/lib/sortRows.ts`).
+Spaties tellen wel mee, zodat "De La Soul" niet samenvalt met "Dela".
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie op een titelkolom sorteert, vindt een titel die met een leesteken begint voortaan onder zijn eerste letter in plaats van bovenaan de lijst.
+
+**Score:** 3
 
 #### Pull Request
 

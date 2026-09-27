@@ -10,6 +10,7 @@ import { albumsOfPlaylists } from "./albumFromPlaylists";
 import type { DjcylowMixLink } from "./djcylowMix";
 import type { PlaylistLink } from "./playlistLink";
 import type { StoredTrack } from "./trackStore";
+import { compareText } from "@/lib/sortRows";
 
 export interface RegisterRow {
   id: string;
@@ -139,8 +140,6 @@ export interface RegisterSort {
   dir: "asc" | "desc";
 }
 
-// Numeriek, zodat 96BPM voor 112BPM komt en PRO2 voor PRO10; hoofdletters en accenten tellen niet.
-const collator = new Intl.Collator("nl", { numeric: true, sensitivity: "base" });
 
 /** De tekst waarop een rij sorteert; een lijst op zijn waarden achter elkaar, null als er niets staat. */
 function sortValue(row: RegisterRow, key: SortKey): string | null {
@@ -167,7 +166,8 @@ export function sortRegister(rows: readonly RegisterRow[], sort: RegisterSort | 
   const keyed = rows.map((row) => ({ row, value: sortValue(row, sort.key) }));
   keyed.sort((a, b) => {
     if (a.value === null || b.value === null) return a.value === b.value ? 0 : a.value === null ? 1 : -1;
-    return sign * collator.compare(a.value, b.value);
+    // Numeriek (96BPM voor 112BPM, PRO2 voor PRO10); hoofdletters, accenten en leestekens tellen niet.
+    return sign * compareText(a.value, b.value);
   });
   return keyed.map((entry) => entry.row);
 }
