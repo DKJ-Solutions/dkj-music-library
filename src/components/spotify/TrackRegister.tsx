@@ -468,12 +468,11 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
           role="switch"
           className="register-column-switch"
           aria-checked={columnSet === "hidden"}
-          aria-label="Verborgen kolommen tonen"
           title="Wissel tussen de zichtbare en de verborgen kolommen"
           onClick={toggleColumns}
         >
-          <span className="pill-toggle" data-active={columnSet === "visible"}>Zichtbare kolommen</span>
-          <span className="pill-toggle" data-active={columnSet === "hidden"}>Verborgen kolommen</span>
+          <span className="register-column-switch-track" aria-hidden="true" />
+          <span>verborgen kolommen</span>
         </button>
         <span className="register-count" aria-live="polite">
           {list.length === rows.length

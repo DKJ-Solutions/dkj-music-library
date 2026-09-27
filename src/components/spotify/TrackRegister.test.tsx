@@ -92,12 +92,11 @@ describe("TrackRegister", () => {
     const headers = () => [...document.querySelectorAll(".register-table thead code")].map((c) => c.textContent);
     const file = "Airdraw, Jo.E & Aaren - Bryde's Whale";
     render(<TrackRegister rows={[row(1, { file })]} artistCount={1} />);
-    const toggle = screen.getByRole("switch", { name: "Verborgen kolommen tonen" });
+    const toggle = screen.getByRole("switch", { name: "verborgen kolommen" });
     expect(toggle.getAttribute("aria-checked")).toBe("false");
     expect(headers()).toContain("dkj_title");
 
-    // Ook een klik op de helft die al aan staat wisselt: het is één switch.
-    fireEvent.click(screen.getByText("Zichtbare kolommen"));
+    fireEvent.click(toggle);
     expect(toggle.getAttribute("aria-checked")).toBe("true");
     expect(headers()).toEqual(["dkj_track_id", "dkj_file", "dkj_artist", "dkj_artist_id"]);
     expect(screen.getByTitle(file)).toBeTruthy();
