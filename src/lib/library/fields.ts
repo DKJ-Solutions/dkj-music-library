@@ -60,6 +60,9 @@ export const FILE_KEY = "dkj_file";
 /** Het veld met de Spotify-playlists waarin een track staat (zie playlistLinks.ts). */
 export const PLAYLISTS_KEY = "spotify_playlist";
 
+/** Het veld met de eigen BPM-groep (zie bpmFromPlaylists.ts). */
+export const BPM_KEY = "dkj_bpm";
+
 /** Hoe de namen in `dkj_albumartiest` aan elkaar staan. */
 export const ALBUM_ARTIST_SEPARATOR = ", ";
 

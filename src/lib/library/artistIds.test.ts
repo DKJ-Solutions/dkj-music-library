@@ -186,6 +186,7 @@ describe("applyArtistIdsFromSnapshot", () => {
     const result = applyLibraryIdsFromSnapshot(db, { syncedAt: "x", playlists: [eenduidig, tweede, anders, ookAnders] });
     expect(result.albumsFilled).toBe(1);
     expect(getTrack(db, "MAR01-BRU01-01")?.dkj_album).toBe("Green Full (f)");
+    expect(getTrack(db, "MAR01-BRU01-01")?.dkj_bpm).toBe("128BPM");
     expect(getTrack(db, "MAR01-AMY01-01")?.dkj_album).toBeNull();
   });
 

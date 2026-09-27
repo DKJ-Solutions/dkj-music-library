@@ -32,11 +32,23 @@
 
 ### PLAN
 
+Dave: vul `dkj_bpm` zoveel mogelijk uit de Spotify-playlists. Gemeten op 12.471 tracks: 6.968 krijgen
+precies één BPM uit hun playlists (een BPM in de naam, of de vaste MMC-regels: House Mix 128, Drum & Bass
+Mix 176), 33 krijgen verschillende BPM's, 5.470 staan alleen in playlists zonder BPM (Top 100, ALT,
+Classic Pop, Feestzaal). Voor "zoveel mogelijk" twee uitbreidingen: D&B/DNB in de naam is 176 (sluit aan
+op Dave's vaste Drum & Bass-regel, +469 tracks), en bij verschillende BPM's wint de meest genoemde, met
+leeg bij een gelijke stand.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `bpmFromPlaylists.ts`: per playlist `classifyMmcBpm`, dan de BPM uit de naam (ook 144), dan D&B/DNB → 176; per track de meest genoemde
+- [x] `fillBpmsFromPlaylists()` in de sync, na het album; alleen zolang `dkj_bpm` leeg is
+- [x] Echte data: 7.454 tracks gevuld (128BPM 3.203, 176BPM 3.612, 112BPM 639)
+- [x] README bijgewerkt
 
 ### TEST
+
+- [x] typecheck, eslint en vitest groen, met `bpmFromPlaylists.test.ts` en een sync-test in `artistIds.test.ts`
 
 ### DEPLOY: feat/dkj-bpm-from-playlists
 
@@ -44,7 +56,12 @@
 
 ##### Tier 0
 
-**Score:**
+`dkj_bpm` wordt nu uit de Spotify-playlists afgeleid: een BPM in de playlistnaam (`128BPM EDM`), House
+Mix is 128, Drum & Bass en D&B/DNB zijn 176. Noemen de playlists verschillende BPM's, dan wint de meest
+genoemde; bij een gelijke stand blijft het leeg. 7.454 van de 12.471 tracks hebben zo hun BPM gekregen;
+de sync doet het voortaan bij elke nieuwe track.
+
+**Score:** 4
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +70,9 @@
 
 ##### Tier 1
 
-**Score:**
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +81,9 @@
 
 ##### Tier 2
 
-**Score:**
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
 
 #### Pull Request
 
