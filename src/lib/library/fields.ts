@@ -30,8 +30,10 @@ export interface FieldDef {
   label: string;
   /** Vorige naam van dit veld, als het hernoemd is (zie de regels hierboven). */
   renamedFrom?: string;
-  /** Alleen bij type text: de enige toegestane waarden. Een andere waarde is een invoerfout; hoofdletters
-   *  en spaties tellen niet mee ("128 bpm" wordt "128BPM"). Opgeslagen wordt altijd de spelling hier. */
+  /** Bij type text: de enige toegestane waarden. Bij type json: de enige toegestane elementen van de
+   *  lijst (dubbelen vallen weg, de volgorde is die van hier). Een andere waarde is een invoerfout;
+   *  hoofdletters en spaties tellen niet mee ("128 bpm" wordt "128BPM"). Opgeslagen wordt altijd de
+   *  spelling hier. */
   options?: readonly string[];
 }
 
@@ -59,6 +61,9 @@ export const FILE_KEY = "dkj_file";
 
 /** Het veld met de Spotify-playlists waarin een track staat (zie playlistLinks.ts). */
 export const PLAYLISTS_KEY = "spotify_playlist";
+
+/** Het veld met de eigen groepen (zie groupFromWorlds.ts). */
+export const GROUP_KEY = "dkj_group";
 
 /** Het veld met de eigen BPM-groep (zie bpmFromPlaylists.ts). */
 export const BPM_KEY = "dkj_bpm";
@@ -111,7 +116,12 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
     label: "Spotify-playlists waarin de track staat, als { id, name }; bij elke sync ververst (playlistLinks.ts)",
     renamedFrom: "dkj_playlists",
   },
-  { key: "dkj_group", type: "text", label: "Eigen groep", options: ["MMC", "DJ CYLOW", "Prive", "Overige"] },
+  {
+    key: "dkj_group",
+    type: "json",
+    label: "Eigen groepen, als lijst: de werelden van de playlists van de track (groupFromWorlds.ts)",
+    options: ["MMC", "DJ CYLOW", "Prive", "Overige"],
+  },
   // Nieuw veld? Voeg het hier toe, bv.:
   // { key: "energy", type: "integer", label: "Energie 1-10" },
 ];
@@ -142,8 +152,8 @@ export function validateFields(fields: readonly FieldDef[]): void {
       throw new Error(`renamedFrom ${JSON.stringify(field.renamedFrom)} is geen geldige veldnaam`);
     }
     if (field.options !== undefined) {
-      if (field.type !== "text") {
-        throw new Error(`veld ${JSON.stringify(field.key)}: options kan alleen bij type text`);
+      if (field.type !== "text" && field.type !== "json") {
+        throw new Error(`veld ${JSON.stringify(field.key)}: options kan alleen bij type text of json`);
       }
       const keys = field.options.map(optionKey);
       if (keys.length === 0 || keys.includes("") || new Set(keys).size !== keys.length) {

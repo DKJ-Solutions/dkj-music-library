@@ -65,6 +65,7 @@ export function toSqlValue(field: FieldDef, value: TrackValue | undefined): SQLI
       }
       break;
     case "json":
+      if (field.options !== undefined) return toOptionList(field, value);
       if (typeof value === "object") return JSON.stringify(value);
       if (typeof value === "string") {
         const trimmed = value.trim();
@@ -83,6 +84,36 @@ export function toSqlValue(field: FieldDef, value: TrackValue | undefined): SQLI
   throw new TrackInputError(
     `veld "${field.key}" verwacht ${field.type}, kreeg ${JSON.stringify(value)}`
   );
+}
+
+/** Een json-veld met options: een lijst waarvan elk element een optie is ("MMC; prive" mag ook, uit een
+ *  CSV). Dubbelen vallen weg en de volgorde wordt die van de options; een lege lijst wordt null. */
+function toOptionList(field: FieldDef, value: TrackValue): SQLInputValue {
+  const options = field.options ?? [];
+  let items: unknown;
+  if (Array.isArray(value)) items = value;
+  else if (typeof value === "string") {
+    const trimmed = value.trim();
+    try {
+      items = trimmed.startsWith("[") ? JSON.parse(trimmed) : trimmed.split(";");
+    } catch {
+      items = null;
+    }
+  }
+  if (!Array.isArray(items)) {
+    throw new TrackInputError(`veld "${field.key}" verwacht een lijst uit ${options.join(", ")}, kreeg ${JSON.stringify(value)}`);
+  }
+  const chosen = new Set<string>();
+  for (const item of items) {
+    if (typeof item === "string" && item.trim() === "") continue;
+    const match = typeof item === "string" ? options.find((option) => optionKey(option) === optionKey(item)) : undefined;
+    if (match === undefined) {
+      throw new TrackInputError(`veld "${field.key}" kent alleen ${options.join(", ")}, kreeg ${JSON.stringify(item)}`);
+    }
+    chosen.add(match);
+  }
+  const list = options.filter((option) => chosen.has(option));
+  return list.length > 0 ? JSON.stringify(list) : null;
 }
 
 /** Het omgekeerde van toSqlValue: de kolomwaarde terug naar de vorm die de app gebruikt. */

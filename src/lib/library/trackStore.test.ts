@@ -33,6 +33,7 @@ describe("het schema in fields.ts", () => {
 
   it("weigert options buiten type text, en lege of dubbele options", () => {
     expect(() => validateFields([{ key: "x", type: "real", label: "", options: ["1"] }])).toThrow();
+    expect(() => validateFields([{ key: "x", type: "json", label: "", options: ["A"] }])).not.toThrow();
     expect(() => validateFields([{ key: "x", type: "text", label: "", options: [] }])).toThrow();
     expect(() => validateFields([{ key: "x", type: "text", label: "", options: ["96BPM", "96 bpm"] }])).toThrow();
   });
@@ -138,11 +139,14 @@ describe("toSqlValue", () => {
     expect(() => toSqlValue(field("boolean"), "misschien")).toThrow(TrackInputError);
   });
 
-  it("kent voor dkj_group alleen MMC, DJ CYLOW, Prive en Overige", () => {
+  it("kent voor dkj_group een lijst uit MMC, DJ CYLOW, Prive en Overige", () => {
     const group = TRACK_FIELDS.find((f) => f.key === "dkj_group")!;
     expect(group.options).toEqual(["MMC", "DJ CYLOW", "Prive", "Overige"]);
-    expect(toSqlValue(group, "dj cylow")).toBe("DJ CYLOW");
-    expect(() => toSqlValue(group, "Privé")).toThrow(TrackInputError);
+    expect(toSqlValue(group, ["prive", "MMC", "mmc"])).toBe('["MMC","Prive"]');
+    expect(toSqlValue(group, "dj cylow; Prive")).toBe('["DJ CYLOW","Prive"]');
+    expect(toSqlValue(group, [])).toBeNull();
+    expect(() => toSqlValue(group, ["Privé"])).toThrow(TrackInputError);
+    expect(() => toSqlValue(group, 5)).toThrow(TrackInputError);
   });
 
   it("houdt een veld met options aan die lijst, in de spelling van de lijst", () => {
