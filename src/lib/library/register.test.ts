@@ -113,6 +113,36 @@ describe("sortRegister", () => {
     expect(ids(sortRegister(titels, { key: "dkjTitle", dir: "asc" }))).toEqual(["A", "B", "H", "T", "Z"]);
   });
 
+  it("negeert een lidwoord vooraan (A, An, The), maar alleen als los woord", () => {
+    const titels: RegisterRow[] = [
+      { ...base, id: "Beatles", dkjTitle: "The Beatles" },
+      { ...base, id: "Tribe", dkjTitle: "A Tribe Called Quest" },
+      { ...base, id: "Emotion", dkjTitle: "an Emotion" },
+      { ...base, id: "Abba", dkjTitle: "Abba" },
+      { ...base, id: "Aha", dkjTitle: "A-ha" },
+      { ...base, id: "Cure", dkjTitle: "'The Cure'" },
+      { ...base, id: "Theory", dkjTitle: "Theory of a Deadman" },
+    ];
+    expect(ids(sortRegister(titels, { key: "dkjTitle", dir: "asc" }))).toEqual([
+      "Abba",
+      "Aha",
+      "Beatles",
+      "Cure",
+      "Emotion",
+      "Theory",
+      "Tribe",
+    ]);
+  });
+
+  it("laat een titel die alleen uit een lidwoord bestaat staan", () => {
+    const titels: RegisterRow[] = [
+      { ...base, id: "TheThe", dkjTitle: "The The" },
+      { ...base, id: "A", dkjTitle: "A" },
+      { ...base, id: "Zombie", dkjTitle: "Zombie" },
+    ];
+    expect(ids(sortRegister(titels, { key: "dkjTitle", dir: "asc" }))).toEqual(["A", "TheThe", "Zombie"]);
+  });
+
   it("laat spaties wel meetellen: woorden blijven woorden", () => {
     const titels: RegisterRow[] = [
       { ...base, id: "2", dkjTitle: "Dela" },
