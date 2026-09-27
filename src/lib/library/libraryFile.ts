@@ -24,6 +24,14 @@
 // wachten op elkaars database-lock (busy_timeout in db.ts), maar kunnen elkaars export-bestanden
 // overschrijven. Draai een script dus niet terwijl er een sync op /spotify loopt.
 //
+// DE HASH ONTHOUDT OOK DE VELDEN. Wat in library_meta staat, is de hash van de export plus een
+// vingerafdruk van de veldenlijst waarmee de database hem las of schreef. Een restore neemt alleen
+// velden over die in fields.ts staan; draaide die met een oudere veldenlijst (een dev-server die de
+// nieuwe fields.ts nog niet had geladen tijdens een `git pull`), dan ontbreekt er een veld terwijl de
+// hash van de export wel klopt -- en zonder die vingerafdruk bleef dat voor altijd "gelijk". Nu leidt
+// een andere veldenlijst tot een nieuwe restore. Gemeten op 27 september 2026: dkj_playlists stond in
+// de export, maar bij alle 12.471 tracks leeg in de database, met een kloppende hash.
+//
 // Wat NIET meegaat: kolommen die wel in de database staan maar niet (meer) in fields.ts. Die gebruikt
 // de app niet, en op een verse kloon bestaan ze niet.
 //
@@ -61,6 +69,12 @@ function readHash(db: DatabaseSync): string | null {
     | { value: string }
     | undefined;
   return row?.value ?? null;
+}
+
+/** Wat de database over de export onthoudt: de hash, plus een vingerafdruk van de veldenlijst. */
+function syncStamp(hash: string, fields: readonly FieldDef[]): string {
+  const shape = fields.map((field) => `${field.key}:${field.type}`).join(",");
+  return `${hash}+${crypto.createHash("sha256").update(shape).digest("hex").slice(0, 16)}`;
 }
 
 function writeHash(db: DatabaseSync, hash: string): void {
@@ -136,7 +150,7 @@ export function exportLibrary(
   writeAtomic(path.join(dir, ARTISTS_FILE), toLines(artists));
 
   const hash = exportHash(dir)!;
-  writeHash(db, hash);
+  writeHash(db, syncStamp(hash, fields));
   return hash;
 }
 
@@ -225,7 +239,7 @@ export function restoreLibrary(
         requireText(artist, "created_at", where)
       );
     });
-    writeHash(db, hash);
+    writeHash(db, syncStamp(hash, fields));
     db.exec("COMMIT");
   } catch (err) {
     db.exec("ROLLBACK");
@@ -251,7 +265,7 @@ export function syncWithExport(
   }
   const onDisk = exportHash(dir);
   if (onDisk) {
-    if (onDisk === stored) return "in-sync";
+    if (syncStamp(onDisk, fields) === stored) return "in-sync";
     restoreLibrary(db, dir, fields);
     return "restored";
   }

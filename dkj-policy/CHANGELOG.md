@@ -2,7 +2,40 @@
 
 ## [Unreleased]
 
-**16 patch entries** <!-- pending-tally -->
+**17 patch entries** <!-- pending-tally -->
+
+### DEPLOY: fix/library-sync-fields · 20260927-180523Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+De bibliotheek bouwt zich nu opnieuw op uit de export als hij eerder met een andere veldenlijst gelezen
+werd. Daarvoor kon een nieuw veld na een `git pull` voorgoed leeg blijven in de database, terwijl de
+export het wel had: zo was `dkj_playlists` bij alle 12.471 tracks leeg. Elke bestaande database bouwt
+zich bij de eerste opening één keer opnieuw op.
+
+**Score:** 3
+
+##### Tier 1
+
+Intern; management merkt hier niets van.
+
+**Score:** N/A
+
+##### Tier 2
+
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
+
+#### Pull Request
+
+De bibliotheek bouwt zich opnieuw op als de veldenlijst veranderd is
+
+[PR #20](https://github.com/DKJ-Solutions/dkj-music-library/pull/20)
+
+---
 
 ### DEPLOY: feat/dkj-playlists-field · 20260927-175945Z
 
