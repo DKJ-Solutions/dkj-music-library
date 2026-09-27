@@ -2,7 +2,33 @@
 
 ## [Unreleased]
 
-**25 / 33 minor entries** <!-- pending-tally -->
+**26 / 34 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/clean-dkj-title · 20260927-210735Z
+
+`dkj_title` is nu alleen de titel. Generieke versie-aanduidingen en featuring gaan eruit:
+*99 Biker Friends (Main Version) (Explicit)* wordt *99 Biker Friends*, *2 up in the Morning (Radio Mix)* wordt
+*2 up in the Morning* en *Titanium (feat. Sia)* wordt *Titanium*. Een remix van een artiest blijft staan
+(*Higher (David Penn Remix)*), net als wat bij de titel hoort (*(I Can't Get No) Satisfaction*). Een groep
+tussen haakjes is generiek als elk woord erin een versiewoord of een jaartal is (`fileName.ts`).
+Bestaande waarden in de oude afgeleide vorm zijn rechtgezet (1668 tracks) door `refreshTitles`, die ook in
+elke sync meedraait. Een zelf ingevulde titel blijft staan.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+In het trackregister staat voortaan de kale titel, zonder Radio Mix, Remastered of featuring.
+
+**Score:** 3
+
+#### Pull Request
+
+dkj_title zonder versie-aanduiding en featuring
+
+[PR #37](https://github.com/DKJ-Solutions/dkj-music-library/pull/37)
+
+---
 
 ### DEPLOY: feat/sort-ignore-punctuation · 20260927-210219Z
 
