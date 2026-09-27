@@ -2,7 +2,40 @@
 
 ## [Unreleased]
 
-**7 patch entries** <!-- pending-tally -->
+**8 patch entries** <!-- pending-tally -->
+
+### DEPLOY: refactor/dkj-track-id · 20260927-152759Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+`track_id` heet nu `dkj_track_id`: in de database, in de export en als kolomkop voor
+`npm run library:import`. Er is niets te doen: een bestaande database hernoemt de kolom de eerste keer dat
+hij opent, een oude export wordt nog gewoon gelezen, en een importbestand met `track_id` als kolomkop werkt
+nog.
+
+**Score:** 2
+
+##### Tier 1
+
+Een persoonlijke tool zonder opdrachtgever; niemand buiten de ontwikkelaar merkt dit.
+
+**Score:** N/A
+
+##### Tier 2
+
+Er is geen dienst met abonnees.
+
+**Score:** N/A
+
+#### Pull Request
+
+track_id becomes dkj_track_id, with a migration for existing databases, exports and import files
+
+[PR #10](https://github.com/DKJ-Solutions/dkj-music-library/pull/10)
+
+---
 
 ### DEPLOY: feat/artist-ids · 20260927-152121Z
 
