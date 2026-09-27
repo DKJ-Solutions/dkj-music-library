@@ -76,7 +76,7 @@ describe("TrackRegister", () => {
     );
   });
 
-  it("kapt dkj_title af, met de volledige titel als tooltip, en toont dkj_file, dkj_artist, dkj_track_id en dkj_artist_id niet", () => {
+  it("kapt dkj_title af, met de volledige titel als tooltip, en toont dkj_file, dkj_artist, dkj_track_id en dkj_artist_id standaard niet", () => {
     const dkjTitle = "Bryde's Whale (New Ordinance Edit) (Extended Mix)";
     const file = `Airdraw, Jo.E & Aaren - ${dkjTitle}`;
     render(<TrackRegister rows={[row(1, { dkjTitle, file })]} artistCount={1} />);
@@ -86,6 +86,53 @@ describe("TrackRegister", () => {
     expect(screen.queryByRole("button", { name: /^dkj_artist/ })).toBeNull();
     expect(screen.queryByRole("button", { name: /dkj_track_id/ })).toBeNull();
     expect(screen.queryByRole("button", { name: /dkj_artist_id/ })).toBeNull();
+  });
+
+  it("wisselt met de switch naar de verborgen kolommen en terug", () => {
+    const headers = () => [...document.querySelectorAll(".register-table thead code")].map((c) => c.textContent);
+    const file = "Airdraw, Jo.E & Aaren - Bryde's Whale";
+    render(<TrackRegister rows={[row(1, { file })]} artistCount={1} />);
+    const toggle = screen.getByRole("switch", { name: "verborgen kolommen" });
+    expect(toggle.getAttribute("aria-checked")).toBe("false");
+    expect(headers()).toContain("dkj_title");
+
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute("aria-checked")).toBe("true");
+    expect(headers()).toEqual(["dkj_track_id", "dkj_file", "dkj_artist", "dkj_artist_id"]);
+    expect(screen.getByTitle(file)).toBeTruthy();
+    expect(screen.getByText("ART01-001")).toBeTruthy();
+
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute("aria-checked")).toBe("false");
+    expect(headers()).not.toContain("dkj_file");
+    expect(headers()).toContain("dkj_title");
+  });
+
+  it("zet in de verborgen kolommen één artiest-ID als chip, en meer in een menu met de namen", () => {
+    render(
+      <TrackRegister
+        rows={[
+          row(1, { artistIds: ["AAA01"], artistNames: ["Aa"] }),
+          row(2, { artistIds: ["CCC01", "DDD01", "EEE01"], artistNames: ["Cc", "Dd", "Ee"] }),
+        ]}
+        artistCount={4}
+      />
+    );
+    fireEvent.click(screen.getByRole("switch"));
+    expect(screen.getByTitle("Aa").textContent).toBe("AAA01");
+    expect(screen.queryByText("EEE01")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /3 artists/ }));
+    expect(screen.getByText("EEE01")).toBeTruthy();
+    expect(screen.getByText("Ee")).toBeTruthy();
+  });
+
+  it("laat de sortering vallen bij het wisselen van kolommen", () => {
+    render(<TrackRegister rows={[row(1), row(2)]} artistCount={1} />);
+    fireEvent.click(screen.getByRole("button", { name: /dkj_title/ }));
+    expect(screen.getByRole("button", { name: /dkj_title/ }).closest("th")?.getAttribute("aria-sort")).toBe("ascending");
+    fireEvent.click(screen.getByRole("switch"));
+    fireEvent.click(screen.getByRole("switch"));
+    expect(screen.getByRole("button", { name: /dkj_title/ }).closest("th")?.getAttribute("aria-sort")).toBe("none");
   });
 
   it("toont één groep als label en meer groepen als menu, en filtert op elk van de groepen", () => {

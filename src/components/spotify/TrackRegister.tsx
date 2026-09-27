@@ -24,17 +24,18 @@ const ALBUM_VARIANTS = ["Light (f)", "Full (f)", "Light (m)", "Full (m)"] as con
 const nf = new Intl.NumberFormat("nl-NL");
 const GROUP_OPTIONS: readonly string[] = TRACK_FIELDS.find((field) => field.key === "dkj_group")?.options ?? [];
 
-/** De kolommen van de tabel, in volgorde: het veld en waarop hij sorteert. dkj_track_id, dkj_file,
- *  dkj_artist en dkj_artist_id staan er niet in (Dave); op alle vier zoeken kan nog steeds. */
-const COLUMNS: readonly { key: SortKey; field: string }[] = [
-  { key: "dkjTitle", field: "dkj_title" },
-  { key: "albumArtist", field: "dkj_albumartiest" },
-  { key: "playlists", field: "spotify_playlist" },
-  { key: "mixes", field: "djcylow_mix" },
-  { key: "bpm", field: "dkj_bpm" },
-  { key: "album", field: "dkj_album" },
-  { key: "groups", field: "dkj_group" },
-];
+/** Eén kolom van de tabel: het veld, waarop hij sorteert, zijn deel van de breedte (table-layout: fixed,
+ *  zodat alle kolommen altijd passen) en wat er in de cel staat. */
+interface Column {
+  key: SortKey;
+  field: string;
+  width: string;
+  cell: (row: RegisterRow, term: string) => ReactNode;
+  className?: string;
+}
+
+/** Welke kolommen de tabel toont: de gewone, of de kolommen die daar bewust uit zijn gelaten. */
+type ColumnSet = "visible" | "hidden";
 
 /** Klik op een kop: oplopend, nog eens: aflopend, een derde keer: weer de oorspronkelijke volgorde. */
 function nextSort(current: RegisterSort | null, key: SortKey): RegisterSort | null {
@@ -274,12 +275,102 @@ function OneLine({ text, term, className }: { text: string | null; term: string;
   );
 }
 
+/** Zoveel artiest-ID's staan er als chip; bij meer wordt het een menu, net als bij de playlists (Dave). */
+const ARTIST_IDS_INLINE = 1;
+
+function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term: string }) {
+  if (ids.length === 0) return <Empty />;
+  const chip = (id: string, i: number) => (
+    <span key={id} className="register-chip" title={names[i]}>
+      <Highlight text={id} term={term} />
+    </span>
+  );
+  if (ids.length <= ARTIST_IDS_INLINE) return <div className="register-chips">{ids.map(chip)}</div>;
+  // Net als bij de playlists: "3 artists", en bij een zoekopdracht de treffer op de knop.
+  const hit = term ? ids.findIndex((id, i) => fold(`${id} ${names[i]}`).includes(term)) : -1;
+  return (
+    <Dropdown
+      label={
+        hit >= 0 ? (
+          <>
+            <Highlight text={ids[hit]} term={term} />
+            <span className="register-menu-count">+{ids.length - 1}</span>
+          </>
+        ) : (
+          `${ids.length} artists`
+        )
+      }
+    >
+      {ids.map((id, i) => (
+        <span key={id} className="register-menu-item register-menu-item--static">
+          <span className="register-menu-id"><Highlight text={id} term={term} /></span>
+          <Highlight text={names[i]} term={term} />
+        </span>
+      ))}
+    </Dropdown>
+  );
+}
+
+/** De gewone kolommen, in volgorde. dkj_track_id, dkj_file, dkj_artist en dkj_artist_id staan er niet in
+ *  (Dave); die staan in HIDDEN_COLUMNS, achter de switch, en op alle vier zoeken kan altijd. */
+const VISIBLE_COLUMNS: readonly Column[] = [
+  { key: "dkjTitle", field: "dkj_title", width: "28%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
+  { key: "albumArtist", field: "dkj_albumartiest", width: "19%", cell: (row, term) => <OneLine text={row.albumArtist} term={term} className="register-album-artist" /> },
+  {
+    key: "playlists",
+    field: "spotify_playlist",
+    width: "14%",
+    className: "register-playlists-cell",
+    cell: (row, term) => (
+      <OutLinkLabels
+        links={row.playlists.map((p) => ({ key: p.id, name: p.name, href: playlistUrl(p.id) }))}
+        site="Spotify"
+        noun="playlists"
+        term={term}
+      />
+    ),
+  },
+  {
+    key: "mixes",
+    field: "djcylow_mix",
+    width: "13%",
+    className: "register-playlists-cell",
+    cell: (row, term) => (
+      <OutLinkLabels
+        links={row.mixes.map((m) => ({ key: m.slug, name: m.name, href: mixUrl(m.slug) }))}
+        site="djcylow.com"
+        noun="mixes"
+        term={term}
+      />
+    ),
+  },
+  {
+    key: "bpm",
+    field: "dkj_bpm",
+    width: "7%",
+    cell: (row, term) => (row.bpm ? <span className="register-tag"><Highlight text={row.bpm} term={term} /></span> : <Empty />),
+  },
+  { key: "album", field: "dkj_album", width: "11%", cell: (row, term) => <Album album={row.album} candidates={row.albumCandidates} term={term} /> },
+  { key: "groups", field: "dkj_group", width: "8%", cell: (row, term) => <Groups groups={row.groups} term={term} /> },
+];
+
+/** De kolommen die uit de gewone tabel zijn gelaten, te zien via de switch. */
+const HIDDEN_COLUMNS: readonly Column[] = [
+  { key: "id", field: "dkj_track_id", width: "12%", cell: (row, term) => <OneLine text={row.id} term={term} className="register-id" /> },
+  { key: "file", field: "dkj_file", width: "45%", cell: (row, term) => <OneLine text={row.file} term={term} className="register-file" /> },
+  { key: "artist", field: "dkj_artist", width: "25%", cell: (row, term) => <OneLine text={row.artist} term={term} className="register-artist" /> },
+  { key: "artistIds", field: "dkj_artist_id", width: "18%", cell: (row, term) => <ArtistIds ids={row.artistIds} names={row.artistNames} term={term} /> },
+];
+
+const COLUMN_SETS: Record<ColumnSet, readonly Column[]> = { visible: VISIBLE_COLUMNS, hidden: HIDDEN_COLUMNS };
+
 export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
   const [query, setQuery] = useState("");
   const [bpm, setBpm] = useState("");
   const [album, setAlbum] = useState("");
   const [group, setGroup] = useState("");
   const [sort, setSort] = useState<RegisterSort | null>(null);
+  const [columnSet, setColumnSet] = useState<ColumnSet>("visible");
   const [page, setPage] = useState(0);
   const deferredQuery = useDeferredValue(query);
   const box = useRef<HTMLDivElement>(null);
@@ -306,6 +397,13 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
   const label = (value: string, n: number | undefined) => `${value} (${nf.format(n ?? 0)})`;
   const reset = <T,>(set: (value: T) => void) => (value: T) => {
     set(value);
+    goTo(0);
+  };
+  const columns = COLUMN_SETS[columnSet];
+  // Eén switch: elke klik wisselt van set. De sortering hoort bij een kop die dan weg is, dus die vervalt.
+  const toggleColumns = () => {
+    setColumnSet(columnSet === "visible" ? "hidden" : "visible");
+    setSort(null);
     goTo(0);
   };
 
@@ -365,6 +463,17 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
             <option value={EMPTY_FILTER}>{label("Leeg", groupCounts.get(EMPTY_FILTER))}</option>
           </select>
         </label>
+        <button
+          type="button"
+          role="switch"
+          className="register-column-switch"
+          aria-checked={columnSet === "hidden"}
+          title="Wissel tussen de zichtbare en de verborgen kolommen"
+          onClick={toggleColumns}
+        >
+          <span className="register-column-switch-track" aria-hidden="true" />
+          <span>verborgen kolommen</span>
+        </button>
         <span className="register-count" aria-live="polite">
           {list.length === rows.length
             ? `${nf.format(rows.length)} nummers`
@@ -376,17 +485,13 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
         <table className="register-table">
           {/* Vaste verdeling van de breedte (table-layout: fixed), zodat alle kolommen altijd passen. */}
           <colgroup>
-            <col style={{ width: "28%" }} />
-            <col style={{ width: "19%" }} />
-            <col style={{ width: "14%" }} />
-            <col style={{ width: "13%" }} />
-            <col style={{ width: "7%" }} />
-            <col style={{ width: "11%" }} />
-            <col style={{ width: "8%" }} />
+            {columns.map(({ key, width }) => (
+              <col key={key} style={{ width }} />
+            ))}
           </colgroup>
           <thead>
             <tr>
-              {COLUMNS.map(({ key, field }) => {
+              {columns.map(({ key, field }) => {
                 const dir = sort?.key === key ? sort.dir : null;
                 return (
                   <th key={key} aria-sort={dir === "asc" ? "ascending" : dir === "desc" ? "descending" : "none"}>
@@ -409,32 +514,14 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
           <tbody>
             {slice.length === 0 ? (
               <tr>
-                <td colSpan={COLUMNS.length} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
+                <td colSpan={columns.length} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
               </tr>
             ) : (
               slice.map((row) => (
                 <tr key={row.id}>
-                  <td><OneLine text={row.dkjTitle} term={term} className="register-title" /></td>
-                  <td><OneLine text={row.albumArtist} term={term} className="register-album-artist" /></td>
-                  <td className="register-playlists-cell">
-                    <OutLinkLabels
-                      links={row.playlists.map((p) => ({ key: p.id, name: p.name, href: playlistUrl(p.id) }))}
-                      site="Spotify"
-                      noun="playlists"
-                      term={term}
-                    />
-                  </td>
-                  <td className="register-playlists-cell">
-                    <OutLinkLabels
-                      links={row.mixes.map((m) => ({ key: m.slug, name: m.name, href: mixUrl(m.slug) }))}
-                      site="djcylow.com"
-                      noun="mixes"
-                      term={term}
-                    />
-                  </td>
-                  <td>{row.bpm ? <span className="register-tag"><Highlight text={row.bpm} term={term} /></span> : <Empty />}</td>
-                  <td><Album album={row.album} candidates={row.albumCandidates} term={term} /></td>
-                  <td><Groups groups={row.groups} term={term} /></td>
+                  {columns.map(({ key, cell, className }) => (
+                    <td key={key} className={className}>{cell(row, term)}</td>
+                  ))}
                 </tr>
               ))
             )}
