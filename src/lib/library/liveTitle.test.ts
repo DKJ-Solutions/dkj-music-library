@@ -22,6 +22,9 @@ describe("studioTitleOf", () => {
       expect(isLiveTitle(title)).toBe(false);
     }
     expect(studioTitleOf("Live Is Life - Live")).toBe("Live Is Life");
+    for (const title of ["Song - Live Wire", "Highway to Hell - Live and Loud", "Song (Live It Up Remix)"]) {
+      expect(studioTitleOf(title)).toBe(title);
+    }
   });
 
   it("herkent een live-titel", () => {

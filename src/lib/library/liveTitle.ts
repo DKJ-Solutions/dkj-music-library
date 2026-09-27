@@ -8,7 +8,8 @@
 //
 // Live herken je alleen aan de TITEL, niet aan het album: een album als "I Live, I Learn" is niet live.
 // Twee vormen, zoals Spotify ze schrijft:
-//   - een stuk na " - " (of " – ") met het woord live erin: "Clocks - Live",
+//   - een stuk na " - " (of " – ") met live als aanduiding erin (aan het eind, voor een leesteken of voor
+//     at/from/in/on; "Song - Live Wire" is geen live-opname): "Clocks - Live",
 //     "Layla - Acoustic; Live at MTV Unplugged, ...", "Mess of Me - Live [Bonus Track]". Dat stuk valt
 //     weg, en alles erachter ook: Spotify zet de datum van de opname als eigen stuk achter het live-stuk
 //     ("Neon - Live at the Nokia Theatre, ... - December 2007"). Wat ervoor staat, blijft
@@ -22,10 +23,14 @@
 /** Scheidt de titel van een versiestuk: " - " of " – ". */
 const SEGMENT_SEPARATOR = /(\s[-–]\s)/;
 
-const LIVE_WORD = /\blive\b/i;
+/** Live als AANDUIDING: aan het eind, voor een leesteken, of voor at/from/in/on ("Live at Wembley",
+ *  "Acoustic Live", "Live, at Wacken", "Live @ Lowlands", "NMS Live / 2010"). Niet als gewoon woord:
+ *  "Live Wire", "Live and Loud". */
+const LIVE_MARK = String.raw`\blive(?=\s*$|\s*[@;,/()[\]]|\s+(?:at|from|in|on)\b)`;
+const LIVE_WORD = new RegExp(LIVE_MARK, "i");
 
 /** Een stuk tussen haakjes met live erin, met de spaties ervoor. */
-const LIVE_BRACKET = /\s*[([][^()[\]]*\blive\b[^()[\]]*[)\]]/gi;
+const LIVE_BRACKET = new RegExp(String.raw`\s*[([][^()[\]]*${LIVE_MARK}[^()[\]]*[)\]]`, "gi");
 
 /** De titel zonder live-aanduiding. Een titel zonder live-aanduiding komt ongewijzigd terug, en ook een
  *  titel die anders leeg zou worden. */
