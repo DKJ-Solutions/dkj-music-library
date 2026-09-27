@@ -48,7 +48,7 @@ export const LEGACY_TRACK_ID_KEY = "track_id";
  *  omdat trackIds.ts het ook nodig heeft en artistIds.ts trackIds.ts al importeert. */
 export const ARTIST_IDS_KEY = "dkj_artist_ids";
 
-/** Het veld met precies één artiest: de eerste uit `artists` (zie fillPrimaryArtists in artistIds.ts). */
+/** Het veld met precies één artiest: de remixer, anders de eerste uit `artists` (zie primaryArtist.ts). */
 export const PRIMARY_ARTIST_KEY = "dkj_artist";
 
 /** Het veld met alle artiesten als één tekst, in de volgorde van Spotify (zie fillAlbumArtists in artistIds.ts). */
@@ -90,7 +90,7 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
     options: ["128BPM", "112BPM", "176BPM", "144BPM", "96BPM"],
   },
   { key: "dkj_album", type: "text", label: "Eigen album (kleur, Light/Full, f/m)", options: DKJ_ALBUM_OPTIONS },
-  { key: "dkj_artist", type: "text", label: "Eén artiest: de eerste uit artists, tenzij zelf ingevuld" },
+  { key: "dkj_artist", type: "text", label: "Eén artiest: de remixer/editor, anders de eerste uit artists, tenzij zelf ingevuld" },
   { key: "dkj_albumartiest", type: "text", label: "Alle artiesten in Spotify-volgorde, met komma's, tenzij zelf ingevuld" },
   // Nieuw veld? Voeg het hier toe, bv.:
   // { key: "energy", type: "integer", label: "Energie 1-10" },
