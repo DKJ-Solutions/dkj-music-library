@@ -224,7 +224,15 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
               slice.map((row) => (
                 <tr key={row.id}>
                   <td className="register-id"><Highlight text={row.id} term={term} /></td>
-                  <td className="register-file">{row.file ? <Highlight text={row.file} term={term} /> : <Empty />}</td>
+                  <td className="register-file">
+                    {row.file ? (
+                      <span className="register-file-text" title={row.file}>
+                        <Highlight text={row.file} term={term} />
+                      </span>
+                    ) : (
+                      <Empty />
+                    )}
+                  </td>
                   <td className="register-album-artist">
                     {row.albumArtist ? <Highlight text={row.albumArtist} term={term} /> : <Empty />}
                   </td>

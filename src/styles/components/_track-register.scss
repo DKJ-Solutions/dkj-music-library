@@ -131,10 +131,21 @@
   min-width: 130px;
 }
 
-// dkj_file is de hoofdkolom (hij verving de titel): gewone letter, volle inktkleur.
+// dkj_file is de hoofdkolom (hij verving de titel): gewone letter, volle inktkleur. Een lange naam wordt
+// op één regel afgekapt; de volledige naam staat in de tooltip (title) bij het erover hoveren.
 .register-file {
-  min-width: 280px;
   color: var(--ink);
+}
+
+.register-file-text {
+  display: block;
+  width: 360px;
+  max-width: 40vw;
+  min-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: default;
 }
 
 // dkj_playlists: één playlist is een label dat hem opent; bij meer dan één opent de knop een menu met

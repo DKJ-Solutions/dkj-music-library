@@ -60,6 +60,12 @@ describe("TrackRegister", () => {
     expect(screen.queryByRole("link", { name: "Drie" })).toBeNull();
   });
 
+  it("kapt dkj_file af, met de volledige naam als tooltip", () => {
+    const file = "Airdraw, Jo.E & Aaren - Bryde's Whale (New Ordinance Edit) (Extended Mix)";
+    render(<TrackRegister rows={[row(1, { file })]} artistCount={1} />);
+    expect(screen.getByTitle(file).className).toBe("register-file-text");
+  });
+
   it("meldt het als niets past", () => {
     render(<TrackRegister rows={rows} artistCount={1} />);
     fireEvent.change(screen.getByLabelText(/dkj_album/), { target: { value: "Red Light (f)" } });
