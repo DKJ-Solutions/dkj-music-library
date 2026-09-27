@@ -26,9 +26,25 @@ export type SortKeyFn<Row, Column extends string> = (row: Row, column: Column) =
 // duurder over ~380 rijen.
 const collator = new Intl.Collator("nl", { sensitivity: "base", numeric: true });
 
+// Leestekens tellen niet mee: "'Til Tuesday" hoort bij de T en "...Baby One More Time" bij de B. Zelf
+// weggehaald in plaats van via `ignorePunctuation`, want die negeert ook spaties -- dan valt "De La"
+// samen met "Dela". Blijft er niets over (een titel van alleen leestekens), dan telt de oorspronkelijke.
+const LEESTEKENS = /\p{P}/gu;
+
+function zonderLeestekens(tekst: string): string {
+  const kaal = tekst.replace(LEESTEKENS, "");
+  return kaal.trim() === "" ? tekst : kaal;
+}
+
+/** Alfabetische vergelijking van twee teksten: Nederlandse collatie, hoofdletters, accenten en
+ *  leestekens tellen niet, getallen numeriek. Gedeeld met het trackregister (lib/library/register.ts). */
+export function compareText(a: string, b: string): number {
+  return collator.compare(zonderLeestekens(a), zonderLeestekens(b));
+}
+
 function compareKeys(a: string | number, b: string | number): number {
   if (typeof a === "number" && typeof b === "number") return a - b;
-  return collator.compare(String(a), String(b));
+  return compareText(String(a), String(b));
 }
 
 function isLeeg(key: SortKey): boolean {

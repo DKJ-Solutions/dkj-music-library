@@ -102,6 +102,25 @@ describe("sortRegister", () => {
     expect(ids(sortRegister(rows, { key: "groups", dir: "asc" }))).toEqual(["C", "A", "B"]);
   });
 
+  it("negeert leestekens zoals ', ... en ( in de titel", () => {
+    const titels: RegisterRow[] = [
+      { ...base, id: "Z", dkjTitle: "Zombie" },
+      { ...base, id: "T", dkjTitle: "'Til Tuesday" },
+      { ...base, id: "B", dkjTitle: "...Baby One More Time" },
+      { ...base, id: "H", dkjTitle: "(Here I Am)" },
+      { ...base, id: "A", dkjTitle: "Abba" },
+    ];
+    expect(ids(sortRegister(titels, { key: "dkjTitle", dir: "asc" }))).toEqual(["A", "B", "H", "T", "Z"]);
+  });
+
+  it("laat spaties wel meetellen: woorden blijven woorden", () => {
+    const titels: RegisterRow[] = [
+      { ...base, id: "2", dkjTitle: "Dela" },
+      { ...base, id: "1", dkjTitle: "De La Soul" },
+    ];
+    expect(ids(sortRegister(titels, { key: "dkjTitle", dir: "asc" }))).toEqual(["1", "2"]);
+  });
+
   it("laat de volgorde staan zonder sortering, en verandert de invoer niet", () => {
     expect(ids(sortRegister(rows, null))).toEqual(["A", "B", "C"]);
     sortRegister(rows, { key: "id", dir: "desc" });
