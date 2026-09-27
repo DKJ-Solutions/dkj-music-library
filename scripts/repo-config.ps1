@@ -90,6 +90,24 @@ function Get-ReleaseNoteRoot {
     'dkj-policy/releases/audience'
 }
 
+# --- Welk publiek deze repo bedient (Dave, 27 september 2026) --------------------------------------
+#
+# TIER 2. Deze repo is geen middel om iets anders te verkopen, zoals de BWJ-repo's een webshop zijn
+# (dat zou tier 1 zijn). Het is zelf het product: een tool die het leven van de gebruiker makkelijker
+# maakt. De gebruiker is dus de abonnee van het product waarmee hij zijn muziekcollectie beheert, ook
+# als die gebruiker de enige is en de repo zelf onderhoudt. Wat hij als gebruiker merkt, is tier 2;
+# alleen wat hij als ontwikkelaar merkt, is tier 0.
+#
+# Tot deze keuze stond de vraag open en vroeg elke entry naar tier 1 en 2 tegelijk; alle 19 entries tot
+# dan toe beantwoordden tier 2 met N/A. De scherpere definitie is gevraagd in
+# DKJ-Solutions/dkj-claude-plugins#2557.
+$script:ReleaseAudienceTier = 2
+
+function Get-ReleaseAudienceTier {
+    <# Het ene publiek waar entries in deze repo naar gevraagd worden, naast tier 0: 2 (de gebruiker). #>
+    return $script:ReleaseAudienceTier
+}
+
 # --- Adopted from the DKJ-Solutions/dkj-claude-plugins config blueprint ---------------------------------
 #
 # Each function below is the source's own text, comments included, for a value that states the

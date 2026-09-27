@@ -11,6 +11,8 @@ import { SpotifyReauthRequiredError } from "@/lib/spotify/errors";
 import { sameOriginGuard } from "@/lib/http/sameOrigin";
 import { withLibrary } from "@/lib/library/libraryFile";
 import { applyLibraryIdsFromSnapshot, type ArtistIdResult } from "@/lib/library/artistIds";
+import { fillGroupsFromWorlds } from "@/lib/library/groupFromWorlds";
+import { getEnrichedSnapshot } from "@/lib/spotify/enrichedPlaylists";
 import type { TrackIdResult } from "@/lib/library/trackIds";
 
 // fs/de Spotify-token-laag vereisen de Node-runtime, niet de edge-runtime. Een volledige sync van
@@ -50,7 +52,13 @@ export async function POST(request: Request) {
     let trackIds: TrackIdResult | null = null;
     let artistIds: ArtistIdResult | null = null;
     try {
-      const ids = withLibrary((db) => applyLibraryIdsFromSnapshot(db, snapshot));
+      // De werelden (met je handmatige correcties) voor dkj_group; zie groupFromWorlds.ts.
+      const worlds = getEnrichedSnapshot(snapshot)?.playlists ?? [];
+      const ids = withLibrary((db) => {
+        const result = applyLibraryIdsFromSnapshot(db, snapshot);
+        fillGroupsFromWorlds(db, worlds);
+        return result;
+      });
       trackIds = ids.tracks;
       artistIds = ids.artists;
     } catch (err) {

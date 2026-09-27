@@ -2,7 +2,62 @@
 
 ## [Unreleased]
 
-**21 patch entries** <!-- pending-tally -->
+**0 / 23 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/dkj-group-from-worlds · 20260927-185319Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+`dkj_group` is nu een lijst en wordt gevuld uit de werelden van de Spotify-playlists van een track: MMC,
+DJ CYLOW en Prive, en een playlist met een beschrijving telt sowieso als MMC. Een track in meer werelden
+krijgt meer groepen. Alle 12.471 tracks zijn gevuld: 9.662 alleen Prive, 409 alleen MMC, 312 alleen DJ
+CYLOW en 2.088 met meer dan één groep. `Overige` zet je zelf.
+
+**Score:** 3
+
+##### Tier 1
+
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
+
+##### Tier 2
+
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
+
+#### Pull Request
+
+dkj_group wordt een lijst en wordt afgeleid uit de werelden van de playlists
+
+[PR #27](https://github.com/DKJ-Solutions/dkj-music-library/pull/27)
+
+---
+
+### DEPLOY: feat/release-audience-tier · 20260927-185039Z
+
+Nieuwe changelog-entries vragen voortaan alleen naar tier 0 en naar tier 2 (de gebruiker van de app),
+net als in de bronrepo. De vraag naar tier 1 (management of opdrachtgever) vervalt, omdat die hier
+nooit van toepassing is.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+N/A. Dit verandert alleen hoe entries gevraagd worden; in de app merkt de gebruiker niets.
+
+**Score:** N/A
+
+#### Pull Request
+
+Deze repo publiceert voor tier 2
+
+[PR #26](https://github.com/DKJ-Solutions/dkj-music-library/pull/26)
+
+---
 
 ### DEPLOY: feat/dkj-group-field · 20260927-184320Z
 
