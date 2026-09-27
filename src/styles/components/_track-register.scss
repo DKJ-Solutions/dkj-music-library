@@ -120,6 +120,48 @@
   font-size: 1em;
 }
 
+// De kop is een knop die op die kolom sorteert; het pijltje zegt hoe (▲ oplopend, ▼ aflopend).
+.register-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.register-sort code {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.register-sort-mark {
+  flex: none;
+  opacity: 0.35;
+}
+
+.register-sort:hover,
+.register-table th[aria-sort="ascending"] .register-sort,
+.register-table th[aria-sort="descending"] .register-sort {
+  color: var(--ink);
+}
+
+.register-sort:hover .register-sort-mark,
+.register-table th[aria-sort="ascending"] .register-sort-mark,
+.register-table th[aria-sort="descending"] .register-sort-mark {
+  opacity: 1;
+  color: var(--accent);
+}
+
+.register-sort:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .register-table tbody tr:last-child td {
   border-bottom: 0;
 }

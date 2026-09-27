@@ -1,5 +1,5 @@
 "use client";
-// De tabel van /spotify/trackregister: zoeken, filteren op dkj_bpm en dkj_album, en bladeren per
+// De tabel van /spotify/trackregister: zoeken, filteren op dkj_bpm en dkj_album, sorteren via de kopregel, en bladeren per
 // 100 rijen (12.000+ rijen in één keer renderen maakt de pagina traag). Alle logica die geen React is
 // zit in register.ts; hier alleen de weergave en de filterstand.
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -11,13 +11,35 @@ import {
   filterRegister,
   fold,
   searchText,
+  sortRegister,
   type RegisterRow,
+  type RegisterSort,
+  type SortKey,
 } from "@/lib/library/register";
 
 const PAGE_SIZE = 100;
 const ALBUM_VARIANTS = ["Light (f)", "Full (f)", "Light (m)", "Full (m)"] as const;
 const nf = new Intl.NumberFormat("nl-NL");
 const GROUP_OPTIONS: readonly string[] = TRACK_FIELDS.find((field) => field.key === "dkj_group")?.options ?? [];
+
+/** De kolommen van de tabel, in volgorde: het veld en waarop hij sorteert. */
+const COLUMNS: readonly { key: SortKey; field: string }[] = [
+  { key: "id", field: "dkj_track_id" },
+  { key: "file", field: "dkj_file" },
+  { key: "artist", field: "dkj_artist" },
+  { key: "albumArtist", field: "dkj_albumartiest" },
+  { key: "artistIds", field: "dkj_artist_ids" },
+  { key: "playlists", field: "spotify_playlist" },
+  { key: "bpm", field: "dkj_bpm" },
+  { key: "album", field: "dkj_album" },
+  { key: "groups", field: "dkj_group" },
+];
+
+/** Klik op een kop: oplopend, nog eens: aflopend, een derde keer: weer de oorspronkelijke volgorde. */
+function nextSort(current: RegisterSort | null, key: SortKey): RegisterSort | null {
+  if (current?.key !== key) return { key, dir: "asc" };
+  return current.dir === "asc" ? { key, dir: "desc" } : null;
+}
 
 interface TrackRegisterProps {
   rows: RegisterRow[];
@@ -216,6 +238,7 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
   const [bpm, setBpm] = useState("");
   const [album, setAlbum] = useState("");
   const [group, setGroup] = useState("");
+  const [sort, setSort] = useState<RegisterSort | null>(null);
   const [page, setPage] = useState(0);
   const deferredQuery = useDeferredValue(query);
   const box = useRef<HTMLDivElement>(null);
@@ -228,10 +251,11 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
   const bpmCounts = useMemo(() => countBy(rows, "bpm"), [rows]);
   const albumCounts = useMemo(() => countBy(rows, "album"), [rows]);
   const groupCounts = useMemo(() => countBy(rows, "groups"), [rows]);
-  const list = useMemo(
+  const filtered = useMemo(
     () => filterRegister(rows, haystacks, { term: deferredQuery, bpm, album, group }),
     [rows, haystacks, deferredQuery, bpm, album, group]
   );
+  const list = useMemo(() => sortRegister(filtered, sort), [filtered, sort]);
 
   const term = fold(deferredQuery.trim());
   const pages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
@@ -323,15 +347,24 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
           </colgroup>
           <thead>
             <tr>
-              <th><code>dkj_track_id</code></th>
-              <th><code>dkj_file</code></th>
-              <th><code>dkj_artist</code></th>
-              <th><code>dkj_albumartiest</code></th>
-              <th><code>dkj_artist_ids</code></th>
-              <th><code>spotify_playlist</code></th>
-              <th><code>dkj_bpm</code></th>
-              <th><code>dkj_album</code></th>
-              <th><code>dkj_group</code></th>
+              {COLUMNS.map(({ key, field }) => {
+                const dir = sort?.key === key ? sort.dir : null;
+                return (
+                  <th key={key} aria-sort={dir === "asc" ? "ascending" : dir === "desc" ? "descending" : "none"}>
+                    <button
+                      type="button"
+                      className="register-sort"
+                      title={`Sorteer op ${field}`}
+                      onClick={() => reset(setSort)(nextSort(sort, key))}
+                    >
+                      <code>{field}</code>
+                      <span className="register-sort-mark" aria-hidden="true">
+                        {dir === "asc" ? "▲" : dir === "desc" ? "▼" : "↕"}
+                      </span>
+                    </button>
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>

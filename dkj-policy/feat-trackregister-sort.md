@@ -39,19 +39,35 @@
 
 ### PLAN
 
+Dave vroeg om een sorteeroptie in de bovenste rij van het trackregister. Elke kolomkop wordt een knop:
+eerste klik oplopend, tweede aflopend, derde terug naar de oorspronkelijke volgorde. Lege cellen staan in
+beide richtingen onderaan; lijstkolommen (artiest-ID's, playlists, groepen) sorteren op hun waarden achter
+elkaar. De sortering werkt op het gefilterde resultaat en springt terug naar pagina 1.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `sortRegister` + `SortKey`/`RegisterSort` in `src/lib/library/register.ts` (pure, numerieke collator)
+- [x] Klikbare kopregel met `aria-sort` en ▲/▼/↕ in `TrackRegister.tsx`, stijl in `_track-register.scss`
 
 ### TEST
 
+- [x] Unit-tests `sortRegister` (numeriek, leeg onderaan, lijstkolom, invoer onaangetast) en een componenttest voor de klikcyclus
+- [x] vitest, typecheck en eslint groen
+- [ ] Dave bekijkt de kopregel in de browser (zichtbaar resultaat, wacht op zijn woord)
+
 ### DEPLOY: feat/trackregister-sort
 
-**Score:**
+Het trackregister sorteert op elke kolom: klik op een kolomkop voor oplopend, nog eens voor aflopend, en
+een derde keer voor de oorspronkelijke volgorde. Lege cellen blijven onderaan, BPM en ID's sorteren
+numeriek (96BPM vóór 112BPM).
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A -- een lokale app zonder abonnees; alleen Dave gebruikt het register.
+
+**Score:** N/A
 
 #### Pull Request
 
