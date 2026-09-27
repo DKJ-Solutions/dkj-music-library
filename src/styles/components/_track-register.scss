@@ -1,0 +1,213 @@
+// /spotify/trackregister -- de tabel van het Trackregister. Hergebruikt .stats/.stat (masthead.scss),
+// .playlist-search (playlist-toolbar.scss) en de --emotion-*-tokens voor de albumkleuren; nieuw is
+// alleen de tabel zelf, want die heeft ruim twaalfduizend rijen en zes kolommen, meer dan de rijenlijsten
+// elders in de app dragen.
+.track-register {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 8px;
+}
+
+.track-register code,
+.masthead .lede code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+}
+
+.register-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.register-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+}
+
+.register-filter span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.register-filter select {
+  max-width: 100%;
+  font: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+.register-filter select:focus-visible,
+.register-pager button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.register-count {
+  font-size: 13px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.register-table-box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+}
+
+.register-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.register-table th,
+.register-table td {
+  text-align: left;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.register-table th {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.register-table th code {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 1em;
+}
+
+.register-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.register-id {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.register-title {
+  min-width: 200px;
+  color: var(--ink);
+}
+
+.register-artists {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.register-artist {
+  min-width: 130px;
+}
+
+.register-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.register-chip,
+.register-tag {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  padding: 1px 7px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+.register-chip {
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  cursor: default;
+}
+
+.register-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+// Full is een gevulde stip, Light alleen de rand -- dezelfde kleur, minder dicht.
+.register-swatch {
+  width: 10px;
+  height: 10px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 2px solid var(--c);
+  background: var(--c);
+  flex: none;
+}
+
+.register-swatch--light {
+  background: transparent;
+}
+
+.register-none {
+  color: var(--muted);
+  opacity: 0.6;
+}
+
+.register-table mark {
+  background: var(--gold-soft);
+  color: inherit;
+  border-radius: 2px;
+}
+
+.register-empty {
+  padding: 28px 14px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.register-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.register-pager-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.register-pager button {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.register-pager button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}

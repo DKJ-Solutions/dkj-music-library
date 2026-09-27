@@ -193,6 +193,16 @@ export function applyArtistIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot)
   return { newArtists: plan.length, tracksFilled, totalArtists: Number(total.n) };
 }
 
+/** Eigen artiest-ID -> naam, voor het Trackregister (/spotify/trackregister). */
+export function readArtistNames(db: DatabaseSync): Record<string, string> {
+  ensureArtistsTable(db);
+  const rows = db.prepare(`SELECT dkj_artist_id, name FROM ${ARTISTS_TABLE}`).all() as {
+    dkj_artist_id: string;
+    name: string;
+  }[];
+  return Object.fromEntries(rows.map((row) => [row.dkj_artist_id, row.name]));
+}
+
 /** Spotify-artist-id -> eigen artiest-ID, voor trackIds.ts. */
 export function readArtistIdMap(db: DatabaseSync): Map<string, string> {
   ensureArtistsTable(db);

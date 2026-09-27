@@ -16,3 +16,4 @@
 @use "components/host-mismatch-warning"; // /spotify: app-host <-> OAuth-callback-host lopen uiteen
 @use "components/mix-bridge"; // Mixen <-> playlists: de brug met de DJ Cylow-mix-JSON's
 @use "components/missing-mixes"; // Tweede tabel onder de playlist-manager: mixen zonder eigen playlist
+@use "components/track-register"; // /spotify/trackregister -- het Trackregister (bibliotheek-tabel)

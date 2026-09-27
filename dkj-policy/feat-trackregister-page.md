@@ -32,11 +32,24 @@
 
 ### PLAN
 
+Dave wil het Trackregister gegarandeerd op elke machine en met elk Claude-account kunnen bekijken. Het
+artifact dat er was (claude.ai) hangt aan één account, en delen buiten de organisatie staat uit, dus dat
+kan het niet. De app wel: de export staat in git en de bibliotheek bouwt zich op een verse kloon zelf op.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `register.ts`: pure rijen, zoeken (zonder accenten) en filteren op `dkj_bpm`/`dkj_album`, inclusief "leeg"
+- [x] `readArtistNames()` in `artistIds.ts`, `DKJ_BPM_OPTIONS` in `fields.ts`
+- [x] Pagina `/spotify/trackregister` (Server Component) + `TrackRegister.tsx` (tabel, filters, 100 per pagina)
+- [x] Stijl in `_track-register.scss`, hergebruikt `.stat`, `.playlist-search` en de `--emotion-*`-kleuren
+- [x] Link in de kop van `/spotify`, buiten de snapshot-secties, zodat hij ook zonder sync zichtbaar is
+- [x] README: hoe je het register opent
 
 ### TEST
+
+- [x] typecheck, eslint en vitest groen (707 tests), met `register.test.ts` en `TrackRegister.test.tsx`
+- [x] Verse kloon nagespeeld: een lege database bouwt zich op uit de export (12.471 tracks, 6.951 artiesten)
+- [x] `next dev`: `/spotify/trackregister` geeft 200 met 100 rijen, de link op `/spotify` staat er
 
 ### DEPLOY: feat/trackregister-page
 
@@ -44,7 +57,13 @@
 
 ##### Tier 0
 
-**Score:**
+Het Trackregister is nu een pagina in de app: `/spotify/trackregister`, met een link bovenaan `/spotify`.
+Je ziet elk nummer met `dkj_track_id`, `dkj_artist`, `dkj_albumartiest`, `dkj_artist_ids`, `dkj_bpm` en
+`dkj_album`, zoekt zonder op accenten te letten en filtert op `dkj_bpm` en `dkj_album` (ook op "leeg"). De
+pagina leest de bibliotheek uit de export in git, dus hij werkt op elke kloon, zonder Spotify-login, sync
+of Claude-account.
+
+**Score:** 4
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +72,9 @@
 
 ##### Tier 1
 
-**Score:**
+Een eigen werkpagina; management merkt hier niets van.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +83,9 @@
 
 ##### Tier 2
 
-**Score:**
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
 
 #### Pull Request
 

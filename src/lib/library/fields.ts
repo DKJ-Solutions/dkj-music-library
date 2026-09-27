@@ -62,6 +62,9 @@ export function albumArtistOf(names: readonly string[]): string | null {
   return names.length > 0 ? names.join(ALBUM_ARTIST_SEPARATOR) : null;
 }
 
+/** De eigen BPM-groepen, in de volgorde waarin ze getoond worden. */
+export const DKJ_BPM_OPTIONS = ["128BPM", "112BPM", "176BPM", "144BPM", "96BPM"] as const;
+
 /** De acht kleuren van de eigen albums. */
 export const DKJ_ALBUM_COLOURS = ["Green", "Yellow", "Red", "Purple", "Cyan", "Blue", "Orange", "Magenta"] as const;
 
@@ -87,7 +90,7 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
     key: "dkj_bpm",
     type: "text",
     label: "Eigen BPM-groep",
-    options: ["128BPM", "112BPM", "176BPM", "144BPM", "96BPM"],
+    options: DKJ_BPM_OPTIONS,
   },
   { key: "dkj_album", type: "text", label: "Eigen album (kleur, Light/Full, f/m)", options: DKJ_ALBUM_OPTIONS },
   { key: "dkj_artist", type: "text", label: "Eén artiest: de eerste uit artists, tenzij zelf ingevuld" },

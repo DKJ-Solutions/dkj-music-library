@@ -87,6 +87,14 @@ Kolommen die niet (meer) in `fields.ts` staan, gaan niet mee in de export. Hoe h
 `src/lib/library/libraryFile.ts`. Let op: omdat de repo publiek is, zijn ook je `notes` en `tags` voor
 iedereen te lezen zodra je ze pusht.
 
+### Het Trackregister bekijken
+
+Start de app (`npm run dev`) en open `/spotify/trackregister`; op `/spotify` staat de link bovenaan. Je
+ziet elk nummer met zijn eigen velden, en je kunt zoeken en filteren op `dkj_bpm` en `dkj_album`. De
+pagina leest de bibliotheek en niet de Spotify-snapshot, dus hij werkt op elke kloon van de repo, ook
+zonder Spotify-login of sync. Een lege of ontbrekende database wordt bij het openen uit de export
+opgebouwd.
+
 ### Importeren
 
 ```sh
