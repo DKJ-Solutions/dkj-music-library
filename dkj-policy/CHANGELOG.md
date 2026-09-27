@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**22 / 26 minor entries** <!-- pending-tally -->
+**22 / 27 minor entries** <!-- pending-tally -->
+
+### DEPLOY: docs/25-rescore-tier-2 · 20260927-191125Z
+
+The 22 changelog entries whose work the app's user can see are now scored for tier 2. The four that are
+workflow or developer tooling stay N/A. The pending tally now reads `22 / 26 minor entries`, so the next
+release earns a minor instead of a patch. Resolves #25.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+N/A. This changes how past entries are scored; the app itself does not change for its user.
+
+**Score:** N/A
+
+#### Pull Request
+
+Changelog-entries opnieuw beoordeeld op tier 2 (de gebruiker van de app)
+
+[PR #30](https://github.com/DKJ-Solutions/dkj-music-library/pull/30)
+
+---
 
 ### DEPLOY: feat/trackregister-sort · 20260927-190735Z
 
