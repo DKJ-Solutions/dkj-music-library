@@ -138,6 +138,13 @@ describe("toSqlValue", () => {
     expect(() => toSqlValue(field("boolean"), "misschien")).toThrow(TrackInputError);
   });
 
+  it("kent voor dkj_group alleen MMC, DJ CYLOW, Prive en Overige", () => {
+    const group = TRACK_FIELDS.find((f) => f.key === "dkj_group")!;
+    expect(group.options).toEqual(["MMC", "DJ CYLOW", "Prive", "Overige"]);
+    expect(toSqlValue(group, "dj cylow")).toBe("DJ CYLOW");
+    expect(() => toSqlValue(group, "Privé")).toThrow(TrackInputError);
+  });
+
   it("houdt een veld met options aan die lijst, in de spelling van de lijst", () => {
     const bpm: FieldDef = { key: "dkj_bpm", type: "text", label: "", options: ["128BPM", "96BPM"] };
     expect(toSqlValue(bpm, "128BPM")).toBe("128BPM");
