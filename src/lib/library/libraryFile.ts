@@ -12,9 +12,15 @@
 //   - verschillen ze (verse kloon, of een `git pull` met nieuwe data), dan wordt de database uit de
 //     export opnieuw opgebouwd;
 //   - is er nog geen export maar wel data, dan wordt de export nu geschreven.
-// Dat is veilig omdat elke schrijvende stap via withLibrary() loopt, die direct daarna exporteert:
-// de database heeft dus nooit wijzigingen die de export mist. Mislukt het exporteren, dan blijft de
-// oude hash staan en schrijft de volgende run de export alsnog.
+// Dat is veilig omdat elke schrijvende stap via withLibrary() loopt, die direct daarna exporteert.
+// En voor het geval dat misgaat (een crash, een volle schijf, of het tweede bestand dat niet
+// geschreven wordt terwijl het eerste al wel nieuw is): vóór het schrijven zet withLibrary() de hash
+// op "pending", en pas een geslaagde export zet de echte hash terug. Een database die op "pending"
+// staat, is nieuwer dan de export -- die wordt dan opnieuw geëxporteerd, nooit overschreven.
+//
+// Eén schrijver tegelijk: twee processen die tegelijk exporteren (de dev-server en een script)
+// wachten op elkaars database-lock (busy_timeout in db.ts), maar kunnen elkaars export-bestanden
+// overschrijven. Draai een script dus niet terwijl er een sync op /spotify loopt.
 //
 // Wat NIET meegaat: kolommen die wel in de database staan maar niet (meer) in fields.ts. Die gebruikt
 // de app niet, en op een verse kloon bestaan ze niet.
@@ -34,6 +40,8 @@ const TRACKS_FILE = "tracks.ndjson";
 const LINKS_FILE = "spotify_track_ids.ndjson";
 const META_TABLE = "library_meta";
 const HASH_KEY = "export_hash";
+/** Staat als hash in library_meta zolang de database wijzigingen heeft die nog niet geëxporteerd zijn. */
+const PENDING = "pending";
 
 export function getLibraryExportDir(): string {
   const override = process.env.LIBRARY_EXPORT_DIR;
@@ -77,6 +85,12 @@ function writeAtomic(file: string, content: string): void {
   fs.renameSync(tmp, file);
 }
 
+/** Markeert de database als nieuwer dan de export (zie de kop van dit bestand). */
+function markPending(db: DatabaseSync): void {
+  ensureMetaTable(db);
+  writeHash(db, PENDING);
+}
+
 /** Schrijft beide tabellen naar `dir` en onthoudt de hash in de database. Geeft de hash terug. */
 export function exportLibrary(
   db: DatabaseSync,
@@ -84,7 +98,7 @@ export function exportLibrary(
   fields: readonly FieldDef[] = TRACK_FIELDS
 ): string {
   ensureSpotifyLinkTable(db);
-  ensureMetaTable(db);
+  markPending(db);
   fs.mkdirSync(dir, { recursive: true });
 
   // Vaste sleutelvolgorde: systeemkolommen, dan fields.ts. Zo blijft een regel gelijk zolang de data
@@ -128,6 +142,12 @@ function readLines(file: string): Record<string, unknown>[] {
     });
 }
 
+function requireText(row: Record<string, unknown>, key: string, where: string): string {
+  const value = row[key];
+  if (typeof value !== "string" || value === "") throw new Error(`${where}: "${key}" ontbreekt of is geen tekst`);
+  return value;
+}
+
 /** Vervangt de inhoud van beide tabellen door de export in `dir`, in één transactie. */
 export function restoreLibrary(
   db: DatabaseSync,
@@ -156,18 +176,24 @@ export function restoreLibrary(
   try {
     db.exec(`DELETE FROM ${TRACKS_TABLE}`);
     db.exec(`DELETE FROM ${SPOTIFY_LINK_TABLE}`);
-    for (const track of tracks) {
+    tracks.forEach((track, index) => {
+      const where = `${TRACKS_FILE} regel ${index + 1}`;
       const values: SQLInputValue[] = [
-        String(track[TRACK_ID_KEY]),
-        String(track.created_at),
-        String(track.updated_at),
+        requireText(track, TRACK_ID_KEY, where),
+        requireText(track, "created_at", where),
+        requireText(track, "updated_at", where),
         ...known.map((field) => toSqlValue(field, track[field.key] as TrackValue | undefined)),
       ];
       insertTrack.run(...values);
-    }
-    for (const link of links) {
-      insertLink.run(String(link.spotify_track_id), String(link[TRACK_ID_KEY]), String(link.song_key));
-    }
+    });
+    links.forEach((link, index) => {
+      const where = `${LINKS_FILE} regel ${index + 1}`;
+      insertLink.run(
+        requireText(link, "spotify_track_id", where),
+        requireText(link, TRACK_ID_KEY, where),
+        requireText(link, "song_key", where)
+      );
+    });
     writeHash(db, hash);
     db.exec("COMMIT");
   } catch (err) {
@@ -187,9 +213,14 @@ export function syncWithExport(
   fields: readonly FieldDef[] = TRACK_FIELDS
 ): LibrarySync {
   ensureMetaTable(db);
+  const stored = readHash(db);
+  if (stored === PENDING) {
+    exportLibrary(db, dir, fields);
+    return "exported";
+  }
   const onDisk = exportHash(dir);
   if (onDisk) {
-    if (onDisk === readHash(db)) return "in-sync";
+    if (onDisk === stored) return "in-sync";
     restoreLibrary(db, dir, fields);
     return "restored";
   }
@@ -219,6 +250,7 @@ export function openLibrary(
 export function withLibrary<T>(work: (db: DatabaseSync) => T, dbPath?: string, dir?: string): T {
   const { db } = openLibrary(dbPath, dir);
   try {
+    markPending(db);
     const result = work(db);
     exportLibrary(db, dir);
     return result;

@@ -89,6 +89,43 @@ describe("exportLibrary / restoreLibrary", () => {
 });
 
 describe("syncWithExport / openLibrary / withLibrary", () => {
+  it("gooit geen werk weg als het exporteren halverwege misging", () => {
+    withLibrary((db) => seed(db), dbPath, exportDir);
+
+    // Het werk wordt gecommit, tracks.ndjson is al nieuw, en dan valt het proces om voordat de
+    // koppelingen en de hash geschreven zijn. Op schijf staat nu een export die niet klopt.
+    expect(() =>
+      withLibrary(
+        (db) => {
+          upsertTracks(db, [{ track_id: "T000003", title: "Valerie" }]);
+          fs.appendFileSync(path.join(exportDir, "tracks.ndjson"), '{"track_id":"T000099"}\n');
+          throw new Error("proces valt om");
+        },
+        dbPath,
+        exportDir
+      )
+    ).toThrow("proces valt om");
+
+    const { db, sync } = openLibrary(dbPath, exportDir);
+    expect(sync).toBe("exported");
+    expect(getTrack(db, "T000003")?.title).toBe("Valerie");
+    db.close();
+    const ids = fs.readFileSync(path.join(exportDir, "tracks.ndjson"), "utf8").trim().split("\n");
+    expect(ids.map((line) => JSON.parse(line).track_id)).toEqual(["T000001", "T000002", "T000003"]);
+  });
+
+  it("weigert een export-regel zonder verplicht veld, zonder iets te wissen", () => {
+    const db = memoryDb();
+    seed(db);
+    exportLibrary(db, exportDir);
+    fs.appendFileSync(path.join(exportDir, "spotify_track_ids.ndjson"), '{"track_id":"T000009"}\n');
+
+    const target = memoryDb();
+    upsertTracks(target, [{ track_id: "T000042", title: "Blijft staan" }]);
+    expect(() => restoreLibrary(target, exportDir)).toThrow(/spotify_track_id/);
+    expect(getTrack(target, "T000042")?.title).toBe("Blijft staan");
+  });
+
   it("bouwt op een verse kloon (export, geen database) de database op", () => {
     const source = memoryDb();
     seed(source);

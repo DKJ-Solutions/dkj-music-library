@@ -55,6 +55,8 @@ export function openLibraryDb(
   if (dbPath !== ":memory:") fs.mkdirSync(path.dirname(dbPath), { recursive: true });
   const db = new DatabaseSync(dbPath);
   db.exec("PRAGMA journal_mode = WAL");
+  // Schrijven de dev-server en een script tegelijk, dan wacht de tweede even in plaats van te falen.
+  db.exec("PRAGMA busy_timeout = 5000");
   const schema = syncSchema(db, fields);
   for (const column of schema.orphaned) {
     console.warn(

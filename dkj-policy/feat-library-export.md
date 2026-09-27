@@ -53,6 +53,8 @@ tags, notes, musical_key, release_year) nog leeg; openbaar zijn dus alleen de ID
 
 - [x] `libraryFile.test.ts`: round-trip, determinisme, vervangen i.p.v. aanvullen, CRLF, verse kloon, export na pull, eerste export, leeg, export na elke schrijfstap
 - [x] Vitest 659/659, `tsc --noEmit` en `eslint` schoon
+- [x] Review Victor: half mislukte export kon gecommit werk wissen -> `pending`-markering (DB nieuwer dan export wordt nooit overschreven); `busy_timeout` voor gelijktijdige schrijvers; restore weigert rijen zonder verplicht veld. Tests toegevoegd (661/661)
+- [x] Review Sebastian: niets gevonden; `.gitignore` houdt tokens, private-rules, snapshot en `.db` buiten git (met `git check-ignore` nagelopen)
 - [x] Echte data: verse database via `LIBRARY_DB_PATH` uit de export opgebouwd; beide tabellen identiek aan het origineel
 
 ### DEPLOY: feat/library-export
