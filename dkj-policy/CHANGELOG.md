@@ -2,7 +2,31 @@
 
 ## [Unreleased]
 
-**0 / 24 patch entries** <!-- pending-tally -->
+**0 / 25 patch entries** <!-- pending-tally -->
+
+### DEPLOY: fix/1-stale-spotify-write-comment · 20260927-190116Z
+
+The comments in the mix-tag route and in the Spotify scope configuration no longer claim that the
+playlist description is the only thing the hub writes to Spotify; they name both writers, the
+description (mix-tag) and the name (playlist-name). Resolves #1.
+
+Prevents a later reader from trusting the stale claim when judging what the Spotify scopes are used for.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+A subscriber of a service never sees a source comment.
+
+**Score:** N/A
+
+#### Pull Request
+
+Verouderd commentaar: mix-tag heet nog de enige Spotify-schrijfroute
+
+[PR #28](https://github.com/DKJ-Solutions/dkj-music-library/pull/28)
+
+---
 
 ### DEPLOY: feat/trackregister-page · 20260927-185715Z
 
