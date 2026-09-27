@@ -39,12 +39,14 @@ import { TRACKS_TABLE, renameLegacyColumn } from "./db";
 import {
   ALBUM_ARTIST_KEY,
   ARTIST_IDS_KEY,
+  FILE_KEY,
   LEGACY_TRACK_ID_KEY,
   PRIMARY_ARTIST_KEY,
   TRACK_FIELDS,
   TRACK_ID_KEY,
   albumArtistOf,
 } from "./fields";
+import { fileNameOf } from "./fileName";
 import { primaryArtistOf } from "./primaryArtist";
 import { toSqlValue, type TrackValue } from "./trackStore";
 
@@ -192,6 +194,7 @@ function metadataOf(track: Track, artistIdOf: ArtistIdMap): Record<string, Track
     [ARTIST_IDS_KEY]: ownIds.length > 0 ? ownIds : null,
     [PRIMARY_ARTIST_KEY]: primaryArtistOf(track.name, track.artists.map((a) => a.name)),
     [ALBUM_ARTIST_KEY]: albumArtistOf(track.artists.map((a) => a.name)),
+    [FILE_KEY]: fileNameOf(track.name, track.artists.map((a) => a.name)),
   };
 }
 

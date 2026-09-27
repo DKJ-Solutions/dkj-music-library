@@ -2,7 +2,40 @@
 
 ## [Unreleased]
 
-**14 patch entries** <!-- pending-tally -->
+**15 patch entries** <!-- pending-tally -->
+
+### DEPLOY: feat/dkj-file-field · 20260927-174510Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+Het Trackregister krijgt de kolom `dkj_file`: de bestandsnaam zoals op de desktop, zonder extensie.
+`Higher - David Penn Remix` van Abel Ramos en David Penn wordt `Abel Ramos - Higher (David Penn Remix)`.
+Remixers en featurings staan alleen in de titel, niet nog eens bij de artiesten; elk stuk na ` - ` komt
+tussen haakjes, en tekens die Windows weigert, gaan eruit. Alle 12.471 tracks zijn gevuld.
+
+**Score:** 3
+
+##### Tier 1
+
+Intern datamodel; management merkt hier niets van.
+
+**Score:** N/A
+
+##### Tier 2
+
+Geen abonnee van een dienst ziet dit.
+
+**Score:** N/A
+
+#### Pull Request
+
+Trackregister krijgt de kolom dkj_file (de bestandsnaam zoals op de desktop)
+
+[PR #18](https://github.com/DKJ-Solutions/dkj-music-library/pull/18)
+
+---
 
 ### DEPLOY: feat/dkj-artist-title-credit · 20260927-173538Z
 

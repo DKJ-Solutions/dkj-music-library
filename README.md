@@ -172,6 +172,20 @@ wat je zelf invult, blijft staan.
 
 De regels staan bovenaan `src/lib/library/artistIds.ts`.
 
+### De bestandsnaam: `dkj_file`
+
+`dkj_file` is de naam die het bestand op je desktop zou hebben, zonder extensie:
+`<artiesten> - <titel> (<versie>)`. Bijvoorbeeld `Higher - David Penn Remix` van Abel Ramos en David
+Penn wordt `Abel Ramos - Higher (David Penn Remix)`.
+
+- De artiesten staan met `, ` ertussen en `&` voor de laatste (`Airdraw, Jo.E & Aaren`). Een remixer
+  staat al in de versie en gaat er dus uit, behalve als hij ook de hoofdartiest is. Wie de titel als
+  featuring noemt, staat er ook niet nog eens vooraan.
+- Elk stuk na ` - ` komt tussen haakjes: `Levels - Radio Edit` wordt `Avicii - Levels (Radio Edit)`.
+- Tekens die Windows niet in een bestandsnaam toestaat, gaan eruit (`/` `\` `:` worden `-`).
+
+Ook dit veld wordt alleen gevuld zolang het leeg is. De regels staan in `src/lib/library/fileName.ts`.
+
 ### Velden met vaste keuzes
 
 `dkj_bpm` en `dkj_album` accepteren alleen hun eigen opties; elke andere waarde breekt de import af.

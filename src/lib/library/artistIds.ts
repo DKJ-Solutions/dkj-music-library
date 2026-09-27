@@ -18,14 +18,16 @@
 // En elke track krijgt in `dkj_artist` één artiest: de remixer of editor als de titel er een noemt,
 // anders de eerste uit `artists` (primaryArtist.ts), ook weer alleen zolang dat veld leeg is -- zie
 // fillPrimaryArtists(). En in `dkj_albumartiest` de hele rij
-// artiesten als één tekst, in de volgorde van Spotify ("A, B, C") -- zie fillAlbumArtists().
+// artiesten als één tekst, in de volgorde van Spotify ("A, B, C") -- zie fillAlbumArtists(). En in
+// `dkj_file` de bestandsnaam zoals op de desktop (fileName.ts) -- zie fillFileNames().
 //
 // planArtistIds() is puur (geen database) en daardoor los te testen; applyArtistIdsFromSnapshot()
 // voert het plan uit, in één transactie.
 import type { DatabaseSync } from "node:sqlite";
 import type { Snapshot } from "@/lib/spotify/types";
 import { TRACKS_TABLE } from "./db";
-import { ALBUM_ARTIST_KEY, ARTIST_IDS_KEY, PRIMARY_ARTIST_KEY, TRACK_ID_KEY, albumArtistOf } from "./fields";
+import { ALBUM_ARTIST_KEY, ARTIST_IDS_KEY, FILE_KEY, PRIMARY_ARTIST_KEY, TRACK_ID_KEY, albumArtistOf } from "./fields";
+import { fileNameOf } from "./fileName";
 import { primaryArtistOf } from "./primaryArtist";
 import {
   SPOTIFY_LINK_TABLE,
@@ -266,8 +268,15 @@ export function fillAlbumArtists(db: DatabaseSync): number {
   return fillMissing(db, ALBUM_ARTIST_KEY, (track) => albumArtistOf(track.names));
 }
 
+/** Vult `dkj_file` (fileName.ts) bij elke track waar het nog leeg is. Geeft het aantal gevulde tracks terug. */
+export function fillFileNames(db: DatabaseSync): number {
+  return fillMissing(db, FILE_KEY, (track) => fileNameOf(track.title, track.names));
+}
+
 export interface LibraryIdResult {
   artists: ArtistIdResult;
+  /** Tracks die in deze run hun `dkj_file` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
+  fileNamesFilled: number;
   /** Tracks die in deze run hun `dkj_albumartiest` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
   albumArtistsFilled: number;
   /** Tracks die in deze run hun `dkj_artist` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
@@ -287,5 +296,6 @@ export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot
   const tracks = applyTrackIdsFromSnapshot(db, snapshot, readArtistIdMap(db));
   const primaryArtistsFilled = fillPrimaryArtists(db);
   const albumArtistsFilled = fillAlbumArtists(db);
-  return { albumArtistsFilled, artists, primaryArtistsFilled, renumbered, tracks };
+  const fileNamesFilled = fillFileNames(db);
+  return { albumArtistsFilled, artists, fileNamesFilled, primaryArtistsFilled, renumbered, tracks };
 }
