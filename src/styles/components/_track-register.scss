@@ -4,15 +4,23 @@
 // elders in de app dragen.
 // Het register gebruikt de hele breedte van het venster, niet de 1080px van de andere pagina's: acht
 // kolommen passen daar niet in. De zijmarges van .wrap blijven.
+// HOOGSTENS ÉÉN VERTICALE SCROLLBALK (Dave): de pagina is precies zo hoog als het venster en scrolt zelf
+// niet; masthead, filters en pager nemen wat ze nodig hebben, en het scrollvak van de tabel vult de rest.
+// Alleen in een venster dat daar te laag voor is (zie min-height van .register-table-box) scrolt de pagina.
 .wrap--full {
   max-width: none;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  padding-bottom: 0;
 }
 
 .track-register {
-  // Hoogte van de pager plus de ruimte erboven: wat het scrollvak van het venster overlaat.
-  --register-pager-height: 72px;
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
   gap: 18px;
   margin-top: 8px;
 }
@@ -67,17 +75,17 @@
   font-variant-numeric: tabular-nums;
 }
 
-// Eigen scrollvak dat NOOIT HOGER IS DAN HET VENSTER (Dave): het venster min de plakkende pager eronder,
-// zodat tabel en bladerknoppen samen altijd in beeld passen. De kolomkoppen blijven bovenaan staan en de
-// horizontale scrollbalk zit onderin beeld, in plaats van onder honderd rijen.
+// Eigen scrollvak dat NOOIT HOGER IS DAN HET VENSTER (Dave): het vult de ruimte tussen de filters en de
+// pager (flex), zodat tabel en bladerknoppen samen altijd in beeld passen en er maar één verticale
+// scrollbalk is: deze. De kolomkoppen blijven bovenaan staan en de horizontale scrollbalk zit onderin beeld.
 .register-table-box {
+  flex: 1 1 auto;
+  min-height: 240px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: auto;
-  max-height: calc(100vh - var(--register-pager-height));
-  max-height: calc(100dvh - var(--register-pager-height));
   overscroll-behavior: contain;
 }
 
@@ -396,20 +404,16 @@ a.register-menu-item:hover {
   text-align: center;
 }
 
-// Vorige en Volgende zijn ALTIJD ZICHTBAAR (Dave): de pager plakt aan de onderkant van het venster
-// zolang de tabel erboven nog doorloopt, met de paginakleur erachter zodat er geen rijen doorheen schijnen.
+// Vorige en Volgende zijn ALTIJD ZICHTBAAR (Dave): de pager staat onder het scrollvak, binnen het venster.
 .register-pager {
-  position: sticky;
-  bottom: 0;
-  z-index: 2;
+  flex: none;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
   margin-top: -8px;
-  padding: 10px 0;
-  background: var(--bg);
+  padding: 0 0 16px;
 }
 
 .register-pager-buttons {

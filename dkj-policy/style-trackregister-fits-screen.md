@@ -48,6 +48,7 @@ de PR wacht op Dave's oordeel.
 - [x] `.register-table-box`: `max-height` is het venster min de pager (`100dvh`, met `100vh` als terugval), zonder de oude minimale 420px
 - [x] `.register-pager`: plakt aan de onderkant van het venster, met de paginakleur erachter
 - [x] `.masthead`: `padding-bottom` 28px -> 12px
+- [x] Dave (27 september 2026): er waren twee verticale scrollbalken, want de `max-height` rekende de masthead en de filters erboven niet mee, dus de pagina scrolde ook. Nu is `.wrap--full` precies zo hoog als het venster (flexkolom), vult `.register-table-box` de rest (`flex: 1`, min. 240px) en staat de pager er gewoon onder: één verticale scrollbalk
 
 ### TEST
 
@@ -56,8 +57,9 @@ de PR wacht op Dave's oordeel.
 
 ### DEPLOY: style/trackregister-fits-screen
 
-De tabel in het Trackregister wordt nooit hoger dan het venster. Vorige en Volgende plakken aan de
-onderkant van het scherm, dus je hoeft niet meer naar beneden te scrollen om te bladeren. De kop van elke
+De tabel in het Trackregister wordt nooit hoger dan het venster: de pagina is zo hoog als het scherm en
+het scrollvak van de tabel vult wat er overblijft, dus er is nog maar één verticale scrollbalk. Vorige en
+Volgende staan daaronder altijd in beeld, dus je hoeft niet meer naar beneden te scrollen om te bladeren. De kop van elke
 pagina met een masthead heeft onderaan minder ruimte: 12px in plaats van 28px.
 
 **Score:** 2
