@@ -50,7 +50,7 @@ en `djcylow_mix` dat, net als `spotify_playlist`, naar de mix op djcylow.com wij
 - [x] `slug` op `Mix` (mixStore.ts), zoals de website hem uit `permalink` afleidt
 - [x] `djcylow_mix` in het schema, met `djcylowMix.ts` (link) en `djcylowMixes.ts` (plan + schrijven), aangesloten op de sync-route en `library:assign-ids`
 - [x] Trackregister: `dkj_file` en `dkj_artist` verborgen, `dkj_title` en `djcylow_mix` erbij, playlist- en mixlinks via één component
-- [x] Registertabel in Bahnschrift op breedte 94 (tokens `--font-narrow`, `--font-narrow-width`), `.register-tag` en `.register-chip` zonder padding en achtergrond
+- [x] Registertabel in Bahnschrift op breedte 94 (tokens `--font-narrow`, `--font-narrow-width`), `.register-tag` en `.register-chip` zonder padding en achtergrond, rijen om en om gekleurd
 - [x] Export gevuld (`library:assign-ids` met de mix-bron uit djcylow-react)
 - [x] README bijgewerkt
 
@@ -63,7 +63,7 @@ en `djcylow_mix` dat, net als `spotify_playlist`, naar de mix op djcylow.com wij
 
 Het trackregister heeft twee nieuwe kolommen. `dkj_title` toont alleen de titel van het nummer, in de
 vorm van `dkj_file` na de artiesten, en vervangt `dkj_file` in de tabel (zoeken op `dkj_file` kan nog).
-De tabel staat in een smaller lettertype (Bahnschrift, iets smaller dan normaal), en de labels voor BPM, album en groep en de artiest-ID's hebben geen achtergrond meer. Ook `dkj_artist` staat niet meer in de tabel; `dkj_albumartiest` toont de artiesten al. `djcylow_mix` noemt de mixen op djcylow.com waarin een track zit en linkt naar hun pagina, net zoals
+De tabel staat in een smaller lettertype (Bahnschrift, iets smaller dan normaal), en de labels voor BPM, album en groep en de artiest-ID's hebben geen achtergrond meer, en de rijen zijn om en om gekleurd. Ook `dkj_artist` staat niet meer in de tabel; `dkj_albumartiest` toont de artiesten al. `djcylow_mix` noemt de mixen op djcylow.com waarin een track zit en linkt naar hun pagina, net zoals
 `spotify_playlist` naar Spotify linkt. Een track zit in een mix als hij in de eigen MMC-playlist van
 die mix staat; zonder mix-bron op de machine blijft het veld zoals het was.
 
