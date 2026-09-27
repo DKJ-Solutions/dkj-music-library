@@ -34,9 +34,12 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `.claude/settings.json` from the specialists-init proposal (enabledPlugins + allow/deny permissions)
+- [x] adopt-dkj-policy Part 5: `.claude/statusline/dkj-progress.ps1` and the `statusLine` key
 
 ### TEST
+
+- [x] `settings.json` parses as strict JSON with `enabledPlugins`, `permissions` and `statusLine`
 
 ### DEPLOY: chore/commit-settings-statusline
 
@@ -44,7 +47,11 @@
 
 ##### Tier 0
 
-**Score:**
+The repo's Claude Code settings are now versioned: the enabled plugins, the workflow's allow rules and
+the deny rules for force-push, hard reset, rebase and `rm -rf`. The statusline draws a progress bar for
+the long background runs (test gate, ship-pr waiting on CI).
+
+**Score:** 3
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -53,7 +60,9 @@
 
 ##### Tier 1
 
-**Score:**
+N/A -- developer tooling only.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -62,7 +71,9 @@
 
 ##### Tier 2
 
-**Score:**
+N/A -- no app behaviour changes.
+
+**Score:** N/A
 
 #### Pull Request
 
