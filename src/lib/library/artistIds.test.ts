@@ -126,8 +126,8 @@ describe("applyArtistIdsFromSnapshot", () => {
     const first = applyLibraryIdsFromSnapshot(db, snap);
     expect(first.artists).toEqual({ newArtists: 3, tracksFilled: 0, totalArtists: 3 });
     expect(first.tracks.newTracks).toBe(2);
-    expect(getTrack(db, "MAR01-01")?.dkj_artist_ids).toEqual(["MAR01", "BRU01"]);
-    expect(getTrack(db, "MAR01-02")?.dkj_artist_ids).toEqual(["MAR01", "AMY01"]);
+    expect(getTrack(db, "MAR01-BRU01-01")?.dkj_artist_ids).toEqual(["MAR01", "BRU01"]);
+    expect(getTrack(db, "MAR01-AMY01-01")?.dkj_artist_ids).toEqual(["MAR01", "AMY01"]);
     const again = applyLibraryIdsFromSnapshot(db, snap);
     expect([again.artists.newArtists, again.renumbered, again.tracks.newTracks]).toEqual([0, 0, 0]);
   });
@@ -154,7 +154,7 @@ describe("applyArtistIdsFromSnapshot", () => {
     db.exec("UPDATE tracks SET dkj_track_id = REPLACE(dkj_track_id, 'XXX00-0', 'T00000')");
     const result = applyLibraryIdsFromSnapshot(db, snap);
     expect(result.renumbered).toBe(2);
-    expect(listTracks(db).map((t) => t.dkj_track_id)).toEqual(["MAR01-01", "MAR01-02"]);
+    expect(listTracks(db).map((t) => t.dkj_track_id)).toEqual(["MAR01-AMY01-01", "MAR01-BRU01-01"]);
   });
 
   it("gaat mee in de export, en een export van vóór de artiesten zet gewoon terug", () => {

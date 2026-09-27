@@ -1,12 +1,13 @@
-// EIGEN TRACK-ID'S UIT DE SPOTIFY-SNAPSHOT: elk NUMMER krijgt één ID, bv. PRO02-01.
+// EIGEN TRACK-ID'S UIT DE SPOTIFY-SNAPSHOT: elk NUMMER krijgt één ID, bv. PRO02-01 of MAR01-BRU01-01.
 //
-// HET FORMAAT: <dkj_artist_id van de hoofdartiest>-<volgnummer>. The Prodigy is PRO02, dus hun
-// eerste nummer is PRO02-01, het tweede PRO02-02. Het volgnummer is het laagste dat voor die artiest
-// nog vrij is, minstens twee cijfers, en groeit door na 99 (IMM01-143). Het streepje houdt het
-// eenduidig: artiest-ID en volgnummer kunnen allebei doorgroeien, en zonder scheiding zou MAR10001
-// zowel MAR100 + 01 als MAR10 + 001 kunnen zijn. De hoofdartiest is de eerste artiest die Spotify
-// noemt; heeft die (nog) geen eigen ID, dan wordt het XXX00-NN. Artiesten krijgen dus eerst hun ID
-// (artistIds.ts, applyLibraryIdsFromSnapshot), daarna de nummers.
+// HET FORMAAT: <dkj_artist_id>-<dkj_artist_id>-...-<volgnummer>: de eigen ID's van ALLE artiesten van
+// het nummer, in de volgorde die Spotify noemt (dus hoofdartiest eerst, gelijk aan `dkj_artist_ids`),
+// met een streepje ertussen, en daarachter een volgnummer. Firestarter van The Prodigy (PRO02) is
+// PRO02-21; Uptown Funk van Mark Ronson (MAR01) en Bruno Mars (BRU01) is MAR01-BRU01-01. Het
+// volgnummer telt per combinatie van artiesten: het laagste dat voor die combinatie nog vrij is,
+// minstens twee cijfers, en het groeit door na 99 (IMM01-143). Het laatste stuk na een streepje is dus
+// altijd het volgnummer. Heeft geen enkele artiest (nog) een eigen ID, dan wordt het XXX00-NN.
+// Artiesten krijgen daarom eerst hun ID (artistIds.ts, applyLibraryIdsFromSnapshot), daarna de nummers.
 //
 // Een nummer is niet hetzelfde als een Spotify-track. Dezelfde opname staat vaak meerdere keren op
 // Spotify (single, album, compilatie), elk met een eigen Spotify-ID. Twee Spotify-tracks tellen als
@@ -21,8 +22,10 @@
 // niet meer, ook niet als je `dkj_artist_ids` later zelf aanpast.
 //
 // DE OUDE ID'S (T000001, tot 27 september 2026) worden één keer omgenummerd door
-// renumberLegacyTrackIds(): per hoofdartiest in de volgorde van hun T-nummer, dus het oudste nummer van
-// een artiest krijgt -01.
+// renumberLegacyTrackIds(): per artiestencombinatie in de volgorde van hun T-nummer, dus het oudste
+// nummer van een combinatie krijgt -01. Het tussenformaat van diezelfde dag (alleen de hoofdartiest,
+// MAR01-03 voor Uptown Funk) is op 27 september 2026 met renumberTrackIds() omgezet; zie het
+// changelog-item van fix/track-id-all-artists.
 //
 // Bestaande rijen in `tracks` worden verder nooit aangepast: een nieuw nummer krijgt bij het aanmaken
 // zijn Spotify-metadata (titel, artiesten, album, duur, eigen artiest-ID's), en alles wat je daarna
@@ -38,14 +41,15 @@ import { toSqlValue, type TrackValue } from "./trackStore";
 
 export const SPOTIFY_LINK_TABLE = "spotify_track_ids";
 
-/** Het artiest-deel van een track-ID als de hoofdartiest geen eigen ID heeft. */
+/** Het artiest-deel van een track-ID als geen van de artiesten een eigen ID heeft. */
 export const NO_ARTIST_ID = "XXX00";
 
 const NUMBER_DIGITS = 2;
 const OWN_ID_SHAPE = /^(.+)-(\d+)$/;
 const LEGACY_ID_SHAPE = /^T\d+$/;
 
-/** Het eigen ID van het `n`-de nummer van een artiest: PRO02-01. Na 99 groeit het door (IMM01-100). */
+/** Het eigen ID van het `n`-de nummer van een artiest of combinatie: PRO02-01, MAR01-BRU01-01. Na 99
+ *  groeit het door (IMM01-100). */
 export function formatTrackId(artistId: string, n: number): string {
   return `${artistId}-${String(n).padStart(NUMBER_DIGITS, "0")}`;
 }
@@ -88,9 +92,10 @@ function ownArtistIds(track: Track, artistIdOf: ArtistIdMap): string[] {
   return track.artists.map((a) => (a.id ? artistIdOf.get(a.id) : undefined)).filter((id): id is string => !!id);
 }
 
-function mainArtistId(track: Track, artistIdOf: ArtistIdMap): string {
-  const main = track.artists[0];
-  return (main?.id && artistIdOf.get(main.id)) || NO_ARTIST_ID;
+/** Het artiest-deel van een track-ID: alle eigen artiest-ID's in volgorde, met streepjes. Krijgt dezelfde
+ *  lijst als `dkj_artist_ids` (ownArtistIds, ook in metadataOf), zodat ID en veld altijd overeenkomen. */
+export function artistPart(artistIds: readonly string[]): string {
+  return artistIds.length > 0 ? artistIds.join("-") : NO_ARTIST_ID;
 }
 
 export interface SpotifyLink {
@@ -135,7 +140,7 @@ export function planTrackIds(
       const key = songKey(track);
       let trackId = bySongKey.get(key);
       if (!trackId) {
-        trackId = numbers.next(mainArtistId(track, artistIdOf));
+        trackId = numbers.next(artistPart(ownArtistIds(track, artistIdOf)));
         bySongKey.set(key, trackId);
         plan.newTracks.push({ trackId, track });
       }
@@ -237,18 +242,50 @@ export function applyTrackIdsFromSnapshot(
   };
 }
 
-/** Nummert elke track met een oud ID (T000001) om naar het nieuwe formaat, in één transactie: per
- *  hoofdartiest (de eerste in `dkj_artist_ids`) in de volgorde van het oude nummer. Werkt de
- *  koppeltabel mee bij. Geeft het aantal omgenummerde tracks terug; een tweede keer doet niets. */
-export function renumberLegacyTrackIds(db: DatabaseSync): number {
+function parseArtistIds(value: string | null): string[] {
+  try {
+    const ids = value ? (JSON.parse(value) as unknown) : null;
+    return Array.isArray(ids) ? ids.filter((id): id is string => typeof id === "string" && id !== "") : [];
+  } catch {
+    return []; // met de hand verknoeid; valt terug op XXX00
+  }
+}
+
+/** Volgorde waarin tracks bij het omnummeren hun nieuwe volgnummer krijgen: op het oude ID, met het
+ *  getal als getal (T1000000 na T999999, MAR01-10 na MAR01-09). */
+function oldOrder(a: string, b: string): number {
+  const split = (id: string): [string, number] => {
+    const own = OWN_ID_SHAPE.exec(id);
+    if (own) return [own[1], Number(own[2])];
+    if (LEGACY_ID_SHAPE.test(id)) return ["T", Number(id.slice(1))];
+    return [id, 0];
+  };
+  const [pa, na] = split(a);
+  const [pb, nb] = split(b);
+  return pa < pb ? -1 : pa > pb ? 1 : na - nb;
+}
+
+/** Geeft elke track waarvoor `isStale` waar is een nieuw ID uit zijn huidige `dkj_artist_ids`, in één
+ *  transactie, en werkt de koppeltabel mee bij. Volgorde van toekenning = volgorde van het oude ID.
+ *  Geeft het aantal omgenummerde tracks terug. Bewust niet automatisch voor elk ID: een ID verandert
+ *  niet meer zodra het bestaat, ook niet als `dkj_artist_ids` later wijzigt. */
+export function renumberTrackIds(
+  db: DatabaseSync,
+  isStale: (trackId: string, artistIds: readonly string[]) => boolean
+): number {
   ensureSpotifyLinkTable(db);
-  const legacy = (
+  const stale = (
     db
       .prepare(`SELECT ${TRACK_ID_KEY}, "${ARTIST_IDS_KEY}" FROM ${TRACKS_TABLE}`)
       .all() as { dkj_track_id: string; dkj_artist_ids: string | null }[]
-  ).filter((row) => LEGACY_ID_SHAPE.test(row.dkj_track_id));
-  if (legacy.length === 0) return 0;
+  )
+    .map((row) => ({ id: row.dkj_track_id, artistIds: parseArtistIds(row.dkj_artist_ids) }))
+    .filter((row) => isStale(row.id, row.artistIds))
+    .sort((a, b) => oldOrder(a.id, b.id));
+  if (stale.length === 0) return 0;
 
+  // Alle bestaande ID's tellen als bezet, ook de oude die nog omgezet worden: zo kan een nieuw ID nooit
+  // samenvallen met een rij die nog niet aan de beurt was.
   const numbers = new TrackNumbers(allTrackIds(db));
   const now = new Date().toISOString();
   const renameTrack = db.prepare(`UPDATE ${TRACKS_TABLE} SET ${TRACK_ID_KEY} = ?, updated_at = ? WHERE ${TRACK_ID_KEY} = ?`);
@@ -256,24 +293,21 @@ export function renumberLegacyTrackIds(db: DatabaseSync): number {
 
   db.exec("BEGIN");
   try {
-    // Op het oude getal, niet op de tekst: T1000000 hoort na T999999.
-    legacy.sort((a, b) => Number(a.dkj_track_id.slice(1)) - Number(b.dkj_track_id.slice(1)));
-    for (const row of legacy) {
-      let main: string | undefined;
-      try {
-        const ids = row.dkj_artist_ids ? (JSON.parse(row.dkj_artist_ids) as unknown) : null;
-        if (Array.isArray(ids) && typeof ids[0] === "string" && ids[0] !== "") main = ids[0];
-      } catch {
-        // met de hand verknoeid; valt terug op XXX00
-      }
-      const id = numbers.next(main ?? NO_ARTIST_ID);
-      renameTrack.run(id, now, row.dkj_track_id);
-      renameLinks.run(id, row.dkj_track_id);
+    for (const row of stale) {
+      const id = numbers.next(artistPart(row.artistIds));
+      renameTrack.run(id, now, row.id);
+      renameLinks.run(id, row.id);
     }
     db.exec("COMMIT");
   } catch (err) {
     db.exec("ROLLBACK");
     throw err;
   }
-  return legacy.length;
+  return stale.length;
+}
+
+/** Nummert elke track met een oud ID (T000001) om naar het huidige formaat. Een tweede keer doet niets:
+ *  dat formaat wordt nergens meer gemaakt. */
+export function renumberLegacyTrackIds(db: DatabaseSync): number {
+  return renumberTrackIds(db, (trackId) => LEGACY_ID_SHAPE.test(trackId));
 }

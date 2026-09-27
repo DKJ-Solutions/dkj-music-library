@@ -107,11 +107,14 @@ rij het is.
 ### Eigen track-ID's uit Spotify
 
 Elk nummer dat in je Spotify-playlists voorkomt, krijgt een eigen ID in `dkj_track_id`. Het ID bestaat uit
-het artiest-ID van de hoofdartiest (zie hieronder), een streepje en een volgnummer: Firestarter van The
-Prodigy (`PRO02`) is `PRO02-21`. Het volgnummer is het laagste dat voor die artiest nog vrij is, heeft
-minstens twee cijfers en groeit na 99 door (`IMM01-143`). Het streepje zorgt dat je artiest-ID en
-volgnummer altijd uit elkaar kunt halen, ook als een van beide doorgroeit. Heeft de hoofdartiest geen
-eigen ID, dan begint het ID met `XXX00`.
+de artiest-ID's van alle artiesten van het nummer (zie hieronder), in dezelfde volgorde als
+`dkj_artist_ids` (de hoofdartiest eerst), met een streepje ertussen. Daarachter komt nog een streepje en een
+volgnummer. Firestarter van The Prodigy (`PRO02`) is `PRO02-21`. Cobra Dance van Billy Esteban (`BIL09`) en
+Cafe De Anatolia (`CAF01`) is `BIL09-CAF01-03`.
+
+Het volgnummer telt per combinatie van artiesten. Het is het laagste nummer dat voor die combinatie nog vrij
+is, heeft minstens twee cijfers en loopt na 99 gewoon door (`IMM01-143`). Het laatste stuk na een streepje
+is dus altijd het volgnummer. Heeft geen van de artiesten een eigen ID, dan begint het ID met `XXX00`.
 
 Dit gebeurt na elke sync op `/spotify` automatisch. Voor een snapshot die er al ligt, draai je:
 
@@ -126,8 +129,9 @@ npm run library:assign-ids
 - **Een ID verandert niet meer.** De tabel `spotify_track_ids` onthoudt welk Spotify-ID bij welk eigen ID
   hoort. Een nieuwe variant van een bekend nummer krijgt het bestaande ID, ook als de oude variant niet
   meer in je playlists staat. Pas je `dkj_artist_ids` later zelf aan, dan blijft het ID ook staan. De
-  enige uitzondering was de overstap van het oude formaat (`T000001`, tot 27 september 2026). Die ID's
-  zijn één keer omgenummerd, per hoofdartiest in de volgorde van hun oude nummer.
+  enige uitzondering was de overstap naar dit formaat op 27 september 2026. Toen zijn de oude ID's
+  (`T000001`, en kort daarna een variant met alleen de hoofdartiest) één keer omgenummerd, per
+  artiestencombinatie in de volgorde van hun oude nummer.
 - **Wat je zelf invult, blijft staan.** Een nieuw nummer krijgt bij het aanmaken titel, artiesten, album
   en duur van Spotify. Daarna past de toekenning die rij niet meer aan.
 
