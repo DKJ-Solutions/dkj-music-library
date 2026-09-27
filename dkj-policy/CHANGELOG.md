@@ -2,7 +2,40 @@
 
 ## [Unreleased]
 
-**9 patch entries** <!-- pending-tally -->
+**10 patch entries** <!-- pending-tally -->
+
+### DEPLOY: fix/track-id-all-artists · 20260927-160019Z
+
+#### What does the change on this branch deploy to main?
+
+##### Tier 0
+
+`dkj_track_id` bevat nu de ID's van alle artiesten van een nummer, in volgorde en met een streepje ertussen,
+en daarachter een volgnummer per artiestencombinatie. Cobra Dance van Billy Esteban en Cafe De Anatolia is
+`BIL09-CAF01-03`. Nummers met één artiest hebben hetzelfde ID als eerst (Firestarter blijft `PRO02-21`).
+De 4.692 nummers met meer dan één artiest zijn één keer omgenummerd, ook in de koppeltabel.
+
+**Score:** 3
+
+##### Tier 1
+
+Een persoonlijke tool zonder opdrachtgever; niemand buiten de ontwikkelaar merkt dit.
+
+**Score:** N/A
+
+##### Tier 2
+
+Er is geen dienst met abonnees.
+
+**Score:** N/A
+
+#### Pull Request
+
+dkj_track_id carries every artist ID in order, not just the main artist's (MAR01BRU01-01)
+
+[PR #12](https://github.com/DKJ-Solutions/dkj-music-library/pull/12)
+
+---
 
 ### DEPLOY: feat/track-id-format · 20260927-155129Z
 
