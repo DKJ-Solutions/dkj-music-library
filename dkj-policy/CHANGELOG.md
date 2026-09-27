@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**27 / 36 minor entries** <!-- pending-tally -->
+**27 / 37 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/register-column-switch · 20260927-222544Z
+
+Het trackregister heeft een kleine schakelaar `verborgen kolommen` in de filterbalk. Uit toont de gewone tabel, aan toont de vier kolommen die daar bewust uit zijn gelaten: `dkj_track_id`, `dkj_file`, `dkj_artist` en `dkj_artist_id` (als chip, of als menu met de namen bij meer artiesten). Zoeken, filters en bladeren werken in beide sets. Wisselen zet de sortering terug, omdat die bij een kop hoorde die dan verdwenen is.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+N/A -- een lokale app zonder abonnees; alleen de eigenaar gebruikt het register.
+
+**Score:** N/A
+
+#### Pull Request
+
+Switch in het trackregister tussen de zichtbare en de verborgen kolommen
+
+[PR #40](https://github.com/DKJ-Solutions/dkj-music-library/pull/40)
+
+---
 
 ### DEPLOY: feat/sort-ignore-articles · 20260927-211617Z
 
