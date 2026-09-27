@@ -39,21 +39,34 @@
 
 ### PLAN
 
+De repo beantwoordt de `decide`-vraag `Get-ReleaseAudienceTier` met 2 (Dave, 27 september 2026): de app
+is zelf het product en de gebruiker is de abonnee, ook als hij de enige gebruiker is. Aanleiding: de
+CHANGELOG week af van de bron en telde 19 patch-entries. Bron-issues: DKJ-Solutions/dkj-claude-plugins#2555,
+#2556, #2557.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `Get-ReleaseAudienceTier` met waarde 2 en de reden erbij in `scripts/repo-config.ps1`
+- [x] Dit branch-document opnieuw opgebouwd, zodat het al in de vorm voor tier 2 staat
 
 ### TEST
 
+- [x] `new-branch` bouwt met de nieuwe waarde de twee secties met een naam op in plaats van Tier 0/1/2
+
 ### DEPLOY: feat/release-audience-tier
 
-**Score:**
+Nieuwe changelog-entries vragen voortaan alleen naar tier 0 en naar tier 2 (de gebruiker van de app),
+net als in de bronrepo. De vraag naar tier 1 (management of opdrachtgever) vervalt, omdat die hier
+nooit van toepassing is.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A. Dit verandert alleen hoe entries gevraagd worden; in de app merkt de gebruiker niets.
+
+**Score:** N/A
 
 #### Pull Request
 
 Deze repo publiceert voor tier 2
-
