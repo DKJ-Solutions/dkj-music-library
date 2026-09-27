@@ -1,0 +1,163 @@
+# Finishes a ship whose session is gone: merges a pull request ship-pr armed with merge-when-green
+# once its required check turns green (issue #2329, derived from the source repo's own
+# .github/workflows/merge-on-green.yml, issue #2319).
+#
+# WHAT THIS CLOSES. ship-pr.ps1 refuses to merge on a red or pending required check. When that check
+# later turns green -- a re-run, a flaky leg retried -- nothing merged the pull request: the merge was
+# owed to a session that had already exited. ship-pr now ARMS such a pull request with the
+# merge-when-green label at that refusal, and this job is the sweep that reads the label.
+#
+# IT ADDS NO GATE OF ITS OWN. The plugin's pick-merge-on-green.ps1 only asks the tracker which armed
+# pull request is owed a merge; the ship is the plugin's own ship-pr.ps1, so the staleness guard, the
+# step-list gate and the DEPLOY lock are the same implementation a live session runs, and it folds and
+# verifies the resolves exactly as that session would. Both are reached through a checkout of the
+# plugin's tree rather than copied here.
+#
+# THE SHIP RUNS IN THIS REPO'S TREE, NOT IN THE CHECKED-OUT PLUGIN TREE. CLAUDE_PROJECT_DIR points
+# both scripts at the workspace root, so they read THIS repo's scripts/repo-config.ps1, its branch
+# document and its trunk -- the plugin checkout is only where the code comes from.
+#
+# THREE TRIGGERS FOR ONE SWEEP, AND THE SWEEP IGNORES WHICH OF THEM WOKE IT. workflow_run gives
+# immediacy; the schedule is what makes it durable (whether a partial re-run re-emits workflow_run is
+# not a contract worth resting this on); workflow_dispatch is the hand valve. workflow_run RUNS THE
+# VERSION OF THIS FILE ON THE DEFAULT BRANCH, so a change here is inert until it is merged.
+#
+# workflow_run RUNS WITH SECRETS EVEN FOR A PULL REQUEST FROM A FORK, which is why this job reads
+# NOTHING out of the event. Everything it acts on comes from the tracker: an open pull request
+# carrying a label only ship-pr writes, whose head is a branch of THIS repository -- the picker
+# refuses a cross-repository one outright. Neither guard is load-bearing alone.
+#
+# THE SHIP NEEDS FOLD_PUSH_TOKEN, AND THAT TOKEN NEEDS ONE MORE SCOPE THAN THE FOLD RUNNER'S:
+# Pull requests: Read and write, beside Contents: Read and write. A merge made with the job-scoped
+# GITHUB_TOKEN starts no workflow runs, so it would land the pull request and silence this repo's
+# CI on the trunk, fold-on-merge.yml and verify-resolved.yml all at once -- the unobserved-merge state
+# those runners exist to close. Without the scope the merge fails with a 403, loudly; it can never
+# merge without folding.
+#
+# ONE SWEEP AT A TIME, REPO-WIDE, AND NOT CANCELLED: this job merges and folds, and two concurrent
+# sweeps would race to ship the SAME pull request. A sweep re-reads the tracker when it starts, so a
+# dropped duplicate pending run costs nothing.
+#
+# WINDOWS: the shared scripts target Windows PowerShell 5.1, which is what 'shell: powershell' is.
+name: Merge on green
+
+# The job token only reads; the write half arrives as FOLD_PUSH_TOKEN on the one step that needs it.
+permissions:
+  contents: read
+  pull-requests: read
+
+on:
+  workflow_run:
+    workflows: ["Always-on budget", "Branch entry", "ci"]
+    types: [completed]
+  schedule:
+    # Every 3 hours: a backstop for what workflow_run misses, not the ordinary path -- sparser than
+    # the source repo's own half-hourly sweep (issue #2487). workflow_run wakes this the moment CI
+    # finishes, which is the ordinary path here too; the schedule only has to catch what that
+    # trigger misses. The source repo is public, so a windows-latest job costs it nothing on a
+    # standard runner and 30 minutes buys latency for free; a private repo is billed per scheduled
+    # job START, rounded up to a whole minute, whether or not anything is owed a merge. Half-hourly
+    # there is 48 jobs/day, roughly 1,440 billed minutes/month; every 3 hours is 8/day, roughly
+    # 240/month.
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: merge-on-green
+  cancel-in-progress: false
+
+jobs:
+  merge-on-green:
+    runs-on: windows-latest
+    # 45 minutes, longer than the other runners because this one waits on CI on purpose: ship-pr may
+    # bring a stale branch forward and re-certify it, and each lap is a full CI cycle. Re-size it to
+    # this repo's own CI duration; the cap is a wedge detector, against GitHub's six-hour default.
+    timeout-minutes: 45
+    steps:
+      # The trunk, not the event's head: the sweep asks the tracker which pull request is owed a merge,
+      # and on a scheduled run there is no head at all. Shallow here, deepened only when there is
+      # something to ship. FOLD_PUSH_TOKEN is persisted into the workspace git config, which is what
+      # lets ship-pr's own fold commit push past the trunk ruleset -- the fold runner's reasoning.
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: main
+          token: ${{ secrets.FOLD_PUSH_TOKEN }}
+
+      # THE SHARED SCRIPTS ARE PINNED TO A RELEASE, NOT ref: main (issue #2333). This job holds a write
+      # credential, and code fetched at the tip of another repository would run beside it with no
+      # release in between. Move the pin when you update the dkj-policy plugin: re-running
+      # adopt-ci-floor.ps1 reports a runner pinned behind the version it came from.
+      - name: Fetch the shared workflow scripts
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          repository: DKJ-Solutions/dkj-claude-plugins
+          ref: f582c704dbce851c4c6295ee163a5e8b3394234b # v5.8.0
+          path: .workflow-scripts
+          persist-credentials: false
+
+      # The picker reads with the job-scoped token, not the PAT: it only lists pull requests and
+      # their checks, and the standing credential stays out of every step that does not need it.
+      - name: Is any armed pull request owed a merge?
+        id: pick
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          CLAUDE_PROJECT_DIR: ${{ github.workspace }}
+        run: |
+          powershell -NoProfile -ExecutionPolicy Bypass -File .workflow-scripts/plugins/dkj-policy/scripts/ci/pick-merge-on-green.ps1
+          exit $LASTEXITCODE
+
+      # THE BRANCH ARRIVES THROUGH env:, NOT THROUGH ${{ }} INSIDE run:. A head ref is chosen by
+      # whoever opened the pull request; the picker has already refused any name outside a plain
+      # charset, and this is the second half of that same guard.
+      - name: Ship it
+        if: ${{ steps.pick.outputs.picked == 'true' }}
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ secrets.FOLD_PUSH_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          CLAUDE_PROJECT_DIR: ${{ github.workspace }}
+          SHIP_BRANCH: ${{ steps.pick.outputs.branch }}
+          SHIP_PR: ${{ steps.pick.outputs.pr }}
+          SHIP_SHA: ${{ steps.pick.outputs.sha }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # THE PLUGIN CHECKOUT SITS INSIDE THIS WORKSPACE, AND ship-pr READS THE TREE AS DIRTY BECAUSE
+          # OF IT. Excluded locally, so the fold runs in place on the trunk as it would in a session
+          # rather than detouring through a temporary worktree. .git/info/exclude is never committed.
+          Add-Content -LiteralPath .git/info/exclude -Value '/.workflow-scripts/'
+
+          # Widen the refspec before deepening: a checkout with ref: narrows remote.origin.fetch to
+          # the trunk, so an --unshallow alone would not know the branch this job is here to ship.
+          # The full history is what ship-pr's staleness walk needs to be sound.
+          git remote set-branches origin '*'
+          git fetch --unshallow --quiet origin
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "could not deepen this shallow clone -- ship-pr's staleness walk would be unsound, so nothing was merged."
+            exit 1
+          }
+
+          git checkout --quiet $env:SHIP_BRANCH
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "could not check out the head branch of PR #$($env:SHIP_PR) -- nothing was merged."
+            exit 1
+          }
+
+          # ship-pr dot-sources THIS checkout's scripts/repo-config.ps1, so it has to be the commit the
+          # picker judged -- and the picker refused any diff touching scripts/, .github/ or the plugin
+          # checkout path (#2338). A push after the pick stops the job; the next sweep judges it.
+          $head = (git rev-parse HEAD).Trim()
+          if ($head -ne $env:SHIP_SHA) {
+            Write-Error "PR #$($env:SHIP_PR)'s head moved after the pick ($($env:SHIP_SHA) -> $head) -- nothing was run or merged."
+            exit 1
+          }
+
+          # -SkipLint -SkipTests, and this job must not omit them: the sweep picked this pull request
+          # BECAUSE its required check is green on this exact head, and that certificate is what the
+          # merge is allowed on. Re-running the local gates here would prove nothing it does not carry.
+          Write-Host "merge-on-green: running ship-pr.ps1 on '$env:SHIP_BRANCH' for PR #$env:SHIP_PR"
+          powershell -NoProfile -ExecutionPolicy Bypass -File .workflow-scripts/plugins/dkj-policy/scripts/release/ship-pr.ps1 -SkipLint -SkipTests
+          exit $LASTEXITCODE

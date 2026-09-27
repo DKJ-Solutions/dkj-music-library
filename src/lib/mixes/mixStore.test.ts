@@ -63,7 +63,8 @@ describe("getMixDirCandidates", () => {
   });
 
   it("laat een expliciete override de énige kandidaat zijn -- een verkeerd pad hoort op te vallen", () => {
-    const override = path.join("D:", "elders", "mixes");
+    // Absoluut op elk OS: "D:" is alleen op Windows absoluut en werd op de Linux-CI relatief opgelost.
+    const override = path.resolve(path.sep, "elders", "mixes");
     expect(getMixDirCandidates(cwd, override)).toEqual([override]);
   });
 
