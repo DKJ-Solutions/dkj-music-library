@@ -2,7 +2,30 @@
 
 ## [Unreleased]
 
-**24 / 30 minor entries** <!-- pending-tally -->
+**24 / 31 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/album-candidates-dropdown · 20260927-202957Z
+
+Staat `dkj_album` in het Trackregister leeg omdat de playlists van een track verschillende albums
+noemen, dan toont de cel nu een menu "N albums" met die kandidaten, elk met zijn kleurstaal -- net als
+de menu's bij playlists en groepen. Zoek je op een albumnaam, dan staat die treffer op de knop. Een
+track met een ingevuld album toont gewoon dat album.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+N/A -- de Trackregister is een intern beheerscherm; geen abonnee ziet het.
+
+**Score:** N/A
+
+#### Pull Request
+
+dkj_album toont een menu met de kandidaat-albums als de playlists verschillen
+
+[PR #34](https://github.com/DKJ-Solutions/dkj-music-library/pull/34)
+
+---
 
 ### DEPLOY: style/dropdown-over-table · 20260927-201346Z
 
