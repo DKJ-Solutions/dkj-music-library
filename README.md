@@ -56,6 +56,43 @@ De mix-JSON's van de DJ Cylow-website worden alleen gelezen, nooit geschreven. D
 `MIXES_DATA_DIR`, of anders in `src/data/mixes` of `../djcylow-react/src/data/mixes`
 (zie `src/lib/mixes/mixStore.ts`).
 
+## De trackdatabase
+
+De eigen collectie (ongeveer 6000 tracks: je eigen track-ID met de metadata, zonder audio) staat in één
+SQLite-bestand, `data/library/library.db`. Die map valt onder `data/` en blijft dus buiten git. Het
+bestand gebruikt de SQLite die in Node zelf zit (22.13 of hoger), dus er hoeft niets extra's
+geïnstalleerd te worden. Wil je het bestand ergens anders, zet dan `LIBRARY_DB_PATH`.
+
+### Importeren
+
+```sh
+npm run library:import -- pad/naar/tracks.csv    # of .json
+```
+
+- **CSV**: de kopregel bestaat uit `track_id` plus veldnamen uit `src/lib/library/fields.ts`, gescheiden
+  door `,` of `;` (Excel). Een lijstveld zoals `artists` mag als `"Artiest A; Artiest B"`, maar zet het
+  tussen aanhalingstekens als `;` ook je scheidingsteken is. **Een lege cel laat de bestaande waarde
+  staan.**
+- **JSON**: een lijst objecten, of `{ "tracks": [...] }`. `null` maakt een veld leeg.
+
+Het script mag je vaker draaien. Een bestaande `track_id` wordt bijgewerkt en niet dubbel toegevoegd,
+en alleen de kolommen in het bestand worden aangeraakt. Klopt er één rij niet (een onbekende
+kolomnaam, `12.5` in een geheel-getalveld), dan wordt er niets geschreven en meldt het script welke
+rij het is.
+
+### Een veld toevoegen
+
+Voeg in `src/lib/library/fields.ts` één regel toe aan `TRACK_FIELDS`:
+
+```ts
+{ key: "energy", type: "integer", label: "Energie 1-10" },
+```
+
+Bij de volgende import of app-start krijgt de database die kolom zelf. Bestaande tracks houden al hun
+data en krijgen een lege waarde voor het nieuwe veld. De typen zijn `text`, `integer`, `real`,
+`boolean` en `json` (voor lijsten). Hernoemen gaat met `renamedFrom`. Haal je een veld weg, dan blijft
+de kolom met de data gewoon in de database staan. De regels staan bovenaan `fields.ts`.
+
 ## Poorten
 
 ```sh

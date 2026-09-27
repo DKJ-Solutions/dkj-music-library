@@ -36,9 +36,18 @@ Een lokale SQLite-database voor ~6000 tracks (eigen ID + Spotify-metadata), met 
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Veldregister `src/lib/library/fields.ts`: alle velden op één plek, met validatie
+- [x] `src/lib/library/db.ts`: SQLite via `node:sqlite`, schema-sync (toevoegen/hernoemen, nooit verwijderen)
+- [x] `src/lib/library/trackStore.ts`: upsert per veld, typeconversie, lezen/tellen/verwijderen
+- [x] CSV/JSON-import (`csv.ts`, `importFile.ts`, `scripts/library/import-tracks.ts`, `npm run library:import`)
+- [x] Dependencies: `tsx` (script draaien), `@types/node` naar ^22.13 (types voor `node:sqlite`)
+- [x] README: sectie "De trackdatabase"
 
 ### TEST
+
+- [x] `npm test`: 639 tests groen, waarvan 22 nieuw (schema-sync, rollback bij een foute rij, 6000 tracks in één keer)
+- [x] `npm run typecheck` en `npm run lint` groen
+- [x] Script met de hand gedraaid tegen een tijdelijke database: een foute rij wordt geweigerd, opnieuw importeren werkt bij zonder dubbelen, de artiestenlijst komt als JSON in de database
 
 ### DEPLOY: feature/track-library-db
 
@@ -46,7 +55,12 @@ Een lokale SQLite-database voor ~6000 tracks (eigen ID + Spotify-metadata), met 
 
 ##### Tier 0
 
-**Score:**
+The app now has a local track database. The collection of about 6000 tracks (your own track ID plus the
+Spotify metadata) goes into one SQLite file with `npm run library:import`, from a CSV or JSON file. A
+new data field is one line in `src/lib/library/fields.ts`, and the database adds the column itself.
+Removing a field never deletes data.
+
+**Score:** 4
 
 <!--
      Is this change also relevant to management and the employer/commissioner? Then continue to Tier 1.
@@ -55,7 +69,9 @@ Een lokale SQLite-database voor ~6000 tracks (eigen ID + Spotify-metadata), met 
 
 ##### Tier 1
 
-**Score:**
+Not relevant: the app is local and has no subscribers.
+
+**Score:** N/A
 
 <!--
      Is this change also relevant to a subscriber of the service? Then continue to Tier 2.
@@ -64,7 +80,9 @@ Een lokale SQLite-database voor ~6000 tracks (eigen ID + Spotify-metadata), met 
 
 ##### Tier 2
 
-**Score:**
+Not relevant: see Tier 1.
+
+**Score:** N/A
 
 #### Pull Request
 
