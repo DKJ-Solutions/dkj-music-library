@@ -116,7 +116,7 @@ rij het is.
 
 Elk nummer dat in je Spotify-playlists voorkomt, krijgt een eigen ID in `dkj_track_id`. Het ID bestaat uit
 de artiest-ID's van alle artiesten van het nummer (zie hieronder), in dezelfde volgorde als
-`dkj_artist_ids` (de hoofdartiest eerst), met een streepje ertussen. Daarachter komt nog een streepje en een
+`dkj_artist_id` (de hoofdartiest eerst), met een streepje ertussen. Daarachter komt nog een streepje en een
 volgnummer. Firestarter van The Prodigy (`PRO02`) is `PRO02-21`. Cobra Dance van Billy Esteban (`BIL09`) en
 Cafe De Anatolia (`CAF01`) is `BIL09-CAF01-03`.
 
@@ -143,7 +143,7 @@ npm run library:assign-ids
   van de groep. De regels staan in `src/lib/library/liveTitle.ts` en `liveVariants.ts`.
 - **Een ID verandert niet meer.** De tabel `spotify_track_ids` onthoudt welk Spotify-ID bij welk eigen ID
   hoort. Een nieuwe variant van een bekend nummer krijgt het bestaande ID, ook als de oude variant niet
-  meer in je playlists staat. Pas je `dkj_artist_ids` later zelf aan, dan blijft het ID ook staan. De
+  meer in je playlists staat. Pas je `dkj_artist_id` later zelf aan, dan blijft het ID ook staan. De
   enige uitzondering was de overstap naar dit formaat op 27 september 2026. Toen zijn de oude ID's
   (`T000001`, en kort daarna een variant met alleen de hoofdartiest) één keer omgenummerd, per
   artiestencombinatie in de volgorde van hun oude nummer.
@@ -156,7 +156,7 @@ De regels staan bovenaan `src/lib/library/trackIds.ts`.
 
 Elke artiest krijgt bij dezelfde stap een eigen ID: drie letters en een nummer, bijvoorbeeld `PRO01`.
 De ID's staan in de tabel `artists` (en in de export als `artists.ndjson`). Elke track krijgt in
-`dkj_artist_ids` de lijst ID's van zijn artiesten, met de hoofdartiest eerst.
+`dkj_artist_id` (tot 27 september 2026 `dkj_artist_ids`) de lijst ID's van zijn artiesten, met de hoofdartiest eerst.
 
 - **De letters zijn de eerste drie van de naam.** Een lidwoord vooraan telt niet mee: The Prodigy wordt
   `PRO`, De Dijk `DIJ`. Accenten gaan eraf (Röyksopp → `ROY`), en tekens die geen letter zijn tellen niet
@@ -165,7 +165,7 @@ De ID's staan in de tabel `artists` (en in de export als `artists.ndjson`). Elke
   vol, dan gaat het door met `MAR100`, zodat elke artiest een ID krijgt.
 - **Eén ID per Spotify-artiest.** Twee artiesten met dezelfde naam houden elk hun eigen ID, en een
   artiest die op Spotify van naam verandert, houdt zijn ID.
-- **Een zelf ingevulde `dkj_artist_ids` blijft staan.**
+- **Een zelf ingevulde `dkj_artist_id` blijft staan.**
 
 Daarnaast krijgt elke track in `dkj_artist` precies één artiest. De artiest die de remix of edit maakte,
 gaat altijd voor: staat een van de artiesten van de track in het versiedeel van de titel (`Filmic - CRi
@@ -196,7 +196,7 @@ Ook dit veld wordt alleen gevuld zolang het leeg is. De regels staan in `src/lib
 `dkj_title` is alleen de titel, in dezelfde vorm als in `dkj_file` na de artiesten: `Higher - David Penn
 Remix` wordt `Higher (David Penn Remix)`. Het is geen bestandsnaam, dus tekens als `?` en `:` blijven
 staan. Ook dit veld wordt alleen gevuld zolang het leeg is. Het trackregister toont `dkj_title` en niet
-`dkj_file`, en ook `dkj_artist` niet (`dkj_albumartiest` staat er wel); op beide zoeken kan nog wel.
+`dkj_file`, en ook `dkj_artist` en `dkj_track_id` niet; op alle drie zoeken kan nog wel.
 
 ### De playlists: `spotify_playlist`
 

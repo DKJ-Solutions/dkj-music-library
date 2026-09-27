@@ -123,30 +123,30 @@ describe("applyArtistIdsFromSnapshot", () => {
     track("t3", "Valerie", [["a2", "Mark Ronson"], ["a5", "Amy Winehouse"]])
   );
 
-  it("geeft nieuwe tracks hun ID en dkj_artist_ids in één keer, en doet bij opnieuw draaien niets", () => {
+  it("geeft nieuwe tracks hun ID en dkj_artist_id in één keer, en doet bij opnieuw draaien niets", () => {
     const db = memoryDb();
     const first = applyLibraryIdsFromSnapshot(db, snap);
     expect(first.artists).toEqual({ newArtists: 3, tracksFilled: 0, totalArtists: 3 });
     expect(first.tracks.newTracks).toBe(2);
-    expect(getTrack(db, "MAR01-BRU01-01")?.dkj_artist_ids).toEqual(["MAR01", "BRU01"]);
-    expect(getTrack(db, "MAR01-AMY01-01")?.dkj_artist_ids).toEqual(["MAR01", "AMY01"]);
+    expect(getTrack(db, "MAR01-BRU01-01")?.dkj_artist_id).toEqual(["MAR01", "BRU01"]);
+    expect(getTrack(db, "MAR01-AMY01-01")?.dkj_artist_id).toEqual(["MAR01", "AMY01"]);
     const again = applyLibraryIdsFromSnapshot(db, snap);
     expect([again.artists.newArtists, again.renumbered, again.tracks.newTracks]).toEqual([0, 0, 0]);
   });
 
-  it("vult dkj_artist_ids bij bestaande tracks die het nog niet hadden, hoofdartiest eerst", () => {
+  it("vult dkj_artist_id bij bestaande tracks die het nog niet hadden, hoofdartiest eerst", () => {
     const db = memoryDb();
     applyTrackIdsFromSnapshot(db, snap, new Map()); // tracks van vóór de artiest-ID's: XXX00-NN
     expect(applyArtistIdsFromSnapshot(db, snap).tracksFilled).toBe(2);
-    expect(getTrack(db, "XXX00-01")?.dkj_artist_ids).toEqual(["MAR01", "BRU01"]);
+    expect(getTrack(db, "XXX00-01")?.dkj_artist_id).toEqual(["MAR01", "BRU01"]);
   });
 
-  it("laat een zelf ingevulde dkj_artist_ids staan", () => {
+  it("laat een zelf ingevulde dkj_artist_id staan", () => {
     const db = memoryDb();
     applyTrackIdsFromSnapshot(db, snap, new Map());
-    upsertTracks(db, [{ dkj_track_id: "XXX00-01", dkj_artist_ids: ["ZZZ01"] }]);
+    upsertTracks(db, [{ dkj_track_id: "XXX00-01", dkj_artist_id: ["ZZZ01"] }]);
     applyArtistIdsFromSnapshot(db, snap);
-    expect(getTrack(db, "XXX00-01")?.dkj_artist_ids).toEqual(["ZZZ01"]);
+    expect(getTrack(db, "XXX00-01")?.dkj_artist_id).toEqual(["ZZZ01"]);
   });
 
   it("zet in dkj_artist de eerste artiest uit het rijtje, en laat een zelf ingevulde staan", () => {

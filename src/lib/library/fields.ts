@@ -46,9 +46,10 @@ export const TRACK_ID_KEY = "dkj_track_id";
  *  importbestand met de kolomkop `track_id` werkt nog (trackStore.ts). Geschreven wordt alleen de nieuwe. */
 export const LEGACY_TRACK_ID_KEY = "track_id";
 
-/** Het veld met de eigen artiest-ID's van een track (zie artistIds.ts). Hier en niet in artistIds.ts,
+/** Het veld met de eigen artiest-ID's van een track (zie artistIds.ts), tot 27 september 2026
+ *  `dkj_artist_ids`. Zelfde naam als de sleutel van de tabel artists, maar hier een lijst. Hier en niet in artistIds.ts,
  *  omdat trackIds.ts het ook nodig heeft en artistIds.ts trackIds.ts al importeert. */
-export const ARTIST_IDS_KEY = "dkj_artist_ids";
+export const ARTIST_IDS_KEY = "dkj_artist_id";
 
 /** Het veld met precies één artiest: de remixer, anders de eerste uit `artists` (zie primaryArtist.ts). */
 export const PRIMARY_ARTIST_KEY = "dkj_artist";
@@ -108,7 +109,12 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
   { key: "genre", type: "text", label: "Genre" },
   { key: "tags", type: "json", label: "Eigen tags, als lijst" },
   { key: "notes", type: "text", label: "Vrije notities" },
-  { key: "dkj_artist_ids", type: "json", label: "Eigen artiest-ID's (tabel artists, zie artistIds.ts), hoofdartiest eerst" },
+  {
+    key: "dkj_artist_id",
+    type: "json",
+    label: "Eigen artiest-ID's (tabel artists, zie artistIds.ts), hoofdartiest eerst",
+    renamedFrom: "dkj_artist_ids",
+  },
   {
     key: "dkj_bpm",
     type: "text",

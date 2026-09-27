@@ -130,7 +130,7 @@ describe("applyTrackIdsFromSnapshot", () => {
       artists: ["Artist a1"],
       album: "Album",
       duration_ms: 180000,
-      dkj_artist_ids: ["ART01"],
+      dkj_artist_id: ["ART01"],
     });
   });
 
@@ -186,9 +186,9 @@ describe("renumberLegacyTrackIds", () => {
   it("nummert oude T-ID's per artiestencombinatie om in de volgorde van het oude nummer, koppelingen incluis", () => {
     const db = memoryDb();
     upsertTracks(db, [
-      { dkj_track_id: "T000002", title: "Tweede", dkj_artist_ids: ["PRO02"] },
-      { dkj_track_id: "T000001", title: "Eerste", dkj_artist_ids: ["PRO02", "AMY01"] },
-      { dkj_track_id: "T000003", title: "Valerie", dkj_artist_ids: ["AMY01"] },
+      { dkj_track_id: "T000002", title: "Tweede", dkj_artist_id: ["PRO02"] },
+      { dkj_track_id: "T000001", title: "Eerste", dkj_artist_id: ["PRO02", "AMY01"] },
+      { dkj_track_id: "T000003", title: "Valerie", dkj_artist_id: ["AMY01"] },
       { dkj_track_id: "T000010", title: "Zonder artiest" },
       { dkj_track_id: "PRO02-01", title: "Al nieuw" },
     ]);
@@ -213,9 +213,9 @@ describe("renumberLegacyTrackIds", () => {
   it("zet met renumberTrackIds alleen om wat het predicaat aanwijst, in de volgorde van het oude ID", () => {
     const db = memoryDb();
     upsertTracks(db, [
-      { dkj_track_id: "MAR01-10", title: "Later", dkj_artist_ids: ["MAR01", "BRU01"] },
-      { dkj_track_id: "MAR01-09", title: "Eerder", dkj_artist_ids: ["MAR01", "BRU01"] },
-      { dkj_track_id: "MAR01-01", title: "Solo", dkj_artist_ids: ["MAR01"] },
+      { dkj_track_id: "MAR01-10", title: "Later", dkj_artist_id: ["MAR01", "BRU01"] },
+      { dkj_track_id: "MAR01-09", title: "Eerder", dkj_artist_id: ["MAR01", "BRU01"] },
+      { dkj_track_id: "MAR01-01", title: "Solo", dkj_artist_id: ["MAR01"] },
     ]);
     // Het tussenformaat: alleen de hoofdartiest, bij een nummer met meer artiesten.
     const onlyMain = (id: string, artists: readonly string[]) => artists.length > 1 && id.startsWith(`${artists[0]}-`) && /^[A-Z]{3}\d+-\d+$/.test(id);

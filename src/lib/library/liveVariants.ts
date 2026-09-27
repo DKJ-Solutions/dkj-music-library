@@ -145,7 +145,7 @@ export function mergeLiveVariants(db: DatabaseSync): LiveMergeResult {
       const merged = mergeRows(group);
       const next = retitle(merged);
       const survivorId = String(merged[TRACK_ID_KEY]);
-      // Het laagste ID met hetzelfde artiest-deel: zo blijft het ID bij `dkj_artist_ids` passen.
+      // Het laagste ID met hetzelfde artiest-deel: zo blijft het ID bij `dkj_artist_id` passen.
       const targetId = ids
         .filter((id) => trackIdPrefix(id) === trackIdPrefix(survivorId))
         .sort(compareTrackIds)[0];

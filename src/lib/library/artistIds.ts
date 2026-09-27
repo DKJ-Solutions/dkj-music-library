@@ -12,7 +12,7 @@
 // twee artiesten, en een artiest die op Spotify van naam verandert, houdt zijn ID. De tabel `artists`
 // onthoudt de koppeling; opnieuw toekennen op dezelfde snapshot doet niets.
 //
-// Elke track krijgt in `dkj_artist_ids` de lijst eigen artiest-ID's, hoofdartiest eerst, maar alleen
+// Elke track krijgt in `dkj_artist_id` de lijst eigen artiest-ID's, hoofdartiest eerst, maar alleen
 // zolang dat veld nog leeg is: wat je zelf invult, blijft staan.
 //
 // En elke track krijgt in `dkj_artist` één artiest: de remixer of editor als de titel er een noemt,
@@ -139,15 +139,15 @@ export function ensureArtistsTable(db: DatabaseSync): void {
 export interface ArtistIdResult {
   /** Artiesten die in deze run een eigen ID kregen. */
   newArtists: number;
-  /** Tracks waarvan `dkj_artist_ids` in deze run gevuld werd. */
+  /** Tracks waarvan `dkj_artist_id` in deze run gevuld werd. */
   tracksFilled: number;
   /** Totaal aantal artiesten na deze run. */
   totalArtists: number;
 }
 
-/** Kent eigen ID's toe aan elke nieuwe artiest in de snapshot en vult `dkj_artist_ids` bij tracks waar
+/** Kent eigen ID's toe aan elke nieuwe artiest in de snapshot en vult `dkj_artist_id` bij tracks waar
  *  dat nog leeg is. Draai dit vóór de track-ID's (zoals applyLibraryIdsFromSnapshot() doet): nieuwe tracks krijgen hun
- *  dkj_artist_ids dan al bij het aanmaken, en dit vult alleen oudere tracks aan. */
+ *  dkj_artist_id dan al bij het aanmaken, en dit vult alleen oudere tracks aan. */
 export function applyArtistIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot): ArtistIdResult {
   ensureArtistsTable(db);
   ensureSpotifyLinkTable(db);
@@ -352,7 +352,7 @@ export interface LibraryIdResult {
   tracks: TrackIdResult;
 }
 
-/** Alle eigen ID's uit de snapshot, in de volgorde die nodig is: eerst de artiesten (en `dkj_artist_ids`
+/** Alle eigen ID's uit de snapshot, in de volgorde die nodig is: eerst de artiesten (en `dkj_artist_id`
  *  bij bestaande tracks), dan het eenmalig omnummeren van oude track-ID's en het samenvoegen van
  *  live-varianten (zodat de koppeltabel de sleutels zonder live kent), dan de nieuwe nummers --
  *  een track-ID begint met het artiest-ID van zijn hoofdartiest. Elke stap is een eigen transactie en

@@ -24,13 +24,12 @@ const ALBUM_VARIANTS = ["Light (f)", "Full (f)", "Light (m)", "Full (m)"] as con
 const nf = new Intl.NumberFormat("nl-NL");
 const GROUP_OPTIONS: readonly string[] = TRACK_FIELDS.find((field) => field.key === "dkj_group")?.options ?? [];
 
-/** De kolommen van de tabel, in volgorde: het veld en waarop hij sorteert. dkj_file en dkj_artist staan
- *  er niet in (Dave): dkj_title en dkj_albumartiest tonen hetzelfde, en op beide zoeken kan nog steeds. */
+/** De kolommen van de tabel, in volgorde: het veld en waarop hij sorteert. dkj_track_id, dkj_file en
+ *  dkj_artist staan er niet in (Dave); op alle drie zoeken kan nog steeds. */
 const COLUMNS: readonly { key: SortKey; field: string }[] = [
-  { key: "id", field: "dkj_track_id" },
   { key: "dkjTitle", field: "dkj_title" },
   { key: "albumArtist", field: "dkj_albumartiest" },
-  { key: "artistIds", field: "dkj_artist_ids" },
+  { key: "artistIds", field: "dkj_artist_id" },
   { key: "playlists", field: "spotify_playlist" },
   { key: "mixes", field: "djcylow_mix" },
   { key: "bpm", field: "dkj_bpm" },
@@ -413,14 +412,13 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
         <table className="register-table">
           {/* Vaste verdeling van de breedte (table-layout: fixed), zodat alle kolommen altijd passen. */}
           <colgroup>
+            <col style={{ width: "23%" }} />
+            <col style={{ width: "15%" }} />
             <col style={{ width: "9%" }} />
-            <col style={{ width: "20%" }} />
+            <col style={{ width: "14%" }} />
             <col style={{ width: "13%" }} />
-            <col style={{ width: "8%" }} />
-            <col style={{ width: "13%" }} />
-            <col style={{ width: "12%" }} />
             <col style={{ width: "7%" }} />
-            <col style={{ width: "10%" }} />
+            <col style={{ width: "11%" }} />
             <col style={{ width: "8%" }} />
           </colgroup>
           <thead>
@@ -453,7 +451,6 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
             ) : (
               slice.map((row) => (
                 <tr key={row.id}>
-                  <td className="register-id"><Highlight text={row.id} term={term} /></td>
                   <td><OneLine text={row.dkjTitle} term={term} className="register-title" /></td>
                   <td><OneLine text={row.albumArtist} term={term} className="register-album-artist" /></td>
                   <td><ArtistIds ids={row.artistIds} names={row.artistNames} term={term} /></td>

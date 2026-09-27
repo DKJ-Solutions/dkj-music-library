@@ -51,8 +51,8 @@ export interface RegisterFilter {
 const text = (value: unknown): string | null => (typeof value === "string" && value !== "" ? value : null);
 
 export function toRegisterRow(track: StoredTrack, artistNames: Record<string, string>): RegisterRow {
-  const ids = Array.isArray(track.dkj_artist_ids)
-    ? track.dkj_artist_ids.filter((id): id is string => typeof id === "string")
+  const ids = Array.isArray(track.dkj_artist_id)
+    ? track.dkj_artist_id.filter((id): id is string => typeof id === "string")
     : [];
   const playlists = Array.isArray(track.spotify_playlist)
     ? track.spotify_playlist.filter(

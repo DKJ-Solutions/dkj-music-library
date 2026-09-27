@@ -76,7 +76,7 @@ describe("TrackRegister", () => {
     );
   });
 
-  it("kapt dkj_title af, met de volledige titel als tooltip, en toont dkj_file niet", () => {
+  it("kapt dkj_title af, met de volledige titel als tooltip, en toont dkj_file, dkj_artist en dkj_track_id niet", () => {
     const dkjTitle = "Bryde's Whale (New Ordinance Edit) (Extended Mix)";
     const file = `Airdraw, Jo.E & Aaren - ${dkjTitle}`;
     render(<TrackRegister rows={[row(1, { dkjTitle, file })]} artistCount={1} />);
@@ -84,6 +84,8 @@ describe("TrackRegister", () => {
     expect(screen.queryByTitle(file)).toBeNull();
     expect(screen.queryByRole("button", { name: /dkj_file/ })).toBeNull();
     expect(screen.queryByRole("button", { name: /^dkj_artist/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /dkj_track_id/ })).toBeNull();
+    expect(screen.getByRole("button", { name: /dkj_artist_id/ })).toBeTruthy();
   });
 
   it("zet één artiest-ID als chip, en meer in een menu met de namen", () => {
@@ -122,15 +124,15 @@ describe("TrackRegister", () => {
         artistCount={1}
       />
     );
-    const ids = () => Array.from(bodyRows(), (tr) => tr.querySelector(".register-id")?.textContent);
+    const titles = () => Array.from(bodyRows(), (tr) => tr.querySelector(".register-title")?.textContent);
     const header = screen.getByRole("button", { name: /dkj_bpm/ });
     fireEvent.click(header);
-    expect(ids()).toEqual(["ART01-003", "ART01-001", "ART01-002"]);
+    expect(titles()).toEqual(["Nummer 3", "Nummer 1", "Nummer 2"]);
     expect(header.closest("th")?.getAttribute("aria-sort")).toBe("ascending");
     fireEvent.click(header);
-    expect(ids()).toEqual(["ART01-001", "ART01-003", "ART01-002"]);
+    expect(titles()).toEqual(["Nummer 1", "Nummer 3", "Nummer 2"]);
     fireEvent.click(header);
-    expect(ids()).toEqual(["ART01-001", "ART01-002", "ART01-003"]);
+    expect(titles()).toEqual(["Nummer 1", "Nummer 2", "Nummer 3"]);
     expect(header.closest("th")?.getAttribute("aria-sort")).toBe("none");
   });
 

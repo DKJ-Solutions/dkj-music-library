@@ -42,7 +42,7 @@ try {
       `${total} tracks, ${totalLinks} Spotify-ID's in totaal`
   );
   console.log(
-    `${artists.newArtists} nieuwe artiesten, dkj_artist_ids gevuld bij ${artists.tracksFilled} tracks -- ` +
+    `${artists.newArtists} nieuwe artiesten, dkj_artist_id gevuld bij ${artists.tracksFilled} tracks -- ` +
       `${artists.totalArtists} artiesten in totaal`
   );
   if (primaryArtistsFilled > 0) console.log(`dkj_artist gevuld bij ${primaryArtistsFilled} bestaande tracks`);
