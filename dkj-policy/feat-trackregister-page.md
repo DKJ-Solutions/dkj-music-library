@@ -52,6 +52,7 @@ kan het niet. De app wel: de export staat in git en de bibliotheek bouwt zich op
 - [x] Lange `dkj_file` op één regel afgekapt met …, volledige naam als tooltip (Dave)
 - [x] Elke rij is precies één regel (Dave): tekstcellen afgekapt met tooltip, meer dan twee artiest-ID's in een menu met de namen; één gedeeld menu voor playlists en ID's
 - [x] Interactief versus statisch (Dave): links en menuknoppen in de accentkleur met rand en ↗/▾, statische chips en labels grijs zonder rand
+- [x] Link en menu ook onderling verschillend (Dave): een link is onderstreepte tekst met ↗, een menu een gevulde knop met ▾
 
 ### TEST
 
