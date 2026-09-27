@@ -1,6 +1,6 @@
 // /spotify/trackregister -- de tabel van het Trackregister. Hergebruikt .stats/.stat (masthead.scss),
 // .playlist-search (playlist-toolbar.scss) en de --emotion-*-tokens voor de albumkleuren; nieuw is
-// alleen de tabel zelf, want die heeft ruim twaalfduizend rijen en acht kolommen, meer dan de rijenlijsten
+// alleen de tabel zelf, want die heeft ruim twaalfduizend rijen en negen kolommen, meer dan de rijenlijsten
 // elders in de app dragen.
 // Het register gebruikt de hele breedte van het venster, niet de 1080px van de andere pagina's: acht
 // kolommen passen daar niet in. De zijmarges van .wrap blijven.

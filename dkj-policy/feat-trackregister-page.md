@@ -56,6 +56,7 @@ kan het niet. De app wel: de export staat in git en de bibliotheek bouwt zich op
 - [x] De tabel past altijd (Dave): `table-layout: fixed` met een vaste verdeling per kolom, alles in een cel afgekapt; pas onder 900px een horizontale scrollbalk
 - [x] Na #21 en #22: kolom heet `spotify_playlist` (was `dkj_playlists`), `dkj_album` is nu bij 8.257 tracks gevuld
 - [x] `dkj_artist_ids`: al vanaf twee artiesten een menu "N artists" (Dave)
+- [x] Kolom en filter `dkj_group` na #24; kolomverdeling aangepast zodat negen kolommen passen
 
 ### TEST
 

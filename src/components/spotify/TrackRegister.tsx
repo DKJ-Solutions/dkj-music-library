@@ -3,7 +3,7 @@
 // 100 rijen (12.000+ rijen in één keer renderen maakt de pagina traag). Alle logica die geen React is
 // zit in register.ts; hier alleen de weergave en de filterstand.
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { DKJ_ALBUM_COLOURS, DKJ_BPM_OPTIONS } from "@/lib/library/fields";
+import { DKJ_ALBUM_COLOURS, DKJ_BPM_OPTIONS, TRACK_FIELDS } from "@/lib/library/fields";
 import { playlistUrl, type PlaylistLink } from "@/lib/library/playlistLink";
 import {
   EMPTY_FILTER,
@@ -17,6 +17,7 @@ import {
 const PAGE_SIZE = 100;
 const ALBUM_VARIANTS = ["Light (f)", "Full (f)", "Light (m)", "Full (m)"] as const;
 const nf = new Intl.NumberFormat("nl-NL");
+const GROUP_OPTIONS: readonly string[] = TRACK_FIELDS.find((field) => field.key === "dkj_group")?.options ?? [];
 
 interface TrackRegisterProps {
   rows: RegisterRow[];
@@ -181,6 +182,7 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
   const [query, setQuery] = useState("");
   const [bpm, setBpm] = useState("");
   const [album, setAlbum] = useState("");
+  const [group, setGroup] = useState("");
   const [page, setPage] = useState(0);
   const deferredQuery = useDeferredValue(query);
   const box = useRef<HTMLDivElement>(null);
@@ -192,9 +194,10 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
   const haystacks = useMemo(() => rows.map(searchText), [rows]);
   const bpmCounts = useMemo(() => countBy(rows, "bpm"), [rows]);
   const albumCounts = useMemo(() => countBy(rows, "album"), [rows]);
+  const groupCounts = useMemo(() => countBy(rows, "group"), [rows]);
   const list = useMemo(
-    () => filterRegister(rows, haystacks, { term: deferredQuery, bpm, album }),
-    [rows, haystacks, deferredQuery, bpm, album]
+    () => filterRegister(rows, haystacks, { term: deferredQuery, bpm, album, group }),
+    [rows, haystacks, deferredQuery, bpm, album, group]
   );
 
   const term = fold(deferredQuery.trim());
@@ -254,6 +257,16 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
             <option value={EMPTY_FILTER}>{label("Leeg", albumCounts.get(EMPTY_FILTER))}</option>
           </select>
         </label>
+        <label className="register-filter" htmlFor="register-group">
+          <span>dkj_group</span>
+          <select id="register-group" value={group} onChange={(e) => reset(setGroup)(e.target.value)}>
+            <option value="">{label("Alle", rows.length)}</option>
+            {GROUP_OPTIONS.map((option) => (
+              <option key={option} value={option}>{label(option, groupCounts.get(option))}</option>
+            ))}
+            <option value={EMPTY_FILTER}>{label("Leeg", groupCounts.get(EMPTY_FILTER))}</option>
+          </select>
+        </label>
         <span className="register-count" aria-live="polite">
           {list.length === rows.length
             ? `${nf.format(rows.length)} nummers`
@@ -265,14 +278,15 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
         <table className="register-table">
           {/* Vaste verdeling van de breedte (table-layout: fixed), zodat alle kolommen altijd passen. */}
           <colgroup>
-            <col style={{ width: "11%" }} />
-            <col style={{ width: "23%" }} />
-            <col style={{ width: "11%" }} />
-            <col style={{ width: "14%" }} />
             <col style={{ width: "10%" }} />
-            <col style={{ width: "14%" }} />
+            <col style={{ width: "21%" }} />
+            <col style={{ width: "10%" }} />
+            <col style={{ width: "12%" }} />
+            <col style={{ width: "9%" }} />
+            <col style={{ width: "13%" }} />
             <col style={{ width: "7%" }} />
             <col style={{ width: "10%" }} />
+            <col style={{ width: "8%" }} />
           </colgroup>
           <thead>
             <tr>
@@ -284,12 +298,13 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
               <th><code>spotify_playlist</code></th>
               <th><code>dkj_bpm</code></th>
               <th><code>dkj_album</code></th>
+              <th><code>dkj_group</code></th>
             </tr>
           </thead>
           <tbody>
             {slice.length === 0 ? (
               <tr>
-                <td colSpan={8} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
+                <td colSpan={9} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
               </tr>
             ) : (
               slice.map((row) => (
@@ -302,6 +317,7 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
                   <td className="register-playlists-cell"><PlaylistLabels playlists={row.playlists} term={term} /></td>
                   <td>{row.bpm ? <span className="register-tag"><Highlight text={row.bpm} term={term} /></span> : <Empty />}</td>
                   <td>{row.album ? <AlbumTag album={row.album} term={term} /> : <Empty />}</td>
+                  <td>{row.group ? <span className="register-tag"><Highlight text={row.group} term={term} /></span> : <Empty />}</td>
                 </tr>
               ))
             )}

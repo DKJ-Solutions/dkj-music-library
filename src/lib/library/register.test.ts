@@ -14,6 +14,7 @@ function stored(over: Partial<StoredTrack> = {}): StoredTrack {
     dkj_bpm: null,
     dkj_album: null,
     dkj_file: "Mark Ronson - Uptown Funk",
+    dkj_group: "MMC",
     spotify_playlist: [{ id: "p1", name: "Funk" }, { bad: true }],
     ...over,
   };
@@ -32,6 +33,7 @@ describe("toRegisterRow", () => {
       bpm: "112BPM",
       album: null,
       file: "Mark Ronson - Uptown Funk",
+      group: "MMC",
       playlists: [{ id: "p1", name: "Funk" }],
     });
   });
@@ -48,7 +50,7 @@ describe("filterRegister", () => {
     toRegisterRow(stored({ dkj_track_id: "ROY01-01", title: "Eple", dkj_artist_ids: ["ROY01"], dkj_artist: "Röyksopp", dkj_albumartiest: "Röyksopp" }), {}),
   ];
   const hay = rows.map(searchText);
-  const run = (filter: Partial<{ term: string; bpm: string; album: string }>) =>
+  const run = (filter: Partial<{ term: string; bpm: string; album: string; group: string }>) =>
     filterRegister(rows, hay, { term: "", bpm: "", album: "", ...filter }).map((row) => row.id);
 
   it("zoekt ook op playlistnaam", () => {
@@ -58,6 +60,11 @@ describe("filterRegister", () => {
   it("zoekt zonder accenten of hoofdletters, ook in artiest-ID's", () => {
     expect(run({ term: "royksopp" })).toEqual(["ROY01-01"]);
     expect(run({ term: "BRU01" })).toEqual(["MAR01-BRU01-01"]);
+  });
+
+  it("filtert op dkj_group", () => {
+    expect(run({ group: "MMC" })).toEqual(["MAR01-BRU01-01", "ROY01-01"]);
+    expect(run({ group: EMPTY_FILTER })).toEqual([]);
   });
 
   it("filtert op een optie en op leeg", () => {

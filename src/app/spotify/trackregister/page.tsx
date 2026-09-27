@@ -45,7 +45,7 @@ export default function TrackRegisterPage() {
           eerste artiest), <code>dkj_albumartiest</code> (alle artiesten in Spotify-volgorde),{" "}
           <code>dkj_artist_ids</code>, <code>dkj_bpm</code>, <code>dkj_album</code>, <code>dkj_file</code> (de
           bestandsnaam zoals op de desktop) en <code>spotify_playlist</code> (klik op een playlist om hem op Spotify te
-          openen). De data komt uit{" "}
+          openen) en <code>dkj_group</code>. De data komt uit{" "}
           <code>data/library/export/</code>, dus elke kloon van de repo toont hetzelfde register.
         </p>
       </header>
