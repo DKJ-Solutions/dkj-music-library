@@ -152,7 +152,19 @@ De ID's staan in de tabel `artists` (en in de export als `artists.ndjson`). Elke
   artiest die op Spotify van naam verandert, houdt zijn ID.
 - **Een zelf ingevulde `dkj_artist_ids` blijft staan.**
 
+Daarnaast krijgt elke track in `dkj_artist` precies één artiest: de eerste uit `artists`, dus de
+hoofdartiest. Ook die wordt alleen gevuld zolang hij leeg is; wat je zelf invult, blijft staan.
+
 De regels staan bovenaan `src/lib/library/artistIds.ts`.
+
+### Velden met vaste keuzes
+
+`dkj_bpm` en `dkj_album` accepteren alleen hun eigen opties; elke andere waarde breekt de import af.
+Hoofdletters en spaties tellen niet mee (`128 bpm` wordt `128BPM`).
+
+- **`dkj_bpm`**: `128BPM`, `112BPM`, `176BPM`, `144BPM`, `96BPM`.
+- **`dkj_album`**: een kleur met `Light (f)`, `Full (f)`, `Light (m)` of `Full (m)`, bijvoorbeeld
+  `Green Light (f)`. De acht kleuren zijn Green, Yellow, Red, Purple, Cyan, Blue, Orange en Magenta.
 
 ### Een veld toevoegen
 
@@ -164,7 +176,7 @@ Voeg in `src/lib/library/fields.ts` één regel toe aan `TRACK_FIELDS`:
 
 Bij de volgende import of app-start krijgt de database die kolom zelf. Bestaande tracks houden al hun
 data en krijgen een lege waarde voor het nieuwe veld. De typen zijn `text`, `integer`, `real`,
-`boolean` en `json` (voor lijsten). Hernoemen gaat met `renamedFrom`. Haal je een veld weg, dan blijft
+`boolean` en `json` (voor lijsten). Een `text`-veld kan met `options` een vaste lijst keuzes krijgen. Hernoemen gaat met `renamedFrom`. Haal je een veld weg, dan blijft
 de kolom met de data gewoon in de database staan. De regels staan bovenaan `fields.ts`.
 
 ## Poorten

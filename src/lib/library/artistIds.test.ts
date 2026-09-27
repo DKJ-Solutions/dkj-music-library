@@ -7,6 +7,7 @@ import {
   applyArtistIdsFromSnapshot,
   applyLibraryIdsFromSnapshot,
   artistPrefix,
+  fillPrimaryArtists,
   formatArtistId,
   planArtistIds,
 } from "./artistIds";
@@ -145,6 +146,22 @@ describe("applyArtistIdsFromSnapshot", () => {
     upsertTracks(db, [{ dkj_track_id: "XXX00-01", dkj_artist_ids: ["ZZZ01"] }]);
     applyArtistIdsFromSnapshot(db, snap);
     expect(getTrack(db, "XXX00-01")?.dkj_artist_ids).toEqual(["ZZZ01"]);
+  });
+
+  it("zet in dkj_artist de eerste artiest uit het rijtje, en laat een zelf ingevulde staan", () => {
+    const db = memoryDb();
+    applyLibraryIdsFromSnapshot(db, snap);
+    expect(getTrack(db, "MAR01-BRU01-01")?.dkj_artist).toBe("Mark Ronson");
+    upsertTracks(db, [
+      { dkj_track_id: "MAR01-BRU01-01", dkj_artist: null },
+      { dkj_track_id: "MAR01-AMY01-01", dkj_artist: "Amy Winehouse" },
+      { dkj_track_id: "LOS01-01", artists: [] },
+    ]);
+    expect(fillPrimaryArtists(db)).toBe(1);
+    expect(getTrack(db, "MAR01-BRU01-01")?.dkj_artist).toBe("Mark Ronson");
+    expect(getTrack(db, "MAR01-AMY01-01")?.dkj_artist).toBe("Amy Winehouse");
+    expect(getTrack(db, "LOS01-01")?.dkj_artist).toBeNull();
+    expect(fillPrimaryArtists(db)).toBe(0);
   });
 
   it("nummert oude T-ID's om zodra de artiesten bekend zijn", () => {
