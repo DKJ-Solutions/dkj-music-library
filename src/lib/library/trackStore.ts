@@ -2,20 +2,20 @@
 // fields.ts: een kolom die daar niet in staat, wordt niet gelezen en niet geschreven.
 //
 // SCHRIJVEN IS AANVULLEN, NIET VERVANGEN. upsertTracks() werkt alleen de velden bij die in een rij
-// staan. Een import met alleen `track_id` en `bpm` laat titel, artiesten enz. dus ongemoeid. Wie een
+// staan. Een import met alleen `dkj_track_id` en `bpm` laat titel, artiesten enz. dus ongemoeid. Wie een
 // veld echt wil leegmaken, geeft het mee met null (dat kan alleen vanuit JSON: een lege CSV-cel
 // betekent "niet bekend" en laat de bestaande waarde staan, zie scripts/library/import-tracks.ts).
 //
 // SERVER-ONLY: werkt op een DatabaseSync uit db.ts.
 import type { DatabaseSync, SQLInputValue } from "node:sqlite";
 import { TRACKS_TABLE } from "./db";
-import { TRACK_FIELDS, TRACK_ID_KEY, type FieldDef } from "./fields";
+import { LEGACY_TRACK_ID_KEY, TRACK_FIELDS, TRACK_ID_KEY, type FieldDef } from "./fields";
 
 export type TrackValue = string | number | boolean | null | unknown[] | Record<string, unknown>;
 
-/** Eén track: altijd een `track_id`, plus welke velden uit fields.ts er ook zijn. */
+/** Eén track: altijd een `dkj_track_id`, plus welke velden uit fields.ts er ook zijn. */
 export interface TrackRecord {
-  track_id: string;
+  dkj_track_id: string;
   [field: string]: TrackValue | undefined;
 }
 
@@ -100,7 +100,7 @@ export function fromSqlValue(field: FieldDef, value: unknown): TrackValue {
 
 function rowToTrack(row: Record<string, unknown>, fields: readonly FieldDef[]): StoredTrack {
   const track: StoredTrack = {
-    track_id: String(row[TRACK_ID_KEY]),
+    dkj_track_id: String(row[TRACK_ID_KEY]),
     created_at: String(row.created_at),
     updated_at: String(row.updated_at),
   };
@@ -140,9 +140,9 @@ export function upsertTracks(
       const keys: string[] = [];
       const values: SQLInputValue[] = [];
       try {
-        id = validTrackId(record[TRACK_ID_KEY]);
+        id = validTrackId(record[TRACK_ID_KEY] ?? record[LEGACY_TRACK_ID_KEY]);
         for (const [key, value] of Object.entries(record)) {
-          if (key === TRACK_ID_KEY || value === undefined) continue;
+          if (key === TRACK_ID_KEY || key === LEGACY_TRACK_ID_KEY || value === undefined) continue;
           const field = byKey.get(key);
           if (!field) {
             throw new TrackInputError(`onbekend veld "${key}" (staat niet in fields.ts)`);
@@ -191,7 +191,7 @@ export function getTrack(
   return row ? rowToTrack(row, fields) : null;
 }
 
-/** Alle tracks, gesorteerd op track_id. Bij ~6000 tracks is alles in één keer lezen prima. */
+/** Alle tracks, gesorteerd op dkj_track_id. Bij ~6000 tracks is alles in één keer lezen prima. */
 export function listTracks(
   db: DatabaseSync,
   fields: readonly FieldDef[] = TRACK_FIELDS

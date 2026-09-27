@@ -21,7 +21,7 @@ describe("het schema in fields.ts", () => {
 
   it("weigert dubbele, gereserveerde en ongeldige veldnamen", () => {
     expect(() => validateFields([{ key: "bpm", type: "real", label: "" }, { key: "bpm", type: "real", label: "" }])).toThrow();
-    expect(() => validateFields([{ key: "track_id", type: "text", label: "" }])).toThrow();
+    expect(() => validateFields([{ key: "dkj_track_id", type: "text", label: "" }])).toThrow();
     expect(() => validateFields([{ key: "Mijn Veld", type: "text", label: "" }])).toThrow();
   });
 });
@@ -31,19 +31,19 @@ describe("syncSchema", () => {
 
   it("voegt een nieuw veld toe aan een bestaande database, met behoud van de rijen", () => {
     const db = memoryDb(base);
-    upsertTracks(db, [{ track_id: "t1", title: "Eerste" }], base);
+    upsertTracks(db, [{ dkj_track_id: "t1", title: "Eerste" }], base);
 
     const withEnergy = [...base, { key: "energy", type: "integer", label: "" } as FieldDef];
     expect(syncSchema(db, withEnergy).added).toEqual(["energy"]);
 
     expect(getTrack(db, "t1", withEnergy)).toMatchObject({ title: "Eerste", energy: null });
-    upsertTracks(db, [{ track_id: "t1", energy: 7 }], withEnergy);
+    upsertTracks(db, [{ dkj_track_id: "t1", energy: 7 }], withEnergy);
     expect(getTrack(db, "t1", withEnergy)).toMatchObject({ title: "Eerste", energy: 7 });
   });
 
   it("hernoemt een kolom via renamedFrom, met de data erin", () => {
     const db = memoryDb([{ key: "key", type: "text", label: "" }]);
-    upsertTracks(db, [{ track_id: "t1", key: "8A" }], [{ key: "key", type: "text", label: "" }]);
+    upsertTracks(db, [{ dkj_track_id: "t1", key: "8A" }], [{ key: "key", type: "text", label: "" }]);
 
     const renamed: FieldDef[] = [{ key: "musical_key", type: "text", label: "", renamedFrom: "key" }];
     expect(syncSchema(db, renamed).renamed).toEqual([{ from: "key", to: "musical_key" }]);
@@ -61,10 +61,10 @@ describe("upsertTracks", () => {
   it("voegt toe en werkt daarna alleen de meegegeven velden bij", () => {
     const db = memoryDb();
     expect(
-      upsertTracks(db, [{ track_id: "dkj-0001", title: "Levels", artists: ["Avicii"], bpm: 126 }])
+      upsertTracks(db, [{ dkj_track_id: "dkj-0001", title: "Levels", artists: ["Avicii"], bpm: 126 }])
     ).toEqual({ inserted: 1, updated: 0 });
 
-    expect(upsertTracks(db, [{ track_id: "dkj-0001", bpm: 126.5 }])).toEqual({ inserted: 0, updated: 1 });
+    expect(upsertTracks(db, [{ dkj_track_id: "dkj-0001", bpm: 126.5 }])).toEqual({ inserted: 0, updated: 1 });
     expect(getTrack(db, "dkj-0001")).toMatchObject({
       title: "Levels",
       artists: ["Avicii"],
@@ -76,26 +76,26 @@ describe("upsertTracks", () => {
   it("schrijft niets als één rij fout is", () => {
     const db = memoryDb();
     expect(() =>
-      upsertTracks(db, [{ track_id: "a", title: "Goed" }, { track_id: "b", bmp: 120 }])
+      upsertTracks(db, [{ dkj_track_id: "a", title: "Goed" }, { dkj_track_id: "b", bmp: 120 }])
     ).toThrow(/rij 2: onbekend veld "bmp"/);
     expect(countTracks(db)).toBe(0);
   });
 
-  it("eist een track_id", () => {
+  it("eist een dkj_track_id", () => {
     expect(() => upsertTracks(memoryDb(), [{ title: "Zonder ID" }])).toThrow(TrackInputError);
   });
 
   it("maakt een veld leeg met null", () => {
     const db = memoryDb();
-    upsertTracks(db, [{ track_id: "a", genre: "House" }]);
-    upsertTracks(db, [{ track_id: "a", genre: null }]);
+    upsertTracks(db, [{ dkj_track_id: "a", genre: "House" }]);
+    upsertTracks(db, [{ dkj_track_id: "a", genre: null }]);
     expect(getTrack(db, "a")?.genre).toBeNull();
   });
 
   it("lijst, telt en verwijdert", () => {
     const db = memoryDb();
-    upsertTracks(db, [{ track_id: "b" }, { track_id: "a" }]);
-    expect(listTracks(db).map((t) => t.track_id)).toEqual(["a", "b"]);
+    upsertTracks(db, [{ dkj_track_id: "b" }, { dkj_track_id: "a" }]);
+    expect(listTracks(db).map((t) => t.dkj_track_id)).toEqual(["a", "b"]);
     expect(deleteTrack(db, "a")).toBe(true);
     expect(deleteTrack(db, "a")).toBe(false);
     expect(countTracks(db)).toBe(1);
@@ -103,7 +103,7 @@ describe("upsertTracks", () => {
 
   it("verwerkt 6000 tracks in één keer", () => {
     const db = memoryDb();
-    const records = Array.from({ length: 6000 }, (_, i) => ({ track_id: `t${i}`, title: `Track ${i}`, bpm: 120 }));
+    const records = Array.from({ length: 6000 }, (_, i) => ({ dkj_track_id: `t${i}`, title: `Track ${i}`, bpm: 120 }));
     expect(upsertTracks(db, records).inserted).toBe(6000);
     expect(countTracks(db)).toBe(6000);
   });
@@ -130,14 +130,14 @@ describe("toSqlValue", () => {
 describe("import uit CSV", () => {
   it("laat een lege cel de bestaande waarde staan", () => {
     const db = memoryDb();
-    upsertTracks(db, [{ track_id: "a", title: "Titel", bpm: 128 }]);
-    upsertTracks(db, parseImportText("track_id;title;bpm\na;;130\n", "csv"));
+    upsertTracks(db, [{ dkj_track_id: "a", title: "Titel", bpm: 128 }]);
+    upsertTracks(db, parseImportText("dkj_track_id;title;bpm\na;;130\n", "csv"));
     expect(getTrack(db, "a")).toMatchObject({ title: "Titel", bpm: 130 });
   });
 
   it("leest JSON als lijst of als { tracks }", () => {
-    expect(parseImportText('[{"track_id":"a"}]', "json")).toEqual([{ track_id: "a" }]);
-    expect(parseImportText('{"tracks":[{"track_id":"a"}]}', "json")).toEqual([{ track_id: "a" }]);
+    expect(parseImportText('[{"dkj_track_id":"a"}]', "json")).toEqual([{ dkj_track_id: "a" }]);
+    expect(parseImportText('{"tracks":[{"dkj_track_id":"a"}]}', "json")).toEqual([{ dkj_track_id: "a" }]);
     expect(() => parseImportText('{"x":1}', "json")).toThrow();
   });
 });

@@ -133,16 +133,16 @@ export function applyArtistIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot)
     (
       db.prepare(`SELECT spotify_track_id, ${TRACK_ID_KEY} FROM ${SPOTIFY_LINK_TABLE}`).all() as {
         spotify_track_id: string;
-        track_id: string;
+        dkj_track_id: string;
       }[]
-    ).map((row) => [row.spotify_track_id, row.track_id])
+    ).map((row) => [row.spotify_track_id, row.dkj_track_id])
   );
   const empty = new Set(
     (
       db.prepare(`SELECT ${TRACK_ID_KEY} FROM ${TRACKS_TABLE} WHERE "${ARTIST_IDS_FIELD}" IS NULL`).all() as {
-        track_id: string;
+        dkj_track_id: string;
       }[]
-    ).map((row) => row.track_id)
+    ).map((row) => row.dkj_track_id)
   );
 
   const now = new Date().toISOString();

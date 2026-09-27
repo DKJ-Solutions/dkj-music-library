@@ -16,6 +16,7 @@ import {
   SYSTEM_COLUMNS,
   TRACK_FIELDS,
   TRACK_ID_KEY,
+  LEGACY_TRACK_ID_KEY,
   validateFields,
   type FieldDef,
   type FieldType,
@@ -72,11 +73,21 @@ function columnNames(db: DatabaseSync): Set<string> {
   return new Set(rows.map((row) => row.name));
 }
 
+/** Hernoemt kolom `from` naar `to` in `table`, als de tabel bestaat en de kolom nog de oude naam heeft.
+ *  Namen komen uit de code zelf, nooit uit invoer. */
+export function renameLegacyColumn(db: DatabaseSync, table: string, from: string, to: string): void {
+  const columns = new Set(
+    (db.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[]).map((row) => row.name)
+  );
+  if (columns.has(from) && !columns.has(to)) db.exec(`ALTER TABLE ${table} RENAME COLUMN "${from}" TO "${to}"`);
+}
+
 /** Maakt de tabel als hij er nog niet is, hernoemt kolommen met `renamedFrom` en voegt ontbrekende
  *  kolommen toe. Verwijdert nooit iets. Veldnamen zijn door validateFields() al beperkt tot
  *  [a-z0-9_], dus ze kunnen veilig in de SQL staan. */
 export function syncSchema(db: DatabaseSync, fields: readonly FieldDef[]): SchemaSyncReport {
   validateFields(fields);
+  renameLegacyColumn(db, TRACKS_TABLE, LEGACY_TRACK_ID_KEY, TRACK_ID_KEY);
   const report: SchemaSyncReport = { added: [], renamed: [], orphaned: [] };
 
   // Bewust geen STRICT-tabel: dan zou een type-wijziging in fields.ts de oude rijen breken.

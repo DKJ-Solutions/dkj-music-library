@@ -34,7 +34,12 @@ export interface FieldDef {
 
 /** De sleutel van elke track: jouw eigen gegenereerde ID. Geen apart veld in TRACK_FIELDS, omdat hij
  *  nooit hernoemd of weggehaald mag worden. */
-export const TRACK_ID_KEY = "track_id";
+export const TRACK_ID_KEY = "dkj_track_id";
+
+/** De oude naam van TRACK_ID_KEY (tot 27 september 2026). Nog overal gelezen: een bestaande database
+ *  hernoemt de kolom zelf (db.ts, trackIds.ts), een oude export zet gewoon terug (libraryFile.ts) en een
+ *  importbestand met de kolomkop `track_id` werkt nog (trackStore.ts). Geschreven wordt alleen de nieuwe. */
+export const LEGACY_TRACK_ID_KEY = "track_id";
 
 export const TRACK_FIELDS: readonly FieldDef[] = [
   { key: "spotify_track_id", type: "text", label: "Spotify-track-ID (het deel na spotify:track:)" },

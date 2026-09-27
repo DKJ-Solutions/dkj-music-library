@@ -127,7 +127,7 @@ describe("applyArtistIdsFromSnapshot", () => {
   it("laat een zelf ingevulde dkj_artist_ids staan", () => {
     const db = memoryDb();
     applyTrackIdsFromSnapshot(db, snap);
-    upsertTracks(db, [{ track_id: "T000001", dkj_artist_ids: ["ZZZ01"] }]);
+    upsertTracks(db, [{ dkj_track_id: "T000001", dkj_artist_ids: ["ZZZ01"] }]);
     applyArtistIdsFromSnapshot(db, snap);
     expect(getTrack(db, "T000001")?.dkj_artist_ids).toEqual(["ZZZ01"]);
   });

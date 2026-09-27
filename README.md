@@ -69,7 +69,7 @@ hoeft niets extra's geïnstalleerd te worden. Wil je het bestand ergens anders, 
 De database zelf staat niet in git: een binair bestand valt niet te vergelijken of samen te voegen.
 Wat wel in git staat, is een tekst-export in `data/library/export/`:
 
-- `tracks.ndjson`: één regel per nummer, gesorteerd op `track_id`;
+- `tracks.ndjson`: één regel per nummer, gesorteerd op `dkj_track_id`;
 - `spotify_track_ids.ndjson`: welk Spotify-ID bij welk eigen ID hoort.
 
 **De export is de bron, de database een kopie.** Elke stap die de bibliotheek opent (de sync op
@@ -93,13 +93,13 @@ iedereen te lezen zodra je ze pusht.
 npm run library:import -- pad/naar/tracks.csv    # of .json
 ```
 
-- **CSV**: de kopregel bestaat uit `track_id` plus veldnamen uit `src/lib/library/fields.ts`, gescheiden
+- **CSV**: de kopregel bestaat uit `dkj_track_id` plus veldnamen uit `src/lib/library/fields.ts`, gescheiden
   door `,` of `;` (Excel). Een lijstveld zoals `artists` mag als `"Artiest A; Artiest B"`, maar zet het
   tussen aanhalingstekens als `;` ook je scheidingsteken is. **Een lege cel laat de bestaande waarde
   staan.**
 - **JSON**: een lijst objecten, of `{ "tracks": [...] }`. `null` maakt een veld leeg.
 
-Het script mag je vaker draaien. Een bestaande `track_id` wordt bijgewerkt en niet dubbel toegevoegd,
+Het script mag je vaker draaien. Een bestaande `dkj_track_id` wordt bijgewerkt en niet dubbel toegevoegd,
 en alleen de kolommen in het bestand worden aangeraakt. Klopt er één rij niet (een onbekende
 kolomnaam, `12.5` in een geheel-getalveld), dan wordt er niets geschreven en meldt het script welke
 rij het is.

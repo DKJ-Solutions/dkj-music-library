@@ -2,9 +2,9 @@
 //
 // data/library/library.db blijft lokaal en git-ignored: een binair SQLite-bestand valt in git niet te
 // vergelijken of samen te voegen. Wat wél in git staat, is data/library/export/:
-//   - tracks.ndjson             één regel per nummer (track_id, created_at, updated_at + fields.ts),
-//                               gesorteerd op track_id
-//   - spotify_track_ids.ndjson  de koppeltabel uit trackIds.ts, gesorteerd op track_id en Spotify-ID
+//   - tracks.ndjson             één regel per nummer (dkj_track_id, created_at, updated_at + fields.ts),
+//                               gesorteerd op dkj_track_id
+//   - spotify_track_ids.ndjson  de koppeltabel uit trackIds.ts, gesorteerd op dkj_track_id en Spotify-ID
 //   - artists.ndjson            de artiesten uit artistIds.ts, gesorteerd op dkj_artist_id (ontbreekt in
 //                               een export van vóór de artiest-ID's; dan is de tabel gewoon leeg)
 // Eén rij per regel en een vaste volgorde, dus een diff laat precies zien wat er veranderde.
@@ -34,7 +34,7 @@ import path from "path";
 import type { DatabaseSync, SQLInputValue } from "node:sqlite";
 import { TRACKS_TABLE, openLibraryDb } from "./db";
 import { ARTISTS_TABLE, ensureArtistsTable } from "./artistIds";
-import { TRACK_FIELDS, TRACK_ID_KEY, type FieldDef } from "./fields";
+import { LEGACY_TRACK_ID_KEY, TRACK_FIELDS, TRACK_ID_KEY, type FieldDef } from "./fields";
 import { SPOTIFY_LINK_TABLE, ensureSpotifyLinkTable } from "./trackIds";
 import { countTracks, listTracks, toSqlValue, type TrackValue } from "./trackStore";
 
@@ -112,7 +112,7 @@ export function exportLibrary(
   // gelijk is.
   const tracks = listTracks(db, fields).map((track) => {
     const line: Record<string, TrackValue> = {
-      [TRACK_ID_KEY]: track.track_id,
+      [TRACK_ID_KEY]: track.dkj_track_id,
       created_at: track.created_at,
       updated_at: track.updated_at,
     };
@@ -172,8 +172,11 @@ export function restoreLibrary(
   ensureArtistsTable(db);
   ensureMetaTable(db);
 
-  const tracks = readLines(path.join(dir, TRACKS_FILE));
-  const links = readLines(path.join(dir, LINKS_FILE));
+  // Een export van vóór de hernoeming heeft `track_id` in plaats van `dkj_track_id`.
+  const withTrackId = (row: Record<string, unknown>) =>
+    TRACK_ID_KEY in row || !(LEGACY_TRACK_ID_KEY in row) ? row : { ...row, [TRACK_ID_KEY]: row[LEGACY_TRACK_ID_KEY] };
+  const tracks = readLines(path.join(dir, TRACKS_FILE)).map(withTrackId);
+  const links = readLines(path.join(dir, LINKS_FILE)).map(withTrackId);
   const artistsFile = path.join(dir, ARTISTS_FILE);
   const artists = fs.existsSync(artistsFile) ? readLines(artistsFile) : [];
   // Alleen velden die (nog) in fields.ts staan; een veld dat intussen weg is, valt stil weg.

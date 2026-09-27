@@ -2,7 +2,7 @@
 //
 //   npm run library:import -- pad/naar/tracks.csv
 //
-// Opnieuw draaien is veilig: een bestaande track_id wordt bijgewerkt, niet verdubbeld. Faalt één
+// Opnieuw draaien is veilig: een bestaande dkj_track_id wordt bijgewerkt, niet verdubbeld. Faalt één
 // rij, dan wordt er niets geschreven en meldt het script welke rij het was.
 import { openLibraryDb } from "../../src/lib/library/db";
 import { withLibrary } from "../../src/lib/library/libraryFile";
