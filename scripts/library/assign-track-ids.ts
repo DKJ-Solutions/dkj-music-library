@@ -29,7 +29,7 @@ const { ownerUserId } = readPrivateRules();
 const own = ownPlaylistsOnly(snapshot, ownerUserId);
 
 try {
-  const { shared, tracks, artists, primaryArtistsFilled, albumArtistsFilled, fileNamesFilled, titlesFilled, titlesRefreshed, playlistsChanged, mixesChanged, albumsFilled, bpmsFilled, groupsFilled, live, renumbered, total, yearsFilled } = withLibrary((db) => ({
+  const { shared, tracks, artists, primaryArtistsFilled, albumArtistsFilled, fileNamesFilled, titlesFilled, titlesRefreshed, playlistsChanged, mixesChanged, albumsFilled, bpmsFilled, genresFilled, groupsFilled, live, renumbered, total, yearsFilled } = withLibrary((db) => ({
     // Eerst weg wat alleen in gedeelde playlists staat, dan de rest uit je eigen playlists.
     shared: removeSharedOnlyTracks(db, snapshot, ownerUserId),
     ...applyLibraryIdsFromSnapshot(db, own),
@@ -64,6 +64,7 @@ try {
   else if (mixesChanged > 0) console.log(`djcylow_mix bijgewerkt bij ${mixesChanged} tracks`);
   if (albumsFilled > 0) console.log(`dkj_album uit de playlists gevuld bij ${albumsFilled} tracks`);
   if (bpmsFilled > 0) console.log(`dkj_bpm uit de playlists gevuld bij ${bpmsFilled} tracks`);
+  if (genresFilled > 0) console.log(`dkj_genre uit de playlists gevuld bij ${genresFilled} tracks`);
   if (groupsFilled > 0) console.log(`dkj_group uit de werelden gevuld bij ${groupsFilled} tracks`);
   if (yearsFilled > 0) console.log(`year uit Spotify gevuld bij ${yearsFilled} tracks`);
   console.log("Export bijgewerkt in data/library/export/ -- commit die map om hem op je andere machines te hebben.");

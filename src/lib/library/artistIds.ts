@@ -33,6 +33,7 @@ import {
   ARTIST_IDS_KEY,
   BPM_KEY,
   FILE_KEY,
+  GENRE_KEY,
   PLAYLISTS_KEY,
   TITLE_KEY,
   PRIMARY_ARTIST_KEY,
@@ -42,6 +43,7 @@ import {
 import { albumFromPlaylists } from "./albumFromPlaylists";
 import { bpmFromPlaylists } from "./bpmFromPlaylists";
 import { fileNameOf, titleNameOf, versionedTitleOf } from "./fileName";
+import { genreFromPlaylists } from "./genreFromPlaylists";
 import { mergeLiveVariants, type LiveMergeResult } from "./liveVariants";
 import { applyPlaylistLinks } from "./playlistLinks";
 import { primaryArtistOf } from "./primaryArtist";
@@ -359,10 +361,18 @@ export function fillBpmsFromPlaylists(db: DatabaseSync): number {
   return fillMissing(db, BPM_KEY, (track) => bpmFromPlaylists(track.playlists));
 }
 
+/** Vult `dkj_genre` uit de playlists (genreFromPlaylists.ts) bij elke track waar het nog leeg is. Geeft
+ *  het aantal gevulde tracks terug. */
+export function fillGenresFromPlaylists(db: DatabaseSync): number {
+  return fillMissing(db, GENRE_KEY, (track) => genreFromPlaylists(track.playlists));
+}
+
 export interface LibraryIdResult {
   artists: ArtistIdResult;
   /** Tracks die in deze run hun `dkj_bpm` uit de playlists kregen. */
   bpmsFilled: number;
+  /** Tracks die in deze run hun `dkj_genre` uit de playlists kregen. */
+  genresFilled: number;
   /** Tracks die in deze run hun `dkj_album` uit de playlists kregen. */
   albumsFilled: number;
   /** Tracks die in deze run hun `dkj_file` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
@@ -402,9 +412,10 @@ export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot
   const titlesFilled = fillTitles(db);
   const titlesRefreshed = refreshTitles(db);
   const playlistsChanged = applyPlaylistLinks(db, snapshot);
-  // Na de playlists: het album en de BPM worden uit hun namen afgeleid.
+  // Na de playlists: het album, de BPM en het genre worden uit hun namen afgeleid.
   const albumsFilled = fillAlbumsFromPlaylists(db);
   const bpmsFilled = fillBpmsFromPlaylists(db);
+  const genresFilled = fillGenresFromPlaylists(db);
   const yearsFilled = applyReleaseYears(db, snapshot);
-  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, live, playlistsChanged, primaryArtistsFilled, renumbered, titlesFilled, titlesRefreshed, tracks, yearsFilled };
+  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, genresFilled, live, playlistsChanged, primaryArtistsFilled, renumbered, titlesFilled, titlesRefreshed, tracks, yearsFilled };
 }

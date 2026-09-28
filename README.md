@@ -283,7 +283,10 @@ Hoofdletters en spaties tellen niet mee (`128 bpm` wordt `128BPM`).
   leeg is met de werelden van de playlists van de track (een playlist met een beschrijving telt
   sowieso als MMC); staat een track in meer werelden, dan heeft hij meer groepen. `Overige` zet je
   zelf (`src/lib/library/groupFromWorlds.ts`).
-- **`dkj_genre`**: `EDM`, `POP`, `ALT` of `OST`. Dit veld vul je zelf; het wordt niet afgeleid.
+- **`dkj_genre`**: `EDM`, `POP`, `ALT` of `OST`. Het veld wordt bij elke sync uit de playlists afgeleid
+  zolang het leeg is: het genre als los woord in de naam (`128BPM EDM`, `Classic Pop`, `🟢 ALT`,
+  `| OST`), en House Mix, Drum & Bass en D&B/DNB zijn EDM. Noemen de playlists verschillende genres, dan
+  wint het meest genoemde; bij een gelijke stand blijft het leeg (`src/lib/library/genreFromPlaylists.ts`).
 - **`dkj_bpm`**: `128BPM`, `112BPM`, `176BPM`, `144BPM`, `96BPM`. Het veld wordt bij elke sync uit de
   playlists afgeleid zolang het leeg is: een BPM in de naam (`128BPM EDM`), House Mix is 128, Drum &
   Bass en D&B/DNB zijn 176. Noemen de playlists verschillende BPM's, dan wint de meest genoemde; bij
