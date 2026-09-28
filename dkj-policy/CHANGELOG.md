@@ -2,7 +2,33 @@
 
 ## [Unreleased]
 
-**31 / 42 minor entries** <!-- pending-tally -->
+**32 / 43 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/45-musicbrainz-release-year · 20260928-125351Z
+
+Nieuw script `npm run library:release-years` zoekt bij MusicBrainz het jaar op waarin een nummer voor
+het eerst uitkwam, met hooguit 1 verzoek per seconde, en bewaart dat lokaal in
+`data/musicbrainz/release-years.json` (niet in git). De Maple Classic-pagina toont nu het vroegste
+jaar van MusicBrainz, het Trackregister en het album, zodat een nummer op een verzamelalbum of
+heruitgave niet meer het jaar van die uitgave krijgt. Nog lege jaren in de bibliotheek worden bij een
+sync ook uit die cache gevuld.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Op de Maple Classic-pagina kloppen de jaren van nummers op verzamelalbums en heruitgaven, zoals *I'm a
+Believer* op *The Best of The Monkees*: 1966 in plaats van 2008.
+
+**Score:** 3
+
+#### Pull Request
+
+Jaar van eerste uitgave via MusicBrainz, lokaal bewaard
+
+[PR #48](https://github.com/DKJ-Solutions/dkj-music-library/pull/48)
+
+---
 
 ### DEPLOY: feat/maple-classic-page · 20260928-120118Z
 
