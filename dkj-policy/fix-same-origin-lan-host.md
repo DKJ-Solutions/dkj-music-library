@@ -39,21 +39,35 @@
 
 ### PLAN
 
+Dave kreeg op http://192.168.178.123:3000 `cross_origin_forbidden` bij de sync. Gemeten: de browser
+stuurt daar geen `Sec-Fetch-Site` (alleen op een beveiligde origin), dus de guard viel terug op de
+Origin-vergelijking, en die vergeleek met `request.url`, dat Next dev altijd als `localhost:3000` bouwt.
+Met Origin `localhost` kwam een POST door, met Origin `192.168.178.123` niet.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `sameOrigin.ts`: de Origin vergelijken met de `Host`-header (terugval: `request.url`); een onleesbare Origin (`null`) wordt geweigerd
 
 ### TEST
 
+- [x] `sameOrigin.test.ts`: LAN-host door, andere host geweigerd, Origin `null` geweigerd
+- [x] Live tegen de dev-server: Origin 192.168.178.123 met die Host komt door (400 van de route zelf), evil.example.com krijgt 403
+- [x] `vitest run`, `tsc --noEmit`, `eslint` (lint gate)
+
 ### DEPLOY: fix/same-origin-lan-host
 
-**Score:**
+De knoppen die iets opslaan (sync, afvinken, uitloggen) werken nu ook als je de app opent via het
+LAN-adres, bijvoorbeeld http://192.168.178.123:3000. De beveiliging tegen verzoeken van andere sites
+vergelijkt nu met het adres dat de browser werkelijk aansprak, in plaats van met `localhost`.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie de app op een ander apparaat in huis opent, kan weer syncen in plaats van een foutmelding te krijgen.
+
+**Score:** 3
 
 #### Pull Request
 
 sync en andere knoppen werken ook via het LAN-adres
-
