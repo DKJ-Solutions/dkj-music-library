@@ -3,7 +3,7 @@
 // De pagina leest de bibliotheek (libraryFile.ts), en die bouwt zich op een verse kloon zelf op uit de
 // export in git -- dus het register is op elke machine met de repo te zien, zonder account of sync.
 // Hier staat alleen wat de tabel nodig heeft: één compacte rij per track, en het filter op zoekterm,
-// dkj_bpm, dkj_genre en dkj_album.
+// dkj_bpm, dkj_genre, dkj_album, dkj_group en een bereik van year.
 //
 // Pure module: geen fs, geen sqlite -- ook vanuit een client-component te importeren.
 import { albumsOfPlaylists } from "./albumFromPlaylists";
@@ -53,6 +53,9 @@ export interface RegisterFilter {
   genre?: string;
   /** Leeg of weggelaten = alle. */
   group?: string;
+  /** Het laagste en hoogste year, beide inclusief, als ingetypte tekst; leeg of weggelaten = geen grens. */
+  yearFrom?: string;
+  yearTo?: string;
 }
 
 const text = (value: unknown): string | null => (typeof value === "string" && value !== "" ? value : null);
@@ -114,6 +117,20 @@ const matches = (value: string | null, want: string) =>
 const matchesList = (values: readonly string[], want: string) =>
   want === "" || (want === EMPTY_FILTER ? values.length === 0 : values.includes(want));
 
+/** Een ingetypte jaargrens als getal; null als er (nog) geen geheel getal staat. */
+const bound = (value: string | undefined): number | null => {
+  const trimmed = value?.trim() ?? "";
+  return /^\d+$/.test(trimmed) ? Number(trimmed) : null;
+};
+
+/** Past het year binnen van–tot? Zonder grenzen past alles; met een grens valt een rij zonder year af. */
+function inYearRange(year: string | null, from: number | null, to: number | null): boolean {
+  if (from === null && to === null) return true;
+  if (year === null) return false;
+  const n = Number(year);
+  return (from === null || n >= from) && (to === null || n <= to);
+}
+
 /** De rijen die bij het filter passen. `haystacks` is searchText() per rij, vooraf berekend. */
 export function filterRegister(
   rows: readonly RegisterRow[],
@@ -121,12 +138,15 @@ export function filterRegister(
   filter: RegisterFilter
 ): RegisterRow[] {
   const term = fold(filter.term.trim());
+  const from = bound(filter.yearFrom);
+  const to = bound(filter.yearTo);
   return rows.filter(
     (row, i) =>
       (term === "" || haystacks[i].includes(term)) && matches(row.bpm, filter.bpm) &&
       matches(row.genre, filter.genre ?? "") &&
       matches(row.album, filter.album) &&
-      matchesList(row.groups, filter.group ?? "")
+      matchesList(row.groups, filter.group ?? "") &&
+      inYearRange(row.year, from, to)
   );
 }
 

@@ -88,6 +88,18 @@ describe("filterRegister", () => {
     expect(run({ album: "Green Full (f)" })).toEqual([]);
   });
 
+  it("filtert op een bereik van year, beide grenzen inclusief", () => {
+    const years: RegisterRow[] = ["1999", "2000", "2009", "2010", null].map((year) => ({ ...rows[0], id: `Y${year}`, year }));
+    const pick = (yearFrom: string, yearTo: string) =>
+      filterRegister(years, years.map(searchText), { term: "", bpm: "", album: "", yearFrom, yearTo }).map((row) => row.id);
+    expect(pick("2000", "2009")).toEqual(["Y2000", "Y2009"]);
+    expect(pick("2009", "")).toEqual(["Y2009", "Y2010"]);
+    expect(pick("", "1999")).toEqual(["Y1999"]);
+    // Zonder grenzen (of met iets dat nog geen jaar is) doet het filter niets, ook niet met rijen zonder year.
+    expect(pick("", "")).toHaveLength(5);
+    expect(pick("20a", " ")).toHaveLength(5);
+  });
+
   it("telt per waarde, leeg onder EMPTY_FILTER", () => {
     expect(countBy(rows, "bpm")).toEqual(new Map([["128BPM", 1], [EMPTY_FILTER, 1]]));
   });
