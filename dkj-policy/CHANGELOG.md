@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**32 / 43 minor entries** <!-- pending-tally -->
+**33 / 44 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/same-origin-lan-host · 20260928-130050Z
+
+De knoppen die iets opslaan (sync, afvinken, uitloggen) werken nu ook als je de app opent via het
+LAN-adres, bijvoorbeeld http://192.168.178.123:3000. De beveiliging tegen verzoeken van andere sites
+vergelijkt nu met het adres dat de browser werkelijk aansprak, in plaats van met `localhost`.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Wie de app op een ander apparaat in huis opent, kan weer syncen in plaats van een foutmelding te krijgen.
+
+**Score:** 3
+
+#### Pull Request
+
+sync en andere knoppen werken ook via het LAN-adres
+
+[PR #49](https://github.com/DKJ-Solutions/dkj-music-library/pull/49)
+
+---
 
 ### DEPLOY: feat/45-musicbrainz-release-year · 20260928-125351Z
 
