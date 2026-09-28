@@ -56,7 +56,7 @@ kolom die zegt in welke Classic Pop-playlists het staat.
 - [x] `classicPopTable.test.ts`: herkennen en labelen, ontdubbelen, playlists per nummer, jaar, zoeken, sorteren
 - [x] vitest (61 bestanden, 854 tests), typecheck en eslint groen
 - [x] `/spotify/classic-pop` rendert op de dev-server: 2.465 nummers, 1.286 artiesten, 33 playlists
-- [ ] Dave bekijkt de pagina (zichtbaar resultaat, dus geen merge zonder zijn blik)
+- [x] Dave bekijkt de pagina (akkoord, 28 september 2026)
 
 ### DEPLOY: feat/classic-pop-page
 
