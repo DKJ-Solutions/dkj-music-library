@@ -38,6 +38,30 @@
   gap: 10px;
 }
 
+// De filters in een EIGEN OMKADERD VAK (Dave): dezelfde rand, radius en vlak als het tabelvak, met het
+// kopje "Filters" in de rand. Zoeken, de kolomschakelaar en de teller staan erboven, buiten het kader.
+.register-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  min-width: 0;
+  margin: 0;
+  padding: 12px 14px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.register-filters legend {
+  padding: 0 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 .register-filter {
   display: flex;
   align-items: center;

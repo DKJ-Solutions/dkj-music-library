@@ -39,19 +39,29 @@
 
 ### PLAN
 
+De filters van TrackRegister (year, dkj_bpm, dkj_genre, dkj_album, dkj_group en "Filters wissen") in een eigen omkaderd vak zetten, los van zoeken, de kolomschakelaar en de teller.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `TrackRegister.tsx`: de filters in een `<fieldset className="register-filters">` met `<legend>Filters</legend>`; zoeken, kolomschakelaar en teller blijven in `.register-controls` erboven
+- [x] `_track-register.scss`: `.register-filters` met dezelfde rand, radius en vlak als het tabelvak, kopje in de rand
 
 ### TEST
 
+- [x] `npx tsc --noEmit` schoon, `npx eslint` schoon, `npx vitest run src/components/spotify` 101/101 groen
+- [ ] Dave bekijkt het trackregister in de browser (het filtervak en hoe het afbreekt op een smal venster)
+
 ### DEPLOY: feat/register-filter-box
 
-**Score:**
+De filters van het trackregister staan in een eigen `<fieldset>` met kader, los van zoeken, de kolomschakelaar en de teller.
+
+**Score:** 1
 
 #### What makes this deploy extra special
 
-**Score:**
+Het trackregister toont de filters in een eigen omkaderd vak met het kopje "Filters", zodat ze in één oogopslag bij elkaar staan.
+
+**Score:** 2
 
 #### Pull Request
 
