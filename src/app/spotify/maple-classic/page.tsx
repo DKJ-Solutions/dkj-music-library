@@ -3,7 +3,8 @@
 // komen uit playlistTableRows.ts, de weergave uit PlaylistTable.tsx.
 import Link from "next/link";
 import { readSnapshot } from "@/lib/spotify/snapshotStore";
-import { toPlaylistTableRows, userNamesFromSnapshot } from "@/lib/spotify/playlistTableRows";
+import { openLibrary } from "@/lib/library/libraryFile";
+import { libraryYearsBySpotifyId, toPlaylistTableRows, userNamesFromSnapshot } from "@/lib/spotify/playlistTableRows";
 import { playlistUrl } from "@/lib/library/playlistLink";
 import { PlaylistTable } from "@/components/spotify/PlaylistTable";
 
@@ -12,10 +13,26 @@ export const dynamic = "force-dynamic";
 
 const PLAYLIST_ID = "21C8ylLvP9fDneF86KAKlY";
 
+// De jaren uit het Trackregister (zie playlistTableRows.ts). Lukt het lezen niet, dan toont de tabel het
+// albumjaar: een minder precies jaar is beter dan geen pagina.
+function readLibraryYears(): Map<string, number> {
+  try {
+    const { db } = openLibrary();
+    try {
+      return libraryYearsBySpotifyId(db);
+    } finally {
+      db.close();
+    }
+  } catch (err) {
+    console.error("[spotify/maple-classic] bibliotheek lezen mislukt, de tabel toont het albumjaar:", err);
+    return new Map();
+  }
+}
+
 export default function MapleClassicPage() {
   const snapshot = readSnapshot();
   const playlist = snapshot?.playlists.find((p) => p.id === PLAYLIST_ID) ?? null;
-  const rows = snapshot && playlist ? toPlaylistTableRows(playlist, userNamesFromSnapshot(snapshot)) : null;
+  const rows = snapshot && playlist ? toPlaylistTableRows(playlist, userNamesFromSnapshot(snapshot), readLibraryYears()) : null;
 
   return (
     <main className="wrap wrap--full">

@@ -60,6 +60,18 @@ describe("toPlaylistTableRows", () => {
     expect(rows.map((r) => r.position)).toEqual([1, 3]);
   });
 
+  it("neemt het jaar uit de bibliotheek boven het albumjaar, en houdt het albumjaar apart", () => {
+    const rows = toPlaylistTableRows(
+      playlist([item("a", "I'm Gonna Be (500 Miles)", { releaseDate: "2003" }), item("b", "Rehab", { releaseDate: "2006" })]),
+      new Map(),
+      new Map([["a", 1988]])
+    );
+    expect(rows.map((r) => [r.year, r.albumYear])).toEqual([
+      [1988, 2003],
+      [2006, 2006],
+    ]);
+  });
+
   it("geeft geen jaar bij een album zonder datum", () => {
     expect(toPlaylistTableRows(playlist([item("a", "X", { releaseDate: null })]))[0].year).toBeNull();
   });

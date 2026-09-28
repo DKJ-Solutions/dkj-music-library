@@ -60,7 +60,21 @@ const COLUMNS: Column[] = [
       </span>
     ),
   },
-  { key: "year", label: "Jaar", width: "6%", cell: (row) => row.year ?? <Empty />, className: "register-year" },
+  {
+    key: "year",
+    label: "Jaar",
+    width: "6%",
+    // Wijkt het jaar af van het album (een verzamelalbum, een heruitgave), dan zegt de tooltip dat.
+    cell: (row) =>
+      row.year === null ? (
+        <Empty />
+      ) : (
+        <span title={row.albumYear !== null && row.albumYear !== row.year ? `Album op Spotify: ${row.albumYear}` : undefined}>
+          {row.year}
+        </span>
+      ),
+    className: "register-year",
+  },
   { key: "duration", label: "Duur", width: "6%", cell: (row) => formatDuration(row.durationMs), className: "register-year" },
   {
     key: "addedAt",

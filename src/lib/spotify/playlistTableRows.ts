@@ -1,7 +1,15 @@
 // De rijen van de playlist-tabel (playlistTable.ts), uit een playlist in de snapshot. Apart van
 // playlistTable.ts omdat yearOf() in releaseYears.ts woont, dat de database importeert: dit bestand
 // hoort alleen aan de serverkant.
+//
+// HET JAAR: Spotify kent alleen de datum van het album, niet die van het nummer. Op een verzamelalbum of
+// een losse heruitgave is dat het jaar van die uitgave (The Best of The Monkees: 2008). Staat het nummer
+// in de bibliotheek, dan telt daarom het `year` van het Trackregister: het vroegste jaar over alle
+// Spotify-varianten, of wat je zelf hebt ingevuld (releaseYears.ts). Anders blijft het albumjaar staan.
+import type { DatabaseSync } from "node:sqlite";
 import { yearOf } from "@/lib/library/releaseYears";
+import { readTrackIdOf } from "@/lib/library/trackIds";
+import { listTracks } from "@/lib/library/trackStore";
 import type { PlaylistTableRow } from "./playlistTable";
 import type { Playlist, Snapshot } from "./types";
 
@@ -16,12 +24,28 @@ export function userNamesFromSnapshot(snapshot: Snapshot): Map<string, string> {
   return names;
 }
 
+/** Spotify track-id -> het `year` van die track in de bibliotheek, voor elke gekoppelde track met een jaar. */
+export function libraryYearsBySpotifyId(db: DatabaseSync): Map<string, number> {
+  const years = new Map<string, number>();
+  for (const track of listTracks(db)) {
+    if (typeof track.year === "number") years.set(String(track.dkj_track_id), track.year);
+  }
+  const bySpotifyId = new Map<string, number>();
+  for (const [spotifyId, trackId] of readTrackIdOf(db)) {
+    const year = years.get(trackId);
+    if (year !== undefined) bySpotifyId.set(spotifyId, year);
+  }
+  return bySpotifyId;
+}
+
 /** Eén rij per nummer, in de volgorde van de playlist. Een item zonder track (een lokaal bestand zonder
  *  metadata, een podcast-aflevering) valt weg, maar telt wel mee in de positie, zodat die met Spotify
- *  blijft kloppen. Een toevoeger die niet in `userNames` staat, blijft als user-id staan. */
+ *  blijft kloppen. Een toevoeger die niet in `userNames` staat, blijft als user-id staan; een nummer dat
+ *  niet in `libraryYears` staat, krijgt het albumjaar. */
 export function toPlaylistTableRows(
   playlist: Playlist,
-  userNames: ReadonlyMap<string, string> = new Map()
+  userNames: ReadonlyMap<string, string> = new Map(),
+  libraryYears: ReadonlyMap<string, number> = new Map()
 ): PlaylistTableRow[] {
   return playlist.tracks.flatMap((item, index) =>
     item.track
@@ -32,7 +56,8 @@ export function toPlaylistTableRows(
             title: item.track.name,
             artists: item.track.artists.map((artist) => artist.name),
             album: item.track.album.name,
-            year: yearOf(item.track.album.releaseDate),
+            year: libraryYears.get(item.track.id) ?? yearOf(item.track.album.releaseDate),
+            albumYear: yearOf(item.track.album.releaseDate),
             durationMs: item.track.durationMs,
             addedAt: item.addedAt,
             addedBy: item.addedBy ? (userNames.get(item.addedBy) ?? item.addedBy) : null,

@@ -13,7 +13,10 @@ export interface PlaylistTableRow {
   title: string;
   artists: string[];
   album: string;
+  /** Het jaar van het nummer: uit het Trackregister als het daar staat, anders het albumjaar. */
   year: number | null;
+  /** Het jaar van het album waar deze versie op staat, zoals Spotify het geeft. */
+  albumYear: number | null;
   durationMs: number;
   /** ISO-tijdstip waarop het nummer aan de playlist is toegevoegd, of null als Spotify het niet kent. */
   addedAt: string | null;
