@@ -39,19 +39,31 @@
 
 ### PLAN
 
+Dave vroeg om te kunnen filteren op tracks met een year tussen 2000 en 2009. Gebouwd als een
+year-filter per decennium, zodat elk decennium (en "Leeg") meteen kiesbaar is, niet alleen 2000–2009.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `register.ts`: `decadeOf`, `decadeLabel`, `decadesOf`, het `decade`-veld in `RegisterFilter` en `countBy(rows, "decade")`
+- [x] `TrackRegister.tsx`: een `year`-select vóór dkj_bpm, met de decennia uit de rijen, tellingen en "Leeg"
 
 ### TEST
 
+- [x] Unittests in `register.test.ts` (grenzen 1999/2000/2009/2010, leeg, telling) en een componenttest in `TrackRegister.test.tsx`
+- [x] vitest, `tsc --noEmit` en eslint groen
+
 ### DEPLOY: feat/year-decade-filter
 
-**Score:**
+Het trackregister heeft een filter `year` dat per decennium filtert (bv. 2000–2009), met het aantal
+nummers per decennium en een optie "Leeg" voor nummers zonder year.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie het register gebruikt, kan nu in één keuze alle nummers uit één decennium tonen.
+
+**Score:** 3
 
 #### Pull Request
 

@@ -3,7 +3,7 @@
 // De pagina leest de bibliotheek (libraryFile.ts), en die bouwt zich op een verse kloon zelf op uit de
 // export in git -- dus het register is op elke machine met de repo te zien, zonder account of sync.
 // Hier staat alleen wat de tabel nodig heeft: één compacte rij per track, en het filter op zoekterm,
-// dkj_bpm, dkj_genre en dkj_album.
+// dkj_bpm, dkj_genre, dkj_album, dkj_group en het decennium van year.
 //
 // Pure module: geen fs, geen sqlite -- ook vanuit een client-component te importeren.
 import { albumsOfPlaylists } from "./albumFromPlaylists";
@@ -53,6 +53,8 @@ export interface RegisterFilter {
   genre?: string;
   /** Leeg of weggelaten = alle. */
   group?: string;
+  /** Het decennium van year als zijn beginjaar ("2000" = 2000–2009); leeg of weggelaten = alle. */
+  decade?: string;
 }
 
 const text = (value: unknown): string | null => (typeof value === "string" && value !== "" ? value : null);
@@ -107,6 +109,27 @@ export function searchText(row: RegisterRow): string {
   );
 }
 
+/** Het decennium van een jaar, als zijn beginjaar: "2004" wordt "2000". Null zonder (geldig) jaar. */
+export function decadeOf(year: string | null): string | null {
+  const n = year === null ? NaN : Number(year);
+  return Number.isInteger(n) ? String(Math.floor(n / 10) * 10) : null;
+}
+
+/** Hoe een decennium in het filter heet: "2000" wordt "2000–2009". */
+export function decadeLabel(decade: string): string {
+  return `${decade}–${Number(decade) + 9}`;
+}
+
+/** De decennia die in de rijen voorkomen, oplopend. */
+export function decadesOf(rows: readonly RegisterRow[]): string[] {
+  const decades = new Set<string>();
+  for (const row of rows) {
+    const decade = decadeOf(row.year);
+    if (decade) decades.add(decade);
+  }
+  return [...decades].sort((a, b) => Number(a) - Number(b));
+}
+
 const matches = (value: string | null, want: string) =>
   want === "" || (want === EMPTY_FILTER ? value === null : value === want);
 
@@ -126,16 +149,20 @@ export function filterRegister(
       (term === "" || haystacks[i].includes(term)) && matches(row.bpm, filter.bpm) &&
       matches(row.genre, filter.genre ?? "") &&
       matches(row.album, filter.album) &&
-      matchesList(row.groups, filter.group ?? "")
+      matchesList(row.groups, filter.group ?? "") &&
+      matches(decadeOf(row.year), filter.decade ?? "")
   );
 }
 
 /** Hoe vaak elke waarde van `key` voorkomt; lege waarden tellen onder EMPTY_FILTER. */
-export function countBy(rows: readonly RegisterRow[], key: "bpm" | "genre" | "album" | "groups"): Map<string, number> {
+export function countBy(rows: readonly RegisterRow[], key: "bpm" | "genre" | "album" | "groups" | "decade"): Map<string, number> {
   const counts = new Map<string, number>();
   for (const row of rows) {
     // Bij een lijst telt de rij mee bij elk van zijn waarden.
-    const values = key === "groups" ? (row.groups.length > 0 ? row.groups : [EMPTY_FILTER]) : [row[key] ?? EMPTY_FILTER];
+    const values =
+      key === "groups"
+        ? row.groups.length > 0 ? row.groups : [EMPTY_FILTER]
+        : [(key === "decade" ? decadeOf(row.year) : row[key]) ?? EMPTY_FILTER];
     for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
   }
   return counts;
