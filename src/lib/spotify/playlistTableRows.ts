@@ -9,9 +9,11 @@
 // Spotify-varianten, of wat je zelf hebt ingevuld, zie releaseYears.ts) en het albumjaar. Kent geen van
 // de drie een jaar, dan blijft de cel leeg.
 import type { DatabaseSync } from "node:sqlite";
+import { openLibrary } from "@/lib/library/libraryFile";
 import { yearOf } from "@/lib/library/releaseYears";
 import { readTrackIdOf } from "@/lib/library/trackIds";
 import { listTracks } from "@/lib/library/trackStore";
+import { classicPopLabel, isClassicPopPlaylist, type ClassicPopRow } from "./classicPopTable";
 import type { PlaylistTableRow } from "./playlistTable";
 import type { Playlist, Snapshot } from "./types";
 
@@ -38,6 +40,23 @@ export function libraryYearsBySpotifyId(db: DatabaseSync): Map<string, number> {
     if (year !== undefined) bySpotifyId.set(spotifyId, year);
   }
   return bySpotifyId;
+}
+
+/** libraryYearsBySpotifyId() voor een pagina: opent de bibliotheek zelf, en geeft bij een leesfout een lege
+ *  map, zodat de tabel dan het albumjaar toont -- een minder precies jaar is beter dan geen pagina. `route`
+ *  noemt de pagina in de foutmelding. */
+export function readLibraryYears(route: string): Map<string, number> {
+  try {
+    const { db } = openLibrary();
+    try {
+      return libraryYearsBySpotifyId(db);
+    } finally {
+      db.close();
+    }
+  } catch (err) {
+    console.error(`[${route}] bibliotheek lezen mislukt, de tabel toont het albumjaar:`, err);
+    return new Map();
+  }
 }
 
 /** Het vroegste van de gegeven jaren, of null als er geen van bekend is. */
@@ -82,4 +101,46 @@ export function toPlaylistTableRows(
         ]
       : []
   );
+}
+
+/** De rijen van de Classic Pop-tabel: elk nummer uit een playlist met "Classic Pop" in de naam, één keer, met
+ *  de playlists waarin het staat. Een nummer valt samen op zijn Spotify track-id, dus twee versies van hetzelfde
+ *  nummer (een single en een verzamelalbum) blijven twee rijen -- precies zoals Spotify ze ook uit elkaar houdt.
+ *  De volgorde is die van de eerste keer dat een nummer in de snapshot opduikt; het jaar volgt dezelfde regel
+ *  als toPlaylistTableRows (zie de kop hierboven). */
+export function toClassicPopRows(
+  playlists: readonly Playlist[],
+  libraryYears: ReadonlyMap<string, number> = new Map(),
+  musicBrainzYears: ReadonlyMap<string, number> = new Map()
+): ClassicPopRow[] {
+  const rows = new Map<string, ClassicPopRow>();
+  for (const playlist of playlists) {
+    if (!isClassicPopPlaylist(playlist.name)) continue;
+    const ref = { id: playlist.id, name: playlist.name, label: classicPopLabel(playlist.name) };
+    for (const item of playlist.tracks) {
+      const track = item.track;
+      if (!track) continue;
+      let row = rows.get(track.id);
+      if (!row) {
+        const albumYear = yearOf(track.album.releaseDate);
+        row = {
+          trackId: track.id,
+          title: track.name,
+          artists: track.artists.map((artist) => artist.name),
+          album: track.album.name,
+          year: earliestYear(musicBrainzYears.get(track.id), libraryYears.get(track.id), albumYear),
+          albumYear,
+          durationMs: track.durationMs,
+          playlists: [],
+          firstAddedAt: null,
+        };
+        rows.set(track.id, row);
+      }
+      // Hetzelfde nummer twee keer in één playlist telt die playlist één keer.
+      if (!row.playlists.some((p) => p.id === ref.id)) row.playlists.push(ref);
+      // ISO-tijdstippen van Spotify (allemaal UTC, "Z") sorteren als tekst goed.
+      if (item.addedAt && (row.firstAddedAt === null || item.addedAt < row.firstAddedAt)) row.firstAddedAt = item.addedAt;
+    }
+  }
+  return [...rows.values()];
 }

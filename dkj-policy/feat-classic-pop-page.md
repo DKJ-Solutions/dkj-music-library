@@ -39,19 +39,41 @@
 
 ### PLAN
 
+Dave vroeg om een nieuwe pagina met één tabel van alle nummers uit de playlists met "Classic Pop" in de
+naam. De snapshot heeft er 33 (de hoofdplaylist `Classic Pop | DJ Cylow` en 32 Music Mood Colours-kleuren),
+samen 3.468 items maar 2.465 unieke nummers. Daarom één rij per nummer (per Spotify track-id), met een
+kolom die zegt in welke Classic Pop-playlists het staat.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `classicPopTable.ts` (puur): rijtype, herkennen van een Classic Pop-playlist, zoeken (ook op playlistnaam), sorteren
+- [x] `toClassicPopRows` in `playlistTableRows.ts`: ontdubbelen op track-id, playlists per nummer, vroegste toevoegmoment, jaar volgens dezelfde regel als de playlist-tabel
+- [x] `readLibraryYears` van de Maple Classic-pagina naar `playlistTableRows.ts`, zodat beide pagina's hem delen
+- [x] `ClassicPopTable.tsx` en de pagina `/spotify/classic-pop`, met sync-knop, plus een link op `/spotify`
 
 ### TEST
 
+- [x] `classicPopTable.test.ts`: herkennen en labelen, ontdubbelen, playlists per nummer, jaar, zoeken, sorteren
+- [x] vitest (61 bestanden, 854 tests), typecheck en eslint groen
+- [x] `/spotify/classic-pop` rendert op de dev-server: 2.465 nummers, 1.286 artiesten, 33 playlists
+- [ ] Dave bekijkt de pagina (zichtbaar resultaat, dus geen merge zonder zijn blik)
+
 ### DEPLOY: feat/classic-pop-page
 
-**Score:**
+Nieuwe pagina `/spotify/classic-pop`: elk nummer uit een playlist met "Classic Pop" in de naam, één keer,
+met de playlists waarin het staat (aantal plus de korte namen, de volledige in de tooltip) en het vroegste
+moment waarop het is toegevoegd. Zoeken werkt ook op playlistnaam, dus "cyan" toont één kleur. De tabel
+sorteert standaard op artiest. `readLibraryYears` woont nu in `playlistTableRows.ts` en wordt door deze
+pagina en de Maple Classic-pagina gedeeld.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie de app gebruikt, heeft nu voor het eerst één overzicht van de hele Classic Pop-verzameling over alle
+kleur-playlists heen, en ziet per nummer waar het staat.
+
+**Score:** 3
 
 #### Pull Request
 
