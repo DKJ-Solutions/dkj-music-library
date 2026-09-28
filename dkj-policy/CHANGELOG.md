@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**38 / 49 minor entries** <!-- pending-tally -->
+**39 / 50 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/register-remember-filters · 20260928-182446Z
+
+De filterstand van het trackregister wordt in localStorage bewaard en na mount hersteld; ongeldige opgeslagen waarden vallen per veld terug op de standaard.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Het trackregister onthoudt je filters (zoekterm, year, dkj_bpm, dkj_genre, dkj_album, dkj_group, sortering, kolommen) na herladen of opnieuw openen, met een knop "Filters wissen".
+
+**Score:** 3
+
+#### Pull Request
+
+Trackregister onthoudt de filterstand
+
+[PR #56](https://github.com/DKJ-Solutions/dkj-music-library/pull/56)
+
+---
 
 ### DEPLOY: feat/year-decade-filter · 20260928-141939Z
 
