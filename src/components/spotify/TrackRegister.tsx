@@ -501,6 +501,27 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
             onChange={(e) => reset(setQuery)(e.target.value)}
           />
         </label>
+        <button
+          type="button"
+          role="switch"
+          className="register-column-switch"
+          aria-checked={columnSet === "hidden"}
+          title="Wissel tussen de zichtbare en de verborgen kolommen"
+          onClick={toggleColumns}
+        >
+          <span className="register-column-switch-track" aria-hidden="true" />
+          <span>verborgen kolommen</span>
+        </button>
+        <span className="register-count" aria-live="polite">
+          {list.length === rows.length
+            ? `${nf.format(rows.length)} nummers`
+            : `${nf.format(list.length)} van ${nf.format(rows.length)} nummers`}
+        </span>
+      </div>
+
+      {/* De filters staan in een eigen omkaderd vak (Dave), los van zoeken en de kolomschakelaar. */}
+      <fieldset className="register-filters">
+        <legend>Filters</legend>
         <div className="register-filter" role="group" aria-labelledby="register-year-label">
           <span id="register-year-label">year</span>
           <input
@@ -568,28 +589,12 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
             <option value={EMPTY_FILTER}>{label("Leeg", groupCounts.get(EMPTY_FILTER))}</option>
           </select>
         </label>
-        <button
-          type="button"
-          role="switch"
-          className="register-column-switch"
-          aria-checked={columnSet === "hidden"}
-          title="Wissel tussen de zichtbare en de verborgen kolommen"
-          onClick={toggleColumns}
-        >
-          <span className="register-column-switch-track" aria-hidden="true" />
-          <span>verborgen kolommen</span>
-        </button>
         {showClearFilters && (
           <button type="button" className="pill-toggle playlist-clear-filters" onClick={clearFilters}>
             Filters wissen
           </button>
         )}
-        <span className="register-count" aria-live="polite">
-          {list.length === rows.length
-            ? `${nf.format(rows.length)} nummers`
-            : `${nf.format(list.length)} van ${nf.format(rows.length)} nummers`}
-        </span>
-      </div>
+      </fieldset>
 
       <div className="register-table-box" ref={box}>
         <table className="register-table">
