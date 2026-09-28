@@ -39,21 +39,40 @@
 
 ### PLAN
 
+Dave: nummers uit een gedeelde Spotify-playlist (zoals "trap" van l_v_l) horen niet in de
+bibliotheek. Gekozen: alle gedeelde playlists (elke playlist die niet van het eigen account is), en
+een nummer dat ook in een eigen playlist staat, blijft.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `ownPlaylists.ts`: de bibliotheek krijgt alleen de eigen playlists te zien, en `removeSharedOnlyTracks` haalt nummers, koppelingen en daarna artiesten zonder nummer weg die de snapshot alleen in gedeelde playlists kent
+- [x] De sync-route en `library:assign-ids` gebruiken het (`ownerUserId` uit `private-rules.json`; zonder eigen account verandert er niets)
+- [x] `library:assign-ids` gedraaid: 821 nummers en 392 artiesten weg, 11.639 nummers over; geen van de weggehaalde had eigen `notes`, `tags`, `genre`, `musical_key` of `bpm`
+- [x] README bijgewerkt
 
 ### TEST
 
+- [x] Tests voor `ownPlaylists.ts`: filteren, de overlap blijft, een nummer zonder playlist blijft, opnieuw draaien doet niets, zonder eigen account niets weg
+- [x] Tweede run haalt niets meer weg; geen rij heeft nog een gedeelde playlist in `spotify_playlist`
+- [x] typecheck, lint en alle 806 tests groen
+
 ### DEPLOY: feat/own-playlists-only
 
-**Score:**
+Alleen je eigen Spotify-playlists vullen de trackbibliotheek. Een gedeelde playlist, van een ander
+account dat je volgt, staat nog wel op `/spotify`, maar levert geen nummers, artiesten of
+`spotify_playlist`-regels meer. Een nummer dat ook in een eigen playlist staat, blijft. Wat alleen via
+gedeelde playlists binnenkwam, is weggehaald: 821 nummers en 392 artiesten. Dat gebeurt bij elke sync
+opnieuw.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Het trackregister toont alleen nog Daves eigen collectie, zonder de ruim achthonderd nummers uit
+playlists van anderen, zoals "trap" en "D&B".
+
+**Score:** 3
 
 #### Pull Request
 
 Nummers uit gedeelde playlists horen niet in de bibliotheek
-
