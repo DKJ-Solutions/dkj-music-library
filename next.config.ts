@@ -11,7 +11,10 @@ const nextConfig: NextConfig = {
   // De Spotify-redirect-URI (en dus de dev-flow) draait op 127.0.0.1, niet localhost (Spotify
   // weigert localhost sinds 2025 -- zie config.ts). Zonder dit staat Next.js 127.0.0.1 wel toe,
   // maar toont bij elke dev-request een cross-origin-waarschuwing.
-  allowedDevOrigins: ["127.0.0.1"],
+  // 192.168.*.*: de app open op een ander apparaat in het thuisnetwerk (bv. http://192.168.178.123:3000).
+  // Zonder deze regel blokkeert Next.js de dev-verbinding (HMR) van dat adres; de pagina hydrateert dan
+  // niet en geen knop in de tabel reageert, zonder één fout in de console (28 september 2026).
+  allowedDevOrigins: ["127.0.0.1", "192.168.*.*"],
 };
 
 export default nextConfig;

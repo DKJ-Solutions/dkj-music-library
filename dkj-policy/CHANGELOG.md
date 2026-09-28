@@ -2,7 +2,30 @@
 
 ## [Unreleased]
 
-**27 / 38 minor entries** <!-- pending-tally -->
+**28 / 39 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/lan-dev-origin · 20260928-100234Z
+
+De app werkt nu ook als je hem opent via het adres van de machine in het thuisnetwerk
+(`192.168.x.x:3000`), en niet alleen via `127.0.0.1`. Tot nu toe blokkeerde Next.js daar de
+dev-verbinding. De pagina kwam dan wel binnen, maar sorteren, de menu's en de filters in het
+trackregister deden niets.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Dave kan het register vanaf een ander apparaat in huis gebruiken.
+
+**Score:** 3
+
+#### Pull Request
+
+Het trackregister werkt ook via het LAN-adres van de dev-server
+
+[PR #43](https://github.com/DKJ-Solutions/dkj-music-library/pull/43)
+
+---
 
 ### DEPLOY: fix/orphan-column-warning-once · 20260927-223242Z
 
