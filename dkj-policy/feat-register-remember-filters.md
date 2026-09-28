@@ -50,7 +50,7 @@ Filterstand van TrackRegister (zoekterm, year, dkj_bpm, dkj_genre, dkj_album, dk
 ### TEST
 
 - [x] `npx tsc --noEmit` schoon, `npx eslint .` schoon, `npx vitest run --no-file-parallelism` 881/881 groen
-- [ ] Dave bekijkt het trackregister in de browser (EDM kiezen, herladen, Filters wissen)
+- [x] Dave heeft het trackregister in de browser bekeken: werkt (2026-09-28)
 
 ### DEPLOY: feat/register-remember-filters
 
