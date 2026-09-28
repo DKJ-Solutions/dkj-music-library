@@ -39,7 +39,7 @@ import type { Album, Artist, Playlist, PlaylistItem, Snapshot, SpotifyImage, Tra
 // kleiner dan de volledige objecten die Spotify standaard teruggeeft. LET OP: `item(...)`, niet
 // `track(...)` -- zie de opmerking bovenaan dit bestand.
 const PLAYLIST_ITEMS_FIELDS =
-  "items(added_at,added_by.id,is_local,item(id,uri,name,type,duration_ms,artists(id,name),album(id,name,images))),next,offset,limit,total";
+  "items(added_at,added_by.id,is_local,item(id,uri,name,type,duration_ms,artists(id,name),album(id,name,images,release_date))),next,offset,limit,total";
 
 // --- Ruwe Spotify-responsvormen (alleen de velden die we gebruiken) ------------------------
 
@@ -72,6 +72,7 @@ interface RawAlbum {
   id: string;
   name: string;
   images: SpotifyImage[] | null;
+  release_date?: string | null;
 }
 
 interface RawTrack {
@@ -115,6 +116,7 @@ function mapAlbum(raw: RawAlbum | null): Album {
     id: raw?.id ?? "",
     name: raw?.name ?? "",
     images: raw?.images ?? [],
+    releaseDate: raw?.release_date ?? null,
   };
 }
 
@@ -200,6 +202,13 @@ export interface BuildSnapshotOptions extends SpotifyFetchOptions {
 
 const DEFAULT_CONCURRENCY = 4;
 
+/** Heeft een eerdere snapshot tracks zonder `releaseDate`? Dan is hij van vóór dat veld (28 september
+ *  2026) en moet de playlist één keer opnieuw opgehaald worden, ook als zijn snapshot_id gelijk is --
+ *  anders krijgt een ongewijzigde playlist het jaar nooit. */
+function lacksReleaseDates(tracks: readonly PlaylistItem[]): boolean {
+  return tracks.some((item) => item.track !== null && item.track.album.releaseDate === undefined);
+}
+
 // De volledige ingest van fase 3: alle playlists + (waar nodig) alle tracks per playlist, met
 // snapshot_id-diffing tegen de vorige snapshot. Playlists worden met een milde concurrency-cap
 // verwerkt (default 4 gelijktijdig) -- elke playlist zelf haalt zijn tracks sequentieel/gepagineerd
@@ -233,7 +242,8 @@ export async function buildSnapshot(options: BuildSnapshotOptions = {}): Promise
       const raw = rawPlaylists[i];
       const meta = mapPlaylistMeta(raw);
       const previous = previousById.get(meta.id);
-      const unchanged = previous !== undefined && previous.snapshotId === meta.snapshotId;
+      const unchanged =
+        previous !== undefined && previous.snapshotId === meta.snapshotId && !lacksReleaseDates(previous.tracks);
 
       let tracks: PlaylistItem[];
       let eventType: SyncProgressEvent["type"];

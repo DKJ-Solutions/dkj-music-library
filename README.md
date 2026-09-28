@@ -216,6 +216,15 @@ kleur-emmer is teruggevonden, telt niet. Ook dit veld wordt bij elke sync opnieu
 de mix-bron (`djcylow-react`, zie `MIXES_DATA_DIR`) op deze machine te vinden is; zonder bron blijft het
 staan zoals het was. De regels staan in `src/lib/library/djcylowMixes.ts`.
 
+### Het jaar: `year`
+
+`year` (tot 28 september 2026 `release_year`, dat toen nog nergens gevuld was) is het jaar waarin
+het nummer uitkwam, uit de `release_date` van het Spotify-album. Staat hetzelfde nummer op meer
+albums (single, album, compilatie), dan telt het vroegste jaar. Een single uit 1997 op een compilatie
+uit 2015 blijft dus 1997. Kent Spotify alleen de compilatie, dan is dat het jaar. Ook dit veld wordt
+alleen gevuld zolang het leeg is, en het trackregister toont het in de kolom `year`. De regels staan in
+`src/lib/library/releaseYears.ts`.
+
 ### Velden met vaste keuzes
 
 `dkj_bpm`, `dkj_album` en `dkj_group` accepteren alleen hun eigen opties; elke andere waarde breekt de import af.

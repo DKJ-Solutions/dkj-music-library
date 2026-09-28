@@ -189,6 +189,12 @@
   color: var(--ink-soft);
 }
 
+// year: vier cijfers, even breed, zodat de jaren onder elkaar recht staan.
+.register-year {
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
 // ELKE RIJ IS PRECIES ÉÉN REGEL (Dave). Tekst wordt afgekapt met … en staat volledig in de tooltip
 // (title); wat niet op één regel past aan chips of labels, gaat in een menu (Dropdown in TrackRegister.tsx).
 .register-oneline {

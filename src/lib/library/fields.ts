@@ -72,6 +72,9 @@ export const PLAYLISTS_KEY = "spotify_playlist";
 /** Het veld met de eigen groepen (zie groupFromWorlds.ts). */
 export const GROUP_KEY = "dkj_group";
 
+/** Het veld met het jaar van uitgave (zie releaseYears.ts), tot 28 september 2026 `release_year`. */
+export const YEAR_KEY = "year";
+
 /** Het veld met de eigen BPM-groep (zie bpmFromPlaylists.ts). */
 export const BPM_KEY = "dkj_bpm";
 
@@ -103,7 +106,12 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
   { key: "artists", type: "json", label: "Artiesten, als lijst" },
   { key: "album", type: "text", label: "Album" },
   { key: "duration_ms", type: "integer", label: "Duur in milliseconden" },
-  { key: "release_year", type: "integer", label: "Jaar van uitgave" },
+  {
+    key: "year",
+    type: "integer",
+    label: "Jaar van uitgave: het vroegste jaar van Spotify over alle varianten van het nummer (releaseYears.ts), tenzij zelf ingevuld",
+    renamedFrom: "release_year",
+  },
   { key: "bpm", type: "real", label: "BPM" },
   { key: "musical_key", type: "text", label: "Toonsoort (bv. 8A of Am)" },
   { key: "genre", type: "text", label: "Genre" },
