@@ -2,7 +2,33 @@
 
 ## [Unreleased]
 
-**36 / 47 minor entries** <!-- pending-tally -->
+**37 / 48 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/dkj-genre-from-playlists · 20260928-140832Z
+
+`dkj_genre` wordt nu bij elke sync (en bij `npm run library:assign-ids`) uit de playlistnamen afgeleid
+zolang het leeg is, net als `dkj_bpm`: het genre als los woord in de naam (`128BPM EDM`, `Classic Pop`,
+`ALT`, `OST`), en House Mix, Drum & Bass en D&B/DNB tellen als EDM. Het meest genoemde genre wint; bij
+een gelijke stand blijft het leeg. De export is meteen gevuld: 10.503 van de 11.639 tracks (EDM 6.922,
+POP 2.452, ALT 1.090, OST 39); 126 gelijke standen en 1.010 tracks zonder genre in hun playlists
+blijven leeg.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Het genrefilter in het trackregister werkt nu meteen voor bijna de hele bibliotheek, in plaats van dat
+elk nummer met de hand een genre moet krijgen.
+
+**Score:** 3
+
+#### Pull Request
+
+dkj_genre wordt uit de playlistnamen afgeleid
+
+[PR #53](https://github.com/DKJ-Solutions/dkj-music-library/pull/53)
+
+---
 
 ### DEPLOY: feat/dkj-genre-field · 20260928-135538Z
 
