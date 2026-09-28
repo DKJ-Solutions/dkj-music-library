@@ -44,6 +44,8 @@ jong jaar. Dave koos route 1 (28 september 2026): het jaar van eerste uitgave bi
 opzoeken, met een lokale cache. Een los script haalt het op, met hooguit 1 verzoek per seconde; de
 pagina's lezen alleen de cache en doen zelf geen netwerkverzoeken.
 
+De jaren op de pagina zijn een zichtbaar resultaat, dus de PR wacht op Dave's blik voordat hij merget.
+
 ### CREATE
 
 - [x] `src/lib/musicbrainz/releaseYear.ts`: zoekopdracht (100 resultaten, het maximum), titelopschoning (live, remaster, demo, radio/single edit, single/album version, edit) en de keuze uit de response (score >= 90, artiest in de credit, vroegste `first-release-date`)
@@ -59,7 +61,6 @@ pagina's lezen alleen de cache en doen zelf geen netwerkverzoeken.
 - [x] Volledige run op Maple Classic tegen het echte MusicBrainz: 232 gevonden, 31 niet gevonden, 1 overgeslagen; 65 rijen worden vroeger dan het albumjaar. Met 25 resultaten miste de zoekopdracht het origineel van klassiekers (*I'm a Believer* 1980), dus nu 100. Valse treffers door naamgenoten: #47
 - [x] Review van de code (Victor): geen blockers; testisolatie van de cache, extra achtervoegsels en de laatste retry-wachttijd verwerkt
 - [x] Pagina lokaal opgehaald: 200, 264 rijen, *I'm a Believer* 1966
-- [ ] Dave bekijkt de pagina (zichtbaar resultaat, dus geen merge zonder zijn woord)
 
 ### DEPLOY: feat/45-musicbrainz-release-year
 
