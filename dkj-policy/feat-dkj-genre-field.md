@@ -39,19 +39,35 @@
 
 ### PLAN
 
+Dave vroeg om een kolom `dkj_genre` in het trackregister met de keuzes EDM, POP, ALT en OST. Eén
+waarde per track (tekst met options, zoals `dkj_bpm`), zelf in te vullen; niet afgeleid.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `dkj_genre` in `fields.ts` (type text, options EDM/POP/ALT/OST)
+- [x] `register.ts`: `genre` in de rij, in de zoektekst, het filter, `countBy` en de sortering
+- [x] `TrackRegister.tsx`: kolom `dkj_genre` na `dkj_bpm`, plus een filter
+- [x] Export bijgewerkt: elke track heeft nu `"dkj_genre":null` (verder niets gewijzigd, gecontroleerd)
+- [x] README: het veld bij de velden met vaste keuzes
 
 ### TEST
 
+- [x] Tests voor de opties, het filter en de kolom; typecheck, vitest (61 bestanden) en eslint groen
+- [ ] Dave bekijkt de kolom op /spotify/trackregister
+
 ### DEPLOY: feat/dkj-genre-field
 
-**Score:**
+Het trackregister heeft een nieuwe kolom `dkj_genre` met de keuzes `EDM`, `POP`, `ALT` en `OST`, naast
+`dkj_bpm`, met een eigen filter (inclusief "Leeg"). Het veld accepteert alleen die vier waarden bij een
+import; het is nog bij alle tracks leeg en wordt niet afgeleid.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie de bibliotheek gebruikt, kan tracks nu op genre indelen en in het register op genre filteren.
+
+**Score:** 3
 
 #### Pull Request
 

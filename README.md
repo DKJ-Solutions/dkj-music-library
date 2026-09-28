@@ -92,8 +92,8 @@ iedereen te lezen zodra je ze pusht.
 ### Het Trackregister bekijken
 
 Start de app (`npm run dev`) en open `/spotify/trackregister`; op `/spotify` staat de link bovenaan. Je
-ziet elk nummer met zijn eigen velden, en je kunt zoeken en filteren op `dkj_bpm` en `dkj_album`. De
-pagina leest de bibliotheek en niet de Spotify-snapshot, dus hij werkt op elke kloon van de repo, ook
+ziet elk nummer met zijn eigen velden, en je kunt zoeken en filteren op `dkj_bpm`, `dkj_genre`,
+`dkj_album` en `dkj_group`. De pagina leest de bibliotheek en niet de Spotify-snapshot, dus hij werkt op elke kloon van de repo, ook
 zonder Spotify-login of sync. Een lege of ontbrekende database wordt bij het openen uit de export
 opgebouwd.
 
@@ -276,13 +276,14 @@ alleen gevuld zolang het leeg is, en het trackregister toont het in de kolom `ye
 
 ### Velden met vaste keuzes
 
-`dkj_bpm`, `dkj_album` en `dkj_group` accepteren alleen hun eigen opties; elke andere waarde breekt de import af.
+`dkj_bpm`, `dkj_genre`, `dkj_album` en `dkj_group` accepteren alleen hun eigen opties; elke andere waarde breekt de import af.
 Hoofdletters en spaties tellen niet mee (`128 bpm` wordt `128BPM`).
 
 - **`dkj_group`**: een lijst uit `MMC`, `DJ CYLOW`, `Prive` en `Overige`. De sync vult hem zolang hij
   leeg is met de werelden van de playlists van de track (een playlist met een beschrijving telt
   sowieso als MMC); staat een track in meer werelden, dan heeft hij meer groepen. `Overige` zet je
   zelf (`src/lib/library/groupFromWorlds.ts`).
+- **`dkj_genre`**: `EDM`, `POP`, `ALT` of `OST`. Dit veld vul je zelf; het wordt niet afgeleid.
 - **`dkj_bpm`**: `128BPM`, `112BPM`, `176BPM`, `144BPM`, `96BPM`. Het veld wordt bij elke sync uit de
   playlists afgeleid zolang het leeg is: een BPM in de naam (`128BPM EDM`), House Mix is 128, Drum &
   Bass en D&B/DNB zijn 176. Noemen de playlists verschillende BPM's, dan wint de meest genoemde; bij

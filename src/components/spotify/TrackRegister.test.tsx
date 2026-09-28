@@ -16,6 +16,7 @@ function row(n: number, over: Partial<RegisterRow> = {}): RegisterRow {
     albumArtist: "Artiest",
     year: null,
     bpm: null,
+    genre: null,
     album: null,
     albumCandidates: [],
     file: `Artiest - Nummer ${n}`,
@@ -145,6 +146,14 @@ describe("TrackRegister", () => {
     expect(screen.getByText("DJ CYLOW", { selector: ".register-menu-item" })).toBeTruthy();
     fireEvent.change(screen.getByLabelText(/dkj_group/), { target: { value: "MMC" } });
     expect(screen.getByText("1 van 2 nummers")).toBeTruthy();
+  });
+
+  it("toont dkj_genre als label en filtert erop", () => {
+    render(<TrackRegister rows={[row(1, { genre: "OST" }), row(2), row(3, { genre: "ALT" })]} artistCount={1} />);
+    expect(screen.getByText("OST", { selector: ".register-tag" })).toBeTruthy();
+    fireEvent.change(screen.getByLabelText(/dkj_genre/), { target: { value: "OST" } });
+    expect(bodyRows()).toHaveLength(1);
+    expect(screen.getByText("1 van 3 nummers")).toBeTruthy();
   });
 
   it("sorteert via de kopregel: oplopend, aflopend, en weer uit", () => {
