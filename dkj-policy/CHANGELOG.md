@@ -2,7 +2,28 @@
 
 ## [Unreleased]
 
-**33 / 44 minor entries** <!-- pending-tally -->
+**34 / 45 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/maple-classic-sync-button · 20260928-130409Z
+
+De Maple Classic-pagina heeft nu dezelfde sync-knop als /spotify, met het tijdstip van de laatste
+snapshot erboven. Na een sync ververst de pagina zichzelf, zodat een wijziging in Spotify meteen te zien is.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Wie de Maple Classic-pagina bekijkt, kan de playlist verversen zonder eerst naar /spotify te gaan.
+
+**Score:** 2
+
+#### Pull Request
+
+sync-knop op de Maple Classic-pagina
+
+[PR #50](https://github.com/DKJ-Solutions/dkj-music-library/pull/50)
+
+---
 
 ### DEPLOY: fix/same-origin-lan-host · 20260928-130050Z
 
