@@ -2,7 +2,30 @@
 
 ## [Unreleased]
 
-**30 / 41 minor entries** <!-- pending-tally -->
+**31 / 42 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/maple-classic-page · 20260928-120118Z
+
+Nieuwe pagina `/spotify/maple-classic`: de playlist Maple Classic 2026 LAN als tabel met positie,
+titel (link naar Spotify), artiest, album, jaar, duur, datum van toevoegen en wie het nummer toevoegde. Het jaar komt uit het Trackregister als het
+nummer daarin staat, zodat een verzamelalbum het niet jonger maakt; anders is het het albumjaar van Spotify.
+Je kunt zoeken op titel, artiest, album of toevoeger en sorteren op elke kolom. Bovenaan `/spotify` staat een link ernaartoe.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+De gebruiker van de app heeft een nieuwe pagina om deze LAN-playlist te bekijken en te doorzoeken.
+
+**Score:** 3
+
+#### Pull Request
+
+eigen pagina met tabel voor de playlist Maple Classic 2026 LAN
+
+[PR #46](https://github.com/DKJ-Solutions/dkj-music-library/pull/46)
+
+---
 
 ### DEPLOY: feat/own-playlists-only · 20260928-101505Z
 
