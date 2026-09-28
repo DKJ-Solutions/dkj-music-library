@@ -39,33 +39,33 @@
 
 ### PLAN
 
-Dave vroeg om te kunnen filteren op tracks met een year tussen 2000 en 2009. Gebouwd als een
-year-filter per decennium, zodat elk decennium (en "Leeg") meteen kiesbaar is, niet alleen 2000–2009.
+Dave vroeg om te kunnen filteren op tracks met een year tussen 2000 en 2009. De eerste versie (een
+select per decennium) was niet wat hij wilde: hij wil zelf een min- en max-jaar invullen.
 
 ### CREATE
 
-- [x] `register.ts`: `decadeOf`, `decadeLabel`, `decadesOf`, het `decade`-veld in `RegisterFilter` en `countBy(rows, "decade")`
-- [x] `TrackRegister.tsx`: een `year`-select vóór dkj_bpm, met de decennia uit de rijen, tellingen en "Leeg"
+- [x] `register.ts`: `yearFrom`/`yearTo` in `RegisterFilter`, beide inclusief; met een grens valt een rij zonder year af
+- [x] `TrackRegister.tsx`: twee invulvelden `van` en `tot` naast `year`, vóór dkj_bpm
+- [x] `_track-register.scss`: de invulvelden in dezelfde stijl als de selects
 
 ### TEST
 
-- [x] Unittests in `register.test.ts` (grenzen 1999/2000/2009/2010, leeg, telling) en een componenttest in `TrackRegister.test.tsx`
+- [x] Unittests in `register.test.ts` (grenzen, één grens, leeg, ongeldige invoer) en een componenttest in `TrackRegister.test.tsx`
 - [x] vitest, `tsc --noEmit` en eslint groen
 
 ### DEPLOY: feat/year-decade-filter
 
-Het trackregister heeft een filter `year` dat per decennium filtert (bv. 2000–2009), met het aantal
-nummers per decennium en een optie "Leeg" voor nummers zonder year.
+Het trackregister heeft een filter `year` met twee invulvelden, van en tot (beide inclusief), zodat je
+bijvoorbeeld alleen nummers uit 2000–2009 ziet. Is er een grens ingevuld, dan vallen nummers zonder year af.
 
 **Score:** 3
 
 #### What makes this deploy extra special
 
-Wie het register gebruikt, kan nu in één keuze alle nummers uit één decennium tonen.
+Wie het register gebruikt, kan nu zelf een jaarbereik invullen en ziet alleen de nummers daarbinnen.
 
 **Score:** 3
 
 #### Pull Request
 
-Trackregister filtert op year per decennium
-
+Trackregister filtert op een zelf ingevuld bereik van year

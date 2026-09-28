@@ -1,5 +1,5 @@
 "use client";
-// De tabel van /spotify/trackregister: zoeken, filteren op year (per decennium), dkj_bpm, dkj_genre, dkj_album en dkj_group, sorteren via de kopregel, en bladeren per
+// De tabel van /spotify/trackregister: zoeken, filteren op een bereik van year, op dkj_bpm, dkj_genre, dkj_album en dkj_group, sorteren via de kopregel, en bladeren per
 // 100 rijen (12.000+ rijen in één keer renderen maakt de pagina traag). Alle logica die geen React is
 // zit in register.ts; hier alleen de weergave en de filterstand.
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -10,8 +10,6 @@ import { playlistUrl } from "@/lib/library/playlistLink";
 import {
   EMPTY_FILTER,
   countBy,
-  decadeLabel,
-  decadesOf,
   filterRegister,
   fold,
   searchText,
@@ -375,7 +373,8 @@ const COLUMN_SETS: Record<ColumnSet, readonly Column[]> = { visible: VISIBLE_COL
 
 export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
   const [query, setQuery] = useState("");
-  const [decade, setDecade] = useState("");
+  const [yearFrom, setYearFrom] = useState("");
+  const [yearTo, setYearTo] = useState("");
   const [bpm, setBpm] = useState("");
   const [genre, setGenre] = useState("");
   const [album, setAlbum] = useState("");
@@ -391,15 +390,13 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
   };
 
   const haystacks = useMemo(() => rows.map(searchText), [rows]);
-  const decades = useMemo(() => decadesOf(rows), [rows]);
-  const decadeCounts = useMemo(() => countBy(rows, "decade"), [rows]);
   const bpmCounts = useMemo(() => countBy(rows, "bpm"), [rows]);
   const genreCounts = useMemo(() => countBy(rows, "genre"), [rows]);
   const albumCounts = useMemo(() => countBy(rows, "album"), [rows]);
   const groupCounts = useMemo(() => countBy(rows, "groups"), [rows]);
   const filtered = useMemo(
-    () => filterRegister(rows, haystacks, { term: deferredQuery, bpm, genre, album, group, decade }),
-    [rows, haystacks, deferredQuery, bpm, genre, album, group, decade]
+    () => filterRegister(rows, haystacks, { term: deferredQuery, bpm, genre, album, group, yearFrom, yearTo }),
+    [rows, haystacks, deferredQuery, bpm, genre, album, group, yearFrom, yearTo]
   );
   const list = useMemo(() => sortRegister(filtered, sort), [filtered, sort]);
 
@@ -442,16 +439,28 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
             onChange={(e) => reset(setQuery)(e.target.value)}
           />
         </label>
-        <label className="register-filter" htmlFor="register-year">
-          <span>year</span>
-          <select id="register-year" value={decade} onChange={(e) => reset(setDecade)(e.target.value)}>
-            <option value="">{label("Alle", rows.length)}</option>
-            {decades.map((option) => (
-              <option key={option} value={option}>{label(decadeLabel(option), decadeCounts.get(option))}</option>
-            ))}
-            <option value={EMPTY_FILTER}>{label("Leeg", decadeCounts.get(EMPTY_FILTER))}</option>
-          </select>
-        </label>
+        <div className="register-filter" role="group" aria-labelledby="register-year-label">
+          <span id="register-year-label">year</span>
+          <input
+            className="register-year-input"
+            type="number"
+            inputMode="numeric"
+            placeholder="van"
+            aria-label="year van"
+            value={yearFrom}
+            onChange={(e) => reset(setYearFrom)(e.target.value)}
+          />
+          <span aria-hidden="true">–</span>
+          <input
+            className="register-year-input"
+            type="number"
+            inputMode="numeric"
+            placeholder="tot"
+            aria-label="year tot"
+            value={yearTo}
+            onChange={(e) => reset(setYearTo)(e.target.value)}
+          />
+        </div>
         <label className="register-filter" htmlFor="register-bpm">
           <span>dkj_bpm</span>
           <select id="register-bpm" value={bpm} onChange={(e) => reset(setBpm)(e.target.value)}>

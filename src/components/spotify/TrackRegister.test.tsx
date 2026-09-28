@@ -156,13 +156,12 @@ describe("TrackRegister", () => {
     expect(screen.getByText("1 van 3 nummers")).toBeTruthy();
   });
 
-  it("filtert op year per decennium, met de decennia uit de rijen", () => {
+  it("filtert op een zelf ingevuld bereik van year", () => {
     render(
       <TrackRegister rows={[row(1, { year: "1999" }), row(2, { year: "2000" }), row(3, { year: "2009" }), row(4)]} artistCount={1} />
     );
-    const select = screen.getByLabelText(/^year/) as HTMLSelectElement;
-    expect([...select.options].map((o) => o.text)).toEqual(["Alle (4)", "1990–1999 (1)", "2000–2009 (2)", "Leeg (1)"]);
-    fireEvent.change(select, { target: { value: "2000" } });
+    fireEvent.change(screen.getByLabelText("year van"), { target: { value: "2000" } });
+    fireEvent.change(screen.getByLabelText("year tot"), { target: { value: "2009" } });
     expect(bodyRows()).toHaveLength(2);
     expect(screen.getByText("2 van 4 nummers")).toBeTruthy();
   });

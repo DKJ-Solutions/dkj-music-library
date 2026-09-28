@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EMPTY_FILTER, countBy, decadeLabel, decadeOf, decadesOf, filterRegister, searchText, sortRegister, toRegisterRow, type RegisterRow } from "./register";
+import { EMPTY_FILTER, countBy, filterRegister, searchText, sortRegister, toRegisterRow, type RegisterRow } from "./register";
 import type { StoredTrack } from "./trackStore";
 
 function stored(over: Partial<StoredTrack> = {}): StoredTrack {
@@ -59,7 +59,7 @@ describe("filterRegister", () => {
     toRegisterRow(stored({ dkj_track_id: "ROY01-01", title: "Eple", dkj_artist_id: ["ROY01"], dkj_artist: "Röyksopp", dkj_albumartiest: "Röyksopp" }), {}),
   ];
   const hay = rows.map(searchText);
-  const run = (filter: Partial<{ term: string; bpm: string; genre: string; album: string; group: string; decade: string }>) =>
+  const run = (filter: Partial<{ term: string; bpm: string; genre: string; album: string; group: string }>) =>
     filterRegister(rows, hay, { term: "", bpm: "", album: "", ...filter }).map((row) => row.id);
 
   it("zoekt ook op playlistnaam", () => {
@@ -88,32 +88,20 @@ describe("filterRegister", () => {
     expect(run({ album: "Green Full (f)" })).toEqual([]);
   });
 
-  it("filtert op het decennium van year", () => {
-    const years: RegisterRow[] = [
-      { ...rows[0], id: "Y1999", year: "1999" },
-      { ...rows[0], id: "Y2000", year: "2000" },
-      { ...rows[0], id: "Y2009", year: "2009" },
-      { ...rows[0], id: "Y2010", year: "2010" },
-      { ...rows[0], id: "Ynull", year: null },
-    ];
-    const pick = (decade: string) =>
-      filterRegister(years, years.map(searchText), { term: "", bpm: "", album: "", decade }).map((row) => row.id);
-    expect(pick("2000")).toEqual(["Y2000", "Y2009"]);
-    expect(pick(EMPTY_FILTER)).toEqual(["Ynull"]);
-    expect(pick("")).toHaveLength(5);
-    expect(decadesOf(years)).toEqual(["1990", "2000", "2010"]);
-    expect(countBy(years, "decade")).toEqual(new Map([["1990", 1], ["2000", 2], ["2010", 1], [EMPTY_FILTER, 1]]));
+  it("filtert op een bereik van year, beide grenzen inclusief", () => {
+    const years: RegisterRow[] = ["1999", "2000", "2009", "2010", null].map((year) => ({ ...rows[0], id: `Y${year}`, year }));
+    const pick = (yearFrom: string, yearTo: string) =>
+      filterRegister(years, years.map(searchText), { term: "", bpm: "", album: "", yearFrom, yearTo }).map((row) => row.id);
+    expect(pick("2000", "2009")).toEqual(["Y2000", "Y2009"]);
+    expect(pick("2009", "")).toEqual(["Y2009", "Y2010"]);
+    expect(pick("", "1999")).toEqual(["Y1999"]);
+    // Zonder grenzen (of met iets dat nog geen jaar is) doet het filter niets, ook niet met rijen zonder year.
+    expect(pick("", "")).toHaveLength(5);
+    expect(pick("20a", " ")).toHaveLength(5);
   });
 
   it("telt per waarde, leeg onder EMPTY_FILTER", () => {
     expect(countBy(rows, "bpm")).toEqual(new Map([["128BPM", 1], [EMPTY_FILTER, 1]]));
-  });
-});
-
-describe("decadeOf", () => {
-  it("rondt af naar het beginjaar van het decennium", () => {
-    expect([decadeOf("2004"), decadeOf("1980"), decadeOf(null), decadeOf("onbekend")]).toEqual(["2000", "1980", null, null]);
-    expect(decadeLabel("2000")).toBe("2000–2009");
   });
 });
 
