@@ -24,7 +24,7 @@ if (!snapshot) {
 const mixLinks = getMixLinks(snapshot);
 
 try {
-  const { tracks, artists, primaryArtistsFilled, albumArtistsFilled, fileNamesFilled, titlesFilled, titlesRefreshed, playlistsChanged, mixesChanged, albumsFilled, bpmsFilled, groupsFilled, live, renumbered, total } = withLibrary((db) => ({
+  const { tracks, artists, primaryArtistsFilled, albumArtistsFilled, fileNamesFilled, titlesFilled, titlesRefreshed, playlistsChanged, mixesChanged, albumsFilled, bpmsFilled, groupsFilled, live, renumbered, total, yearsFilled } = withLibrary((db) => ({
     ...applyLibraryIdsFromSnapshot(db, snapshot),
     // De werelden (met je handmatige correcties) voor dkj_group; zie groupFromWorlds.ts.
     groupsFilled: fillGroupsFromWorlds(db, getEnrichedSnapshot(snapshot)?.playlists ?? []),
@@ -56,6 +56,7 @@ try {
   if (albumsFilled > 0) console.log(`dkj_album uit de playlists gevuld bij ${albumsFilled} tracks`);
   if (bpmsFilled > 0) console.log(`dkj_bpm uit de playlists gevuld bij ${bpmsFilled} tracks`);
   if (groupsFilled > 0) console.log(`dkj_group uit de werelden gevuld bij ${groupsFilled} tracks`);
+  if (yearsFilled > 0) console.log(`year uit Spotify gevuld bij ${yearsFilled} tracks`);
   console.log("Export bijgewerkt in data/library/export/ -- commit die map om hem op je andere machines te hebben.");
 } catch (err) {
   console.error(`Toekennen mislukt: ${err instanceof Error ? err.message : String(err)}`);

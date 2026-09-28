@@ -29,6 +29,10 @@ export interface Album {
   id: string;
   name: string;
   images: SpotifyImage[];
+  /** Spotify's `release_date`: "1997", "1997-05" of "1997-05-12" (de precisie verschilt per album).
+   *  null = Spotify kent geen datum. Ontbreekt in een snapshot van vóór 28 september 2026; de ingest
+   *  haalt zo'n playlist daarom één keer opnieuw op (zie buildSnapshot in ingest.ts). */
+  releaseDate?: string | null;
 }
 
 export interface Track {

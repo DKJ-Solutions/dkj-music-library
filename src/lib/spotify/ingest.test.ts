@@ -54,7 +54,7 @@ function rawTrackItem(overrides: Record<string, unknown> = {}) {
       type: "track",
       duration_ms: 200_000,
       artists: [{ id: "artist-1", name: "Some Artist" }],
-      album: { id: "album-1", name: "Some Album", images: [] },
+      album: { id: "album-1", name: "Some Album", images: [], release_date: "1997-05-12" },
     },
     ...overrides,
   };
@@ -87,7 +87,7 @@ describe("fetchAllPlaylistItems", () => {
           uri: "spotify:track:track-1",
           name: "Some Song",
           artists: [{ id: "artist-1", name: "Some Artist" }],
-          album: { id: "album-1", name: "Some Album", images: [] },
+          album: { id: "album-1", name: "Some Album", images: [], releaseDate: "1997-05-12" },
           durationMs: 200_000,
         },
       },
@@ -188,7 +188,7 @@ describe("buildSnapshot", () => {
                 uri: "spotify:track:oud-track",
                 name: "Oud nummer",
                 artists: [],
-                album: { id: "", name: "", images: [] },
+                album: { id: "", name: "", images: [], releaseDate: null },
                 durationMs: 1000,
               },
             },
@@ -207,6 +207,44 @@ describe("buildSnapshot", () => {
     expect(snapshot.playlists[0].tracks).toEqual(previous.playlists[0].tracks);
     // De naam komt wel uit de nieuwe playlist-metadata (die verandert onafhankelijk van tracks).
     expect(snapshot.playlists[0].name).toBe("Roadtrip");
+  });
+
+  it("haalt een ongewijzigde playlist één keer opnieuw op als de vorige tracks nog geen releaseDate kennen", async () => {
+    const previous: Snapshot = {
+      syncedAt: "2026-01-01T00:00:00Z",
+      playlists: [
+        {
+          id: "playlist-1",
+          name: "Roadtrip",
+          uri: "spotify:playlist:playlist-1",
+          collaborative: false,
+          public: true,
+          snapshotId: "snap-v1",
+          owner: { id: "dave", displayName: "Dave" },
+          images: [],
+          description: null,
+          trackCount: 1,
+          tracks: [
+            {
+              addedAt: null,
+              addedBy: null,
+              isLocal: false,
+              // Een snapshot van vóór releaseDate: het veld ontbreekt helemaal.
+              track: { id: "track-1", uri: "spotify:track:track-1", name: "Some Song", artists: [], album: { id: "", name: "", images: [] }, durationMs: 1 },
+            },
+          ],
+        },
+      ],
+    };
+
+    mockedFetchAllPages
+      .mockResolvedValueOnce([rawPlaylist({ snapshot_id: "snap-v1" })])
+      .mockResolvedValueOnce([rawTrackItem()]);
+
+    const snapshot = await buildSnapshot({ previousSnapshot: previous });
+
+    expect(mockedFetchAllPages).toHaveBeenCalledTimes(2);
+    expect(snapshot.playlists[0].tracks[0].track?.album.releaseDate).toBe("1997-05-12");
   });
 
   it("haalt tracks wél opnieuw op als het snapshot_id is veranderd", async () => {

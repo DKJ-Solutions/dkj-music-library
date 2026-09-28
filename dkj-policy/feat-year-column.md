@@ -39,19 +39,39 @@
 
 ### PLAN
 
+Dave: een nieuwe kolom `year` met het jaar waarin het nummer uitkwam, en die kolom ook in de tabel van
+het trackregister. Het lege veld `release_year` bestond al: dat wordt `year` (via `renamedFrom`), zodat
+er geen twee jaarkolommen komen.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Ingest vraagt `release_date` op (live gecontroleerd: Spotify geeft hem nog terug) en haalt een ongewijzigde playlist uit een oudere snapshot één keer opnieuw op
+- [x] `release_year` hernoemd naar `year`; `releaseYears.ts` vult het vroegste jaar over alle varianten, alleen zolang het leeg is
+- [x] `readTrackIdOf` in `trackIds.ts` vervangt twee kopieën van dezelfde query (`playlistLinks.ts`, `djcylowMixes.ts`)
+- [x] Kolom `year` in het trackregister, na `dkj_albumartiest` (sorteren en zoeken werken ook)
+- [x] Sync gedraaid en `library:assign-ids`: alle 12.460 nummers hebben een jaar (1947 t/m 2026)
+- [x] README bijgewerkt
 
 ### TEST
 
+- [x] Tests voor `yearOf`, `planReleaseYears`, `applyReleaseYears`, het opnieuw ophalen in de ingest en sorteren en zoeken in het register
+- [x] typecheck, lint en alle 799 tests groen
+
 ### DEPLOY: feat/year-column
 
-**Score:**
+Elk nummer heeft een veld `year`: het jaar waarin het uitkwam, volgens Spotify. Het trackregister
+toont het in een eigen kolom, na de artiest, en je kunt erop sorteren en zoeken. Staat een nummer op
+meer albums (single, album, compilatie), dan telt het vroegste jaar. Het lege veld `release_year` heet
+nu `year`. De sync haalt de albumdatum mee, en bij de eerste sync na deze wijziging worden alle
+playlists één keer volledig opgehaald.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Dave ziet in het register meteen uit welk jaar elk nummer is, en kan de collectie op jaar sorteren.
+
+**Score:** 3
 
 #### Pull Request
 

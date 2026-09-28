@@ -192,6 +192,16 @@ export function ensureSpotifyLinkTable(db: DatabaseSync): void {
   db.exec(`CREATE INDEX IF NOT EXISTS ${SPOTIFY_LINK_TABLE}_song_key ON ${SPOTIFY_LINK_TABLE} (song_key)`);
 }
 
+/** Spotify-track-ID -> eigen dkj_track_id, uit de koppeltabel (die wordt aangemaakt als hij er nog niet is). */
+export function readTrackIdOf(db: DatabaseSync): Map<string, string> {
+  ensureSpotifyLinkTable(db);
+  const rows = db.prepare(`SELECT spotify_track_id, ${TRACK_ID_KEY} FROM ${SPOTIFY_LINK_TABLE}`).all() as {
+    spotify_track_id: string;
+    dkj_track_id: string;
+  }[];
+  return new Map(rows.map((row) => [row.spotify_track_id, row.dkj_track_id]));
+}
+
 function readLinks(db: DatabaseSync): SpotifyLink[] {
   const rows = db
     .prepare(`SELECT spotify_track_id, ${TRACK_ID_KEY}, song_key FROM ${SPOTIFY_LINK_TABLE}`)

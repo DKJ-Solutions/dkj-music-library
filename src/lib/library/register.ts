@@ -21,6 +21,8 @@ export interface RegisterRow {
   artistNames: string[];
   artist: string | null;
   albumArtist: string | null;
+  /** Het jaar van uitgave (year), als tekst: zo zoekt en sorteert het als de andere kolommen. */
+  year: string | null;
   bpm: string | null;
   album: string | null;
   /** De albums die de playlists noemen (albumsOfPlaylists). Meer dan één: de playlists verschillen, en
@@ -74,6 +76,7 @@ export function toRegisterRow(track: StoredTrack, artistNames: Record<string, st
     artistNames: ids.map((id) => artistNames[id] ?? id),
     artist: text(track.dkj_artist),
     albumArtist: text(track.dkj_albumartiest),
+    year: typeof track.year === "number" ? String(track.year) : null,
     bpm: text(track.dkj_bpm),
     album: text(track.dkj_album),
     albumCandidates: albumsOfPlaylists(playlists.map((p) => p.name)),
@@ -93,7 +96,7 @@ export function fold(value: string): string {
 /** Alles waarop gezocht wordt, in één gevouwen string. */
 export function searchText(row: RegisterRow): string {
   return fold(
-    [row.id, row.title, ...row.artistIds, ...row.artistNames, row.artist, row.albumArtist, row.bpm, row.album, ...row.groups, row.file, row.dkjTitle, ...row.playlists.map((p) => p.name), ...row.mixes.map((m) => m.name)]
+    [row.id, row.title, ...row.artistIds, ...row.artistNames, row.artist, row.albumArtist, row.year, row.bpm, row.album, ...row.groups, row.file, row.dkjTitle, ...row.playlists.map((p) => p.name), ...row.mixes.map((m) => m.name)]
       .filter(Boolean)
       .join(" ")
   );
@@ -133,7 +136,7 @@ export function countBy(rows: readonly RegisterRow[], key: "bpm" | "album" | "gr
 }
 
 /** De kolommen waarop de tabel kan sorteren; elke kolom van het register. */
-export type SortKey = "id" | "file" | "dkjTitle" | "artist" | "albumArtist" | "artistIds" | "playlists" | "mixes" | "bpm" | "album" | "groups";
+export type SortKey = "id" | "file" | "dkjTitle" | "artist" | "albumArtist" | "year" | "artistIds" | "playlists" | "mixes" | "bpm" | "album" | "groups";
 
 export interface RegisterSort {
   key: SortKey;

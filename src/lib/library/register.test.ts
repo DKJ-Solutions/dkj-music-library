@@ -11,6 +11,7 @@ function stored(over: Partial<StoredTrack> = {}): StoredTrack {
     dkj_artist_id: ["MAR01", "BRU01"],
     dkj_artist: "Mark Ronson",
     dkj_albumartiest: "Mark Ronson, Bruno Mars",
+    year: 2014,
     dkj_bpm: null,
     dkj_album: null,
     dkj_file: "Mark Ronson - Uptown Funk",
@@ -32,6 +33,7 @@ describe("toRegisterRow", () => {
       artistNames: ["Mark Ronson", "BRU01"],
       artist: "Mark Ronson",
       albumArtist: "Mark Ronson, Bruno Mars",
+      year: "2014",
       bpm: "112BPM",
       album: null,
       albumCandidates: [],
@@ -44,8 +46,8 @@ describe("toRegisterRow", () => {
   });
 
   it("maakt van ontbrekende of lege velden null en een lege lijst", () => {
-    const row = toRegisterRow(stored({ dkj_artist_id: null, dkj_artist: "", title: null }), {});
-    expect([row.artistIds, row.artist, row.title]).toEqual([[], null, ""]);
+    const row = toRegisterRow(stored({ dkj_artist_id: null, dkj_artist: "", title: null, year: null }), {});
+    expect([row.artistIds, row.artist, row.title, row.year]).toEqual([[], null, "", null]);
   });
 });
 
@@ -96,6 +98,20 @@ describe("sortRegister", () => {
   it("sorteert numeriek, met lege cellen onderaan in beide richtingen", () => {
     expect(ids(sortRegister(rows, { key: "bpm", dir: "asc" }))).toEqual(["C", "A", "B"]);
     expect(ids(sortRegister(rows, { key: "bpm", dir: "desc" }))).toEqual(["A", "C", "B"]);
+  });
+
+  it("sorteert op year, met een onbekend jaar onderaan", () => {
+    const jaren: RegisterRow[] = [
+      { ...base, id: "A", year: "2014" },
+      { ...base, id: "B", year: null },
+      { ...base, id: "C", year: "1997" },
+    ];
+    expect(ids(sortRegister(jaren, { key: "year", dir: "asc" }))).toEqual(["C", "A", "B"]);
+    expect(ids(sortRegister(jaren, { key: "year", dir: "desc" }))).toEqual(["A", "C", "B"]);
+  });
+
+  it("zoekt op het jaar", () => {
+    expect(searchText({ ...base, year: "1997" })).toContain("1997");
   });
 
   it("sorteert een lijstkolom op zijn waarden", () => {

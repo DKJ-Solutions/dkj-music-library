@@ -18,7 +18,7 @@ import type { Snapshot } from "@/lib/spotify/types";
 import { TRACKS_TABLE } from "./db";
 import { PLAYLISTS_KEY, TRACK_ID_KEY } from "./fields";
 import type { PlaylistLink } from "./playlistLink";
-import { SPOTIFY_LINK_TABLE, ensureSpotifyLinkTable } from "./trackIds";
+import { readTrackIdOf } from "./trackIds";
 
 export { playlistUrl, type PlaylistLink } from "./playlistLink";
 
@@ -43,15 +43,7 @@ export function planPlaylistLinks(
 
 /** Zet `spotify_playlist` bij elke track gelijk aan de snapshot. Geeft het aantal gewijzigde tracks terug. */
 export function applyPlaylistLinks(db: DatabaseSync, snapshot: Snapshot): number {
-  ensureSpotifyLinkTable(db);
-  const trackIdOf = new Map(
-    (
-      db.prepare(`SELECT spotify_track_id, ${TRACK_ID_KEY} FROM ${SPOTIFY_LINK_TABLE}`).all() as {
-        spotify_track_id: string;
-        dkj_track_id: string;
-      }[]
-    ).map((row) => [row.spotify_track_id, row.dkj_track_id])
-  );
+  const trackIdOf = readTrackIdOf(db);
   const plan = planPlaylistLinks(snapshot, trackIdOf);
   const current = db.prepare(`SELECT ${TRACK_ID_KEY}, "${PLAYLISTS_KEY}" AS value FROM ${TRACKS_TABLE}`).all() as {
     dkj_track_id: string;

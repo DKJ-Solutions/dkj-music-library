@@ -45,6 +45,7 @@ import { fileNameOf, titleNameOf, versionedTitleOf } from "./fileName";
 import { mergeLiveVariants, type LiveMergeResult } from "./liveVariants";
 import { applyPlaylistLinks } from "./playlistLinks";
 import { primaryArtistOf } from "./primaryArtist";
+import { applyReleaseYears } from "./releaseYears";
 import {
   SPOTIFY_LINK_TABLE,
   applyTrackIdsFromSnapshot,
@@ -376,6 +377,8 @@ export interface LibraryIdResult {
   albumArtistsFilled: number;
   /** Tracks die in deze run hun `dkj_artist` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
   primaryArtistsFilled: number;
+  /** Tracks die in deze run hun `year` uit de snapshot kregen (releaseYears.ts). */
+  yearsFilled: number;
   /** Tracks die in deze run van een oud ID (T000001) naar het nieuwe formaat gingen. */
   renumbered: number;
   /** Live-varianten die in deze run in hun studioversie opgingen of een schone titel kregen (liveVariants.ts). */
@@ -402,5 +405,6 @@ export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot
   // Na de playlists: het album en de BPM worden uit hun namen afgeleid.
   const albumsFilled = fillAlbumsFromPlaylists(db);
   const bpmsFilled = fillBpmsFromPlaylists(db);
-  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, live, playlistsChanged, primaryArtistsFilled, renumbered, titlesFilled, titlesRefreshed, tracks };
+  const yearsFilled = applyReleaseYears(db, snapshot);
+  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, live, playlistsChanged, primaryArtistsFilled, renumbered, titlesFilled, titlesRefreshed, tracks, yearsFilled };
 }

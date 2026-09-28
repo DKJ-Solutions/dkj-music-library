@@ -314,8 +314,9 @@ function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term:
 /** De gewone kolommen, in volgorde. dkj_track_id, dkj_file, dkj_artist en dkj_artist_id staan er niet in
  *  (Dave); die staan in HIDDEN_COLUMNS, achter de switch, en op alle vier zoeken kan altijd. */
 const VISIBLE_COLUMNS: readonly Column[] = [
-  { key: "dkjTitle", field: "dkj_title", width: "28%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
-  { key: "albumArtist", field: "dkj_albumartiest", width: "19%", cell: (row, term) => <OneLine text={row.albumArtist} term={term} className="register-album-artist" /> },
+  { key: "dkjTitle", field: "dkj_title", width: "25%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
+  { key: "albumArtist", field: "dkj_albumartiest", width: "17%", cell: (row, term) => <OneLine text={row.albumArtist} term={term} className="register-album-artist" /> },
+  { key: "year", field: "year", width: "5%", cell: (row, term) => <OneLine text={row.year} term={term} className="register-year" /> },
   {
     key: "playlists",
     field: "spotify_playlist",

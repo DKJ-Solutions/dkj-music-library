@@ -14,6 +14,7 @@ function row(n: number, over: Partial<RegisterRow> = {}): RegisterRow {
     artistNames: ["Artiest"],
     artist: "Artiest",
     albumArtist: "Artiest",
+    year: null,
     bpm: null,
     album: null,
     albumCandidates: [],
@@ -95,6 +96,7 @@ describe("TrackRegister", () => {
     const toggle = screen.getByRole("switch", { name: "verborgen kolommen" });
     expect(toggle.getAttribute("aria-checked")).toBe("false");
     expect(headers()).toContain("dkj_title");
+    expect(headers()).toContain("year");
 
     fireEvent.click(toggle);
     expect(toggle.getAttribute("aria-checked")).toBe("true");

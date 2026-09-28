@@ -19,7 +19,7 @@ import type { Snapshot } from "@/lib/spotify/types";
 import { TRACKS_TABLE } from "./db";
 import type { DjcylowMixLink } from "./djcylowMix";
 import { MIXES_KEY, TRACK_ID_KEY } from "./fields";
-import { SPOTIFY_LINK_TABLE, ensureSpotifyLinkTable } from "./trackIds";
+import { readTrackIdOf } from "./trackIds";
 
 export { mixUrl, type DjcylowMixLink } from "./djcylowMix";
 
@@ -57,15 +57,7 @@ export function applyDjcylowMixes(
   { mixCount, links }: { mixCount: number; links: readonly MixLink[] }
 ): number {
   if (mixCount === 0) return 0;
-  ensureSpotifyLinkTable(db);
-  const trackIdOf = new Map(
-    (
-      db.prepare(`SELECT spotify_track_id, ${TRACK_ID_KEY} FROM ${SPOTIFY_LINK_TABLE}`).all() as {
-        spotify_track_id: string;
-        dkj_track_id: string;
-      }[]
-    ).map((row) => [row.spotify_track_id, row.dkj_track_id])
-  );
+  const trackIdOf = readTrackIdOf(db);
   const plan = planDjcylowMixes(snapshot, links, trackIdOf);
   const current = db.prepare(`SELECT ${TRACK_ID_KEY}, "${MIXES_KEY}" AS value FROM ${TRACKS_TABLE}`).all() as {
     dkj_track_id: string;
