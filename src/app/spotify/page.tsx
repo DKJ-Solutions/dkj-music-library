@@ -79,6 +79,11 @@ export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusP
             🗂️ Bekijk het DKJ Trackregister (elke track met zijn eigen velden) →
           </Link>
         </p>
+        <p className="dashboard-link-row">
+          <Link href="/spotify/maple-classic" className="accent-text">
+            🍁 Bekijk de playlist Maple Classic 2026 LAN als tabel →
+          </Link>
+        </p>
       </header>
 
       <section className="layer">
