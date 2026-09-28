@@ -60,7 +60,7 @@ de snapshot, zoals de wereld-routes. De tabel neemt de stijl van het Trackregist
 - [x] Jaar: bibliotheekjaar boven albumjaar, albumjaar apart bewaard; op de pagina 4 rijen met tooltip
 - [x] `vitest run` (820 groen), `tsc --noEmit`, `eslint`
 - [x] Pagina lokaal opgehaald: 200, 264 rijen, de link staat op `/spotify`; toevoegers Jellootje 151, Dave K. John 91, Bas van Leeuwen 22
-- [ ] Dave bekijkt de pagina (zichtbaar resultaat, dus geen merge zonder zijn woord)
+- [x] Dave bekijkt de pagina (zichtbaar resultaat, dus geen merge zonder zijn woord) -- akkoord gegeven met "merge pr" (2026-09-28)
 
 ### DEPLOY: feat/maple-classic-page
 
