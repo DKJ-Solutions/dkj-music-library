@@ -8,6 +8,7 @@ import { foundReleaseYears, readReleaseYearCache } from "@/lib/musicbrainz/cache
 import { libraryYearsBySpotifyId, toPlaylistTableRows, userNamesFromSnapshot } from "@/lib/spotify/playlistTableRows";
 import { playlistUrl } from "@/lib/library/playlistLink";
 import { PlaylistTable } from "@/components/spotify/PlaylistTable";
+import SyncButton from "../SyncButton";
 
 // Zelfde reden als /spotify/page.tsx: leest een fs-snapshot die buiten de build kan wijzigen.
 export const dynamic = "force-dynamic";
@@ -56,6 +57,14 @@ export default function MapleClassicPage() {
             </a>
           </p>
         )}
+        {/* Dezelfde knop als op /spotify: haalt een nieuwe snapshot op en ververst daarna deze pagina, zodat
+            een wijziging in Spotify (bijv. verwijderde nummers) hier zichtbaar wordt. */}
+        <p className="empty-note" style={{ marginTop: "10px" }}>
+          {snapshot
+            ? `Laatste snapshot: gesynchroniseerd op ${new Date(snapshot.syncedAt).toLocaleString("nl-NL")}.`
+            : "Nog geen snapshot."}
+        </p>
+        <SyncButton />
       </header>
 
       {rows ? (

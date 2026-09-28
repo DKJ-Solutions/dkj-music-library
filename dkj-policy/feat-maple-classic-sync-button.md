@@ -39,21 +39,34 @@
 
 ### PLAN
 
+Dave vroeg om een sync-knop op http://192.168.178.123:3000/spotify/maple-classic, zodat een wijziging in
+Spotify (hier: 9 verwijderde nummers) op de pagina te zien is zonder eerst naar /spotify te gaan. Dat werkt
+via het LAN-adres sinds de reparatie van de same-origin-guard in PR #49.
+
+Een zichtbaar resultaat, dus de PR wacht op Dave's blik voordat hij merget.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `maple-classic/page.tsx`: de bestaande `SyncButton` en het tijdstip van de laatste snapshot in de kop
 
 ### TEST
 
+- [x] `tsc --noEmit`, `eslint`, `vitest run` (lint gate)
+- [x] Pagina lokaal opgehaald: knop en tijdstip staan erop; na een sync 255 rijen
+
 ### DEPLOY: feat/maple-classic-sync-button
 
-**Score:**
+De Maple Classic-pagina heeft nu dezelfde sync-knop als /spotify, met het tijdstip van de laatste
+snapshot erboven. Na een sync ververst de pagina zichzelf, zodat een wijziging in Spotify meteen te zien is.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie de Maple Classic-pagina bekijkt, kan de playlist verversen zonder eerst naar /spotify te gaan.
+
+**Score:** 2
 
 #### Pull Request
 
 sync-knop op de Maple Classic-pagina
-
