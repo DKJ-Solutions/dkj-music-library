@@ -39,19 +39,34 @@
 
 ### PLAN
 
+Dave: via http://192.168.178.123:3000/spotify/trackregister werkten de knoppen in de tabel niet meer.
+Gemeten in headless Chrome: via het LAN-adres komt er geen `[HMR] connected`, hydrateert de pagina niet
+en doet een klik op een sorteerkop niets, zonder één consolefout. Via 127.0.0.1 werkt alles.
+`allowedDevOrigins` stond alleen 127.0.0.1 toe.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `allowedDevOrigins` staat ook `192.168.*.*` toe
 
 ### TEST
 
+- [x] Opnieuw gemeten via het LAN-adres: de pagina hydrateert, sorteren werkt en het playlistmenu gaat open
+- [x] typecheck en lint groen
+
 ### DEPLOY: fix/lan-dev-origin
 
-**Score:**
+De app werkt nu ook als je hem opent via het adres van de machine in het thuisnetwerk
+(`192.168.x.x:3000`), en niet alleen via `127.0.0.1`. Tot nu toe blokkeerde Next.js daar de
+dev-verbinding. De pagina kwam dan wel binnen, maar sorteren, de menu's en de filters in het
+trackregister deden niets.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Dave kan het register vanaf een ander apparaat in huis gebruiken.
+
+**Score:** 3
 
 #### Pull Request
 
