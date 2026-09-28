@@ -53,7 +53,7 @@ waarde per track (tekst met options, zoals `dkj_bpm`), zelf in te vullen; niet a
 ### TEST
 
 - [x] Tests voor de opties, het filter en de kolom; typecheck, vitest (61 bestanden) en eslint groen
-- [ ] Dave bekijkt de kolom op /spotify/trackregister
+- [x] Dave bekeek de kolom op /spotify/trackregister en gaf opdracht tot PR + merge
 
 ### DEPLOY: feat/dkj-genre-field
 
