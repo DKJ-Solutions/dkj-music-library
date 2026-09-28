@@ -43,17 +43,26 @@ Filterstand van TrackRegister (zoekterm, year, dkj_bpm, dkj_genre, dkj_album, dk
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `registerPrefs.ts`: load/save/validate van de filterstand onder `dkj.trackregister.filters.v1`, per veld gevalideerd tegen de echte opties
+- [x] `TrackRegister.tsx`: herstel na mount (SSR-veilig), bewaren bij elke wijziging, knop "Filters wissen"
+- [x] Tests: `registerPrefs.test.ts` + drie nieuwe gevallen in `TrackRegister.test.tsx`
 
 ### TEST
 
+- [x] `npx tsc --noEmit` schoon, `npx eslint .` schoon, `npx vitest run --no-file-parallelism` 881/881 groen
+- [ ] Dave bekijkt het trackregister in de browser (EDM kiezen, herladen, Filters wissen)
+
 ### DEPLOY: feat/register-remember-filters
 
-**Score:**
+De filterstand van het trackregister wordt in localStorage bewaard en na mount hersteld; ongeldige opgeslagen waarden vallen per veld terug op de standaard.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Het trackregister onthoudt je filters (zoekterm, year, dkj_bpm, dkj_genre, dkj_album, dkj_group, sortering, kolommen) na herladen of opnieuw openen, met een knop "Filters wissen".
+
+**Score:** 3
 
 #### Pull Request
 
