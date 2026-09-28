@@ -4,11 +4,12 @@
 // zit in register.ts; hier alleen de weergave en de filterstand.
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { DKJ_ALBUM_COLOURS, DKJ_BPM_OPTIONS, DKJ_GENRE_OPTIONS, TRACK_FIELDS } from "@/lib/library/fields";
+import { DKJ_ALBUM_COLOURS, DKJ_ALBUM_OPTIONS, DKJ_BPM_OPTIONS, DKJ_GENRE_OPTIONS, TRACK_FIELDS } from "@/lib/library/fields";
 import { mixUrl } from "@/lib/library/djcylowMix";
 import { playlistUrl } from "@/lib/library/playlistLink";
 import {
   EMPTY_FILTER,
+  SORT_KEYS,
   countBy,
   filterRegister,
   fold,
@@ -18,11 +19,33 @@ import {
   type RegisterSort,
   type SortKey,
 } from "@/lib/library/register";
+import {
+  defaultRegisterPrefs,
+  isDefaultRegisterPrefs,
+  loadRegisterPrefs,
+  saveRegisterPrefs,
+  type ColumnSet,
+  type RegisterPrefs,
+  type RegisterPrefsOptions,
+} from "@/lib/library/registerPrefs";
 
 const PAGE_SIZE = 100;
 const ALBUM_VARIANTS = ["Light (f)", "Full (f)", "Light (m)", "Full (m)"] as const;
 const nf = new Intl.NumberFormat("nl-NL");
 const GROUP_OPTIONS: readonly string[] = TRACK_FIELDS.find((field) => field.key === "dkj_group")?.options ?? [];
+
+/** De opties waartegen een opgeslagen filterstand gevalideerd wordt (registerPrefs.ts). */
+const PREFS_OPTIONS: RegisterPrefsOptions = {
+  bpm: DKJ_BPM_OPTIONS,
+  genre: DKJ_GENRE_OPTIONS,
+  album: DKJ_ALBUM_OPTIONS,
+  group: GROUP_OPTIONS,
+  sortKeys: SORT_KEYS,
+};
+
+/** De stand waarmee het register opent zonder (geldige) opgeslagen filters -- ook de stand van
+ *  "Filters wissen". */
+const DEFAULT_PREFS: RegisterPrefs = defaultRegisterPrefs();
 
 /** Eén kolom van de tabel: het veld, waarop hij sorteert, zijn deel van de breedte (table-layout: fixed,
  *  zodat alle kolommen altijd passen) en wat er in de cel staat. */
@@ -33,9 +56,6 @@ interface Column {
   cell: (row: RegisterRow, term: string) => ReactNode;
   className?: string;
 }
-
-/** Welke kolommen de tabel toont: de gewone, of de kolommen die daar bewust uit zijn gelaten. */
-type ColumnSet = "visible" | "hidden";
 
 /** Klik op een kop: oplopend, nog eens: aflopend, een derde keer: weer de oorspronkelijke volgorde. */
 function nextSort(current: RegisterSort | null, key: SortKey): RegisterSort | null {
@@ -372,22 +392,57 @@ const HIDDEN_COLUMNS: readonly Column[] = [
 const COLUMN_SETS: Record<ColumnSet, readonly Column[]> = { visible: VISIBLE_COLUMNS, hidden: HIDDEN_COLUMNS };
 
 export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
-  const [query, setQuery] = useState("");
-  const [yearFrom, setYearFrom] = useState("");
-  const [yearTo, setYearTo] = useState("");
-  const [bpm, setBpm] = useState("");
-  const [genre, setGenre] = useState("");
-  const [album, setAlbum] = useState("");
-  const [group, setGroup] = useState("");
-  const [sort, setSort] = useState<RegisterSort | null>(null);
-  const [columnSet, setColumnSet] = useState<ColumnSet>("visible");
+  const [query, setQuery] = useState(DEFAULT_PREFS.query);
+  const [yearFrom, setYearFrom] = useState(DEFAULT_PREFS.yearFrom);
+  const [yearTo, setYearTo] = useState(DEFAULT_PREFS.yearTo);
+  const [bpm, setBpm] = useState(DEFAULT_PREFS.bpm);
+  const [genre, setGenre] = useState(DEFAULT_PREFS.genre);
+  const [album, setAlbum] = useState(DEFAULT_PREFS.album);
+  const [group, setGroup] = useState(DEFAULT_PREFS.group);
+  const [sort, setSort] = useState<RegisterSort | null>(DEFAULT_PREFS.sort);
+  const [columnSet, setColumnSet] = useState<ColumnSet>(DEFAULT_PREFS.columnSet);
   const [page, setPage] = useState(0);
+  // Pas waar na mount (het effect hieronder): de server rendert zonder localStorage, dus vóór mount
+  // moet de client-HTML gelijk zijn aan de lege beginstand hierboven (anders een hydration mismatch).
+  // Ook de wachter voor het schrijf-effect verderop: schrijven vóór het herstel zou de opgeslagen
+  // stand overschrijven met die lege beginstand.
+  const [restored, setRestored] = useState(false);
   const deferredQuery = useDeferredValue(query);
   const box = useRef<HTMLDivElement>(null);
   const goTo = (next: number) => {
     setPage(next);
     box.current?.scrollTo?.({ top: 0 });
   };
+
+  // Zet alle negen velden in één keer -- gedeeld door het herstel-effect hieronder en "Filters wissen".
+  const applyPrefs = (prefs: RegisterPrefs) => {
+    setQuery(prefs.query);
+    setYearFrom(prefs.yearFrom);
+    setYearTo(prefs.yearTo);
+    setBpm(prefs.bpm);
+    setGenre(prefs.genre);
+    setAlbum(prefs.album);
+    setGroup(prefs.group);
+    setSort(prefs.sort);
+    setColumnSet(prefs.columnSet);
+  };
+
+  // Herstelt de bewaarde filterstand (registerPrefs.ts) na mount; ongeldige of corrupte waarden vallen
+  // terug op hun standaardwaarde, dus dit rendert altijd.
+  // Dit is bewust een synchronisatie met een externe bron (localStorage bestaat niet server-side), geen
+  // render-afgeleide state: lezen vóór mount zou de server-HTML en de client-HTML laten verschillen.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- eenmalig herstel ná mount, zie hierboven.
+    applyPrefs(loadRegisterPrefs(PREFS_OPTIONS));
+    setRestored(true);
+  }, []);
+
+  // Bewaart elke wijziging, zodra het herstel hierboven gedaan is. `page` telt bewust niet mee: een
+  // nieuw bezoek begint altijd op pagina 1.
+  useEffect(() => {
+    if (!restored) return;
+    saveRegisterPrefs({ query, yearFrom, yearTo, bpm, genre, album, group, sort, columnSet });
+  }, [restored, query, yearFrom, yearTo, bpm, genre, album, group, sort, columnSet]);
 
   const haystacks = useMemo(() => rows.map(searchText), [rows]);
   const bpmCounts = useMemo(() => countBy(rows, "bpm"), [rows]);
@@ -415,6 +470,13 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
   const toggleColumns = () => {
     setColumnSet(columnSet === "visible" ? "hidden" : "visible");
     setSort(null);
+    goTo(0);
+  };
+  const currentPrefs: RegisterPrefs = { query, yearFrom, yearTo, bpm, genre, album, group, sort, columnSet };
+  const showClearFilters = !isDefaultRegisterPrefs(currentPrefs);
+  // Zet alles terug naar de standaardstand (en dus ook de opgeslagen stand, via het schrijf-effect).
+  const clearFilters = () => {
+    applyPrefs(DEFAULT_PREFS);
     goTo(0);
   };
 
@@ -517,6 +579,11 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
           <span className="register-column-switch-track" aria-hidden="true" />
           <span>verborgen kolommen</span>
         </button>
+        {showClearFilters && (
+          <button type="button" className="pill-toggle playlist-clear-filters" onClick={clearFilters}>
+            Filters wissen
+          </button>
+        )}
         <span className="register-count" aria-live="polite">
           {list.length === rows.length
             ? `${nf.format(rows.length)} nummers`

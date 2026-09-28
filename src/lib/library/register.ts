@@ -164,6 +164,10 @@ export function countBy(rows: readonly RegisterRow[], key: "bpm" | "genre" | "al
 /** De kolommen waarop de tabel kan sorteren; elke kolom van het register. */
 export type SortKey = "id" | "file" | "dkjTitle" | "artist" | "albumArtist" | "year" | "artistIds" | "playlists" | "mixes" | "bpm" | "genre" | "album" | "groups";
 
+/** Dezelfde kolommen als SortKey, maar als waarden -- zodat een opgeslagen sortering (registerPrefs.ts)
+ *  gevalideerd kan worden. */
+export const SORT_KEYS: readonly SortKey[] = ["id", "file", "dkjTitle", "artist", "albumArtist", "year", "artistIds", "playlists", "mixes", "bpm", "genre", "album", "groups"];
+
 export interface RegisterSort {
   key: SortKey;
   dir: "asc" | "desc";

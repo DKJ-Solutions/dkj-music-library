@@ -1,10 +1,17 @@
 // @vitest-environment jsdom
-// TrackRegister.tsx: de tabel van /spotify/trackregister. Het filter zelf is getest in register.test.ts;
-// hier wat de component beslist: bladeren per 100 rijen, en dat een filter terugspringt naar pagina 1.
-import { describe, expect, it } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+// TrackRegister.tsx: de tabel van /spotify/trackregister. Het filter zelf is getest in register.test.ts,
+// het bewaren van de filterstand in registerPrefs.test.ts; hier wat de component zelf beslist: bladeren
+// per 100 rijen, dat een filter terugspringt naar pagina 1, en dat de bewaarde stand ook echt terugkomt.
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { TrackRegister } from "./TrackRegister";
 import type { RegisterRow } from "@/lib/library/register";
+import { REGISTER_PREFS_KEY } from "@/lib/library/registerPrefs";
+
+// Elke test begint met een lege localStorage: anders leest de volgende test de bewaarde stand van de
+// vorige terug, en cleanup() ontkoppelt de vorige render (zijn schrijf-effect mag niet meer vuren).
+beforeEach(() => window.localStorage.clear());
+afterEach(cleanup);
 
 function row(n: number, over: Partial<RegisterRow> = {}): RegisterRow {
   return {
@@ -205,5 +212,48 @@ describe("TrackRegister", () => {
     render(<TrackRegister rows={rows} artistCount={1} />);
     fireEvent.change(screen.getByLabelText(/dkj_album/), { target: { value: "Red Light (f)" } });
     expect(screen.getByText("Geen nummer gevonden met deze zoekterm en filters.")).toBeTruthy();
+  });
+
+  it("onthoudt dkj_genre: opnieuw renderen (een nieuw bezoek) herstelt de gekozen waarde", () => {
+    const withGenre = [row(1, { genre: "OST" }), row(2), row(3, { genre: "ALT" })];
+    const { unmount } = render(<TrackRegister rows={withGenre} artistCount={1} />);
+    fireEvent.change(screen.getByLabelText(/dkj_genre/), { target: { value: "OST" } });
+    expect(bodyRows()).toHaveLength(1);
+    unmount();
+
+    render(<TrackRegister rows={withGenre} artistCount={1} />);
+    expect((screen.getByLabelText(/dkj_genre/) as HTMLSelectElement).value).toBe("OST");
+    expect(bodyRows()).toHaveLength(1);
+  });
+
+  it("rendert gewoon met de standaardstand bij corrupte localStorage, en negeert een onbekende dkj_genre", () => {
+    window.localStorage.setItem(REGISTER_PREFS_KEY, "{niet-geldige-json");
+    render(<TrackRegister rows={rows} artistCount={1} />);
+    expect(bodyRows()).toHaveLength(100);
+
+    window.localStorage.setItem(
+      REGISTER_PREFS_KEY,
+      JSON.stringify({ genre: "BESTAAT-NIET", sort: { key: "geen-kolom", dir: "op-en-neer" }, columnSet: "wat-dan-ook" })
+    );
+    render(<TrackRegister rows={rows} artistCount={1} />);
+    expect(bodyRows().length).toBeGreaterThan(0);
+    expect((screen.getAllByLabelText(/dkj_genre/)[0] as HTMLSelectElement).value).toBe("");
+  });
+
+  it('zet met "Filters wissen" alles terug naar de standaardstand, en dus ook de opgeslagen stand', () => {
+    const withGenre = [row(1, { genre: "OST" }), row(2), row(3, { genre: "ALT" })];
+    const { unmount } = render(<TrackRegister rows={withGenre} artistCount={1} />);
+    expect(screen.queryByRole("button", { name: "Filters wissen" })).toBeNull();
+
+    fireEvent.change(screen.getByLabelText(/dkj_genre/), { target: { value: "OST" } });
+    const clear = screen.getByRole("button", { name: "Filters wissen" });
+    fireEvent.click(clear);
+    expect((screen.getByLabelText(/dkj_genre/) as HTMLSelectElement).value).toBe("");
+    expect(bodyRows()).toHaveLength(3);
+    expect(screen.queryByRole("button", { name: "Filters wissen" })).toBeNull();
+    unmount();
+
+    render(<TrackRegister rows={withGenre} artistCount={1} />);
+    expect((screen.getByLabelText(/dkj_genre/) as HTMLSelectElement).value).toBe("");
   });
 });
