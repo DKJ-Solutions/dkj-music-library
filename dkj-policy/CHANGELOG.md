@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**35 / 46 minor entries** <!-- pending-tally -->
+**36 / 47 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/dkj-genre-field · 20260928-135538Z
+
+Het trackregister heeft een nieuwe kolom `dkj_genre` met de keuzes `EDM`, `POP`, `ALT` en `OST`, naast
+`dkj_bpm`, met een eigen filter (inclusief "Leeg"). Het veld accepteert alleen die vier waarden bij een
+import; het is nog bij alle tracks leeg en wordt niet afgeleid.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Wie de bibliotheek gebruikt, kan tracks nu op genre indelen en in het register op genre filteren.
+
+**Score:** 3
+
+#### Pull Request
+
+Trackregister krijgt dkj_genre (EDM, POP, ALT, OST)
+
+[PR #52](https://github.com/DKJ-Solutions/dkj-music-library/pull/52)
+
+---
 
 ### DEPLOY: feat/classic-pop-page · 20260928-132625Z
 
