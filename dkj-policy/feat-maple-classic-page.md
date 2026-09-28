@@ -39,19 +39,38 @@
 
 ### PLAN
 
+Dave vroeg om een eigen pagina met een tabel voor de Spotify-playlist `21C8ylLvP9fDneF86KAKlY`
+(Maple Classic 2026 LAN, van Jellootje, 264 nummers). Die staat al in de snapshot, dus de pagina leest
+de snapshot, zoals de wereld-routes. De tabel neemt de stijl van het Trackregister over.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `src/lib/spotify/playlistTable.ts`: de rij, zoeken, sorteerwaarde per kolom, duur, tracklink (puur)
+- [x] `src/lib/spotify/playlistTableRows.ts`: rijen uit een snapshot-playlist (server, want `yearOf` trekt de database mee)
+- [x] `src/components/spotify/PlaylistTable.tsx`: zoekveld, sorteerbare kop, tellers
+- [x] `src/app/spotify/maple-classic/page.tsx` + een link bovenaan `/spotify`
+- [x] README: korte sectie over de pagina
 
 ### TEST
 
+- [x] `playlistTable.test.ts`: rijen, zoeken (accent-ongevoelig), sorteren (lege jaren onderaan), duur
+- [x] `vitest run` (816 groen), `tsc --noEmit`, `eslint`
+- [x] Pagina lokaal opgehaald: 200, 264 rijen, de link staat op `/spotify`
+- [ ] Dave bekijkt de pagina (zichtbaar resultaat, dus geen merge zonder zijn woord)
+
 ### DEPLOY: feat/maple-classic-page
 
-**Score:**
+Nieuwe pagina `/spotify/maple-classic`: de playlist Maple Classic 2026 LAN als tabel met positie,
+titel (link naar Spotify), artiest, album, jaar, duur en datum van toevoegen. Je kunt zoeken op titel,
+artiest of album en sorteren op elke kolom. Bovenaan `/spotify` staat een link ernaartoe.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+De gebruiker van de app heeft een nieuwe pagina om deze LAN-playlist te bekijken en te doorzoeken.
+
+**Score:** 3
 
 #### Pull Request
 

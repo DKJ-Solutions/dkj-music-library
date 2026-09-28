@@ -96,6 +96,12 @@ pagina leest de bibliotheek en niet de Spotify-snapshot, dus hij werkt op elke k
 zonder Spotify-login of sync. Een lege of ontbrekende database wordt bij het openen uit de export
 opgebouwd.
 
+### Maple Classic 2026 LAN
+
+`/spotify/maple-classic` toont één playlist als tabel: Maple Classic 2026 LAN (van Jellootje). Je kunt
+zoeken op titel, artiest of album en sorteren op elke kolom. De pagina leest de Spotify-snapshot, dus je
+hebt eerst een sync nodig. De link staat bovenaan op `/spotify`.
+
 ### Importeren
 
 ```sh
