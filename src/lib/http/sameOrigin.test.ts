@@ -51,6 +51,24 @@ describe("sameOriginGuard", () => {
     expect(sameOriginGuard(request)?.status).toBe(403);
   });
 
+  it("vergelijkt de Origin met de Host-header, niet met request.url (Next dev: altijd localhost)", () => {
+    const lan = makeRequest("http://localhost:3000/api/spotify/sync", {
+      origin: "http://192.168.178.123:3000",
+      host: "192.168.178.123:3000",
+    });
+    expect(sameOriginGuard(lan)).toBeNull();
+    const vreemd = makeRequest("http://localhost:3000/api/spotify/sync", {
+      origin: "http://192.168.178.99:3000",
+      host: "192.168.178.123:3000",
+    });
+    expect(sameOriginGuard(vreemd)?.status).toBe(403);
+  });
+
+  it("weigert een Origin 'null' (sandboxed iframe, file://)", () => {
+    const request = makeRequest("http://127.0.0.1:3000/api/spotify/sync", { origin: "null" });
+    expect(sameOriginGuard(request)?.status).toBe(403);
+  });
+
   it("laat een verzoek zonder Sec-Fetch-Site én zonder Origin door (bv. curl -X POST, zie sync/route.ts)", () => {
     const request = makeRequest("http://127.0.0.1:3000/api/spotify/sync");
     expect(sameOriginGuard(request)).toBeNull();
