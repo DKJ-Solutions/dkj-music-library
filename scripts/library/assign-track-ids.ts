@@ -14,6 +14,8 @@ import { getEnrichedSnapshot } from "../../src/lib/spotify/enrichedPlaylists";
 import { withLibrary } from "../../src/lib/library/libraryFile";
 import { countTracks } from "../../src/lib/library/trackStore";
 import { readSnapshot } from "../../src/lib/spotify/snapshotStore";
+import { readPrivateRules } from "../../src/lib/spotify/privateRules";
+import { ownPlaylistsOnly, removeSharedOnlyTracks } from "../../src/lib/library/ownPlaylists";
 
 const snapshot = readSnapshot();
 if (!snapshot) {
@@ -22,17 +24,24 @@ if (!snapshot) {
 }
 
 const mixLinks = getMixLinks(snapshot);
+// Alleen je eigen playlists vullen de bibliotheek; zie src/lib/library/ownPlaylists.ts.
+const { ownerUserId } = readPrivateRules();
+const own = ownPlaylistsOnly(snapshot, ownerUserId);
 
 try {
-  const { tracks, artists, primaryArtistsFilled, albumArtistsFilled, fileNamesFilled, titlesFilled, titlesRefreshed, playlistsChanged, mixesChanged, albumsFilled, bpmsFilled, groupsFilled, live, renumbered, total, yearsFilled } = withLibrary((db) => ({
-    ...applyLibraryIdsFromSnapshot(db, snapshot),
+  const { shared, tracks, artists, primaryArtistsFilled, albumArtistsFilled, fileNamesFilled, titlesFilled, titlesRefreshed, playlistsChanged, mixesChanged, albumsFilled, bpmsFilled, groupsFilled, live, renumbered, total, yearsFilled } = withLibrary((db) => ({
+    // Eerst weg wat alleen in gedeelde playlists staat, dan de rest uit je eigen playlists.
+    shared: removeSharedOnlyTracks(db, snapshot, ownerUserId),
+    ...applyLibraryIdsFromSnapshot(db, own),
     // De werelden (met je handmatige correcties) voor dkj_group; zie groupFromWorlds.ts.
     groupsFilled: fillGroupsFromWorlds(db, getEnrichedSnapshot(snapshot)?.playlists ?? []),
     // De mixen op djcylow.com voor djcylow_mix; zie djcylowMixes.ts.
-    mixesChanged: applyDjcylowMixes(db, snapshot, mixLinks),
+    mixesChanged: applyDjcylowMixes(db, own, mixLinks),
     total: countTracks(db),
   }));
   const { newTracks, newLinks, studioReplaced, totalLinks } = tracks;
+  if (ownerUserId === null) console.log("Geen eigen Spotify-account ingesteld -- gedeelde playlists tellen mee (zie private-rules.json)");
+  if (shared.tracksRemoved > 0) console.log(`${shared.tracksRemoved} nummers uit alleen gedeelde playlists weggehaald, en ${shared.artistsRemoved} artiesten zonder nummer`);
   if (renumbered > 0) console.log(`${renumbered} tracks van een oud ID (T000001) naar het nieuwe formaat omgenummerd`);
   if (live.merged > 0) console.log(`${live.merged} live-varianten opgegaan in hun studioversie`);
   if (live.retitled > 0) console.log(`${live.retitled} live-titels schoongemaakt`);

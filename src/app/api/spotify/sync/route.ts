@@ -15,6 +15,8 @@ import { fillGroupsFromWorlds } from "@/lib/library/groupFromWorlds";
 import { applyDjcylowMixes } from "@/lib/library/djcylowMixes";
 import { getMixLinks } from "@/lib/mixes/mixLinks";
 import { getEnrichedSnapshot } from "@/lib/spotify/enrichedPlaylists";
+import { readPrivateRules } from "@/lib/spotify/privateRules";
+import { ownPlaylistsOnly, removeSharedOnlyTracks } from "@/lib/library/ownPlaylists";
 import type { TrackIdResult } from "@/lib/library/trackIds";
 
 // fs/de Spotify-token-laag vereisen de Node-runtime, niet de edge-runtime. Een volledige sync van
@@ -56,11 +58,15 @@ export async function POST(request: Request) {
     try {
       // De werelden (met je handmatige correcties) voor dkj_group; zie groupFromWorlds.ts.
       const worlds = getEnrichedSnapshot(snapshot)?.playlists ?? [];
+      // Alleen je eigen playlists vullen de bibliotheek; zie ownPlaylists.ts.
+      const { ownerUserId } = readPrivateRules();
+      const own = ownPlaylistsOnly(snapshot, ownerUserId);
       const ids = withLibrary((db) => {
-        const result = applyLibraryIdsFromSnapshot(db, snapshot);
+        removeSharedOnlyTracks(db, snapshot, ownerUserId);
+        const result = applyLibraryIdsFromSnapshot(db, own);
         fillGroupsFromWorlds(db, worlds);
         // De mixen op djcylow.com voor djcylow_mix; zie djcylowMixes.ts.
-        applyDjcylowMixes(db, snapshot, getMixLinks(snapshot));
+        applyDjcylowMixes(db, own, getMixLinks(snapshot));
         return result;
       });
       trackIds = ids.tracks;

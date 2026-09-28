@@ -41,7 +41,8 @@ Welk Spotify-account van jou is, en welke playlistnamen altijd in de wereld Priv
 de code. Deze repo is publiek. Die gegevens staan in een lokaal bestand. Kopieer
 `private-rules.example.json` naar `data/spotify/private-rules.json` en vul in:
 
-- `ownerUserId`: je Spotify-user-id (het `owner.id` van je eigen playlists);
+- `ownerUserId`: je Spotify-user-id (het `owner.id` van je eigen playlists). Alleen die playlists
+  vullen de trackdatabase (zie [Alleen eigen playlists](#alleen-eigen-playlists));
 - `priveNamePatterns`: reguliere expressies (hoofdletterongevoelig) op de playlistnaam. Een playlist
   die er een raakt, gaat altijd naar Privé.
 
@@ -114,7 +115,7 @@ rij het is.
 
 ### Eigen track-ID's uit Spotify
 
-Elk nummer dat in je Spotify-playlists voorkomt, krijgt een eigen ID in `dkj_track_id`. Het ID bestaat uit
+Elk nummer dat in je eigen Spotify-playlists voorkomt, krijgt een eigen ID in `dkj_track_id`. Het ID bestaat uit
 de artiest-ID's van alle artiesten van het nummer (zie hieronder), in dezelfde volgorde als
 `dkj_artist_id` (de hoofdartiest eerst), met een streepje ertussen. Daarachter komt nog een streepje en een
 volgnummer. Firestarter van The Prodigy (`PRO02`) is `PRO02-21`. Cobra Dance van Billy Esteban (`BIL09`) en
@@ -151,6 +152,24 @@ npm run library:assign-ids
   en duur van Spotify. Daarna past de toekenning die rij niet meer aan.
 
 De regels staan bovenaan `src/lib/library/trackIds.ts`.
+
+### Alleen eigen playlists
+
+Alleen de playlists van je eigen account (`ownerUserId` in `private-rules.json`) vullen de
+bibliotheek. Een gedeelde playlist, van een ander account dat je volgt en ook als je eraan meewerkt,
+staat wel op `/spotify`, maar levert geen nummers, geen artiesten en geen regel in `spotify_playlist`.
+
+- **Staat een nummer ook in een eigen playlist, dan blijft het.** De gedeelde playlist telt dan
+  alleen niet als bron.
+- **Wat alleen in gedeelde playlists staat, gaat eruit**, bij elke sync. De koppelingen in
+  `spotify_track_ids` gaan mee, en daarna ook elke artiest die bij geen enkel nummer meer hoort. Op
+  28 september 2026 waren dat 821 nummers en 392 artiesten. Zet je zo'n nummer later in een eigen
+  playlist, dan komt het terug met een nieuw ID.
+- **Een nummer dat in geen enkele playlist meer staat, blijft staan.** De bibliotheek is een back-up.
+- Ontbreekt `ownerUserId`, dan valt eigen niet van gedeeld te onderscheiden. Dan telt alles mee en gaat
+  er niets weg.
+
+De regels staan in `src/lib/library/ownPlaylists.ts`.
 
 ### Eigen artiest-ID's
 
