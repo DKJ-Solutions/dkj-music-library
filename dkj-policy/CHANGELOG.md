@@ -2,7 +2,32 @@
 
 ## [Unreleased]
 
-**34 / 45 minor entries** <!-- pending-tally -->
+**35 / 46 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/classic-pop-page · 20260928-132625Z
+
+Nieuwe pagina `/spotify/classic-pop`: elk nummer uit een playlist met "Classic Pop" in de naam, één keer,
+met de playlists waarin het staat (aantal plus de korte namen, de volledige in de tooltip) en het vroegste
+moment waarop het is toegevoegd. Zoeken werkt ook op playlistnaam, dus "cyan" toont één kleur. De tabel
+sorteert standaard op artiest. `readLibraryYears` woont nu in `playlistTableRows.ts` en wordt door deze
+pagina en de Maple Classic-pagina gedeeld.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Wie de app gebruikt, heeft nu voor het eerst één overzicht van de hele Classic Pop-verzameling over alle
+kleur-playlists heen, en ziet per nummer waar het staat.
+
+**Score:** 3
+
+#### Pull Request
+
+Classic Pop-pagina: alle nummers uit de Classic Pop-playlists in één tabel
+
+[PR #51](https://github.com/DKJ-Solutions/dkj-music-library/pull/51)
+
+---
 
 ### DEPLOY: feat/maple-classic-sync-button · 20260928-130409Z
 
