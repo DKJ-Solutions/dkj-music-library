@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**39 / 50 minor entries** <!-- pending-tally -->
+**40 / 51 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/register-filter-box · 20260928-190115Z
+
+De filters van het trackregister staan in een eigen `<fieldset>` met kader, los van zoeken, de kolomschakelaar en de teller.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+Het trackregister toont de filters in een eigen omkaderd vak met het kopje "Filters", zodat ze in één oogopslag bij elkaar staan.
+
+**Score:** 2
+
+#### Pull Request
+
+Trackregister krijgt een omkaderde filtersectie
+
+[PR #57](https://github.com/DKJ-Solutions/dkj-music-library/pull/57)
+
+---
 
 ### DEPLOY: feat/register-remember-filters · 20260928-182446Z
 
