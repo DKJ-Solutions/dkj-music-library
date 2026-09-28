@@ -2,7 +2,28 @@
 
 ## [Unreleased]
 
-**37 / 48 minor entries** <!-- pending-tally -->
+**38 / 49 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/year-decade-filter · 20260928-141939Z
+
+Het trackregister heeft een filter `year` met twee invulvelden, van en tot (beide inclusief), zodat je
+bijvoorbeeld alleen nummers uit 2000–2009 ziet. Is er een grens ingevuld, dan vallen nummers zonder year af.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Wie het register gebruikt, kan nu zelf een jaarbereik invullen en ziet alleen de nummers daarbinnen.
+
+**Score:** 3
+
+#### Pull Request
+
+Trackregister filtert op een zelf ingevuld bereik van year
+
+[PR #54](https://github.com/DKJ-Solutions/dkj-music-library/pull/54)
+
+---
 
 ### DEPLOY: feat/dkj-genre-from-playlists · 20260928-140832Z
 
