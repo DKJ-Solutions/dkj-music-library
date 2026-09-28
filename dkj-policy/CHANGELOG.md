@@ -2,7 +2,31 @@
 
 ## [Unreleased]
 
-**28 / 39 minor entries** <!-- pending-tally -->
+**29 / 40 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/year-column · 20260928-100654Z
+
+Elk nummer heeft een veld `year`: het jaar waarin het uitkwam, volgens Spotify. Het trackregister
+toont het in een eigen kolom, na de artiest, en je kunt erop sorteren en zoeken. Staat een nummer op
+meer albums (single, album, compilatie), dan telt het vroegste jaar. Het lege veld `release_year` heet
+nu `year`. De sync haalt de albumdatum mee, en bij de eerste sync na deze wijziging worden alle
+playlists één keer volledig opgehaald.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Dave ziet in het register meteen uit welk jaar elk nummer is, en kan de collectie op jaar sorteren.
+
+**Score:** 3
+
+#### Pull Request
+
+Kolom year met het jaar van uitgave uit Spotify
+
+[PR #42](https://github.com/DKJ-Solutions/dkj-music-library/pull/42)
+
+---
 
 ### DEPLOY: fix/lan-dev-origin · 20260928-100234Z
 
