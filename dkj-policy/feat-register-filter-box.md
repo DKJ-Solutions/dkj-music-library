@@ -49,7 +49,7 @@ De filters van TrackRegister (year, dkj_bpm, dkj_genre, dkj_album, dkj_group en 
 ### TEST
 
 - [x] `npx tsc --noEmit` schoon, `npx eslint` schoon, `npx vitest run src/components/spotify` 101/101 groen
-- [ ] Dave bekijkt het trackregister in de browser (het filtervak en hoe het afbreekt op een smal venster)
+- [x] Dave heeft het filtervak in de browser bekeken en goedgekeurd (2026-09-28)
 
 ### DEPLOY: feat/register-filter-box
 
