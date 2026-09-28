@@ -39,21 +39,45 @@
 
 ### PLAN
 
+Issue #45: Spotify kent per track alleen het albumjaar, dus verzamelalbums en heruitgaven tonen een te
+jong jaar. Dave koos route 1 (28 september 2026): het jaar van eerste uitgave bij MusicBrainz
+opzoeken, met een lokale cache. Een los script haalt het op, met hooguit 1 verzoek per seconde; de
+pagina's lezen alleen de cache en doen zelf geen netwerkverzoeken.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `src/lib/musicbrainz/releaseYear.ts`: zoekopdracht, titelopschoning (live, remaster, demo, radio edit, single version) en de keuze uit de response (score >= 90, artiest in de credit, vroegste `first-release-date`)
+- [x] `src/lib/musicbrainz/cacheStore.ts`: `data/musicbrainz/release-years.json` lezen (leeg bij een kapot bestand) en atomair schrijven
+- [x] `scripts/library/fetch-release-years.ts` + `npm run library:release-years` (`--playlist`, `--refresh`, `--limit`); een netwerkfout wordt overgeslagen, niet als "niet gevonden" bewaard
+- [x] Maple Classic-pagina en `planReleaseYears`: het vroegste van MusicBrainz, Trackregister en albumjaar; gevulde bibliotheekjaren blijven staan
+- [x] README: het script, de map `data/musicbrainz/` (niet in git) en de limiet
 
 ### TEST
 
+- [x] `releaseYear.test.ts`, `cacheStore.test.ts`, en uitbreidingen van `releaseYears.test.ts` en `playlistTable.test.ts`
+- [x] `vitest run` (844 groen), `tsc --noEmit`, `eslint`
+- [ ] Volledige run op Maple Classic tegen het echte MusicBrainz
+- [ ] Review van de code (Victor)
+- [ ] Dave bekijkt de pagina (zichtbaar resultaat, dus geen merge zonder zijn woord)
+
 ### DEPLOY: feat/45-musicbrainz-release-year
 
-**Score:**
+Nieuw script `npm run library:release-years` zoekt bij MusicBrainz het jaar op waarin een nummer voor
+het eerst uitkwam, met hooguit 1 verzoek per seconde, en bewaart dat lokaal in
+`data/musicbrainz/release-years.json` (niet in git). De Maple Classic-pagina toont nu het vroegste
+jaar van MusicBrainz, het Trackregister en het album, zodat een nummer op een verzamelalbum of
+heruitgave niet meer het jaar van die uitgave krijgt. Nog lege jaren in de bibliotheek worden bij een
+sync ook uit die cache gevuld.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Op de Maple Classic-pagina kloppen de jaren van nummers op verzamelalbums en heruitgaven, zoals *I'm a
+Believer* op *The Best of The Monkees*: 1967 in plaats van 2008.
+
+**Score:** 3
 
 #### Pull Request
 
 Jaar van eerste uitgave via MusicBrainz, lokaal bewaard
-
