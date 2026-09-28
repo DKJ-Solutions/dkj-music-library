@@ -3,13 +3,17 @@
 import { describe, expect, it } from "vitest";
 import { sortRows } from "@/lib/sortRows";
 import { filterPlaylistRows, formatDuration, playlistSortKey, trackUrl, type PlaylistTableRow } from "./playlistTable";
-import { toPlaylistTableRows } from "./playlistTableRows";
+import { toPlaylistTableRows, userNamesFromSnapshot } from "./playlistTableRows";
 import type { Playlist, PlaylistItem } from "./types";
 
-function item(id: string, name: string, over: { artists?: string[]; album?: string; releaseDate?: string | null; durationMs?: number } = {}): PlaylistItem {
+function item(
+  id: string,
+  name: string,
+  over: { artists?: string[]; album?: string; releaseDate?: string | null; durationMs?: number; addedBy?: string | null } = {}
+): PlaylistItem {
   return {
     addedAt: "2026-08-24T13:25:21Z",
-    addedBy: "someone",
+    addedBy: "addedBy" in over ? (over.addedBy ?? null) : "someone",
     isLocal: false,
     track: {
       id,
@@ -22,15 +26,15 @@ function item(id: string, name: string, over: { artists?: string[]; album?: stri
   };
 }
 
-function playlist(tracks: PlaylistItem[]): Playlist {
+function playlist(tracks: PlaylistItem[], owner = { id: "o", displayName: "Eigenaar" as string | null }): Playlist {
   return {
-    id: "pl",
+    id: `pl-${owner.id}`,
     name: "Test",
     uri: "spotify:playlist:pl",
     collaborative: false,
     public: true,
     snapshotId: "s",
-    owner: { id: "o", displayName: "Eigenaar" },
+    owner,
     images: [],
     description: null,
     trackCount: tracks.length,
@@ -58,6 +62,39 @@ describe("toPlaylistTableRows", () => {
 
   it("geeft geen jaar bij een album zonder datum", () => {
     expect(toPlaylistTableRows(playlist([item("a", "X", { releaseDate: null })]))[0].year).toBeNull();
+  });
+});
+
+describe("toevoeger", () => {
+  const snapshot = {
+    syncedAt: "2026-09-28T00:00:00Z",
+    playlists: [
+      playlist([], { id: "u1", displayName: "Bas van Leeuwen" }),
+      playlist([], { id: "u2", displayName: null }),
+    ],
+  };
+
+  it("zet het user-id om in de naam van die gebruiker als eigenaar van een playlist in de snapshot", () => {
+    const names = userNamesFromSnapshot(snapshot);
+    expect(names.get("u1")).toBe("Bas van Leeuwen");
+    expect(names.has("u2")).toBe(false);
+  });
+
+  it("toont de naam, anders het user-id, en niets als Spotify het niet weet", () => {
+    const rows = toPlaylistTableRows(
+      playlist([item("a", "A", { addedBy: "u1" }), item("b", "B", { addedBy: "onbekend" }), item("c", "C", { addedBy: null })]),
+      userNamesFromSnapshot(snapshot)
+    );
+    expect(rows.map((r) => r.addedBy)).toEqual(["Bas van Leeuwen", "onbekend", null]);
+  });
+
+  it("is doorzoekbaar en sorteerbaar", () => {
+    const rows = toPlaylistTableRows(
+      playlist([item("a", "A", { addedBy: "u1" }), item("b", "B", { addedBy: "anna" })]),
+      userNamesFromSnapshot(snapshot)
+    );
+    expect(filterPlaylistRows(rows, "bas").map((r) => r.title)).toEqual(["A"]);
+    expect(sortRows(rows, { column: "addedBy", direction: "asc" }, playlistSortKey).map((r) => r.addedBy)).toEqual(["anna", "Bas van Leeuwen"]);
   });
 });
 

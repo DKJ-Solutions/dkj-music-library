@@ -50,19 +50,21 @@ de snapshot, zoals de wereld-routes. De tabel neemt de stijl van het Trackregist
 - [x] `src/components/spotify/PlaylistTable.tsx`: zoekveld, sorteerbare kop, tellers
 - [x] `src/app/spotify/maple-classic/page.tsx` + een link bovenaan `/spotify`
 - [x] README: korte sectie over de pagina
+- [x] Kolom "Toegevoegd door" (Dave): Spotify geeft alleen een user-id; de naam komt uit de eigenaren van de playlists in de snapshot (`userNamesFromSnapshot`), anders blijft het id staan. Ook doorzoekbaar
 
 ### TEST
 
 - [x] `playlistTable.test.ts`: rijen, zoeken (accent-ongevoelig), sorteren (lege jaren onderaan), duur
-- [x] `vitest run` (816 groen), `tsc --noEmit`, `eslint`
-- [x] Pagina lokaal opgehaald: 200, 264 rijen, de link staat op `/spotify`
+- [x] Toevoeger: naam uit de snapshot, id als terugval, leeg als Spotify het niet weet; zoeken en sorteren
+- [x] `vitest run` (819 groen), `tsc --noEmit`, `eslint`
+- [x] Pagina lokaal opgehaald: 200, 264 rijen, de link staat op `/spotify`; toevoegers Jellootje 151, Dave K. John 91, Bas van Leeuwen 22
 - [ ] Dave bekijkt de pagina (zichtbaar resultaat, dus geen merge zonder zijn woord)
 
 ### DEPLOY: feat/maple-classic-page
 
 Nieuwe pagina `/spotify/maple-classic`: de playlist Maple Classic 2026 LAN als tabel met positie,
-titel (link naar Spotify), artiest, album, jaar, duur en datum van toevoegen. Je kunt zoeken op titel,
-artiest of album en sorteren op elke kolom. Bovenaan `/spotify` staat een link ernaartoe.
+titel (link naar Spotify), artiest, album, jaar, duur, datum van toevoegen en wie het nummer toevoegde.
+Je kunt zoeken op titel, artiest, album of toevoeger en sorteren op elke kolom. Bovenaan `/spotify` staat een link ernaartoe.
 
 **Score:** 3
 

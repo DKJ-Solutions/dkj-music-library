@@ -3,7 +3,7 @@
 // komen uit playlistTableRows.ts, de weergave uit PlaylistTable.tsx.
 import Link from "next/link";
 import { readSnapshot } from "@/lib/spotify/snapshotStore";
-import { toPlaylistTableRows } from "@/lib/spotify/playlistTableRows";
+import { toPlaylistTableRows, userNamesFromSnapshot } from "@/lib/spotify/playlistTableRows";
 import { playlistUrl } from "@/lib/library/playlistLink";
 import { PlaylistTable } from "@/components/spotify/PlaylistTable";
 
@@ -15,6 +15,7 @@ const PLAYLIST_ID = "21C8ylLvP9fDneF86KAKlY";
 export default function MapleClassicPage() {
   const snapshot = readSnapshot();
   const playlist = snapshot?.playlists.find((p) => p.id === PLAYLIST_ID) ?? null;
+  const rows = snapshot && playlist ? toPlaylistTableRows(playlist, userNamesFromSnapshot(snapshot)) : null;
 
   return (
     <main className="wrap wrap--full">
@@ -34,8 +35,8 @@ export default function MapleClassicPage() {
         )}
       </header>
 
-      {playlist ? (
-        <PlaylistTable rows={toPlaylistTableRows(playlist)} />
+      {rows ? (
+        <PlaylistTable rows={rows} />
       ) : (
         <section className="layer">
           <p className="empty-note">

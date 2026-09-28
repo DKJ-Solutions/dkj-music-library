@@ -1,5 +1,5 @@
 "use client";
-// De tabel van één playlist: zoeken op titel, artiest of album, en sorteren via de kopregel. Draagt de
+// De tabel van één playlist: zoeken op titel, artiest, album of toevoeger, en sorteren via de kopregel. Draagt de
 // stijl van het Trackregister (.register-table in _track-register.scss), zodat de twee tabellen er
 // hetzelfde uitzien. Geen bladeren: een playlist heeft honderden rijen, geen twaalfduizend.
 import { useDeferredValue, useMemo, useState, type ReactNode } from "react";
@@ -27,11 +27,11 @@ interface Column {
 const Empty = () => <span className="register-none">—</span>;
 
 const COLUMNS: Column[] = [
-  { key: "position", label: "#", width: "5%", cell: (row) => row.position, className: "register-year" },
+  { key: "position", label: "#", width: "4%", cell: (row) => row.position, className: "register-year" },
   {
     key: "title",
     label: "Titel",
-    width: "27%",
+    width: "24%",
     cell: (row) => (
       <a
         className="register-playlist"
@@ -47,27 +47,40 @@ const COLUMNS: Column[] = [
   {
     key: "artist",
     label: "Artiest",
-    width: "22%",
+    width: "19%",
     cell: (row) => <span className="register-oneline" title={row.artists.join(", ")}>{row.artists.join(", ")}</span>,
   },
   {
     key: "album",
     label: "Album",
-    width: "22%",
+    width: "18%",
     cell: (row) => (
       <span className="register-oneline register-album-artist" title={row.album}>
         {row.album}
       </span>
     ),
   },
-  { key: "year", label: "Jaar", width: "7%", cell: (row) => row.year ?? <Empty />, className: "register-year" },
-  { key: "duration", label: "Duur", width: "7%", cell: (row) => formatDuration(row.durationMs), className: "register-year" },
+  { key: "year", label: "Jaar", width: "6%", cell: (row) => row.year ?? <Empty />, className: "register-year" },
+  { key: "duration", label: "Duur", width: "6%", cell: (row) => formatDuration(row.durationMs), className: "register-year" },
   {
     key: "addedAt",
     label: "Toegevoegd",
     width: "10%",
     cell: (row) => (row.addedAt ? dateFormat.format(new Date(row.addedAt)) : <Empty />),
     className: "register-year",
+  },
+  {
+    key: "addedBy",
+    label: "Toegevoegd door",
+    width: "13%",
+    cell: (row) =>
+      row.addedBy ? (
+        <span className="register-oneline" title={row.addedBy}>
+          {row.addedBy}
+        </span>
+      ) : (
+        <Empty />
+      ),
   },
 ];
 
@@ -97,7 +110,7 @@ export function PlaylistTable({ rows }: { rows: PlaylistTableRow[] }) {
           <input
             id="playlist-q"
             type="search"
-            placeholder="Zoek op titel, artiest of album"
+            placeholder="Zoek op titel, artiest, album of wie het toevoegde"
             autoComplete="off"
             value={query}
             onChange={(e) => setQuery(e.target.value)}

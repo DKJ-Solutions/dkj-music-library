@@ -17,9 +17,12 @@ export interface PlaylistTableRow {
   durationMs: number;
   /** ISO-tijdstip waarop het nummer aan de playlist is toegevoegd, of null als Spotify het niet kent. */
   addedAt: string | null;
+  /** Wie het nummer toevoegde: de Spotify-naam, of het user-id als de snapshot die naam niet kent. null
+   *  als Spotify het niet weet (een verwijderd account). */
+  addedBy: string | null;
 }
 
-export type PlaylistTableColumn = "position" | "title" | "artist" | "album" | "year" | "duration" | "addedAt";
+export type PlaylistTableColumn = "position" | "title" | "artist" | "album" | "year" | "duration" | "addedAt" | "addedBy";
 
 /** De sorteerwaarde van een cel, voor sortRows(). */
 export function playlistSortKey(row: PlaylistTableRow, column: PlaylistTableColumn): SortKey {
@@ -38,14 +41,16 @@ export function playlistSortKey(row: PlaylistTableRow, column: PlaylistTableColu
       return row.durationMs;
     case "addedAt":
       return row.addedAt;
+    case "addedBy":
+      return row.addedBy;
   }
 }
 
-/** De rijen waarin de zoekterm voorkomt in titel, artiest of album (hoofdletter- en accent-ongevoelig). */
+/** De rijen waarin de zoekterm voorkomt in titel, artiest, album of toevoeger (hoofdletter- en accent-ongevoelig). */
 export function filterPlaylistRows(rows: readonly PlaylistTableRow[], query: string): PlaylistTableRow[] {
   const term = fold(query.trim());
   if (!term) return [...rows];
-  return rows.filter((row) => fold([row.title, ...row.artists, row.album].join(" ")).includes(term));
+  return rows.filter((row) => fold([row.title, ...row.artists, row.album, row.addedBy ?? ""].join(" ")).includes(term));
 }
 
 /** Een duur als m:ss, of h:mm:ss vanaf een uur. */
