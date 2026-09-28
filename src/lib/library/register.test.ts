@@ -13,6 +13,7 @@ function stored(over: Partial<StoredTrack> = {}): StoredTrack {
     dkj_albumartiest: "Mark Ronson, Bruno Mars",
     year: 2014,
     dkj_bpm: null,
+    dkj_genre: null,
     dkj_album: null,
     dkj_file: "Mark Ronson - Uptown Funk",
     dkj_group: ["MMC"],
@@ -25,7 +26,7 @@ function stored(over: Partial<StoredTrack> = {}): StoredTrack {
 
 describe("toRegisterRow", () => {
   it("neemt de eigen velden over en zoekt de artiestnamen op", () => {
-    const row = toRegisterRow(stored({ dkj_bpm: "112BPM" }), { MAR01: "Mark Ronson" });
+    const row = toRegisterRow(stored({ dkj_bpm: "112BPM", dkj_genre: "POP" }), { MAR01: "Mark Ronson" });
     expect(row).toEqual({
       id: "MAR01-BRU01-01",
       title: "Uptown Funk",
@@ -35,6 +36,7 @@ describe("toRegisterRow", () => {
       albumArtist: "Mark Ronson, Bruno Mars",
       year: "2014",
       bpm: "112BPM",
+      genre: "POP",
       album: null,
       albumCandidates: [],
       file: "Mark Ronson - Uptown Funk",
@@ -53,11 +55,11 @@ describe("toRegisterRow", () => {
 
 describe("filterRegister", () => {
   const rows: RegisterRow[] = [
-    toRegisterRow(stored({ dkj_bpm: "128BPM", dkj_album: "Green Light (f)" }), {}),
+    toRegisterRow(stored({ dkj_bpm: "128BPM", dkj_genre: "EDM", dkj_album: "Green Light (f)" }), {}),
     toRegisterRow(stored({ dkj_track_id: "ROY01-01", title: "Eple", dkj_artist_id: ["ROY01"], dkj_artist: "Röyksopp", dkj_albumartiest: "Röyksopp" }), {}),
   ];
   const hay = rows.map(searchText);
-  const run = (filter: Partial<{ term: string; bpm: string; album: string; group: string }>) =>
+  const run = (filter: Partial<{ term: string; bpm: string; genre: string; album: string; group: string }>) =>
     filterRegister(rows, hay, { term: "", bpm: "", album: "", ...filter }).map((row) => row.id);
 
   it("zoekt ook op playlistnaam", () => {
@@ -67,6 +69,11 @@ describe("filterRegister", () => {
   it("zoekt zonder accenten of hoofdletters, ook in artiest-ID's", () => {
     expect(run({ term: "royksopp" })).toEqual(["ROY01-01"]);
     expect(run({ term: "BRU01" })).toEqual(["MAR01-BRU01-01"]);
+  });
+
+  it("filtert op dkj_genre", () => {
+    expect(run({ genre: "EDM" })).toEqual(["MAR01-BRU01-01"]);
+    expect(run({ genre: EMPTY_FILTER })).toEqual(["ROY01-01"]);
   });
 
   it("filtert op dkj_group", () => {

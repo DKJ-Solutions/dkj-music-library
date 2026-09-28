@@ -171,6 +171,13 @@ describe("toSqlValue", () => {
     expect(() => toSqlValue(group, 5)).toThrow(TrackInputError);
   });
 
+  it("kent voor dkj_genre alleen EDM, POP, ALT en OST", () => {
+    const genre = TRACK_FIELDS.find((f) => f.key === "dkj_genre")!;
+    expect(genre.options).toEqual(["EDM", "POP", "ALT", "OST"]);
+    expect(toSqlValue(genre, "edm")).toBe("EDM");
+    expect(() => toSqlValue(genre, "House")).toThrow(TrackInputError);
+  });
+
   it("houdt een veld met options aan die lijst, in de spelling van de lijst", () => {
     const bpm: FieldDef = { key: "dkj_bpm", type: "text", label: "", options: ["128BPM", "96BPM"] };
     expect(toSqlValue(bpm, "128BPM")).toBe("128BPM");

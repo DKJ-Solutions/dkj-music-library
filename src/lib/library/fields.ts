@@ -89,6 +89,12 @@ export function albumArtistOf(names: readonly string[]): string | null {
 /** De eigen BPM-groepen, in de volgorde waarin ze getoond worden. */
 export const DKJ_BPM_OPTIONS = ["128BPM", "112BPM", "176BPM", "144BPM", "96BPM"] as const;
 
+/** Het veld met het eigen genre. */
+export const GENRE_KEY = "dkj_genre";
+
+/** De eigen genres, in de volgorde waarin ze getoond worden. */
+export const DKJ_GENRE_OPTIONS = ["EDM", "POP", "ALT", "OST"] as const;
+
 /** Het veld met het eigen album (zie albumFromPlaylists.ts). */
 export const ALBUM_KEY = "dkj_album";
 
@@ -151,6 +157,7 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
     type: "json",
     label: "Mixen op djcylow.com waarin de track zit, als { slug, name }; bij elke sync ververst zolang de mix-bron er is (djcylowMixes.ts)",
   },
+  { key: "dkj_genre", type: "text", label: "Eigen genre", options: DKJ_GENRE_OPTIONS },
   // Nieuw veld? Voeg het hier toe, bv.:
   // { key: "energy", type: "integer", label: "Energie 1-10" },
 ];

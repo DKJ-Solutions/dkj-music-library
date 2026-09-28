@@ -1,10 +1,10 @@
 "use client";
-// De tabel van /spotify/trackregister: zoeken, filteren op dkj_bpm en dkj_album, sorteren via de kopregel, en bladeren per
+// De tabel van /spotify/trackregister: zoeken, filteren op dkj_bpm, dkj_genre, dkj_album en dkj_group, sorteren via de kopregel, en bladeren per
 // 100 rijen (12.000+ rijen in één keer renderen maakt de pagina traag). Alle logica die geen React is
 // zit in register.ts; hier alleen de weergave en de filterstand.
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { DKJ_ALBUM_COLOURS, DKJ_BPM_OPTIONS, TRACK_FIELDS } from "@/lib/library/fields";
+import { DKJ_ALBUM_COLOURS, DKJ_BPM_OPTIONS, DKJ_GENRE_OPTIONS, TRACK_FIELDS } from "@/lib/library/fields";
 import { mixUrl } from "@/lib/library/djcylowMix";
 import { playlistUrl } from "@/lib/library/playlistLink";
 import {
@@ -314,7 +314,7 @@ function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term:
 /** De gewone kolommen, in volgorde. dkj_track_id, dkj_file, dkj_artist en dkj_artist_id staan er niet in
  *  (Dave); die staan in HIDDEN_COLUMNS, achter de switch, en op alle vier zoeken kan altijd. */
 const VISIBLE_COLUMNS: readonly Column[] = [
-  { key: "dkjTitle", field: "dkj_title", width: "25%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
+  { key: "dkjTitle", field: "dkj_title", width: "21%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
   { key: "albumArtist", field: "dkj_albumartiest", width: "17%", cell: (row, term) => <OneLine text={row.albumArtist} term={term} className="register-album-artist" /> },
   { key: "year", field: "year", width: "5%", cell: (row, term) => <OneLine text={row.year} term={term} className="register-year" /> },
   {
@@ -351,6 +351,12 @@ const VISIBLE_COLUMNS: readonly Column[] = [
     width: "7%",
     cell: (row, term) => (row.bpm ? <span className="register-tag"><Highlight text={row.bpm} term={term} /></span> : <Empty />),
   },
+  {
+    key: "genre",
+    field: "dkj_genre",
+    width: "6%",
+    cell: (row, term) => (row.genre ? <span className="register-tag"><Highlight text={row.genre} term={term} /></span> : <Empty />),
+  },
   { key: "album", field: "dkj_album", width: "11%", cell: (row, term) => <Album album={row.album} candidates={row.albumCandidates} term={term} /> },
   { key: "groups", field: "dkj_group", width: "8%", cell: (row, term) => <Groups groups={row.groups} term={term} /> },
 ];
@@ -368,6 +374,7 @@ const COLUMN_SETS: Record<ColumnSet, readonly Column[]> = { visible: VISIBLE_COL
 export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
   const [query, setQuery] = useState("");
   const [bpm, setBpm] = useState("");
+  const [genre, setGenre] = useState("");
   const [album, setAlbum] = useState("");
   const [group, setGroup] = useState("");
   const [sort, setSort] = useState<RegisterSort | null>(null);
@@ -382,11 +389,12 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
 
   const haystacks = useMemo(() => rows.map(searchText), [rows]);
   const bpmCounts = useMemo(() => countBy(rows, "bpm"), [rows]);
+  const genreCounts = useMemo(() => countBy(rows, "genre"), [rows]);
   const albumCounts = useMemo(() => countBy(rows, "album"), [rows]);
   const groupCounts = useMemo(() => countBy(rows, "groups"), [rows]);
   const filtered = useMemo(
-    () => filterRegister(rows, haystacks, { term: deferredQuery, bpm, album, group }),
-    [rows, haystacks, deferredQuery, bpm, album, group]
+    () => filterRegister(rows, haystacks, { term: deferredQuery, bpm, genre, album, group }),
+    [rows, haystacks, deferredQuery, bpm, genre, album, group]
   );
   const list = useMemo(() => sortRegister(filtered, sort), [filtered, sort]);
 
@@ -437,6 +445,16 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
               <option key={option} value={option}>{label(option, bpmCounts.get(option))}</option>
             ))}
             <option value={EMPTY_FILTER}>{label("Leeg", bpmCounts.get(EMPTY_FILTER))}</option>
+          </select>
+        </label>
+        <label className="register-filter" htmlFor="register-genre">
+          <span>dkj_genre</span>
+          <select id="register-genre" value={genre} onChange={(e) => reset(setGenre)(e.target.value)}>
+            <option value="">{label("Alle", rows.length)}</option>
+            {DKJ_GENRE_OPTIONS.map((option) => (
+              <option key={option} value={option}>{label(option, genreCounts.get(option))}</option>
+            ))}
+            <option value={EMPTY_FILTER}>{label("Leeg", genreCounts.get(EMPTY_FILTER))}</option>
           </select>
         </label>
         <label className="register-filter" htmlFor="register-album">

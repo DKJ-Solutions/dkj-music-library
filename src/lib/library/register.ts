@@ -3,7 +3,7 @@
 // De pagina leest de bibliotheek (libraryFile.ts), en die bouwt zich op een verse kloon zelf op uit de
 // export in git -- dus het register is op elke machine met de repo te zien, zonder account of sync.
 // Hier staat alleen wat de tabel nodig heeft: één compacte rij per track, en het filter op zoekterm,
-// dkj_bpm en dkj_album.
+// dkj_bpm, dkj_genre en dkj_album.
 //
 // Pure module: geen fs, geen sqlite -- ook vanuit een client-component te importeren.
 import { albumsOfPlaylists } from "./albumFromPlaylists";
@@ -24,6 +24,8 @@ export interface RegisterRow {
   /** Het jaar van uitgave (year), als tekst: zo zoekt en sorteert het als de andere kolommen. */
   year: string | null;
   bpm: string | null;
+  /** Het eigen genre (dkj_genre). */
+  genre: string | null;
   album: string | null;
   /** De albums die de playlists noemen (albumsOfPlaylists). Meer dan één: de playlists verschillen, en
    *  dan blijft `album` leeg tot je zelf kiest. */
@@ -47,6 +49,8 @@ export interface RegisterFilter {
   /** "" = alle, EMPTY_FILTER = leeg, anders een optie. */
   bpm: string;
   album: string;
+  /** Leeg of weggelaten = alle. */
+  genre?: string;
   /** Leeg of weggelaten = alle. */
   group?: string;
 }
@@ -78,6 +82,7 @@ export function toRegisterRow(track: StoredTrack, artistNames: Record<string, st
     albumArtist: text(track.dkj_albumartiest),
     year: typeof track.year === "number" ? String(track.year) : null,
     bpm: text(track.dkj_bpm),
+    genre: text(track.dkj_genre),
     album: text(track.dkj_album),
     albumCandidates: albumsOfPlaylists(playlists.map((p) => p.name)),
     file: text(track.dkj_file),
@@ -96,7 +101,7 @@ export function fold(value: string): string {
 /** Alles waarop gezocht wordt, in één gevouwen string. */
 export function searchText(row: RegisterRow): string {
   return fold(
-    [row.id, row.title, ...row.artistIds, ...row.artistNames, row.artist, row.albumArtist, row.year, row.bpm, row.album, ...row.groups, row.file, row.dkjTitle, ...row.playlists.map((p) => p.name), ...row.mixes.map((m) => m.name)]
+    [row.id, row.title, ...row.artistIds, ...row.artistNames, row.artist, row.albumArtist, row.year, row.bpm, row.genre, row.album, ...row.groups, row.file, row.dkjTitle, ...row.playlists.map((p) => p.name), ...row.mixes.map((m) => m.name)]
       .filter(Boolean)
       .join(" ")
   );
@@ -119,13 +124,14 @@ export function filterRegister(
   return rows.filter(
     (row, i) =>
       (term === "" || haystacks[i].includes(term)) && matches(row.bpm, filter.bpm) &&
+      matches(row.genre, filter.genre ?? "") &&
       matches(row.album, filter.album) &&
       matchesList(row.groups, filter.group ?? "")
   );
 }
 
 /** Hoe vaak elke waarde van `key` voorkomt; lege waarden tellen onder EMPTY_FILTER. */
-export function countBy(rows: readonly RegisterRow[], key: "bpm" | "album" | "groups"): Map<string, number> {
+export function countBy(rows: readonly RegisterRow[], key: "bpm" | "genre" | "album" | "groups"): Map<string, number> {
   const counts = new Map<string, number>();
   for (const row of rows) {
     // Bij een lijst telt de rij mee bij elk van zijn waarden.
@@ -136,7 +142,7 @@ export function countBy(rows: readonly RegisterRow[], key: "bpm" | "album" | "gr
 }
 
 /** De kolommen waarop de tabel kan sorteren; elke kolom van het register. */
-export type SortKey = "id" | "file" | "dkjTitle" | "artist" | "albumArtist" | "year" | "artistIds" | "playlists" | "mixes" | "bpm" | "album" | "groups";
+export type SortKey = "id" | "file" | "dkjTitle" | "artist" | "albumArtist" | "year" | "artistIds" | "playlists" | "mixes" | "bpm" | "genre" | "album" | "groups";
 
 export interface RegisterSort {
   key: SortKey;
