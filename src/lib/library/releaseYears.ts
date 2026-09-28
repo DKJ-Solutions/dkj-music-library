@@ -1,10 +1,13 @@
-// `year`: het jaar waarin een nummer is uitgebracht, uit Spotify's `release_date` van het album.
+// `year`: het jaar waarin een nummer is uitgebracht, uit Spotify's `release_date` van het album, óf --
+// als dat een jonger jaar geeft, bv. op een verzamelalbum of heruitgave -- uit MusicBrainz'
+// eerste-uitgave-jaar (de lokale cache, issue #45; zie musicbrainz/cacheStore.ts).
 //
 // Eén nummer (één dkj_track_id) staat vaak meerdere keren op Spotify: als single, op het album, op een
 // compilatie. Elke variant heeft zijn eigen albumdatum, en het nummer kwam uit toen de eerste
-// verscheen -- dus telt het VROEGSTE jaar over alle varianten in de snapshot. Een compilatie van 2015
-// maakt een single uit 1997 dus niet jonger. Kent de snapshot alleen de compilatie, dan is dat het
-// jaar; Spotify weet niet beter.
+// verscheen -- dus telt het VROEGSTE jaar over alle varianten in de snapshot, én over de
+// MusicBrainz-cache erbij. Een compilatie van 2015 maakt een single uit 1997 dus niet jonger. Kent de
+// snapshot alleen de compilatie en heeft MusicBrainz geen jaar voor die track, dan is het compilatiejaar
+// het beste wat er is.
 //
 // Net als de andere eigen velden wordt `year` alleen gevuld zolang het leeg is: wat je zelf invult (met
 // `library:import`), blijft staan. Het veld heette tot 28 september 2026 `release_year` en was toen nog
@@ -17,6 +20,7 @@
 // planReleaseYears() is puur; applyReleaseYears() schrijft, in één transactie.
 import type { DatabaseSync } from "node:sqlite";
 import type { Snapshot } from "@/lib/spotify/types";
+import { foundReleaseYears, readReleaseYearCache } from "@/lib/musicbrainz/cacheStore";
 import { TRACKS_TABLE } from "./db";
 import { TRACK_ID_KEY, YEAR_KEY } from "./fields";
 import { readTrackIdOf } from "./trackIds";
@@ -28,17 +32,27 @@ export function yearOf(releaseDate: string | null | undefined): number | null {
   return year > 0 ? year : null;
 }
 
-/** dkj_track_id -> het vroegste jaar over alle Spotify-varianten van die track in de snapshot. */
-export function planReleaseYears(snapshot: Snapshot, trackIdOf: ReadonlyMap<string, string>): Map<string, number> {
+/** dkj_track_id -> het vroegste jaar over alle Spotify-varianten van die track in de snapshot, plus --
+ *  als die er is en vroeger -- het MusicBrainz-jaar (`musicBrainzYears`, sleutel: Spotify-track-id;
+ *  leeg als er geen cache is, bv. in een test). */
+export function planReleaseYears(
+  snapshot: Snapshot,
+  trackIdOf: ReadonlyMap<string, string>,
+  musicBrainzYears: ReadonlyMap<string, number> = new Map()
+): Map<string, number> {
   const plan = new Map<string, number>();
+  const consider = (trackId: string | undefined, year: number | null) => {
+    if (!trackId || year === null) return;
+    const current = plan.get(trackId);
+    if (current === undefined || year < current) plan.set(trackId, year);
+  };
   for (const playlist of snapshot.playlists) {
     for (const item of playlist.tracks) {
       const track = item.track;
-      const trackId = track ? trackIdOf.get(track.id) : undefined;
-      const year = track ? yearOf(track.album.releaseDate) : null;
-      if (!trackId || year === null) continue;
-      const current = plan.get(trackId);
-      if (current === undefined || year < current) plan.set(trackId, year);
+      if (!track) continue;
+      const trackId = trackIdOf.get(track.id);
+      consider(trackId, yearOf(track.album.releaseDate));
+      consider(trackId, musicBrainzYears.get(track.id) ?? null);
     }
   }
   return plan;
@@ -46,7 +60,8 @@ export function planReleaseYears(snapshot: Snapshot, trackIdOf: ReadonlyMap<stri
 
 /** Vult `year` uit de snapshot bij elke track waar het nog leeg is. Geeft het aantal gevulde tracks terug. */
 export function applyReleaseYears(db: DatabaseSync, snapshot: Snapshot): number {
-  const plan = planReleaseYears(snapshot, readTrackIdOf(db));
+  const musicBrainzYears = foundReleaseYears(readReleaseYearCache());
+  const plan = planReleaseYears(snapshot, readTrackIdOf(db), musicBrainzYears);
   const empty = db.prepare(`SELECT ${TRACK_ID_KEY} FROM ${TRACKS_TABLE} WHERE "${YEAR_KEY}" IS NULL`).all() as {
     dkj_track_id: string;
   }[];

@@ -75,6 +75,23 @@ describe("toPlaylistTableRows", () => {
   it("geeft geen jaar bij een album zonder datum", () => {
     expect(toPlaylistTableRows(playlist([item("a", "X", { releaseDate: null })]))[0].year).toBeNull();
   });
+
+  it("neemt het VROEGSTE van MusicBrainz, bibliotheek en albumjaar (issue #45)", () => {
+    const rows = toPlaylistTableRows(
+      playlist([
+        item("a", "MusicBrainz wint", { releaseDate: "2008" }), // compilatiejaar, geen bibliotheekjaar
+        item("b", "Bibliotheek wint", { releaseDate: "2003" }),
+        item("c", "Albumjaar wint", { releaseDate: "1980" }),
+      ]),
+      new Map(),
+      new Map([["b", 1997]]), // bibliotheekjaar
+      new Map([
+        ["a", 1966], // MusicBrainz-jaar, vroeger dan het albumjaar
+        ["b", 2001], // MusicBrainz-jaar, maar later dan het bibliotheekjaar -- dat wint dus
+      ])
+    );
+    expect(rows.map((r) => r.year)).toEqual([1966, 1997, 1980]);
+  });
 });
 
 describe("toevoeger", () => {

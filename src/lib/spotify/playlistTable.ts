@@ -13,7 +13,8 @@ export interface PlaylistTableRow {
   title: string;
   artists: string[];
   album: string;
-  /** Het jaar van het nummer: uit het Trackregister als het daar staat, anders het albumjaar. */
+  /** Het jaar van het nummer: het vroegste van MusicBrainz, het Trackregister en het albumjaar (zie
+   *  playlistTableRows.ts). */
   year: number | null;
   /** Het jaar van het album waar deze versie op staat, zoals Spotify het geeft. */
   albumYear: number | null;

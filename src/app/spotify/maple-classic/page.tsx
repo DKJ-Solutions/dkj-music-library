@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { readSnapshot } from "@/lib/spotify/snapshotStore";
 import { openLibrary } from "@/lib/library/libraryFile";
+import { foundReleaseYears, readReleaseYearCache } from "@/lib/musicbrainz/cacheStore";
 import { libraryYearsBySpotifyId, toPlaylistTableRows, userNamesFromSnapshot } from "@/lib/spotify/playlistTableRows";
 import { playlistUrl } from "@/lib/library/playlistLink";
 import { PlaylistTable } from "@/components/spotify/PlaylistTable";
@@ -32,7 +33,12 @@ function readLibraryYears(): Map<string, number> {
 export default function MapleClassicPage() {
   const snapshot = readSnapshot();
   const playlist = snapshot?.playlists.find((p) => p.id === PLAYLIST_ID) ?? null;
-  const rows = snapshot && playlist ? toPlaylistTableRows(playlist, userNamesFromSnapshot(snapshot), readLibraryYears()) : null;
+  // readReleaseYearCache() valt bij een lees- of parseerfout al terug op een lege cache (zie
+  // cacheStore.ts), dus de tabel toont dan gewoon het Trackregister- of albumjaar.
+  const rows =
+    snapshot && playlist
+      ? toPlaylistTableRows(playlist, userNamesFromSnapshot(snapshot), readLibraryYears(), foundReleaseYears(readReleaseYearCache()))
+      : null;
 
   return (
     <main className="wrap wrap--full">

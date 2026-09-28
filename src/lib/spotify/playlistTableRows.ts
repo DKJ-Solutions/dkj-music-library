@@ -3,9 +3,11 @@
 // hoort alleen aan de serverkant.
 //
 // HET JAAR: Spotify kent alleen de datum van het album, niet die van het nummer. Op een verzamelalbum of
-// een losse heruitgave is dat het jaar van die uitgave (The Best of The Monkees: 2008). Staat het nummer
-// in de bibliotheek, dan telt daarom het `year` van het Trackregister: het vroegste jaar over alle
-// Spotify-varianten, of wat je zelf hebt ingevuld (releaseYears.ts). Anders blijft het albumjaar staan.
+// een losse heruitgave is dat het jaar van die uitgave (The Best of The Monkees: 2008). Het getoonde
+// jaar is daarom het VROEGSTE van drie bronnen (issue #45): het MusicBrainz-jaar (de lokale cache, zie
+// musicbrainz/cacheStore.ts), het `year` van het Trackregister (het vroegste jaar over alle
+// Spotify-varianten, of wat je zelf hebt ingevuld, zie releaseYears.ts) en het albumjaar. Kent geen van
+// de drie een jaar, dan blijft de cel leeg.
 import type { DatabaseSync } from "node:sqlite";
 import { yearOf } from "@/lib/library/releaseYears";
 import { readTrackIdOf } from "@/lib/library/trackIds";
@@ -38,14 +40,25 @@ export function libraryYearsBySpotifyId(db: DatabaseSync): Map<string, number> {
   return bySpotifyId;
 }
 
+/** Het vroegste van de gegeven jaren, of null als er geen van bekend is. */
+function earliestYear(...years: (number | null | undefined)[]): number | null {
+  let earliest: number | null = null;
+  for (const year of years) {
+    if (year == null) continue;
+    if (earliest === null || year < earliest) earliest = year;
+  }
+  return earliest;
+}
+
 /** Eén rij per nummer, in de volgorde van de playlist. Een item zonder track (een lokaal bestand zonder
  *  metadata, een podcast-aflevering) valt weg, maar telt wel mee in de positie, zodat die met Spotify
- *  blijft kloppen. Een toevoeger die niet in `userNames` staat, blijft als user-id staan; een nummer dat
- *  niet in `libraryYears` staat, krijgt het albumjaar. */
+ *  blijft kloppen. Een toevoeger die niet in `userNames` staat, blijft als user-id staan; het jaar is het
+ *  vroegste van MusicBrainz, het Trackregister en het albumjaar (zie de kop hierboven). */
 export function toPlaylistTableRows(
   playlist: Playlist,
   userNames: ReadonlyMap<string, string> = new Map(),
-  libraryYears: ReadonlyMap<string, number> = new Map()
+  libraryYears: ReadonlyMap<string, number> = new Map(),
+  musicBrainzYears: ReadonlyMap<string, number> = new Map()
 ): PlaylistTableRow[] {
   return playlist.tracks.flatMap((item, index) =>
     item.track
@@ -56,7 +69,11 @@ export function toPlaylistTableRows(
             title: item.track.name,
             artists: item.track.artists.map((artist) => artist.name),
             album: item.track.album.name,
-            year: libraryYears.get(item.track.id) ?? yearOf(item.track.album.releaseDate),
+            year: earliestYear(
+              musicBrainzYears.get(item.track.id),
+              libraryYears.get(item.track.id),
+              yearOf(item.track.album.releaseDate)
+            ),
             albumYear: yearOf(item.track.album.releaseDate),
             durationMs: item.track.durationMs,
             addedAt: item.addedAt,
