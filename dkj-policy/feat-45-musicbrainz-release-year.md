@@ -46,7 +46,7 @@ pagina's lezen alleen de cache en doen zelf geen netwerkverzoeken.
 
 ### CREATE
 
-- [x] `src/lib/musicbrainz/releaseYear.ts`: zoekopdracht, titelopschoning (live, remaster, demo, radio edit, single version) en de keuze uit de response (score >= 90, artiest in de credit, vroegste `first-release-date`)
+- [x] `src/lib/musicbrainz/releaseYear.ts`: zoekopdracht (100 resultaten, het maximum), titelopschoning (live, remaster, demo, radio/single edit, single/album version, edit) en de keuze uit de response (score >= 90, artiest in de credit, vroegste `first-release-date`)
 - [x] `src/lib/musicbrainz/cacheStore.ts`: `data/musicbrainz/release-years.json` lezen (leeg bij een kapot bestand) en atomair schrijven
 - [x] `scripts/library/fetch-release-years.ts` + `npm run library:release-years` (`--playlist`, `--refresh`, `--limit`); een netwerkfout wordt overgeslagen, niet als "niet gevonden" bewaard
 - [x] Maple Classic-pagina en `planReleaseYears`: het vroegste van MusicBrainz, Trackregister en albumjaar; gevulde bibliotheekjaren blijven staan
@@ -56,8 +56,9 @@ pagina's lezen alleen de cache en doen zelf geen netwerkverzoeken.
 
 - [x] `releaseYear.test.ts`, `cacheStore.test.ts`, en uitbreidingen van `releaseYears.test.ts` en `playlistTable.test.ts`
 - [x] `vitest run` (844 groen), `tsc --noEmit`, `eslint`
-- [ ] Volledige run op Maple Classic tegen het echte MusicBrainz
-- [ ] Review van de code (Victor)
+- [x] Volledige run op Maple Classic tegen het echte MusicBrainz: 232 gevonden, 31 niet gevonden, 1 overgeslagen; 65 rijen worden vroeger dan het albumjaar. Met 25 resultaten miste de zoekopdracht het origineel van klassiekers (*I'm a Believer* 1980), dus nu 100. Valse treffers door naamgenoten: #47
+- [x] Review van de code (Victor): geen blockers; testisolatie van de cache, extra achtervoegsels en de laatste retry-wachttijd verwerkt
+- [x] Pagina lokaal opgehaald: 200, 264 rijen, *I'm a Believer* 1966
 - [ ] Dave bekijkt de pagina (zichtbaar resultaat, dus geen merge zonder zijn woord)
 
 ### DEPLOY: feat/45-musicbrainz-release-year
@@ -74,7 +75,7 @@ sync ook uit die cache gevuld.
 #### What makes this deploy extra special
 
 Op de Maple Classic-pagina kloppen de jaren van nummers op verzamelalbums en heruitgaven, zoals *I'm a
-Believer* op *The Best of The Monkees*: 1967 in plaats van 2008.
+Believer* op *The Best of The Monkees*: 1966 in plaats van 2008.
 
 **Score:** 3
 

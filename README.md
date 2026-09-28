@@ -34,6 +34,7 @@ Deze repo is publiek. Geheimen en Spotify-brondata blijven daarom buiten git, op
 | `data/spotify/` | opgehaalde brondata: de snapshot, de historie, en de BPM-, wereld- en afgevinkt-stores | nee |
 | `data/library/library.db` | de trackdatabase zelf (een lokale kopie, zie hieronder) | nee |
 | `data/library/export/` | de trackbibliotheek als tekst: je eigen ID's en alle velden | **ja, en dus openbaar** |
+| `data/musicbrainz/` | de MusicBrainz-jaarcache (zie hieronder) | nee |
 
 ### Persoonlijke regels: `data/spotify/private-rules.json`
 
@@ -160,6 +161,27 @@ npm run library:assign-ids
   en duur van Spotify. Daarna past de toekenning die rij niet meer aan.
 
 De regels staan bovenaan `src/lib/library/trackIds.ts`.
+
+### Het jaar van eerste uitgave (MusicBrainz)
+
+Spotify kent alleen de releasedatum van het ALBUM, niet die van het nummer -- op een verzamelalbum of een
+heruitgave is dat een te jong jaar (*The Best of The Monkees*: 2008 in plaats van 1966). Voor een beter
+jaar haalt een los script het eerste-uitgave-jaar op bij [MusicBrainz](https://musicbrainz.org/):
+
+```sh
+npm run library:release-years                        # alle playlists
+npm run library:release-years -- --playlist <id>      # alleen die playlist
+npm run library:release-years -- --refresh            # ook tracks die al in de cache staan
+npm run library:release-years -- --limit 15           # proefrun: hooguit 15 nieuwe tracks
+```
+
+Het resultaat komt in een lokale cache, `data/musicbrainz/release-years.json` (niet in git, zie de tabel
+hierboven). De trackdatabase en `/spotify/maple-classic` lezen alleen die cache en doen zelf nooit een
+netwerkverzoek; het script is de enige plek die met MusicBrainz praat. **MusicBrainz staat zonder
+API-key hooguit 1 verzoek per seconde toe** -- het script houdt dat tempo zelf aan, dus een volledige run
+over de hele bibliotheek duurt een tijd. Draai je hem opnieuw, dan slaat hij tracks die al in de cache
+staan over (tenzij `--refresh`), en tussentijds opgeslagen voortgang gaat bij een afgebroken run niet
+verloren.
 
 ### Alleen eigen playlists
 

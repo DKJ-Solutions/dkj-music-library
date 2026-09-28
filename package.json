@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "library:import": "tsx scripts/library/import-tracks.ts",
     "library:assign-ids": "tsx scripts/library/assign-track-ids.ts",
-    "library:sync": "tsx scripts/library/sync-library.ts"
+    "library:sync": "tsx scripts/library/sync-library.ts",
+    "library:release-years": "tsx scripts/library/fetch-release-years.ts"
   },
   "dependencies": {
     "next": "^16.2.4",

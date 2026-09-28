@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { openLibraryDb } from "./db";
 import { applyReleaseYears, planReleaseYears, yearOf } from "./releaseYears";
 import { getTrack, upsertTracks } from "./trackStore";
@@ -51,9 +51,36 @@ describe("planReleaseYears", () => {
     expect(plan.has("T2")).toBe(false);
     expect(plan.size).toBe(1);
   });
+
+  it("neemt het MusicBrainz-jaar mee als kandidaat -- het vroegste van beide bronnen wint (issue #45)", () => {
+    const ids = new Map([["compilatie", "T1"], ["ander", "T2"]]);
+    const plan = planReleaseYears(
+      snap(playlist("p1", track("compilatie", "2015-01-01"), track("ander", "2010"))),
+      ids,
+      new Map([
+        ["compilatie", 1966], // MusicBrainz vroeger dan de compilatie -- wint
+        ["ander", 2020], // MusicBrainz later dan het albumjaar -- albumjaar wint
+      ])
+    );
+    expect(plan.get("T1")).toBe(1966);
+    expect(plan.get("T2")).toBe(2010);
+  });
 });
 
 describe("applyReleaseYears", () => {
+  // applyReleaseYears leest de MusicBrainz-cache zelf; wijs die naar een pad dat niet bestaat, zodat de
+  // test niet afhangt van wat er toevallig in data/musicbrainz/ op deze machine staat.
+  const ENV_KEY = "MUSICBRAINZ_RELEASE_YEAR_CACHE_PATH";
+  let previous: string | undefined;
+  beforeEach(() => {
+    previous = process.env[ENV_KEY];
+    process.env[ENV_KEY] = "data/__test__/bestaat-niet.json";
+  });
+  afterEach(() => {
+    if (previous === undefined) delete process.env[ENV_KEY];
+    else process.env[ENV_KEY] = previous;
+  });
+
   it("vult year alleen zolang het leeg is", () => {
     const { db } = openLibraryDb(":memory:");
     ensureSpotifyLinkTable(db);
