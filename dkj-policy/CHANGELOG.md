@@ -2,7 +2,32 @@
 
 ## [Unreleased]
 
-**29 / 40 minor entries** <!-- pending-tally -->
+**30 / 41 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/own-playlists-only · 20260928-101505Z
+
+Alleen je eigen Spotify-playlists vullen de trackbibliotheek. Een gedeelde playlist, van een ander
+account dat je volgt, staat nog wel op `/spotify`, maar levert geen nummers, artiesten of
+`spotify_playlist`-regels meer. Een nummer dat ook in een eigen playlist staat, blijft. Wat alleen via
+gedeelde playlists binnenkwam, is weggehaald: 821 nummers en 392 artiesten. Dat gebeurt bij elke sync
+opnieuw.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Het trackregister toont alleen nog Daves eigen collectie, zonder de ruim achthonderd nummers uit
+playlists van anderen, zoals "trap" en "D&B".
+
+**Score:** 3
+
+#### Pull Request
+
+Nummers uit gedeelde playlists horen niet in de bibliotheek
+
+[PR #44](https://github.com/DKJ-Solutions/dkj-music-library/pull/44)
+
+---
 
 ### DEPLOY: feat/year-column · 20260928-100654Z
 
