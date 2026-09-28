@@ -84,6 +84,11 @@ export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusP
             🍁 Bekijk de playlist Maple Classic 2026 LAN als tabel →
           </Link>
         </p>
+        <p className="dashboard-link-row">
+          <Link href="/spotify/classic-pop" className="accent-text">
+            🎙️ Bekijk alle nummers uit de Classic Pop-playlists in één tabel →
+          </Link>
+        </p>
       </header>
 
       <section className="layer">
