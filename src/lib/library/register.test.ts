@@ -90,6 +90,14 @@ describe("filterRegister", () => {
     expect(run({ album: "Green Full (f)" })).toEqual([]);
   });
 
+  it("filtert op alleen een kleur: elk album van die kleur past, Light of Full", () => {
+    const albums: RegisterRow[] = ["Green Light (f)", "Green Full (m)", "Yellow Light (f)", null].map((album, i) => ({ ...rows[0], id: `A${i}`, album }));
+    const pick = (album: string) => filterRegister(albums, albums.map(searchText), { term: "", bpm: "", album }).map((row) => row.id);
+    expect(pick("Green")).toEqual(["A0", "A1"]);
+    expect(pick("Yellow")).toEqual(["A2"]);
+    expect(pick("Magenta")).toEqual([]);
+  });
+
   it("filtert op een bereik van year, beide grenzen inclusief", () => {
     const years: RegisterRow[] = ["1999", "2000", "2009", "2010", null].map((year) => ({ ...rows[0], id: `Y${year}`, year }));
     const pick = (yearFrom: string, yearTo: string) =>

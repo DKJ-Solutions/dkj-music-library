@@ -39,7 +39,7 @@ const GROUP_OPTIONS: readonly string[] = TRACK_FIELDS.find((field) => field.key 
 const PREFS_OPTIONS: RegisterPrefsOptions = {
   bpm: DKJ_BPM_OPTIONS,
   genre: DKJ_GENRE_OPTIONS,
-  album: DKJ_ALBUM_OPTIONS,
+  album: [...DKJ_ALBUM_COLOURS, ...DKJ_ALBUM_OPTIONS],
   group: GROUP_OPTIONS,
   sortKeys: SORT_KEYS,
 };
@@ -693,6 +693,10 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
             <option className="register-option-meta" value="">{label("Alle", rows.length)}</option>
             {DKJ_ALBUM_COLOURS.map((colour) => (
               <optgroup key={colour} label={colour}>
+                {/* De hele kleur, Light en Full samen (Dave): het totaal van de vier varianten. */}
+                <option value={colour}>
+                  {label(colour, ALBUM_VARIANTS.reduce((n, variant) => n + (albumCounts.get(`${colour} ${variant}`) ?? 0), 0))}
+                </option>
                 {ALBUM_VARIANTS.map((variant) => {
                   const option = `${colour} ${variant}`;
                   return <option key={option} value={option}>{label(option, albumCounts.get(option))}</option>;

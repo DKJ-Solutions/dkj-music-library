@@ -43,26 +43,29 @@
 
 - [x] `TrackRegister.tsx`: de opties "Alle" en "Leeg" van de vier filter-dropdowns (dkj_bpm, dkj_genre, dkj_album, dkj_group) krijgen de klasse `register-option-meta`
 - [x] `_track-register.scss`: die klasse krijgt `--muted`, de gewone opties expliciet `--ink`
+- [x] `register.ts`: `albumMatches` -- een kleur uit `DKJ_ALBUM_COLOURS` als albumfilter past bij elk album van die kleur; een kleur is zelf nooit een album, dus geen botsing met de bestaande waarden
+- [x] `TrackRegister.tsx`: elke kleurgroep in de dkj_album-dropdown begint met de kleur zelf, met het totaal van de vier varianten; de kleuren tellen mee als geldige bewaarde filterwaarde. README volgt
 
 ### TEST
 
-- [x] Hele suite (899 tests), `tsc --noEmit`, `eslint` op het component en een Sass-compile groen
-- [ ] Dave kijkt naar de uitgeklapte dropdowns op `/spotify/trackregister`
+- [x] Nieuwe tests in `register.test.ts` (kleurfilter) en `TrackRegister.test.tsx` (optie, telling, filter en herstel na een nieuw bezoek); hele suite (901 tests), `tsc --noEmit`, `eslint` op de gewijzigde bestanden en een Sass-compile groen
+- [ ] Dave kijkt naar de uitgeklapte dropdowns en het kleurfilter op `/spotify/trackregister`
 
 ### DEPLOY: feat/filter-meta-options-dim
 
 In de filters van het trackregister staan "Alle" en "Leeg" nu in een gedempte kleur, zodat de waarden
-die je echt kiest eruit springen.
+die je echt kiest eruit springen. Het `dkj_album`-filter kent nu ook alleen een kleur: kies Green en je
+ziet Green Light en Green Full, (f) en (m) samen.
 
 **Score:** 1
 
 #### What makes this deploy extra special
 
-Alleen de kleur van twee opties in een eigen overzicht; niemand buiten de repo merkt het.
+Alleen een kleur en een extra filterkeuze in een eigen overzicht; niemand buiten de repo merkt het.
 
 **Score:** N/A
 
 #### Pull Request
 
-Alle en Leeg staan minder fel in de filters van het trackregister
+Alle en Leeg minder fel, en het albumfilter kent ook alleen een kleur
 

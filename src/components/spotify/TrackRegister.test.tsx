@@ -264,6 +264,20 @@ describe("TrackRegister", () => {
     expect(screen.getByText("Geen nummer gevonden met deze zoekterm en filters.")).toBeTruthy();
   });
 
+  it("filtert dkj_album op alleen een kleur, telt Light en Full samen, en onthoudt die keuze", () => {
+    const withAlbums = [row(1, { album: "Green Light (f)" }), row(2, { album: "Green Full (m)" }), row(3, { album: "Yellow Light (f)" }), row(4)];
+    const { unmount } = render(<TrackRegister rows={withAlbums} artistCount={1} />);
+    expect(screen.getByRole("option", { name: "Green (2)" })).toBeTruthy();
+    fireEvent.change(screen.getByLabelText(/dkj_album/), { target: { value: "Green" } });
+    expect(bodyRows()).toHaveLength(2);
+    expect(screen.getByText("2 van 4 nummers")).toBeTruthy();
+    unmount();
+
+    render(<TrackRegister rows={withAlbums} artistCount={1} />);
+    expect((screen.getByLabelText(/dkj_album/) as HTMLSelectElement).value).toBe("Green");
+    expect(bodyRows()).toHaveLength(2);
+  });
+
   it("onthoudt dkj_genre: opnieuw renderen (een nieuw bezoek) herstelt de gekozen waarde", () => {
     const withGenre = [row(1, { genre: "OST" }), row(2), row(3, { genre: "ALT" })];
     const { unmount } = render(<TrackRegister rows={withGenre} artistCount={1} />);
