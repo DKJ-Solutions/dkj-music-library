@@ -39,21 +39,56 @@
 
 ### PLAN
 
+Gemeten tegen MusicBrainz (29 september 2026, dezelfde zoekopdracht als het script, limit 100, score >= 90):
+
+- James Morrison, *Wonderful World*: 22 treffers van artiest `88a8d8a9` (vroegste 2006), 2 van een
+  naamgenoot `b49a9595` (vroegste 1996). Een MBID-pin herstelt dit.
+- Lily Allen *Smile* (1995), Status Quo *Whatever You Want* (1977), Sérgio Mendes *Mas Que Nada* (1985):
+  alle treffers van één en dezelfde artiest, dus de uitschieter zit in MusicBrainz' eigen data. Een
+  strengere match helpt hier niet, dus is er een handmatige overschrijving nodig.
+- Randy Bachman, *You Ain't Seen Nothin' Yet*: MusicBrainz credit geen enkele Bachman-opname met 1974.
+  Of de Spotify-track (*Anthology*, 2014) de BTO-opname is, heb ik niet kunnen nagaan. Die track krijgt
+  dus geen overschrijving, want dan zou ik een jaar raden.
+
+#### Aanpak
+
+Beide richtingen uit het issue. Een overschrijving doet niet mee in het minimum maar wint, anders
+verliest hij van precies dat te vroege jaar.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `src/lib/musicbrainz/releaseYearOverrides.ts`: vastgezette jaren per Spotify-track-id (Smile 2006,
+  Whatever You Want 1979, Mas Que Nada 2006)
+- [x] `playlistTableRows.ts` en `releaseYears.ts` (`planReleaseYears`): een vastgezet jaar wint van het minimum
+- [x] `chooseRelease()`: de artiest-MBID van de hoogste score vastzetten, en een naamgenoot telt niet mee
 
 ### TEST
 
+- [x] Regressietests: naamgenoot, samenwerking plus kandidaat zonder MBID, vastgezet jaar op de rij en in het register-plan
+- [x] Het register (`data/library/export`) heeft voor de gekoppelde tracks al het juiste jaar (Status Quo
+  1979, Mas Que Nada 2006), dus er hoeft geen data mee te veranderen
+
 ### DEPLOY: fix/47-musicbrainz-year-namesake
 
-**Score:**
+Een te vroeg MusicBrainz-jaar trekt het jaar op de Maple Classic- en Classic Pop-pagina niet meer terug.
+Opnames van een andere artiest met dezelfde naam tellen niet meer mee, want `chooseRelease()` zet de
+artiest (MBID) van de beste treffer vast. Voor de gevallen waarin MusicBrainz zelf een verkeerd jaar
+heeft, is er een vaste lijst, `src/lib/musicbrainz/releaseYearOverrides.ts`: een jaar daarin wint van
+alle andere bronnen. De lijst begint met *Smile* (2006), *Whatever You Want* (1979) en *Mas Que Nada*
+(2006). *Wonderful World* van James Morrison komt pas goed na
+`npm run library:release-years -- --refresh`, omdat de cache het oude jaar nog bewaart.
+Bij *You Ain't Seen Nothin' Yet* (Randy Bachman) is niet na te gaan welke opname het is, dus die houdt
+1993. Resolves #47.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+De gebruiker van de app ziet op de playlist-pagina's niet langer een jaar dat tien jaar te vroeg is voor
+een bekend nummer, en kan zo'n geval voortaan vastzetten met één regel.
+
+**Score:** 2
 
 #### Pull Request
 
 MusicBrainz-jaar: naamgenoot en uitschieters
-
