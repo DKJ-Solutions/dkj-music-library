@@ -1,5 +1,5 @@
 // WAT ER IN DE EXPORT VERANDERD IS, in één zin: voor het changelog-item dat `npm run library:publish`
-// (scripts/library/publish-library.ps1) schrijft als je iets in de app hebt aangepast, bv. een star.
+// (scripts/library/publish-library.ps1) schrijft als je iets in de app hebt aangepast, bv. een tier.
 //
 // Vergelijkt twee versies van tracks.ndjson per dkj_track_id. `updated_at` telt niet mee: die verandert
 // bij elke schrijfactie en zegt niets over wát er veranderde.

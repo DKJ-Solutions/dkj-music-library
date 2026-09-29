@@ -170,25 +170,34 @@ describe("TrackRegister", () => {
   });
 
   it("toont dkj_rating als kolom met een label", () => {
-    render(<TrackRegister rows={[row(1, { rating: "star-2" }), row(2), row(3, { rating: "star-8" })]} artistCount={1} />);
+    render(<TrackRegister rows={[row(1, { rating: "tier-2" }), row(2), row(3, { rating: "tier-8" })]} artistCount={1} />);
     expect(screen.getByRole("columnheader", { name: /dkj_rating/ })).toBeTruthy();
-    expect(screen.getByText("star-8", { selector: ".register-tag" })).toBeTruthy();
+    expect(screen.getByText("tier-8", { selector: ".register-tag" })).toBeTruthy();
+  });
+
+  it("zet per paar tiers een eigen symbool voor de waardering", () => {
+    const ratings = ["tier-1", "tier-2", "tier-3", "tier-4", "tier-5", "tier-6", "tier-7", "tier-8"];
+    const { container } = render(<TrackRegister rows={ratings.map((rating, i) => row(i + 1, { rating }))} artistCount={1} />);
+    const shapes = [...container.querySelectorAll(".register-rating-symbol")].map((el) =>
+      el.className.replace(/.*register-rating-symbol--/, "")
+    );
+    expect(shapes).toEqual(["circle", "circle", "triangle", "triangle", "diamond", "diamond", "pentagon", "pentagon"]);
   });
 
   it("wijzigt dkj_rating via het potloodje en slaat de keuze meteen op", async () => {
-    const fetchMock = vi.fn(async () => new Response(JSON.stringify({ trackId: "ART01-001", rating: "star-6" }), { status: 200 }));
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify({ trackId: "ART01-001", rating: "tier-6" }), { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
-    render(<TrackRegister rows={[row(1, { rating: "star-4" })]} artistCount={1} />);
+    render(<TrackRegister rows={[row(1, { rating: "tier-4" })]} artistCount={1} />);
     fireEvent.click(screen.getByRole("button", { name: "dkj_rating van ART01-001 wijzigen" }));
-    expect(screen.getByRole("button", { name: "star-4" }).getAttribute("aria-current")).toBe("true");
-    fireEvent.click(screen.getByRole("button", { name: "star-6" }));
+    expect(screen.getByRole("button", { name: "tier-4" }).getAttribute("aria-current")).toBe("true");
+    fireEvent.click(screen.getByRole("button", { name: "tier-6" }));
 
-    expect(screen.getByText("star-6", { selector: ".register-tag" })).toBeTruthy();
-    expect(screen.queryByRole("button", { name: "star-1" })).toBeNull();
+    expect(screen.getByText("tier-6", { selector: ".register-tag" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "tier-1" })).toBeNull();
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
     const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
     expect(url).toBe("/api/spotify/rating");
-    expect(JSON.parse(init.body as string)).toEqual({ trackId: "ART01-001", rating: "star-6" });
+    expect(JSON.parse(init.body as string)).toEqual({ trackId: "ART01-001", rating: "tier-6" });
   });
 
   it("zet de vorige dkj_rating terug als opslaan mislukt, met de reden in de tooltip", async () => {
@@ -196,12 +205,12 @@ describe("TrackRegister", () => {
       "fetch",
       vi.fn(async () => new Response(JSON.stringify({ error: "save_failed", message: "schijf vol" }), { status: 500 }))
     );
-    render(<TrackRegister rows={[row(1, { rating: "star-4" })]} artistCount={1} />);
+    render(<TrackRegister rows={[row(1, { rating: "tier-4" })]} artistCount={1} />);
     fireEvent.click(screen.getByRole("button", { name: /wijzigen/ }));
-    fireEvent.click(screen.getByRole("button", { name: "star-8" }));
+    fireEvent.click(screen.getByRole("button", { name: "tier-8" }));
 
     await waitFor(() => expect(screen.getByTitle("Opslaan mislukt: schijf vol")).toBeTruthy());
-    expect(screen.getByText("star-4", { selector: ".register-tag" })).toBeTruthy();
+    expect(screen.getByText("tier-4", { selector: ".register-tag" })).toBeTruthy();
   });
 
   it("filtert op een zelf ingevuld bereik van year", () => {

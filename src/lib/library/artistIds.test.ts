@@ -255,11 +255,19 @@ describe("refreshTitles", () => {
 });
 
 describe("fillDefaultRatings", () => {
-  it("zet star-4 waar dkj_rating leeg is en laat een zelf gekozen waardering staan", () => {
+  it("zet tier-4 waar dkj_rating leeg is en laat een zelf gekozen waardering staan", () => {
     const db = memoryDb();
-    upsertTracks(db, [{ dkj_track_id: "a" }, { dkj_track_id: "b", dkj_rating: "star-7" }]);
+    upsertTracks(db, [{ dkj_track_id: "a" }, { dkj_track_id: "b", dkj_rating: "tier-7" }]);
     expect(fillDefaultRatings(db)).toBe(1);
-    expect([getTrack(db, "a")?.dkj_rating, getTrack(db, "b")?.dkj_rating]).toEqual(["star-4", "star-7"]);
+    expect([getTrack(db, "a")?.dkj_rating, getTrack(db, "b")?.dkj_rating]).toEqual(["tier-4", "tier-7"]);
     expect(fillDefaultRatings(db)).toBe(0);
+  });
+
+  it("zet een waardering onder de oude naam (star-N) om naar tier-N met hetzelfde getal", () => {
+    const db = memoryDb();
+    upsertTracks(db, [{ dkj_track_id: "a", dkj_rating: "tier-4" }, { dkj_track_id: "b", dkj_rating: "tier-4" }]);
+    db.prepare(`UPDATE tracks SET dkj_rating = 'star-3' WHERE dkj_track_id = 'a'`).run();
+    fillDefaultRatings(db);
+    expect([getTrack(db, "a")?.dkj_rating, getTrack(db, "b")?.dkj_rating]).toEqual(["tier-3", "tier-4"]);
   });
 });

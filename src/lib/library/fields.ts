@@ -98,11 +98,11 @@ export const DKJ_GENRE_OPTIONS = ["EDM", "POP", "ALT", "OST"] as const;
 /** Het veld met de eigen waardering (zie fillDefaultRatings in artistIds.ts). */
 export const RATING_KEY = "dkj_rating";
 
-/** De eigen waarderingen, van laag (star-1) naar hoog (star-8). */
-export const DKJ_RATING_OPTIONS = ["star-1", "star-2", "star-3", "star-4", "star-5", "star-6", "star-7", "star-8"] as const;
+/** De eigen waarderingen, van laag (tier-1) naar hoog (tier-8). */
+export const DKJ_RATING_OPTIONS = ["tier-1", "tier-2", "tier-3", "tier-4", "tier-5", "tier-6", "tier-7", "tier-8"] as const;
 
 /** De waardering die elke track krijgt zolang je er zelf geen hebt gekozen. */
-export const DEFAULT_RATING = "star-4";
+export const DEFAULT_RATING = "tier-4";
 
 /** Het veld met het eigen album (zie albumFromPlaylists.ts). */
 export const ALBUM_KEY = "dkj_album";
@@ -170,7 +170,7 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
   {
     key: "dkj_rating",
     type: "text",
-    label: "Eigen waardering, star-1 (laag) tot star-8 (hoog); standaard star-4, tenzij zelf ingevuld",
+    label: "Eigen waardering, tier-1 (laag) tot tier-8 (hoog); standaard tier-4, tenzij zelf ingevuld",
     options: DKJ_RATING_OPTIONS,
   },
   // Nieuw veld? Voeg het hier toe, bv.:

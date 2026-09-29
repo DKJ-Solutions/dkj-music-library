@@ -221,8 +221,30 @@ function Dropdown({
   );
 }
 
-/** De waardering met een potloodje erachter (Dave): klik erop en de acht stars verschijnen; een klik op
- *  een star maakt hem de nieuwe waarde en slaat hem meteen op (saveRating, POST /api/spotify/rating).
+// Het symbool per paar tiers (Dave): tier-1/2 een groene cirkel, tier-3/4 een blauwe driehoek,
+// tier-5/6 een paarse ruit, tier-7/8 een oranje vijfhoek. De vorm staat in _track-register.scss.
+const RATING_SYMBOLS = [
+  { shape: "circle", colour: "green" },
+  { shape: "triangle", colour: "blue" },
+  { shape: "diamond", colour: "magenta" },
+  { shape: "pentagon", colour: "orange" },
+] as const;
+
+function RatingSymbol({ rating }: { rating: string }) {
+  const level = Number(rating.replace(/^tier-/, ""));
+  const symbol = RATING_SYMBOLS[Math.ceil(level / 2) - 1];
+  if (!symbol) return null;
+  return (
+    <span
+      className={`register-rating-symbol register-rating-symbol--${symbol.shape}`}
+      style={{ ["--c" as string]: `var(--rating-${symbol.colour})` }}
+      aria-hidden="true"
+    />
+  );
+}
+
+/** De waardering met een potloodje erachter (Dave): klik erop en de acht tiers verschijnen; een klik op
+ *  een tier maakt hem de nieuwe waarde en slaat hem meteen op (saveRating, POST /api/spotify/rating).
  *  Optimistisch: de tabel toont de keuze direct, zodat sorteren en zoeken er meteen mee werken. Mislukt
  *  het opslaan, dan komt de vorige waarde terug en staat de reden in de tooltip -- een waardering die
  *  alleen in de browser staat, zou bij de volgende paginalading stilletjes verdwijnen. */
@@ -248,7 +270,14 @@ function Rating({ row, term, setRating }: { row: RegisterRow; term: string; setR
 
   return (
     <span className={`register-rating${error ? " is-error" : ""}${busy ? " is-busy" : ""}`} title={error ? `Opslaan mislukt: ${error}` : undefined}>
-      {row.rating ? <span className="register-tag"><Highlight text={row.rating} term={term} /></span> : <Empty />}
+      {row.rating ? (
+        <span className="register-tag">
+          <RatingSymbol rating={row.rating} />
+          <Highlight text={row.rating} term={term} />
+        </span>
+      ) : (
+        <Empty />
+      )}
       <Dropdown
         label="✎"
         caret={false}
@@ -268,6 +297,7 @@ function Rating({ row, term, setRating }: { row: RegisterRow; term: string; setR
                 void choose(option);
               }}
             >
+              <RatingSymbol rating={option} />
               {option}
             </button>
           ))

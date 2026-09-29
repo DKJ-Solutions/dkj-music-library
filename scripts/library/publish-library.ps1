@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    npm run library:publish -- zet wat je in de app aan de bibliotheek hebt veranderd (bv. een star via
+    npm run library:publish -- zet wat je in de app aan de bibliotheek hebt veranderd (bv. een tier via
     het potloodje in het trackregister) met een commando op main.
 .DESCRIPTION
     De app schrijft een wijziging meteen in data/library/export/, en die map staat in git. Direct op main
@@ -97,7 +97,7 @@ try {
     $deploy = @(
         "### DEPLOY: $name",
         '',
-        "Wijzigingen die in de app zelf zijn gemaakt, zoals een star via het potloodje in het trackregister, staan nu op main: $summary. Er verandert niets aan de code.",
+        "Wijzigingen die in de app zelf zijn gemaakt, zoals een tier via het potloodje in het trackregister, staan nu op main: $summary. Er verandert niets aan de code.",
         '',
         '**Score:** 1',
         '',
