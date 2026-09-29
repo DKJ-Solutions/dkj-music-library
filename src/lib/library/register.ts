@@ -42,6 +42,8 @@ export interface RegisterRow {
   playlists: PlaylistLink[];
   /** De mixen op djcylow.com waarin de track zit (djcylow_mix). */
   mixes: DjcylowMixLink[];
+  /** Het Spotify-track-ID (spotify_track_id), voor de afspeelknop. */
+  spotifyTrackId: string | null;
 }
 
 /** Filterwaarde voor "geen waarde ingevuld"; geen geldige optie van dkj_bpm of dkj_album. */
@@ -102,6 +104,7 @@ export function toRegisterRow(track: StoredTrack, artistNames: Record<string, st
     groups: Array.isArray(track.dkj_group) ? track.dkj_group.filter((g): g is string => typeof g === "string") : [],
     playlists,
     mixes,
+    spotifyTrackId: text(track.spotify_track_id),
   };
 }
 

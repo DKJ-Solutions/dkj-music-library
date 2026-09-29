@@ -2,12 +2,13 @@
 // De tabel van /spotify/trackregister: zoeken, filteren op een bereik van year, op dkj_bpm, dkj_genre, dkj_album en dkj_group, sorteren via de kopregel, en bladeren per
 // 100 rijen (12.000+ rijen in één keer renderen maakt de pagina traag). Alle logica die geen React is
 // zit in register.ts; hier alleen de weergave en de filterstand.
-import { useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { DKJ_ALBUM_COLOURS, DKJ_ALBUM_OPTIONS, DKJ_BPM_OPTIONS, DKJ_GENRE_OPTIONS, DKJ_RATING_OPTIONS, TRACK_FIELDS } from "@/lib/library/fields";
 import { mixUrl } from "@/lib/library/djcylowMix";
 import { playlistUrl } from "@/lib/library/playlistLink";
 import { saveRating } from "@/lib/library/saveRating";
+import { loadSpotifyIframeApi, trackEmbedUrl, trackUri, type SpotifyEmbedController } from "@/lib/library/trackEmbed";
 import {
   CANDIDATES_FILTER,
   EMPTY_FILTER,
@@ -50,18 +51,22 @@ const PREFS_OPTIONS: RegisterPrefsOptions = {
 const DEFAULT_PREFS: RegisterPrefs = defaultRegisterPrefs();
 
 /** Eén kolom van de tabel: het veld, waarop hij sorteert, zijn deel van de breedte (table-layout: fixed,
- *  zodat alle kolommen altijd passen) en wat er in de cel staat. */
+ *  zodat alle kolommen altijd passen) en wat er in de cel staat. De afspeelkolom ("play") is geen veld en
+ *  sorteert niet; zijn kop heeft alleen een naam voor een schermlezer. */
 interface Column {
-  key: SortKey;
+  key: SortKey | "play";
   field: string;
   width: string;
   cell: (row: RegisterRow, term: string, edit: CellEdit) => ReactNode;
   className?: string;
 }
 
-/** Wat een bewerkbare cel nodig heeft: de waardering van een rij in de tabel zetten (Rating). */
+/** Wat een bewerkbare cel nodig heeft: de waardering van een rij in de tabel zetten (Rating), en de
+ *  track die in de speler staat kiezen (PlayButton). */
 interface CellEdit {
   setRating: (trackId: string, rating: string | null) => void;
+  playingId: string | null;
+  togglePlay: (row: RegisterRow) => void;
 }
 
 /** Klik op een kop: oplopend, nog eens: aflopend, een derde keer: weer de oorspronkelijke volgorde. */
@@ -405,6 +410,139 @@ function OneLine({ text, term, className }: { text: string | null; term: string;
   );
 }
 
+/** De afspeelknop in de eigen kolom vóór de titel: zet de track in de speler onderin de tabel, of haalt
+ *  hem er weer uit. Zonder spotify_track_id valt er niets af te spelen, dan blijft de cel leeg. */
+function PlayButton({ row, edit }: { row: RegisterRow; edit: CellEdit }) {
+  if (!row.spotifyTrackId) return null;
+  const playing = edit.playingId === row.id;
+  const name = row.dkjTitle || row.title || row.id;
+  return (
+    <button
+      type="button"
+      className="register-play"
+      aria-pressed={playing}
+      aria-label={playing ? `Speler van ${name} sluiten` : `${name} afspelen`}
+      title={playing ? "Speler sluiten" : "Afspelen in de Spotify-speler"}
+      onClick={() => edit.togglePlay(row)}
+    >
+      {/* SVG in plaats van ▶/■ als tekst: een tekstteken staat nooit precies in het midden van de
+          cirkel. De driehoek staat in zijn viewBox iets naar rechts (optisch midden, niet het
+          geometrische), anders oogt hij links van het midden. */}
+      <svg className="register-play-icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false">
+        {playing ? <rect x="2" y="2" width="6" height="6" rx="1" /> : <path d="M3.2 1.8 8.4 5 3.2 8.2Z" />}
+      </svg>
+    </button>
+  );
+}
+
+/** De Spotify-speler ONDERIN HET TABELVAK (Dave): hij schuift omhoog zodra een track begint en weer omlaag
+ *  bij sluiten. Hij ligt over het scrollvak heen, dat zelf onder de speler door scrolt; de ruimte onderin
+ *  (.has-player) houdt de laatste rij bereikbaar. Eén speler tegelijk, want een iframe per rij maakt de
+ *  pagina traag. Bij sluiten speelt eerst de animatie omlaag (`closing`), en pas daarna `onClosed`, dat de
+ *  speler weghaalt.
+ *
+ *  De speler komt uit Spotify's iFrame API (trackEmbed.ts), zodat de afspeelknop hem meteen laat spelen:
+ *  bij de eerste track zodra de speler klaar is, bij een volgende track via loadUri + play in dezelfde
+ *  speler. De API vervangt het element dat hij krijgt door zijn iframe, dus dat element maakt dit effect
+ *  zelf aan in `host`, buiten React om. Laadt de API niet, dan komt de kale embed, waarin je zelf op play
+ *  klikt. */
+function Player({
+  row,
+  closing,
+  onClose,
+  onClosed,
+}: {
+  row: RegisterRow;
+  closing: boolean;
+  onClose: () => void;
+  onClosed: () => void;
+}) {
+  const id = row.spotifyTrackId;
+  const host = useRef<HTMLDivElement>(null);
+  const controller = useRef<SpotifyEmbedController | null>(null);
+  // De track die nu in de speler hoort, voor de callback van createController: die komt pas later terug.
+  const wanted = useRef(id);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    if (!wanted.current) return;
+    let cancelled = false;
+    const firstUri = trackUri(wanted.current);
+    loadSpotifyIframeApi().then(
+      (api) => {
+        if (cancelled || !host.current) return;
+        const element = document.createElement("div");
+        host.current.appendChild(element);
+        api.createController(element, { uri: firstUri, width: "100%", height: 80 }, (ctrl) => {
+          if (cancelled) return ctrl.destroy();
+          controller.current = ctrl;
+          ctrl.addListener("ready", () => ctrl.play());
+          // Intussen een andere track gekozen: dan die.
+          if (wanted.current && trackUri(wanted.current) !== firstUri) ctrl.loadUri(trackUri(wanted.current));
+        });
+      },
+      () => {
+        if (!cancelled) setFailed(true);
+      }
+    );
+    const box = host.current;
+    return () => {
+      cancelled = true;
+      controller.current?.destroy();
+      controller.current = null;
+      box?.replaceChildren();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (wanted.current === id) return;
+    wanted.current = id;
+    if (!id || !controller.current) return;
+    controller.current.loadUri(trackUri(id));
+    controller.current.play();
+  }, [id]);
+
+  // Terugval voor animationend: in een tabblad dat niet in beeld is slaat de browser de animatie over,
+  // en dan komt dat event nooit -- de speler bleef dan halverwege het sluiten hangen. Iets langer dan de
+  // animatie omlaag (0.18s, _track-register.scss).
+  useEffect(() => {
+    if (!closing) return;
+    const timer = window.setTimeout(onClosed, 300);
+    return () => window.clearTimeout(timer);
+  }, [closing, onClosed]);
+
+  if (!id) return null;
+  const name = row.dkjTitle || row.title || row.id;
+  return (
+    <div
+      className={`register-player${closing ? " is-closing" : ""}`}
+      aria-label={`Spotify-speler: ${name}`}
+      role="region"
+      onAnimationEnd={(event) => {
+        if (closing && event.target === event.currentTarget) onClosed();
+      }}
+    >
+      {failed ? (
+        <iframe
+          key={id}
+          className="register-player-frame"
+          title={`Spotify-speler: ${name}`}
+          src={trackEmbedUrl(id)}
+          height={80}
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        />
+      ) : (
+        <div ref={host} className="register-player-frame" />
+      )}
+      <button type="button" className="register-player-close" aria-label="Speler sluiten" title="Speler sluiten" onClick={onClose}>
+        <svg viewBox="0 0 8 8" aria-hidden="true" focusable="false">
+          <path d="M1 1 7 7M7 1 1 7" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
 /** Zoveel artiest-ID's staan er als chip; bij meer wordt het een menu, net als bij de playlists (Dave). */
 const ARTIST_IDS_INLINE = 1;
 
@@ -444,6 +582,8 @@ function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term:
 /** De gewone kolommen, in volgorde. dkj_track_id, dkj_file, dkj_artist, dkj_artist_id en djcylow_mix staan
  *  er niet in (Dave); die staan in HIDDEN_COLUMNS, achter de switch, en op alle vijf zoeken kan altijd. */
 const VISIBLE_COLUMNS: readonly Column[] = [
+  // De afspeelknop in een EIGEN KOLOM (Dave): vaste breedte, net genoeg voor het knopje.
+  { key: "play", field: "afspelen", width: "40px", className: "register-play-cell", cell: (row, _term, edit) => <PlayButton row={row} edit={edit} /> },
   { key: "dkjTitle", field: "dkj_title", width: "22%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
   { key: "albumArtist", field: "dkj_albumartiest", width: "17%", cell: (row, term) => <OneLine text={row.albumArtist} term={term} className="register-album-artist" /> },
   { key: "year", field: "year", width: "5%", cell: (row, term) => <OneLine text={row.year} term={term} className="register-year" /> },
@@ -515,7 +655,28 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
     () => initialRows.map((row) => (row.id in ratings ? { ...row, rating: ratings[row.id] } : row)),
     [initialRows, ratings]
   );
-  const edit: CellEdit = { setRating: (trackId, rating) => setRatings((prev) => ({ ...prev, [trackId]: rating })) };
+  // De track in de speler (Player). Een rij, geen ID: de speler blijft staan als een filter de rij wegfiltert.
+  const [playing, setPlaying] = useState<RegisterRow | null>(null);
+  // Waar tijdens de animatie omlaag (Player); daarna gaat de speler echt weg.
+  const [closing, setClosing] = useState(false);
+  const finishClose = useCallback(() => {
+    setPlaying(null);
+    setClosing(false);
+  }, []);
+  const closePlayer = () => {
+    // Zonder animatie (prefers-reduced-motion) komt er geen animationend, dus dan meteen weg.
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) setPlaying(null);
+    else setClosing(true);
+  };
+  const edit: CellEdit = {
+    setRating: (trackId, rating) => setRatings((prev) => ({ ...prev, [trackId]: rating })),
+    playingId: playing && !closing ? playing.id : null,
+    togglePlay: (row) => {
+      if (playing?.id === row.id && !closing) return closePlayer();
+      setClosing(false);
+      setPlaying(row);
+    },
+  };
   const [query, setQuery] = useState(DEFAULT_PREFS.query);
   const [yearFrom, setYearFrom] = useState(DEFAULT_PREFS.yearFrom);
   const [yearTo, setYearTo] = useState(DEFAULT_PREFS.yearTo);
@@ -725,52 +886,69 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
         )}
       </fieldset>
 
-      <div className="register-table-box" ref={box}>
-        <table className="register-table">
-          {/* Vaste verdeling van de breedte (table-layout: fixed), zodat alle kolommen altijd passen. */}
-          <colgroup>
-            {columns.map(({ key, width }) => (
-              <col key={key} style={{ width }} />
-            ))}
-          </colgroup>
-          <thead>
-            <tr>
-              {columns.map(({ key, field }) => {
-                const dir = sort?.key === key ? sort.dir : null;
-                return (
-                  <th key={key} aria-sort={dir === "asc" ? "ascending" : dir === "desc" ? "descending" : "none"}>
-                    <button
-                      type="button"
-                      className="register-sort"
-                      title={`Sorteer op ${field}`}
-                      onClick={() => reset(setSort)(nextSort(sort, key))}
-                    >
-                      <code>{field}</code>
-                      <span className="register-sort-mark" aria-hidden="true">
-                        {dir === "asc" ? "▲" : dir === "desc" ? "▼" : "↕"}
-                      </span>
-                    </button>
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            {slice.length === 0 ? (
+      <div className="register-table-area">
+        <div className="register-table-box" ref={box}>
+          <table className="register-table">
+            {/* Vaste verdeling van de breedte (table-layout: fixed), zodat alle kolommen altijd passen. */}
+            <colgroup>
+              {columns.map(({ key, width }) => (
+                <col key={key} style={{ width }} />
+              ))}
+            </colgroup>
+            <thead>
               <tr>
-                <td colSpan={columns.length} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
+                {columns.map(({ key, field }) => {
+                  if (key === "play") {
+                    return (
+                      <th key={key} className="register-play-cell">
+                        <span className="register-hidden-label">{field}</span>
+                      </th>
+                    );
+                  }
+                  const dir = sort?.key === key ? sort.dir : null;
+                  return (
+                    <th key={key} aria-sort={dir === "asc" ? "ascending" : dir === "desc" ? "descending" : "none"}>
+                      <button
+                        type="button"
+                        className="register-sort"
+                        title={`Sorteer op ${field}`}
+                        onClick={() => reset(setSort)(nextSort(sort, key))}
+                      >
+                        <code>{field}</code>
+                        <span className="register-sort-mark" aria-hidden="true">
+                          {dir === "asc" ? "▲" : dir === "desc" ? "▼" : "↕"}
+                        </span>
+                      </button>
+                    </th>
+                  );
+                })}
               </tr>
-            ) : (
-              slice.map((row) => (
-                <tr key={row.id}>
-                  {columns.map(({ key, cell, className }) => (
-                    <td key={key} className={className}>{cell(row, term, edit)}</td>
-                  ))}
+            </thead>
+            <tbody>
+              {slice.length === 0 ? (
+                <tr>
+                  <td colSpan={columns.length} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                slice.map((row) => (
+                  <tr key={row.id}>
+                    {columns.map(({ key, cell, className }) => (
+                      <td key={key} className={className}>{cell(row, term, edit)}</td>
+                    ))}
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+        {playing && (
+          <Player
+            row={playing}
+            closing={closing}
+            onClose={closePlayer}
+            onClosed={finishClose}
+          />
+        )}
       </div>
 
       <div className="register-pager">

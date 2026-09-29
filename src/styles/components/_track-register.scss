@@ -6,7 +6,7 @@
 // kolommen passen daar niet in. De zijmarges van .wrap blijven.
 // HOOGSTENS ÉÉN VERTICALE SCROLLBALK (Dave): de pagina is precies zo hoog als het venster en scrolt zelf
 // niet; masthead, filters en pager nemen wat ze nodig hebben, en het scrollvak van de tabel vult de rest.
-// Alleen in een venster dat daar te laag voor is (zie min-height van .register-table-box) scrolt de pagina.
+// Alleen in een venster dat daar te laag voor is (zie min-height van .register-table-area) scrolt de pagina.
 .wrap--full {
   max-width: none;
   display: flex;
@@ -115,16 +115,26 @@
   font-variant-numeric: tabular-nums;
 }
 
-// Eigen scrollvak dat NOOIT HOGER IS DAN HET VENSTER (Dave): het vult de ruimte tussen de filters en de
-// pager (flex), zodat tabel en bladerknoppen samen altijd in beeld passen en er maar één verticale
-// scrollbalk is: deze. De kolomkoppen blijven bovenaan staan en de horizontale scrollbalk zit onderin beeld.
-.register-table-box {
+// Het kader van de tabel: het scrollvak, en daaronder de Spotify-speler als er een track speelt (Player
+// in TrackRegister.tsx). Het vult de ruimte tussen de filters en de pager (flex), zodat tabel, speler en
+// bladerknoppen samen altijd in beeld passen.
+.register-table-area {
   flex: 1 1 auto;
   min-height: 240px;
+  display: flex;
+  flex-direction: column;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+// Eigen scrollvak dat NOOIT HOGER IS DAN HET VENSTER (Dave): er is maar één verticale scrollbalk, deze. De
+// kolomkoppen blijven bovenaan staan en de horizontale scrollbalk zit onderin, boven de speler.
+.register-table-box {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: auto;
   overscroll-behavior: contain;
 }
@@ -248,6 +258,167 @@
 // dkj_file is de hoofdkolom (hij verving de titel): volle inktkleur.
 .register-title {
   color: var(--ink);
+}
+
+// De afspeelknop in een EIGEN KOLOM vóór dkj_title (Dave; PlayButton in TrackRegister.tsx): 40px breed,
+// het knopje op de linkermarge van de tabel, en de rest van de ruimte als afstand tot de titel.
+.register-table .register-play-cell {
+  padding-right: 0;
+  vertical-align: middle;
+}
+
+// Een kopje dat alleen een schermlezer leest (de afspeelkolom heeft geen zichtbare kop).
+.register-hidden-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.register-play {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.12s ease, border-color 0.12s ease, background-color 0.12s ease;
+}
+
+// Het icoon (PlayButton): een SVG, zodat hij precies in het midden van de cirkel staat.
+.register-play-icon {
+  display: block;
+  width: 10px;
+  height: 10px;
+  fill: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .register-play {
+    transition: none;
+  }
+}
+
+button.register-play:hover,
+.register-play[aria-pressed="true"] {
+  color: var(--accent-ink);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.register-play:focus-visible,
+.register-player-close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+// De Spotify-speler ONDERIN HET TABELKADER (Dave; Player in TrackRegister.tsx). Hij SCHUIFT OMHOOG als een
+// track begint: een negatieve marge onderin, weggeknipt door het kader (overflow: hidden), loopt naar 0,
+// en het scrollvak erboven krimpt mee. Bij sluiten dezelfde weg terug (.is-closing); pas aan het eind
+// daarvan haalt de component hem weg. Vaste hoogte, zodat de marge precies de hele speler is.
+$register-player-height: 97px; // 80px iframe + 2 x 8px padding + 1px rand
+
+.register-player {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  height: $register-player-height;
+  box-sizing: border-box;
+  padding: 8px;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  animation: register-player-in 0.22s ease-out;
+}
+
+.register-player.is-closing {
+  animation: register-player-out 0.18s ease-in forwards;
+}
+
+@keyframes register-player-in {
+  from {
+    margin-bottom: -$register-player-height;
+  }
+  to {
+    margin-bottom: 0;
+  }
+}
+
+@keyframes register-player-out {
+  from {
+    margin-bottom: 0;
+  }
+  to {
+    margin-bottom: -$register-player-height;
+  }
+}
+
+// Zonder animatie haalt de component de speler bij sluiten meteen weg (closePlayer).
+@media (prefers-reduced-motion: reduce) {
+  .register-player,
+  .register-player.is-closing {
+    animation: none;
+  }
+}
+
+.register-player-frame {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 80px;
+  border: 0;
+  border-radius: 12px;
+}
+
+// De iframe die Spotify's iFrame API in de host van Player zet.
+.register-player-frame iframe {
+  display: block;
+  width: 100%;
+  height: 80px;
+  border: 0;
+  border-radius: 12px;
+}
+
+// De sluitknop OP DE SPELER (Dave): een rond knopje op de LINKERbovenhoek, half over de rand van de
+// embed -- rechts staan het Spotify-logo en de knoppen van de speler al, en dat werd te druk (Dave). Het kruisje is een SVG, net als
+// het afspeelicoon, zodat het precies in het midden staat.
+.register-player-close {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--muted);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.register-player-close svg {
+  display: block;
+  width: 8px;
+  height: 8px;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.register-player-close:hover {
+  color: var(--accent-ink);
+  border-color: var(--accent);
 }
 
 // DRIE VORMEN, ZODAT JE ZONDER KLIKKEN ZIET WAT IETS DOET (Dave):
