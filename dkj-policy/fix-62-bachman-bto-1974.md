@@ -41,17 +41,27 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `1CknAHYDCfK3VThkDcG37V` -> 1974 in `src/lib/musicbrainz/releaseYearOverrides.ts` (Dave: het is de BTO-opname)
 
 ### TEST
 
+- [x] `npm run typecheck`, `npm run lint`, `npm test` groen
+
 ### DEPLOY: fix/62-bachman-bto-1974
 
-**Score:**
+*You Ain't Seen Nothin' Yet* van Randy Bachman (album *Anthology*) toont op de Maple Classic-pagina
+1974 in plaats van 1993. Het is de opname van Bachman-Turner Overdrive, en die staat bij MusicBrainz
+onder BTO en niet onder Bachman, dus het jaar is vastgezet in
+`src/lib/musicbrainz/releaseYearOverrides.ts`. Resolves #62.
+
+**Score:** 1
 
 #### What makes this deploy extra special
 
-**Score:**
+De gebruiker van de app ziet bij dit nummer het jaar van het origineel in plaats van een live-uitgave
+van bijna twintig jaar later.
+
+**Score:** 1
 
 #### Pull Request
 

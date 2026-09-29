@@ -14,4 +14,5 @@ export const RELEASE_YEAR_OVERRIDES: ReadonlyMap<string, number> = new Map([
   ["4aR9bPMAOFySBuQSbVWF3d", 2006], // Lily Allen - Smile; MusicBrainz: 1995
   ["2kUzt5LsTUR0ggquP7O3eN", 1979], // Status Quo - Whatever You Want; MusicBrainz: 1977
   ["6U7GUjtamt2P0LcFod1dBT", 2006], // Sérgio Mendes & Black Eyed Peas - Mas Que Nada (de remake op Timeless); MusicBrainz: 1985
+  ["1CknAHYDCfK3VThkDcG37V", 1974], // Randy Bachman - You Ain't Seen Nothin' Yet (de BTO-opname, op Anthology; #62); MusicBrainz: 1993
 ]);
