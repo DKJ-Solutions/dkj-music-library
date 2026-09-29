@@ -8,7 +8,7 @@ import { DKJ_ALBUM_COLOURS, DKJ_ALBUM_OPTIONS, DKJ_BPM_OPTIONS, DKJ_GENRE_OPTION
 import { mixUrl } from "@/lib/library/djcylowMix";
 import { playlistUrl } from "@/lib/library/playlistLink";
 import { saveRating } from "@/lib/library/saveRating";
-import { trackEmbedUrl } from "@/lib/library/trackEmbed";
+import { loadSpotifyIframeApi, trackEmbedUrl, trackUri, type SpotifyEmbedController } from "@/lib/library/trackEmbed";
 import {
   CANDIDATES_FILTER,
   EMPTY_FILTER,
@@ -429,21 +429,76 @@ function PlayButton({ row, edit }: { row: RegisterRow; edit: CellEdit }) {
   );
 }
 
-/** De Spotify-speler boven de tabel (embed-iframe, trackEmbed.ts): één tegelijk, want een iframe per rij
- *  maakt de pagina traag. Het scrollvak van de tabel eronder scrolt los, dus de speler blijft in beeld. */
+/** De Spotify-speler boven de tabel: één tegelijk, want een iframe per rij maakt de pagina traag. Het
+ *  scrollvak van de tabel eronder scrolt los, dus de speler blijft in beeld.
+ *
+ *  De speler komt uit Spotify's iFrame API (trackEmbed.ts), zodat de afspeelknop hem meteen laat spelen:
+ *  bij de eerste track zodra de speler klaar is, bij een volgende track via loadUri + play in dezelfde
+ *  speler. De API vervangt het element dat hij krijgt door zijn iframe, dus dat element maakt dit effect
+ *  zelf aan in `host`, buiten React om. Laadt de API niet, dan komt de kale embed, waarin je zelf op play
+ *  klikt. */
 function Player({ row, onClose }: { row: RegisterRow; onClose: () => void }) {
-  if (!row.spotifyTrackId) return null;
+  const id = row.spotifyTrackId;
+  const host = useRef<HTMLDivElement>(null);
+  const controller = useRef<SpotifyEmbedController | null>(null);
+  // De track die nu in de speler hoort, voor de callback van createController: die komt pas later terug.
+  const wanted = useRef(id);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    if (!wanted.current) return;
+    let cancelled = false;
+    const firstUri = trackUri(wanted.current);
+    loadSpotifyIframeApi().then(
+      (api) => {
+        if (cancelled || !host.current) return;
+        const element = document.createElement("div");
+        host.current.appendChild(element);
+        api.createController(element, { uri: firstUri, width: "100%", height: 80 }, (ctrl) => {
+          if (cancelled) return ctrl.destroy();
+          controller.current = ctrl;
+          ctrl.addListener("ready", () => ctrl.play());
+          // Intussen een andere track gekozen: dan die.
+          if (wanted.current && trackUri(wanted.current) !== firstUri) ctrl.loadUri(trackUri(wanted.current));
+        });
+      },
+      () => {
+        if (!cancelled) setFailed(true);
+      }
+    );
+    const box = host.current;
+    return () => {
+      cancelled = true;
+      controller.current?.destroy();
+      controller.current = null;
+      box?.replaceChildren();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (wanted.current === id) return;
+    wanted.current = id;
+    if (!id || !controller.current) return;
+    controller.current.loadUri(trackUri(id));
+    controller.current.play();
+  }, [id]);
+
+  if (!id) return null;
   const name = row.dkjTitle || row.title || row.id;
   return (
-    <div className="register-player">
-      <iframe
-        key={row.spotifyTrackId}
-        className="register-player-frame"
-        title={`Spotify-speler: ${name}`}
-        src={trackEmbedUrl(row.spotifyTrackId)}
-        height={80}
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-      />
+    <div className="register-player" aria-label={`Spotify-speler: ${name}`} role="region">
+      {failed ? (
+        <iframe
+          key={id}
+          className="register-player-frame"
+          title={`Spotify-speler: ${name}`}
+          src={trackEmbedUrl(id)}
+          height={80}
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        />
+      ) : (
+        <div ref={host} className="register-player-frame" />
+      )}
       <button type="button" className="register-player-close" aria-label="Speler sluiten" title="Speler sluiten" onClick={onClose}>
         ×
       </button>

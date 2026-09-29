@@ -317,6 +317,15 @@ button.register-play:hover,
   border-radius: 12px;
 }
 
+// De iframe die Spotify's iFrame API in de host van Player zet.
+.register-player-frame iframe {
+  display: block;
+  width: 100%;
+  height: 80px;
+  border: 0;
+  border-radius: 12px;
+}
+
 .register-player-close {
   flex: 0 0 auto;
   width: 28px;

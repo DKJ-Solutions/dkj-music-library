@@ -7,6 +7,13 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import { TrackRegister } from "./TrackRegister";
 import { CANDIDATES_FILTER, type RegisterRow } from "@/lib/library/register";
 import { REGISTER_PREFS_KEY } from "@/lib/library/registerPrefs";
+import { loadSpotifyIframeApi } from "@/lib/library/trackEmbed";
+
+// De iFrame API van Spotify is een script van buiten; de tests geven de component een nep-API.
+vi.mock("@/lib/library/trackEmbed", async (original) => ({
+  ...(await original<typeof import("@/lib/library/trackEmbed")>()),
+  loadSpotifyIframeApi: vi.fn(),
+}));
 
 // Elke test begint met een lege localStorage: anders leest de volgende test de bewaarde stand van de
 // vorige terug, en cleanup() ontkoppelt de vorige render (zijn schrijf-effect mag niet meer vuren).
@@ -332,19 +339,39 @@ describe("TrackRegister", () => {
     expect((screen.getByLabelText(/dkj_genre/) as HTMLSelectElement).value).toBe("");
   });
 
-  it("speelt een track af in één speler boven de tabel, en sluit hem met dezelfde knop", () => {
+  it("speelt een track met één klik af in één speler boven de tabel, en sluit hem met dezelfde knop", async () => {
+    const ctrl = { loadUri: vi.fn(), play: vi.fn(), destroy: vi.fn(), addListener: vi.fn() };
+    const createController = vi.fn((_el: HTMLElement, _opts: { uri: string }, cb: (c: typeof ctrl) => void) => cb(ctrl));
+    vi.mocked(loadSpotifyIframeApi).mockResolvedValue({ createController });
     render(<TrackRegister rows={[row(1), row(2), row(3, { spotifyTrackId: null })]} artistCount={1} />);
     expect(document.querySelector(".register-player")).toBeNull();
 
+    // De eerste track: een speler met die URI, die speelt zodra hij klaar is.
     fireEvent.click(screen.getByRole("button", { name: "Nummer 1 afspelen" }));
-    expect(screen.getByTitle("Spotify-speler: Nummer 1").getAttribute("src")).toBe("https://open.spotify.com/embed/track/sp1");
+    await waitFor(() => expect(createController).toHaveBeenCalledTimes(1));
+    expect(createController.mock.calls[0][1].uri).toBe("spotify:track:sp1");
+    const [event, onReady] = ctrl.addListener.mock.calls[0];
+    expect(event).toBe("ready");
+    onReady();
+    expect(ctrl.play).toHaveBeenCalledTimes(1);
 
+    // Een volgende track: dezelfde speler, meteen aan het spelen.
     fireEvent.click(screen.getByRole("button", { name: "Nummer 2 afspelen" }));
-    expect(document.querySelectorAll(".register-player iframe")).toHaveLength(1);
-    expect(screen.getByTitle("Spotify-speler: Nummer 2")).toBeTruthy();
+    expect(ctrl.loadUri).toHaveBeenCalledWith("spotify:track:sp2");
+    expect(ctrl.play).toHaveBeenCalledTimes(2);
+    expect(createController).toHaveBeenCalledTimes(1);
 
     fireEvent.click(screen.getByRole("button", { name: "Speler van Nummer 2 sluiten" }));
     expect(document.querySelector(".register-player")).toBeNull();
+    expect(ctrl.destroy).toHaveBeenCalled();
+  });
+
+  it("valt terug op de kale embed als de iFrame API van Spotify niet laadt", async () => {
+    vi.mocked(loadSpotifyIframeApi).mockRejectedValue(new Error("geen netwerk"));
+    render(<TrackRegister rows={[row(1)]} artistCount={1} />);
+    fireEvent.click(screen.getByRole("button", { name: "Nummer 1 afspelen" }));
+    const frame = await screen.findByTitle("Spotify-speler: Nummer 1");
+    expect(frame.getAttribute("src")).toBe("https://open.spotify.com/embed/track/sp1");
   });
 
   it("geeft een track zonder spotify_track_id geen afspeelknop", () => {
