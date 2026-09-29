@@ -2,12 +2,14 @@
 .wrap {
   max-width: 1080px;
   margin: 0 auto;
-  padding: clamp(28px, 5vw, 64px) clamp(18px, 4vw, 40px) 72px;
+  padding: clamp(16px, 3vw, 36px) clamp(18px, 4vw, 40px) 72px;
 }
 
-.masthead {
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 12px;
+// .kicker en .stats zijn verborgen (Dave, 29 september 2026): ze namen te veel ruimte in. De markup blijft
+// staan, zodat ze met het weghalen van één regel terugkomen -- en de tests die .stats lezen blijven werken.
+.kicker,
+.stats {
+  display: none !important;
 }
 
 .kicker {
