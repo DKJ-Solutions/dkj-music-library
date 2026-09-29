@@ -2,7 +2,39 @@
 
 ## [Unreleased]
 
-**40 / 51 minor entries** <!-- pending-tally -->
+**41 / 52 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/dkj-rating-field · 20260929-102745Z
+
+Nieuw veld `dkj_rating`: je eigen waardering van een nummer, van `star-1` (laag) tot `star-8` (hoog);
+een andere waarde breekt de import af. Elke track krijgt standaard `star-4`: bij elke sync en bij
+`npm run library:assign-ids` wordt het gezet zolang het leeg is, dus een zelf gekozen waardering blijft
+staan. De export is meteen gevuld: alle 11.639 tracks staan op `star-4`. Het trackregister toont het als
+kolom `dkj_rating` na `dkj_genre`, en je kunt erop sorteren en zoeken. Het is het eerste veld dat je in
+de frontend zelf wijzigt: klik op het potloodje achter de waarde, kies een star, en hij wordt meteen
+opgeslagen in de database en de export (`POST /api/spotify/rating`); mislukt dat, dan komt de vorige
+waarde terug met de reden in de tooltip. Zulke wijzigingen zet `npm run library:publish` in één keer op
+main: het maakt een eigen branch voor alleen de export, vult het changelog-item met wat er veranderde, en
+draait de PR, de merge en de fold. Daarnaast staat `djcylow_mix` niet meer in de gewone tabel maar bij de verborgen kolommen
+(achter de switch); zoeken op de mixnamen blijft werken.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Je kunt voor het eerst zelf iets in de bibliotheek aanpassen: je waardering van elk nummer, met één klik
+op het potloodje in het trackregister, meteen opgeslagen. Je kunt erop sorteren, en de mixkolom staat
+niet meer in de weg: die zit nu achter de switch.
+
+**Score:** 4
+
+#### Pull Request
+
+Trackregister krijgt een bewerkbare dkj_rating (star-1 t/m star-8) en verbergt djcylow_mix
+
+[PR #58](https://github.com/DKJ-Solutions/dkj-music-library/pull/58)
+
+---
 
 ### DEPLOY: feat/register-filter-box · 20260928-190115Z
 
