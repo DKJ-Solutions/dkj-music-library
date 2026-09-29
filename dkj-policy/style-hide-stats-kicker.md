@@ -42,16 +42,18 @@
 ### CREATE
 
 - [x] `.kicker` en `.stats` op `display: none` in `_masthead.scss`; de markup blijft staan
+- [x] Padding-top van `.wrap` van `clamp(28px, 5vw, 64px)` naar `clamp(16px, 3vw, 36px)`
 
 ### TEST
 
 - [x] `vitest run`: 65 bestanden, 910 tests groen
-- [ ] Dave bekijkt het resultaat in de werkkopie
+- [ ] Dave bekijkt het resultaat in de werkkopie (inclusief de kleinere padding-top)
 
 ### DEPLOY: style/hide-stats-kicker
 
 De kicker boven de paginatitel en de rij tellers eronder zijn op elke pagina verborgen, omdat ze te veel
-ruimte innamen. Alleen via CSS: de markup blijft, dus terugzetten is één regel weghalen.
+ruimte innamen. Alleen via CSS: de markup blijft, dus terugzetten is één regel weghalen. De ruimte boven de pagina (padding-top van `.wrap`) is ook
+kleiner geworden.
 
 **Score:** 2
 
