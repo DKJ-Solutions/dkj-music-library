@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**41 / 53 minor entries** <!-- pending-tally -->
+**42 / 54 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/6-mix-count-without-source · 20260929-110454Z
+
+On `/spotify`, the **in DJ Cylow** tile no longer shows `0` when the mix source cannot be found. It
+hides itself, the same as the **met ID** tile. Resolves #6.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+The user of the app no longer sees a tile claiming the mix source holds zero mixes on a machine where
+it was simply not found; small, and noticed only on such a machine.
+
+**Score:** 2
+
+#### Pull Request
+
+De 'in DJ Cylow'-teller verbergt zich als de mix-bron ontbreekt
+
+[PR #60](https://github.com/DKJ-Solutions/dkj-music-library/pull/60)
+
+---
 
 ### DEPLOY: chore/library-20260929-122809 · 20260929-103010Z
 
