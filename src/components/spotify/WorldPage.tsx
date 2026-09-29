@@ -40,7 +40,7 @@ export function WorldPage({
   // mix-JSON's van schijf -- PlaylistManager is een Client Component en krijgt het als platte prop.
   const mixIndex = enriched
     ? getPlaylistMixIndex()
-    : { byPlaylistId: {}, missingMixes: [], mixesWithId: 0 };
+    : { byPlaylistId: {}, missingMixes: [], mixesWithId: null };
   // De brontelling + de sync-check horen alleen bij een weergave die álle kandidaten bevat. Dat is MMC:
   // daar wonen de mix-playlists. Op DJ Cylow/Privé zou je 0 gekoppelde playlists tegen 77 mixen afzetten
   // en altijd een kruis krijgen -- een verschil dat niets zegt.

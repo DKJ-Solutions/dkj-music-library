@@ -100,6 +100,11 @@ describe("buildPlaylistMixIndex -- de opzoektabel", () => {
     expect(index.mixesWithId).toBe(2);
   });
 
+  it("geeft null in plaats van 0 als er geen enkele mix binnenkwam (bron niet gevonden)", () => {
+    // Een 0 zou de "in DJ Cylow"-tegel laten zien alsof de bron nul mixen telt (#6).
+    expect(buildPlaylistMixIndex([]).mixesWithId).toBeNull();
+  });
+
   it("sorteert de ontbrekende mixen op nieuwste ID", () => {
     const index = buildPlaylistMixIndex([
       makeLink({ mix: makeMix({ id: "20240408" }), status: "bucket-only" }),

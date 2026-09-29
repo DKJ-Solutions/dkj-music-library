@@ -7,8 +7,10 @@
 // kopie in deze repo (`src/data/mixes/`, buiten git via de .gitignore-regel `data/`); die is
 // weggehaald juist om die dubbeling kwijt te raken. Vandaar de zoekorde hieronder: eerst een
 // expliciete override, dan een lokale map als die er ooit weer is, en anders de zusterrepo naast
-// deze -- beide repo's staan onder .../GitHub/DaveKJohn/, dus een relatief pad volstaat en er hoeft
-// geen absoluut pad met een gebruikersnaam in de code.
+// deze. Die terugval werkt alleen als `djcylow-react` in dezelfde map staat als deze kloon -- sinds
+// de verhuizing uit life-hub (2026-09-27) staat deze repo onder `dkj-solutions/`, dus op een machine
+// waar djcylow-react elders staat hoort MIXES_DATA_DIR gezet te worden. Zo hoeft er geen absoluut pad
+// met een gebruikersnaam in de code.
 //
 // Vindt geen van de kandidaten iets (verse kloon zonder zusterrepo, CI-runner), dan levert dit
 // bestand een lege lijst i.p.v. een fout -- dezelfde "geen bron = leeg, niet stuk"-lijn als
