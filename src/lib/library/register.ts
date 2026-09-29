@@ -26,7 +26,7 @@ export interface RegisterRow {
   bpm: string | null;
   /** Het eigen genre (dkj_genre). */
   genre: string | null;
-  /** De eigen waardering (dkj_rating), star-1 tot star-8. */
+  /** De eigen waardering (dkj_rating), tier-1 tot tier-8. */
   rating: string | null;
   album: string | null;
   /** De albums die de playlists noemen (albumsOfPlaylists). Meer dan één: de playlists verschillen, en

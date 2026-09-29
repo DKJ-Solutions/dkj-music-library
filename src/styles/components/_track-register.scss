@@ -356,7 +356,7 @@ a.register-menu-item:hover {
   background: var(--accent-soft);
 }
 
-// Een keuze in een menu (de stars van dkj_rating): een knop die eruitziet als een menuregel.
+// Een keuze in een menu (de tiers van dkj_rating): een knop die eruitziet als een menuregel.
 .register-menu-choice {
   font-family: inherit;
   text-align: left;
@@ -380,7 +380,7 @@ a.register-menu-item:hover {
   content: " ✓";
 }
 
-// dkj_rating: de waarde met een potloodje erachter, dat het menu met de stars opent.
+// dkj_rating: de waarde met een potloodje erachter, dat het menu met de tiers opent.
 .register-rating {
   display: inline-flex;
   align-items: center;
@@ -415,7 +415,7 @@ a.register-menu-item:hover {
   background: var(--accent-soft);
 }
 
-// Het symbool voor een waardering: één vorm en kleur per paar stars (RATING_SYMBOLS in TrackRegister.tsx).
+// Het symbool voor een waardering: één vorm en kleur per paar tiers (RATING_SYMBOLS in TrackRegister.tsx).
 .register-menu-choice {
   display: flex;
   align-items: center;

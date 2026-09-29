@@ -40,33 +40,38 @@
 ### PLAN
 
 Dave wil de vier symbolen uit zijn screenshot (groene cirkel, blauwe driehoek, paarse ruit, oranje
-vijfhoek) als teken voor dkj_rating, één symbool per paar stars.
+vijfhoek) als teken voor dkj_rating, één symbool per paar tiers.
 
 ### CREATE
 
-- [x] `RatingSymbol` in `TrackRegister.tsx`: star-1/2 cirkel, star-3/4 driehoek, star-5/6 ruit, star-7/8 vijfhoek
+- [x] `RatingSymbol` in `TrackRegister.tsx`: tier-1/2 cirkel, tier-3/4 driehoek, tier-5/6 ruit, tier-7/8 vijfhoek
 - [x] Vormen in `_track-register.scss` via `clip-path`, kleur exact uit Daves screenshot als `--rating-*`-tokens in `_root.scss`
 - [x] Symbool in de cel én in het keuzemenu van het potloodje
+- [x] Waarden hernoemd van `star-N` naar `tier-N` (Dave: je ziet geen ster): `fields.ts`, de export
+  (1× tier-3, 11.638× tier-4) en `fillDefaultRatings` zet een oude `star-N` in de database om
 
 ### TEST
 
-- [x] Test in `TrackRegister.test.tsx`: de juiste vorm per paar stars; suite en typecheck groen
+- [x] Test in `TrackRegister.test.tsx`: de juiste vorm per paar tiers; suite en typecheck groen
 - [ ] Dave bekijkt het trackregister in de browser
 
 ### DEPLOY: feat/rating-symbols
 
-Interne weergave: het trackregister toont bij elke waardering een gekleurd symbool.
+Interne weergave: het trackregister toont bij elke waardering een gekleurd symbool, en de waarden van
+`dkj_rating` heten `tier-1` tot `tier-8` in plaats van `star-1` tot `star-8`. De sync zet een oude
+`star-N` in de database om naar `tier-N` met hetzelfde getal.
 
-**Score:** 2
+**Score:** 3
 
 #### What makes this deploy extra special
 
-De eigen waardering is in één oogopslag te lezen: star-1/2 een groene cirkel, star-3/4 een blauwe
-driehoek, star-5/6 een paarse ruit en star-7/8 een oranje vijfhoek, in de tabel en in het keuzemenu.
+De eigen waardering is in één oogopslag te lezen: tier-1/2 een groene cirkel, tier-3/4 een blauwe
+driehoek, tier-5/6 een paarse ruit en tier-7/8 een oranje vijfhoek, in de tabel en in het keuzemenu. De waarden heten nu `tier-1` tot `tier-8` (was `star-1` tot `star-8`),
+want je ziet geen ster; je eigen keuzes blijven staan met hetzelfde getal.
 
 **Score:** 3
 
 #### Pull Request
 
-De eigen waardering krijgt een gekleurd symbool per paar stars
+De eigen waardering heet tier en krijgt een gekleurd symbool per paar
 

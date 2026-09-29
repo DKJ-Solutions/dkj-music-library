@@ -278,14 +278,14 @@ alleen gevuld zolang het leeg is, en het trackregister toont het in de kolom `ye
 
 ### De waardering: `dkj_rating`
 
-`dkj_rating` is je eigen waardering van een nummer, van `star-1` (laag) tot `star-8` (hoog). Elke track
-krijgt standaard `star-4`: bij elke sync (en bij `npm run library:assign-ids`) wordt het veld op `star-4`
+`dkj_rating` is je eigen waardering van een nummer, van `tier-1` (laag) tot `tier-8` (hoog). Elke track
+krijgt standaard `tier-4`: bij elke sync (en bij `npm run library:assign-ids`) wordt het veld op `tier-4`
 gezet zolang het leeg is, dus een waardering die je zelf hebt gekozen blijft staan
 (`fillDefaultRatings` in `src/lib/library/artistIds.ts`). Het trackregister toont het in de kolom
 `dkj_rating`, en je kunt erop sorteren en zoeken.
 
 Het is het eerste veld dat je in de frontend zelf wijzigt: klik op het potloodje achter de waarde, kies
-een star, en hij wordt meteen opgeslagen (`POST /api/spotify/rating`, zie
+een tier, en hij wordt meteen opgeslagen (`POST /api/spotify/rating`, zie
 `src/lib/library/rating.ts`). Dat schrijft in de database én in de export. Mislukt het opslaan, dan
 komt de vorige waarde terug en staat de reden in de tooltip.
 

@@ -171,11 +171,11 @@ describe("toSqlValue", () => {
     expect(() => toSqlValue(group, 5)).toThrow(TrackInputError);
   });
 
-  it("kent voor dkj_rating alleen star-1 tot en met star-8", () => {
+  it("kent voor dkj_rating alleen tier-1 tot en met tier-8", () => {
     const rating = TRACK_FIELDS.find((f) => f.key === "dkj_rating")!;
-    expect(rating.options).toEqual(["star-1", "star-2", "star-3", "star-4", "star-5", "star-6", "star-7", "star-8"]);
-    expect(toSqlValue(rating, "STAR-5")).toBe("star-5");
-    expect(() => toSqlValue(rating, "star-9")).toThrow(TrackInputError);
+    expect(rating.options).toEqual(["tier-1", "tier-2", "tier-3", "tier-4", "tier-5", "tier-6", "tier-7", "tier-8"]);
+    expect(toSqlValue(rating, "TIER-5")).toBe("tier-5");
+    expect(() => toSqlValue(rating, "tier-9")).toThrow(TrackInputError);
     expect(() => toSqlValue(rating, "4")).toThrow(TrackInputError);
   });
 

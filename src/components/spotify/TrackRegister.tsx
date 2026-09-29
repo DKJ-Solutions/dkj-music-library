@@ -221,8 +221,8 @@ function Dropdown({
   );
 }
 
-// Het symbool per paar stars (Dave): star-1/2 een groene cirkel, star-3/4 een blauwe driehoek,
-// star-5/6 een paarse ruit, star-7/8 een oranje vijfhoek. De vorm staat in _track-register.scss.
+// Het symbool per paar tiers (Dave): tier-1/2 een groene cirkel, tier-3/4 een blauwe driehoek,
+// tier-5/6 een paarse ruit, tier-7/8 een oranje vijfhoek. De vorm staat in _track-register.scss.
 const RATING_SYMBOLS = [
   { shape: "circle", colour: "green" },
   { shape: "triangle", colour: "blue" },
@@ -231,7 +231,7 @@ const RATING_SYMBOLS = [
 ] as const;
 
 function RatingSymbol({ rating }: { rating: string }) {
-  const level = Number(rating.replace(/^star-/, ""));
+  const level = Number(rating.replace(/^tier-/, ""));
   const symbol = RATING_SYMBOLS[Math.ceil(level / 2) - 1];
   if (!symbol) return null;
   return (
@@ -243,8 +243,8 @@ function RatingSymbol({ rating }: { rating: string }) {
   );
 }
 
-/** De waardering met een potloodje erachter (Dave): klik erop en de acht stars verschijnen; een klik op
- *  een star maakt hem de nieuwe waarde en slaat hem meteen op (saveRating, POST /api/spotify/rating).
+/** De waardering met een potloodje erachter (Dave): klik erop en de acht tiers verschijnen; een klik op
+ *  een tier maakt hem de nieuwe waarde en slaat hem meteen op (saveRating, POST /api/spotify/rating).
  *  Optimistisch: de tabel toont de keuze direct, zodat sorteren en zoeken er meteen mee werken. Mislukt
  *  het opslaan, dan komt de vorige waarde terug en staat de reden in de tooltip -- een waardering die
  *  alleen in de browser staat, zou bij de volgende paginalading stilletjes verdwijnen. */

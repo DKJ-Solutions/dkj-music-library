@@ -370,8 +370,12 @@ export function fillGenresFromPlaylists(db: DatabaseSync): number {
 }
 
 /** Zet `dkj_rating` op DEFAULT_RATING bij elke track waar het nog leeg is; een zelf gekozen waardering
- *  blijft staan. Geeft het aantal gevulde tracks terug. */
+ *  blijft staan. Geeft het aantal gevulde tracks terug. Een waardering onder de oude naam (star-N, tot
+ *  29 september 2026) wordt eerst tier-N, met hetzelfde getal -- de naam veranderde, de keuze niet. */
 export function fillDefaultRatings(db: DatabaseSync): number {
+  db.prepare(
+    `UPDATE ${TRACKS_TABLE} SET "${RATING_KEY}" = 'tier-' || substr("${RATING_KEY}", 6) WHERE lower("${RATING_KEY}") LIKE 'star-%'`
+  ).run();
   const result = db
     .prepare(`UPDATE ${TRACKS_TABLE} SET "${RATING_KEY}" = ?, updated_at = ? WHERE "${RATING_KEY}" IS NULL`)
     .run(DEFAULT_RATING, new Date().toISOString());
