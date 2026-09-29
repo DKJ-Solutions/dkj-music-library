@@ -49,7 +49,7 @@
 ### TEST
 
 - [x] Nieuwe tests in `register.test.ts` (kleurfilter) en `TrackRegister.test.tsx` (optie, telling, filter en herstel na een nieuw bezoek); hele suite (901 tests), `tsc --noEmit`, `eslint` op de gewijzigde bestanden en een Sass-compile groen
-- [ ] Dave kijkt naar de uitgeklapte dropdowns en het kleurfilter op `/spotify/trackregister`
+- [x] Dave kijkt naar de uitgeklapte dropdowns en het kleurfilter op `/spotify/trackregister` (akkoord: "merge pr")
 
 ### DEPLOY: feat/filter-meta-options-dim
 
