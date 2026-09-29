@@ -166,10 +166,10 @@ describe("TrackRegister", () => {
     expect(screen.getByText("1 van 3 nummers")).toBeTruthy();
   });
 
-  it("toont dkj_rating als kolom", () => {
-    render(<TrackRegister rows={[row(1, { rating: "2" }), row(2), row(3, { rating: "5" })]} artistCount={1} />);
+  it("toont dkj_rating als kolom met een label", () => {
+    render(<TrackRegister rows={[row(1, { rating: "star-2" }), row(2), row(3, { rating: "star-8" })]} artistCount={1} />);
     expect(screen.getByRole("columnheader", { name: /dkj_rating/ })).toBeTruthy();
-    expect(screen.getByText("5", { selector: ".register-rating" })).toBeTruthy();
+    expect(screen.getByText("star-8", { selector: ".register-tag" })).toBeTruthy();
   });
 
   it("filtert op een zelf ingevuld bereik van year", () => {

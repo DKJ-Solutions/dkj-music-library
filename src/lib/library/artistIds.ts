@@ -32,11 +32,13 @@ import {
   ALBUM_KEY,
   ARTIST_IDS_KEY,
   BPM_KEY,
+  DEFAULT_RATING,
   FILE_KEY,
   GENRE_KEY,
   PLAYLISTS_KEY,
   TITLE_KEY,
   PRIMARY_ARTIST_KEY,
+  RATING_KEY,
   TRACK_ID_KEY,
   albumArtistOf,
 } from "./fields";
@@ -367,12 +369,23 @@ export function fillGenresFromPlaylists(db: DatabaseSync): number {
   return fillMissing(db, GENRE_KEY, (track) => genreFromPlaylists(track.playlists));
 }
 
+/** Zet `dkj_rating` op DEFAULT_RATING bij elke track waar het nog leeg is; een zelf gekozen waardering
+ *  blijft staan. Geeft het aantal gevulde tracks terug. */
+export function fillDefaultRatings(db: DatabaseSync): number {
+  const result = db
+    .prepare(`UPDATE ${TRACKS_TABLE} SET "${RATING_KEY}" = ?, updated_at = ? WHERE "${RATING_KEY}" IS NULL`)
+    .run(DEFAULT_RATING, new Date().toISOString());
+  return Number(result.changes);
+}
+
 export interface LibraryIdResult {
   artists: ArtistIdResult;
   /** Tracks die in deze run hun `dkj_bpm` uit de playlists kregen. */
   bpmsFilled: number;
   /** Tracks die in deze run hun `dkj_genre` uit de playlists kregen. */
   genresFilled: number;
+  /** Tracks die in deze run de standaard-`dkj_rating` kregen (DEFAULT_RATING). */
+  ratingsFilled: number;
   /** Tracks die in deze run hun `dkj_album` uit de playlists kregen. */
   albumsFilled: number;
   /** Tracks die in deze run hun `dkj_file` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
@@ -416,6 +429,7 @@ export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot
   const albumsFilled = fillAlbumsFromPlaylists(db);
   const bpmsFilled = fillBpmsFromPlaylists(db);
   const genresFilled = fillGenresFromPlaylists(db);
+  const ratingsFilled = fillDefaultRatings(db);
   const yearsFilled = applyReleaseYears(db, snapshot);
-  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, genresFilled, live, playlistsChanged, primaryArtistsFilled, renumbered, titlesFilled, titlesRefreshed, tracks, yearsFilled };
+  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, genresFilled, live, playlistsChanged, primaryArtistsFilled, ratingsFilled, renumbered, titlesFilled, titlesRefreshed, tracks, yearsFilled };
 }

@@ -277,13 +277,15 @@ alleen gevuld zolang het leeg is, en het trackregister toont het in de kolom `ye
 
 ### De waardering: `dkj_rating`
 
-`dkj_rating` is je eigen waardering van een nummer: een geheel getal van 1 (laag) tot 5 (hoog). Dit veld
-vul je zelf; het wordt niet afgeleid, dus in de export staat het eerst bij elke track op `null`. Het
-trackregister toont het in de kolom `dkj_rating`, en je kunt erop sorteren en zoeken.
+`dkj_rating` is je eigen waardering van een nummer, van `star-1` (laag) tot `star-8` (hoog). Elke track
+krijgt standaard `star-4`: bij elke sync (en bij `npm run library:assign-ids`) wordt het veld op `star-4`
+gezet zolang het leeg is, dus een waardering die je zelf hebt gekozen blijft staan
+(`fillDefaultRatings` in `src/lib/library/artistIds.ts`). Het trackregister toont het in de kolom
+`dkj_rating`, en je kunt erop sorteren en zoeken.
 
 ### Velden met vaste keuzes
 
-`dkj_bpm`, `dkj_genre`, `dkj_album` en `dkj_group` accepteren alleen hun eigen opties; elke andere waarde breekt de import af.
+`dkj_bpm`, `dkj_genre`, `dkj_rating`, `dkj_album` en `dkj_group` accepteren alleen hun eigen opties; elke andere waarde breekt de import af.
 Hoofdletters en spaties tellen niet mee (`128 bpm` wordt `128BPM`).
 
 - **`dkj_group`**: een lijst uit `MMC`, `DJ CYLOW`, `Prive` en `Overige`. De sync vult hem zolang hij

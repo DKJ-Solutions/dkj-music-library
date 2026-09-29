@@ -9,6 +9,7 @@ import {
   applyLibraryIdsFromSnapshot,
   artistPrefix,
   fillAlbumArtists,
+  fillDefaultRatings,
   fillPrimaryArtists,
   formatArtistId,
   planArtistIds,
@@ -250,5 +251,15 @@ describe("refreshTitles", () => {
     expect(getTrack(db, "B")?.dkj_title).toBe("Mijn Titanium");
     expect(getTrack(db, "C")?.dkj_title).toBe("Higher (David Penn Remix)");
     expect(refreshTitles(db)).toBe(0);
+  });
+});
+
+describe("fillDefaultRatings", () => {
+  it("zet star-4 waar dkj_rating leeg is en laat een zelf gekozen waardering staan", () => {
+    const db = memoryDb();
+    upsertTracks(db, [{ dkj_track_id: "a" }, { dkj_track_id: "b", dkj_rating: "star-7" }]);
+    expect(fillDefaultRatings(db)).toBe(1);
+    expect([getTrack(db, "a")?.dkj_rating, getTrack(db, "b")?.dkj_rating]).toEqual(["star-4", "star-7"]);
+    expect(fillDefaultRatings(db)).toBe(0);
   });
 });

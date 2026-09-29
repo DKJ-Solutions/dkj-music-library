@@ -171,6 +171,14 @@ describe("toSqlValue", () => {
     expect(() => toSqlValue(group, 5)).toThrow(TrackInputError);
   });
 
+  it("kent voor dkj_rating alleen star-1 tot en met star-8", () => {
+    const rating = TRACK_FIELDS.find((f) => f.key === "dkj_rating")!;
+    expect(rating.options).toEqual(["star-1", "star-2", "star-3", "star-4", "star-5", "star-6", "star-7", "star-8"]);
+    expect(toSqlValue(rating, "STAR-5")).toBe("star-5");
+    expect(() => toSqlValue(rating, "star-9")).toThrow(TrackInputError);
+    expect(() => toSqlValue(rating, "4")).toThrow(TrackInputError);
+  });
+
   it("kent voor dkj_genre alleen EDM, POP, ALT en OST", () => {
     const genre = TRACK_FIELDS.find((f) => f.key === "dkj_genre")!;
     expect(genre.options).toEqual(["EDM", "POP", "ALT", "OST"]);

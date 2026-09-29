@@ -26,7 +26,7 @@ export interface RegisterRow {
   bpm: string | null;
   /** Het eigen genre (dkj_genre). */
   genre: string | null;
-  /** De eigen waardering (dkj_rating), als tekst: zo zoekt en sorteert het als de andere kolommen. */
+  /** De eigen waardering (dkj_rating), star-1 tot star-8. */
   rating: string | null;
   album: string | null;
   /** De albums die de playlists noemen (albumsOfPlaylists). Meer dan één: de playlists verschillen, en
@@ -88,7 +88,7 @@ export function toRegisterRow(track: StoredTrack, artistNames: Record<string, st
     year: typeof track.year === "number" ? String(track.year) : null,
     bpm: text(track.dkj_bpm),
     genre: text(track.dkj_genre),
-    rating: typeof track.dkj_rating === "number" ? String(track.dkj_rating) : null,
+    rating: text(track.dkj_rating),
     album: text(track.dkj_album),
     albumCandidates: albumsOfPlaylists(playlists.map((p) => p.name)),
     file: text(track.dkj_file),

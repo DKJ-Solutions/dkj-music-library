@@ -44,26 +44,31 @@ stond niet in de vraag; gekozen is een geheel getal van 1 (laag) tot 5 (hoog), z
 niet afgeleid. Een ander type later kost geen data: een typewissel in `fields.ts` laat de kolom staan.
 Daarna (zelfde dag, vóór de visuele check): verberg de kolom `djcylow_mix`. Die komt op deze branch mee,
 zodat beide wijzigingen aan dezelfde tabel in één blik te beoordelen zijn.
+Daarna (Dave): de waardering gaat van 1 tot 8 als acht opties, `star-1` tot `star-8`, en elke track
+krijgt standaard `star-4`. Het veld wordt daarom tekst met options; de standaard wordt gezet zolang het
+veld leeg is, net als de afgeleide velden, zodat een zelf gekozen waardering blijft staan.
 
 ### CREATE
 
-- [x] `fields.ts`: veld `dkj_rating` (integer) en `RATING_KEY`
+- [x] `fields.ts`: veld `dkj_rating` (tekst, options `star-1` t/m `star-8`), `RATING_KEY`, `DEFAULT_RATING`
+- [x] `fillDefaultRatings` (artistIds.ts) in `applyLibraryIdsFromSnapshot`: `star-4` zolang leeg; gemeld door `library:assign-ids`
 - [x] `register.ts`: `rating` in de rij, in het zoeken en als sorteerkolom
-- [x] `TrackRegister.tsx`: kolom `dkj_rating` (4%) na `dkj_genre`; `dkj_title` van 21% naar 17%
+- [x] `TrackRegister.tsx`: kolom `dkj_rating` (6%, als label) na `dkj_genre`
 - [x] `djcylow_mix` naar de verborgen kolommen (switch); vrijgekomen ruimte naar `dkj_title` (25%) en `spotify_playlist` (19%)
-- [x] Export bijgewerkt: elke track `"dkj_rating":null`, verder byte-gelijk (gecontroleerd); README-sectie
+- [x] Export bijgewerkt: alle 11.639 tracks `"dkj_rating":"star-4"`; README-sectie
 - [ ] Visuele check door Dave op `/spotify/trackregister`
 
 ### TEST
 
-- [x] `register.test.ts` en `TrackRegister.test.tsx` uitgebreid; `npm test` (882), typecheck en lint groen
+- [x] `register.test.ts`, `TrackRegister.test.tsx`, `trackStore.test.ts` (options) en `artistIds.test.ts` (standaard) uitgebreid; `npm test` (884), typecheck en lint groen
 
 ### DEPLOY: feat/dkj-rating-field
 
-Nieuw veld `dkj_rating`: je eigen waardering van een nummer, een geheel getal van 1 (laag) tot 5
-(hoog). Je vult het zelf in; het wordt niet afgeleid, dus in de export staat het eerst bij elke track op
-`null`. Het trackregister toont het als kolom `dkj_rating` na `dkj_genre`, en je kunt erop sorteren en
-zoeken. Daarnaast staat `djcylow_mix` niet meer in de gewone tabel maar bij de verborgen kolommen
+Nieuw veld `dkj_rating`: je eigen waardering van een nummer, van `star-1` (laag) tot `star-8` (hoog);
+een andere waarde breekt de import af. Elke track krijgt standaard `star-4`: bij elke sync en bij
+`npm run library:assign-ids` wordt het gezet zolang het leeg is, dus een zelf gekozen waardering blijft
+staan. De export is meteen gevuld: alle 11.639 tracks staan op `star-4`. Het trackregister toont het als
+kolom `dkj_rating` na `dkj_genre`, en je kunt erop sorteren en zoeken. Daarnaast staat `djcylow_mix` niet meer in de gewone tabel maar bij de verborgen kolommen
 (achter de switch); zoeken op de mixnamen blijft werken.
 
 **Score:** 2
@@ -77,5 +82,5 @@ niet meer in de weg: die zit nu achter de switch.
 
 #### Pull Request
 
-Trackregister krijgt dkj_rating (1-5) en verbergt djcylow_mix
+Trackregister krijgt dkj_rating (star-1 t/m star-8) en verbergt djcylow_mix
 
