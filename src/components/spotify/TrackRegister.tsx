@@ -237,7 +237,7 @@ function RatingSymbol({ rating }: { rating: string }) {
   return (
     <span
       className={`register-rating-symbol register-rating-symbol--${symbol.shape}`}
-      style={{ ["--c" as string]: `var(--emotion-${symbol.colour})` }}
+      style={{ ["--c" as string]: `var(--rating-${symbol.colour})` }}
       aria-hidden="true"
     />
   );

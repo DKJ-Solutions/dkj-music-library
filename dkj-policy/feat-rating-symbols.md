@@ -45,7 +45,7 @@ vijfhoek) als teken voor dkj_rating, één symbool per paar stars.
 ### CREATE
 
 - [x] `RatingSymbol` in `TrackRegister.tsx`: star-1/2 cirkel, star-3/4 driehoek, star-5/6 ruit, star-7/8 vijfhoek
-- [x] Vormen in `_track-register.scss` via `clip-path`, kleur uit de `--emotion-*`-tokens (licht en donker)
+- [x] Vormen in `_track-register.scss` via `clip-path`, kleur exact uit Daves screenshot als `--rating-*`-tokens in `_root.scss`
 - [x] Symbool in de cel én in het keuzemenu van het potloodje
 
 ### TEST
