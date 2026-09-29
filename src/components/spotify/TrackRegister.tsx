@@ -424,7 +424,12 @@ function PlayButton({ row, edit }: { row: RegisterRow; edit: CellEdit }) {
       title={playing ? "Speler sluiten" : "Afspelen in de Spotify-speler"}
       onClick={() => edit.togglePlay(row)}
     >
-      <span aria-hidden="true">{playing ? "■" : "▶"}</span>
+      {/* SVG in plaats van ▶/■ als tekst: een tekstteken staat nooit precies in het midden van de
+          cirkel. De driehoek staat in zijn viewBox iets naar rechts (optisch midden, niet het
+          geometrische), anders oogt hij links van het midden. */}
+      <svg className="register-play-icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false">
+        {playing ? <rect x="2" y="2" width="6" height="6" rx="1" /> : <path d="M3.2 1.8 8.4 5 3.2 8.2Z" />}
+      </svg>
     </button>
   );
 }

@@ -50,7 +50,7 @@ oprekken.
 
 - [x] Een afspeelknop vóór de titel in de kolom dkj_title (`PlayButton`)
 - [x] Eén speler boven de tabel (`Player`), met een sluitknop
-- [x] Styling in `_track-register.scss`
+- [x] Styling in `_track-register.scss`; het afspeel- en stopicoon als SVG, zodat het in het midden van de cirkel staat (Dave)
 - [x] Eén klik: de speler via Spotify's iFrame API (`loadSpotifyIframeApi`), die hem zelf start; de kale embed blijft de terugval (Dave: twee klikken was er één te veel)
 
 ### TEST

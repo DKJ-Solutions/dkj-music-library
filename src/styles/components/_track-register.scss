@@ -272,14 +272,26 @@
   width: 20px;
   height: 20px;
   padding: 0;
-  font: inherit;
-  font-size: 9px;
-  line-height: 1;
   border: 1px solid var(--line);
   border-radius: 50%;
   background: none;
   color: var(--muted);
   cursor: pointer;
+  transition: color 0.12s ease, border-color 0.12s ease, background-color 0.12s ease;
+}
+
+// Het icoon (PlayButton): een SVG, zodat hij precies in het midden van de cirkel staat.
+.register-play-icon {
+  display: block;
+  width: 10px;
+  height: 10px;
+  fill: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .register-play {
+    transition: none;
+  }
 }
 
 .register-play--none {
