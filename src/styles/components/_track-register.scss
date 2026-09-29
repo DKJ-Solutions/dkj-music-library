@@ -356,6 +356,70 @@ a.register-menu-item:hover {
   background: var(--accent-soft);
 }
 
+// Een keuze in een menu (de stars van dkj_rating): een knop die eruitziet als een menuregel.
+.register-menu-choice {
+  font-family: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.register-menu-choice:hover,
+.register-menu-choice:focus-visible {
+  background: var(--accent-soft);
+  outline: none;
+}
+
+.register-menu-choice[aria-current="true"] {
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+
+.register-menu-choice[aria-current="true"]::after {
+  content: " ✓";
+}
+
+// dkj_rating: de waarde met een potloodje erachter, dat het menu met de stars opent.
+.register-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+}
+
+.register-rating.is-busy {
+  opacity: 0.6;
+}
+
+.register-rating.is-error .register-tag {
+  color: var(--status-critical);
+}
+
+.register-rating-edit {
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  padding: 2px 4px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.register-rating-edit:hover,
+.register-rating-edit[aria-expanded="true"] {
+  color: var(--accent-ink);
+  border-color: var(--line);
+  background: var(--accent-soft);
+}
+
+.register-rating-edit:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 .register-menu-item--static {
   cursor: default;
   color: var(--ink);

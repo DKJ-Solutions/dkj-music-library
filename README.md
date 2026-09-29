@@ -6,7 +6,8 @@ machine.
 - **Spotify-mirror** (`/spotify`): een read-only back-up van de Spotify-playlists, met doorzoeken,
   groeperen en filteren, een dashboard, de BPM- en wereld-indeling, en de brug naar de DJ Cylow-mixen.
   Er gaat maar één ding terug naar Spotify, en dat staat in `src/lib/spotify/playlistApi.ts`: de naam
-  en beschrijving van een playlist die bij een mix hoort. Verder schrijft de app niets.
+  en beschrijving van een playlist die bij een mix hoort. Verder schrijft de app niets naar Spotify. In
+  de eigen bibliotheek kun je één veld zelf aanpassen: `dkj_rating`, in het trackregister.
 - **Desktop-mirror**: moet nog gebouwd worden.
 
 De app kwam op 2026-09-27 uit de private repo `life-hub`, en is daar in zijn geheel weggehaald.
@@ -258,7 +259,8 @@ regels staan in `src/lib/library/playlistLinks.ts`.
 ### De mixen: `djcylow_mix`
 
 `djcylow_mix` is de lijst mixen op djcylow.com waarin een track zit, elk met de slug van de mixpagina en
-de titel van de mix; in het register linkt elke naam naar `https://djcylow.com/luister/mix/<slug>`. De
+de titel van de mix. In het register staat hij bij de verborgen kolommen (de switch boven de tabel), en
+daar linkt elke naam naar `https://djcylow.com/luister/mix/<slug>`. De
 koppeling loopt via Spotify, net als bij `spotify_playlist`: de brug koppelt elke mix aan zijn eigen
 MMC-playlist, en een track zit in een mix als hij in die playlist staat. Een mix die alleen in een grote
 kleur-emmer is teruggevonden, telt niet. Ook dit veld wordt bij elke sync opnieuw gezet, maar alleen als
@@ -274,9 +276,38 @@ uit 2015 blijft dus 1997. Kent Spotify alleen de compilatie, dan is dat het jaar
 alleen gevuld zolang het leeg is, en het trackregister toont het in de kolom `year`. De regels staan in
 `src/lib/library/releaseYears.ts`.
 
+### De waardering: `dkj_rating`
+
+`dkj_rating` is je eigen waardering van een nummer, van `star-1` (laag) tot `star-8` (hoog). Elke track
+krijgt standaard `star-4`: bij elke sync (en bij `npm run library:assign-ids`) wordt het veld op `star-4`
+gezet zolang het leeg is, dus een waardering die je zelf hebt gekozen blijft staan
+(`fillDefaultRatings` in `src/lib/library/artistIds.ts`). Het trackregister toont het in de kolom
+`dkj_rating`, en je kunt erop sorteren en zoeken.
+
+Het is het eerste veld dat je in de frontend zelf wijzigt: klik op het potloodje achter de waarde, kies
+een star, en hij wordt meteen opgeslagen (`POST /api/spotify/rating`, zie
+`src/lib/library/rating.ts`). Dat schrijft in de database én in de export. Mislukt het opslaan, dan
+komt de vorige waarde terug en staat de reden in de tooltip.
+
+#### Je wijzigingen op main zetten: `npm run library:publish`
+
+De export staat in git, en direct op `main` committen mag niet: alles gaat via een branch en een PR.
+Dat hoef je niet zelf te doen. Sta op `main`, wijzig wat je wilt in de app, en draai:
+
+```sh
+npm run library:publish            # branch, commit, PR, merge en fold in één keer
+npm run library:publish -- -DryRun # alleen laten zien wat er veranderd is
+```
+
+Het script (`scripts/library/publish-library.ps1`) weigert als je niet op `main` staat, of als er naast
+`data/library/export/` nog iets anders gewijzigd is. Anders zou er werk meeliften dat niet in een
+datawijziging hoort. Daarna maakt het een branch `chore/library-<tijd>`, vult het changelog-item met
+wat er veranderde (bijvoorbeeld "2 tracks gewijzigd (dkj_rating 2)"), en draait het de gewone `open-pr`
+en `ship-pr` van de dkj-policy-plugin. Je eindigt op een bijgewerkte `main`.
+
 ### Velden met vaste keuzes
 
-`dkj_bpm`, `dkj_genre`, `dkj_album` en `dkj_group` accepteren alleen hun eigen opties; elke andere waarde breekt de import af.
+`dkj_bpm`, `dkj_genre`, `dkj_rating`, `dkj_album` en `dkj_group` accepteren alleen hun eigen opties; elke andere waarde breekt de import af.
 Hoofdletters en spaties tellen niet mee (`128 bpm` wordt `128BPM`).
 
 - **`dkj_group`**: een lijst uit `MMC`, `DJ CYLOW`, `Prive` en `Overige`. De sync vult hem zolang hij

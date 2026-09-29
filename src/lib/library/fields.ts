@@ -95,6 +95,15 @@ export const GENRE_KEY = "dkj_genre";
 /** De eigen genres, in de volgorde waarin ze getoond worden. */
 export const DKJ_GENRE_OPTIONS = ["EDM", "POP", "ALT", "OST"] as const;
 
+/** Het veld met de eigen waardering (zie fillDefaultRatings in artistIds.ts). */
+export const RATING_KEY = "dkj_rating";
+
+/** De eigen waarderingen, van laag (star-1) naar hoog (star-8). */
+export const DKJ_RATING_OPTIONS = ["star-1", "star-2", "star-3", "star-4", "star-5", "star-6", "star-7", "star-8"] as const;
+
+/** De waardering die elke track krijgt zolang je er zelf geen hebt gekozen. */
+export const DEFAULT_RATING = "star-4";
+
 /** Het veld met het eigen album (zie albumFromPlaylists.ts). */
 export const ALBUM_KEY = "dkj_album";
 
@@ -158,6 +167,12 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
     label: "Mixen op djcylow.com waarin de track zit, als { slug, name }; bij elke sync ververst zolang de mix-bron er is (djcylowMixes.ts)",
   },
   { key: "dkj_genre", type: "text", label: "Eigen genre", options: DKJ_GENRE_OPTIONS },
+  {
+    key: "dkj_rating",
+    type: "text",
+    label: "Eigen waardering, star-1 (laag) tot star-8 (hoog); standaard star-4, tenzij zelf ingevuld",
+    options: DKJ_RATING_OPTIONS,
+  },
   // Nieuw veld? Voeg het hier toe, bv.:
   // { key: "energy", type: "integer", label: "Energie 1-10" },
 ];

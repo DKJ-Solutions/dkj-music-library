@@ -14,6 +14,7 @@ function stored(over: Partial<StoredTrack> = {}): StoredTrack {
     year: 2014,
     dkj_bpm: null,
     dkj_genre: null,
+    dkj_rating: null,
     dkj_album: null,
     dkj_file: "Mark Ronson - Uptown Funk",
     dkj_group: ["MMC"],
@@ -26,7 +27,7 @@ function stored(over: Partial<StoredTrack> = {}): StoredTrack {
 
 describe("toRegisterRow", () => {
   it("neemt de eigen velden over en zoekt de artiestnamen op", () => {
-    const row = toRegisterRow(stored({ dkj_bpm: "112BPM", dkj_genre: "POP" }), { MAR01: "Mark Ronson" });
+    const row = toRegisterRow(stored({ dkj_bpm: "112BPM", dkj_genre: "POP", dkj_rating: "star-6" }), { MAR01: "Mark Ronson" });
     expect(row).toEqual({
       id: "MAR01-BRU01-01",
       title: "Uptown Funk",
@@ -37,6 +38,7 @@ describe("toRegisterRow", () => {
       year: "2014",
       bpm: "112BPM",
       genre: "POP",
+      rating: "star-6",
       album: null,
       albumCandidates: [],
       file: "Mark Ronson - Uptown Funk",
