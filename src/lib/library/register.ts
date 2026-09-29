@@ -47,11 +47,15 @@ export interface RegisterRow {
 /** Filterwaarde voor "geen waarde ingevuld"; geen geldige optie van dkj_bpm of dkj_album. */
 export const EMPTY_FILTER = "__leeg__";
 
+/** Albumfilter voor "leeg, maar de playlists noemen meer albums" (albumCandidates): die tracks wachten op
+ *  jouw keuze en tonen in de cel een menu "N albums", dus ze staan apart van "Leeg" (Dave). */
+export const CANDIDATES_FILTER = "__kandidaten__";
+
 export interface RegisterFilter {
   term: string;
   /** "" = alle, EMPTY_FILTER = leeg, anders een optie. */
   bpm: string;
-  /** Ook een kleur uit DKJ_ALBUM_COLOURS: dan past elk album van die kleur (albumMatches). */
+  /** Ook een kleur uit DKJ_ALBUM_COLOURS, of CANDIDATES_FILTER (albumMatches). */
   album: string;
   /** Leeg of weggelaten = alle. */
   genre?: string;
@@ -118,11 +122,20 @@ export function searchText(row: RegisterRow): string {
 const matches = (value: string | null, want: string) =>
   want === "" || (want === EMPTY_FILTER ? value === null : value === want);
 
+/** Onder welke lege stand een rij valt als `album` leeg is: CANDIDATES_FILTER als de playlists meer
+ *  albums noemen, anders EMPTY_FILTER. Dezelfde grens als de cel (Album in TrackRegister.tsx). */
+function emptyAlbumState(row: Pick<RegisterRow, "albumCandidates">): string {
+  return row.albumCandidates.length >= 2 ? CANDIDATES_FILTER : EMPTY_FILTER;
+}
+
 /** Het albumfilter: een kleur ("Green") past bij elk album van die kleur, Light of Full, (f) of (m)
- *  (Dave); anders geldt matches(). Een kleur is zelf nooit een album, dus de twee botsen niet. */
-export function albumMatches(album: string | null, want: string): boolean {
-  if ((DKJ_ALBUM_COLOURS as readonly string[]).includes(want)) return album !== null && album.startsWith(`${want} `);
-  return matches(album, want);
+ *  (Dave). Een kleur is zelf nooit een album, dus de twee botsen niet. EMPTY_FILTER past alleen bij een
+ *  rij zonder album en zonder kandidaten, CANDIDATES_FILTER bij een rij zonder album met kandidaten. */
+export function albumMatches(row: Pick<RegisterRow, "album" | "albumCandidates">, want: string): boolean {
+  if (want === "") return true;
+  if ((DKJ_ALBUM_COLOURS as readonly string[]).includes(want)) return row.album !== null && row.album.startsWith(`${want} `);
+  if (want === EMPTY_FILTER || want === CANDIDATES_FILTER) return row.album === null && emptyAlbumState(row) === want;
+  return row.album === want;
 }
 
 /** Een lijst past als hij de gekozen waarde bevat; EMPTY_FILTER past bij een lege lijst. */
@@ -156,18 +169,22 @@ export function filterRegister(
     (row, i) =>
       (term === "" || haystacks[i].includes(term)) && matches(row.bpm, filter.bpm) &&
       matches(row.genre, filter.genre ?? "") &&
-      albumMatches(row.album, filter.album) &&
+      albumMatches(row, filter.album) &&
       matchesList(row.groups, filter.group ?? "") &&
       inYearRange(row.year, from, to)
   );
 }
 
-/** Hoe vaak elke waarde van `key` voorkomt; lege waarden tellen onder EMPTY_FILTER. */
+/** Hoe vaak elke waarde van `key` voorkomt; lege waarden tellen onder EMPTY_FILTER, een leeg album met
+ *  kandidaten onder CANDIDATES_FILTER. */
 export function countBy(rows: readonly RegisterRow[], key: "bpm" | "genre" | "album" | "groups"): Map<string, number> {
   const counts = new Map<string, number>();
   for (const row of rows) {
     // Bij een lijst telt de rij mee bij elk van zijn waarden.
-    const values = key === "groups" ? (row.groups.length > 0 ? row.groups : [EMPTY_FILTER]) : [row[key] ?? EMPTY_FILTER];
+    const values =
+      key === "groups" ? (row.groups.length > 0 ? row.groups : [EMPTY_FILTER])
+      : key === "album" ? [row.album ?? emptyAlbumState(row)]
+      : [row[key] ?? EMPTY_FILTER];
     for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
   }
   return counts;

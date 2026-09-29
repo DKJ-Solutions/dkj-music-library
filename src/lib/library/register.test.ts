@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EMPTY_FILTER, countBy, filterRegister, searchText, sortRegister, toRegisterRow, type RegisterRow } from "./register";
+import { CANDIDATES_FILTER, EMPTY_FILTER, countBy, filterRegister, searchText, sortRegister, toRegisterRow, type RegisterRow } from "./register";
 import type { StoredTrack } from "./trackStore";
 
 function stored(over: Partial<StoredTrack> = {}): StoredTrack {
@@ -96,6 +96,21 @@ describe("filterRegister", () => {
     expect(pick("Green")).toEqual(["A0", "A1"]);
     expect(pick("Yellow")).toEqual(["A2"]);
     expect(pick("Magenta")).toEqual([]);
+  });
+
+  it("scheidt bij dkj_album Leeg (geen kandidaten) van Meerdere kandidaten, ook in de telling", () => {
+    const albums: RegisterRow[] = [
+      { ...rows[0], id: "B0", album: "Green Light (f)", albumCandidates: [] },
+      { ...rows[0], id: "B1", album: null, albumCandidates: [] },
+      { ...rows[0], id: "B2", album: null, albumCandidates: ["Green Light (f)", "Cyan Full (f)"] },
+    ];
+    const pick = (album: string) => filterRegister(albums, albums.map(searchText), { term: "", bpm: "", album }).map((row) => row.id);
+    expect(pick(EMPTY_FILTER)).toEqual(["B1"]);
+    expect(pick(CANDIDATES_FILTER)).toEqual(["B2"]);
+    // Een kleur kijkt naar het gekozen album, niet naar de kandidaten.
+    expect(pick("Cyan")).toEqual([]);
+    const counts = countBy(albums, "album");
+    expect([counts.get("Green Light (f)"), counts.get(EMPTY_FILTER), counts.get(CANDIDATES_FILTER)]).toEqual([1, 1, 1]);
   });
 
   it("filtert op een bereik van year, beide grenzen inclusief", () => {

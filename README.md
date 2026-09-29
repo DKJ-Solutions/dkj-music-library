@@ -94,7 +94,8 @@ iedereen te lezen zodra je ze pusht.
 
 Start de app (`npm run dev`) en open `/spotify/trackregister`; op `/spotify` staat de link bovenaan. Je
 ziet elk nummer met zijn eigen velden, en je kunt zoeken en filteren op `dkj_bpm`, `dkj_genre`,
-`dkj_album` (ook op alleen een kleur, zoals Green: Light en Full samen) en `dkj_group`. De pagina leest de bibliotheek en niet de Spotify-snapshot, dus hij werkt op elke kloon van de repo, ook
+`dkj_album` (ook op alleen een kleur, zoals Green: Light en Full samen; "Leeg" is zonder enig album,
+"Meerdere kandidaten" is leeg omdat de playlists verschillende albums noemen) en `dkj_group`. De pagina leest de bibliotheek en niet de Spotify-snapshot, dus hij werkt op elke kloon van de repo, ook
 zonder Spotify-login of sync. Een lege of ontbrekende database wordt bij het openen uit de export
 opgebouwd.
 
