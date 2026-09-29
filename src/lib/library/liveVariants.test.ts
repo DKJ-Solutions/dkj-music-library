@@ -46,7 +46,7 @@ describe("mergeLiveVariants", () => {
         album: "Back In Black",
         dkj_artist_id: ["ACD01"],
         spotify_playlist: [{ id: "p2", name: "classic" }, { id: "p1", name: "softrock" }],
-        dkj_group: ["Prive", "Overige"],
+        dkj_group: ["DJ CYLOW", "Prive"],
       },
       { dkj_track_id: "ACD01-03", spotify_track_id: "other", title: "Thunderstruck", artists: ["AC/DC"] },
     ]);
@@ -62,7 +62,7 @@ describe("mergeLiveVariants", () => {
       album: "Back In Black",
       bpm: 127,
       spotify_playlist: [{ id: "p2", name: "classic" }, { id: "p1", name: "softrock" }],
-      dkj_group: ["Prive", "Overige"],
+      dkj_group: ["DJ CYLOW", "Prive"],
     });
     expect(links(db)).toEqual([
       { spotify_track_id: "live", dkj_track_id: "ACD01-02", song_key: `${title.toLowerCase()}|acdc` },

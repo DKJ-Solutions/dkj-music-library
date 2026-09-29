@@ -461,16 +461,16 @@ const VISIBLE_COLUMNS: readonly Column[] = [
     ),
   },
   {
-    key: "bpm",
-    field: "dkj_bpm",
-    width: "7%",
-    cell: (row, term) => (row.bpm ? <span className="register-tag"><Highlight text={row.bpm} term={term} /></span> : <Empty />),
-  },
-  {
     key: "genre",
     field: "dkj_genre",
     width: "6%",
     cell: (row, term) => (row.genre ? <span className="register-tag"><Highlight text={row.genre} term={term} /></span> : <Empty />),
+  },
+  {
+    key: "bpm",
+    field: "dkj_bpm",
+    width: "7%",
+    cell: (row, term) => (row.bpm ? <span className="register-tag"><Highlight text={row.bpm} term={term} /></span> : <Empty />),
   },
   {
     key: "rating",

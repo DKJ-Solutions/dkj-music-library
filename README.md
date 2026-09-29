@@ -310,15 +310,14 @@ en `ship-pr` van de dkj-policy-plugin. Je eindigt op een bijgewerkte `main`.
 `dkj_bpm`, `dkj_genre`, `dkj_rating`, `dkj_album` en `dkj_group` accepteren alleen hun eigen opties; elke andere waarde breekt de import af.
 Hoofdletters en spaties tellen niet mee (`128 bpm` wordt `128BPM`).
 
-- **`dkj_group`**: een lijst uit `MMC`, `DJ CYLOW`, `Prive` en `Overige`. De sync vult hem zolang hij
-  leeg is met de werelden van de playlists van de track (een playlist met een beschrijving telt
-  sowieso als MMC); staat een track in meer werelden, dan heeft hij meer groepen. `Overige` zet je
-  zelf (`src/lib/library/groupFromWorlds.ts`).
+- **`dkj_group`**: een lijst uit `MMC`, `DJ CYLOW` en `Prive`. De sync vult hem zolang hij leeg is met
+  de werelden van de playlists van de track (een playlist met een beschrijving telt sowieso als MMC);
+  staat een track in meer werelden, dan heeft hij meer groepen (`src/lib/library/groupFromWorlds.ts`).
 - **`dkj_genre`**: `EDM`, `POP`, `ALT` of `OST`. Het veld wordt bij elke sync uit de playlists afgeleid
   zolang het leeg is: het genre als los woord in de naam (`128BPM EDM`, `Classic Pop`, `🟢 ALT`,
   `| OST`), en House Mix, Drum & Bass en D&B/DNB zijn EDM. Noemen de playlists verschillende genres, dan
   wint het meest genoemde; bij een gelijke stand blijft het leeg (`src/lib/library/genreFromPlaylists.ts`).
-- **`dkj_bpm`**: `128BPM`, `112BPM`, `176BPM`, `144BPM`, `96BPM`. Het veld wordt bij elke sync uit de
+- **`dkj_bpm`**: `96BPM`, `112BPM`, `128BPM`, `144BPM`, `176BPM`. Het veld wordt bij elke sync uit de
   playlists afgeleid zolang het leeg is: een BPM in de naam (`128BPM EDM`), House Mix is 128, Drum &
   Bass en D&B/DNB zijn 176. Noemen de playlists verschillende BPM's, dan wint de meest genoemde; bij
   een gelijke stand blijft het leeg (`src/lib/library/bpmFromPlaylists.ts`).

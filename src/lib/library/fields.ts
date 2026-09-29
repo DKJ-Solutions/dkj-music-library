@@ -86,8 +86,8 @@ export function albumArtistOf(names: readonly string[]): string | null {
   return names.length > 0 ? names.join(ALBUM_ARTIST_SEPARATOR) : null;
 }
 
-/** De eigen BPM-groepen, in de volgorde waarin ze getoond worden. */
-export const DKJ_BPM_OPTIONS = ["128BPM", "112BPM", "176BPM", "144BPM", "96BPM"] as const;
+/** De eigen BPM-groepen, van laag naar hoog: de volgorde waarin ze getoond worden. */
+export const DKJ_BPM_OPTIONS = ["96BPM", "112BPM", "128BPM", "144BPM", "176BPM"] as const;
 
 /** Het veld met het eigen genre. */
 export const GENRE_KEY = "dkj_genre";
@@ -158,7 +158,7 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
     key: "dkj_group",
     type: "json",
     label: "Eigen groepen, als lijst: de werelden van de playlists van de track (groupFromWorlds.ts)",
-    options: ["MMC", "DJ CYLOW", "Prive", "Overige"],
+    options: ["MMC", "DJ CYLOW", "Prive"],
   },
   { key: "dkj_title", type: "text", label: "Alleen de titel, zoals in dkj_file na de artiesten (fileName.ts), tenzij zelf ingevuld" },
   {

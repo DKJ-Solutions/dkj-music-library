@@ -161,9 +161,9 @@ describe("toSqlValue", () => {
     expect(() => toSqlValue(field("boolean"), "misschien")).toThrow(TrackInputError);
   });
 
-  it("kent voor dkj_group een lijst uit MMC, DJ CYLOW, Prive en Overige", () => {
+  it("kent voor dkj_group een lijst uit MMC, DJ CYLOW en Prive", () => {
     const group = TRACK_FIELDS.find((f) => f.key === "dkj_group")!;
-    expect(group.options).toEqual(["MMC", "DJ CYLOW", "Prive", "Overige"]);
+    expect(group.options).toEqual(["MMC", "DJ CYLOW", "Prive"]);
     expect(toSqlValue(group, ["prive", "MMC", "mmc"])).toBe('["MMC","Prive"]');
     expect(toSqlValue(group, "dj cylow; Prive")).toBe('["DJ CYLOW","Prive"]');
     expect(toSqlValue(group, [])).toBeNull();
