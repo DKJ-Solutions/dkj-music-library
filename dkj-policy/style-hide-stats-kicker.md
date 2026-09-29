@@ -48,7 +48,7 @@
 ### TEST
 
 - [x] `vitest run`: 65 bestanden, 910 tests groen
-- [ ] Dave bekijkt het resultaat in de werkkopie (inclusief de kleinere padding-top)
+- [x] Dave bekijkt het resultaat in de werkkopie (goedgekeurd: "nu mag je mergen")
 
 ### DEPLOY: style/hide-stats-kicker
 
