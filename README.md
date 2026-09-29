@@ -326,7 +326,9 @@ Hoofdletters en spaties tellen niet mee (`128 bpm` wordt `128BPM`).
   `Green Light (f)`. De acht kleuren zijn Green, Yellow, Red, Purple, Cyan, Blue, Orange en Magenta.
   Het veld wordt bij elke sync uit de playlists afgeleid zolang het leeg is: noemen alle playlists van
   een track (`Magenta Light (m) ♦️ 128BPM EDM`) hetzelfde album, dan wordt dat het album. Noemen ze
-  verschillende albums, dan blijft het leeg en kies je zelf (`src/lib/library/albumFromPlaylists.ts`).
+  verschillende albums, dan blijft het leeg en kies je zelf. Staat een track in een playlist met
+  `Feestzaal` in de naam, dan wordt het `Cyan Full (f)`, wat de andere playlists ook noemen
+  (`src/lib/library/albumFromPlaylists.ts`).
 
 ### Een veld toevoegen
 
