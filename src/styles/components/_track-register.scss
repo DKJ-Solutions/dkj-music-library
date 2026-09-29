@@ -92,6 +92,16 @@
   width: 72px;
 }
 
+/* "Alle" en "Leeg" zijn geen waarde maar een stand van het filter, dus staan ze minder fel dan de
+   opties die je echt kiest (Dave). */
+.register-filter option {
+  color: var(--ink);
+}
+
+.register-filter .register-option-meta {
+  color: var(--muted);
+}
+
 .register-filter select:focus-visible,
 .register-year-input:focus-visible,
 .register-pager button:focus-visible {

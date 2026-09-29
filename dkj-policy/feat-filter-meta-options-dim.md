@@ -41,17 +41,26 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `TrackRegister.tsx`: de opties "Alle" en "Leeg" van de vier filter-dropdowns (dkj_bpm, dkj_genre, dkj_album, dkj_group) krijgen de klasse `register-option-meta`
+- [x] `_track-register.scss`: die klasse krijgt `--muted`, de gewone opties expliciet `--ink`
 
 ### TEST
 
+- [x] Hele suite (899 tests), `tsc --noEmit`, `eslint` op het component en een Sass-compile groen
+- [ ] Dave kijkt naar de uitgeklapte dropdowns op `/spotify/trackregister`
+
 ### DEPLOY: feat/filter-meta-options-dim
 
-**Score:**
+In de filters van het trackregister staan "Alle" en "Leeg" nu in een gedempte kleur, zodat de waarden
+die je echt kiest eruit springen.
+
+**Score:** 1
 
 #### What makes this deploy extra special
 
-**Score:**
+Alleen de kleur van twee opties in een eigen overzicht; niemand buiten de repo merkt het.
+
+**Score:** N/A
 
 #### Pull Request
 
