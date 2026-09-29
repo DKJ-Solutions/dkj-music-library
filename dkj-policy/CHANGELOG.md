@@ -2,7 +2,36 @@
 
 ## [Unreleased]
 
-**42 / 54 minor entries** <!-- pending-tally -->
+**43 / 55 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/47-musicbrainz-year-namesake · 20260929-111618Z
+
+Een te vroeg MusicBrainz-jaar trekt het jaar op de Maple Classic- en Classic Pop-pagina niet meer terug.
+Opnames van een andere artiest met dezelfde naam tellen niet meer mee, want `chooseRelease()` zet de
+artiest (MBID) van de beste treffer vast. Voor de gevallen waarin MusicBrainz zelf een verkeerd jaar
+heeft, is er een vaste lijst, `src/lib/musicbrainz/releaseYearOverrides.ts`: een jaar daarin wint van
+alle andere bronnen. De lijst begint met *Smile* (2006), *Whatever You Want* (1979) en *Mas Que Nada*
+(2006). *Wonderful World* van James Morrison komt pas goed na
+`npm run library:release-years -- --refresh`, omdat de cache het oude jaar nog bewaart.
+Bij *You Ain't Seen Nothin' Yet* (Randy Bachman) is niet na te gaan welke opname het is, dus die houdt
+1993. Resolves #47.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+De gebruiker van de app ziet op de playlist-pagina's niet langer een jaar dat tien jaar te vroeg is voor
+een bekend nummer, en kan zo'n geval voortaan vastzetten met één regel.
+
+**Score:** 2
+
+#### Pull Request
+
+MusicBrainz-jaar: naamgenoot en uitschieters
+
+[PR #61](https://github.com/DKJ-Solutions/dkj-music-library/pull/61)
+
+---
 
 ### DEPLOY: fix/6-mix-count-without-source · 20260929-110454Z
 
