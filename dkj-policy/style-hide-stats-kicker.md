@@ -41,17 +41,25 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `.kicker` en `.stats` op `display: none` in `_masthead.scss`; de markup blijft staan
 
 ### TEST
 
+- [x] `vitest run`: 65 bestanden, 910 tests groen
+- [ ] Dave bekijkt het resultaat in de werkkopie
+
 ### DEPLOY: style/hide-stats-kicker
 
-**Score:**
+De kicker boven de paginatitel en de rij tellers eronder zijn op elke pagina verborgen, omdat ze te veel
+ruimte innamen. Alleen via CSS: de markup blijft, dus terugzetten is één regel weghalen.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+De gebruiker ziet meer van de inhoud zelf, zonder kopregel en tellers erboven.
+
+**Score:** 2
 
 #### Pull Request
 

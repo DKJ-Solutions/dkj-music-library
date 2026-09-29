@@ -10,6 +10,13 @@
   padding-bottom: 12px;
 }
 
+// .kicker en .stats zijn verborgen (Dave, 29 september 2026): ze namen te veel ruimte in. De markup blijft
+// staan, zodat ze met het weghalen van één regel terugkomen -- en de tests die .stats lezen blijven werken.
+.kicker,
+.stats {
+  display: none !important;
+}
+
 .kicker {
   font-family: var(--font-mono);
   font-size: 12px;
