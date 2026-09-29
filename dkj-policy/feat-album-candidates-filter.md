@@ -41,17 +41,29 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `register.ts`: `CANDIDATES_FILTER` -- een leeg `dkj_album` met twee of meer kandidaten uit de playlists valt niet meer onder `EMPTY_FILTER` maar onder die eigen stand, in `albumMatches` en in `countBy`; dezelfde grens als de cel (`Album` toont vanaf twee kandidaten het menu "N albums")
+- [x] `TrackRegister.tsx`: de dkj_album-dropdown krijgt "Meerdere kandidaten" onder "Leeg" (gedempt, zoals Alle en Leeg); de stat "met een dkj_album" trekt beide lege standen af; de stand is een geldige bewaarde filterwaarde. README volgt
 
 ### TEST
 
+- [x] Nieuwe tests in `register.test.ts` (filter en telling) en `TrackRegister.test.tsx` (opties en filter); hele suite (903 tests), `tsc --noEmit` en `eslint` groen
+- [x] Gemeten op de export (11.639 tracks): Leeg 933, Meerdere kandidaten 2.451 -- samen de 3.384 die "Leeg" eerst toonde
+- [ ] Dave kijkt naar het dkj_album-filter op `/spotify/trackregister`
+
 ### DEPLOY: feat/album-candidates-filter
 
-**Score:**
+"Leeg" in het `dkj_album`-filter toonde ook de tracks waarvan de playlists verschillende albums noemen:
+die hebben geen `dkj_album`, maar de cel toont hun kandidaten als menu "N albums", dus ze leken er een
+te hebben. Die staan nu onder een eigen keuze "Meerdere kandidaten" (2.451 tracks); "Leeg" toont alleen
+nog de tracks zonder enig album (933).
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Alleen een filterkeuze in een eigen overzicht; niemand buiten de repo merkt het.
+
+**Score:** N/A
 
 #### Pull Request
 

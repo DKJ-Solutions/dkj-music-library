@@ -5,7 +5,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { TrackRegister } from "./TrackRegister";
-import type { RegisterRow } from "@/lib/library/register";
+import { CANDIDATES_FILTER, type RegisterRow } from "@/lib/library/register";
 import { REGISTER_PREFS_KEY } from "@/lib/library/registerPrefs";
 
 // Elke test begint met een lege localStorage: anders leest de volgende test de bewaarde stand van de
@@ -276,6 +276,16 @@ describe("TrackRegister", () => {
     render(<TrackRegister rows={withAlbums} artistCount={1} />);
     expect((screen.getByLabelText(/dkj_album/) as HTMLSelectElement).value).toBe("Green");
     expect(bodyRows()).toHaveLength(2);
+  });
+
+  it("toont bij dkj_album Leeg en Meerdere kandidaten apart, en filtert op elk", () => {
+    const withCandidates = [row(1, { album: "Green Light (f)" }), row(2), row(3, { albumCandidates: ["Green Light (f)", "Cyan Full (f)"] })];
+    render(<TrackRegister rows={withCandidates} artistCount={1} />);
+    expect(screen.getByRole("option", { name: "Leeg (1)" })).toBeTruthy();
+    expect(screen.getByRole("option", { name: "Meerdere kandidaten (1)" })).toBeTruthy();
+    fireEvent.change(screen.getByLabelText(/dkj_album/), { target: { value: CANDIDATES_FILTER } });
+    expect(bodyRows()).toHaveLength(1);
+    expect(screen.getByText("2 albums")).toBeTruthy();
   });
 
   it("onthoudt dkj_genre: opnieuw renderen (een nieuw bezoek) herstelt de gekozen waarde", () => {

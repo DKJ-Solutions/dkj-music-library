@@ -9,6 +9,7 @@ import { mixUrl } from "@/lib/library/djcylowMix";
 import { playlistUrl } from "@/lib/library/playlistLink";
 import { saveRating } from "@/lib/library/saveRating";
 import {
+  CANDIDATES_FILTER,
   EMPTY_FILTER,
   SORT_KEYS,
   countBy,
@@ -39,7 +40,7 @@ const GROUP_OPTIONS: readonly string[] = TRACK_FIELDS.find((field) => field.key 
 const PREFS_OPTIONS: RegisterPrefsOptions = {
   bpm: DKJ_BPM_OPTIONS,
   genre: DKJ_GENRE_OPTIONS,
-  album: [...DKJ_ALBUM_COLOURS, ...DKJ_ALBUM_OPTIONS],
+  album: [...DKJ_ALBUM_COLOURS, ...DKJ_ALBUM_OPTIONS, CANDIDATES_FILTER],
   group: GROUP_OPTIONS,
   sortKeys: SORT_KEYS,
 };
@@ -610,7 +611,7 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
         <div className="stat"><b>{nf.format(artistCount)}</b><span>artiesten</span></div>
         <div className="stat"><b>{nf.format(multi)}</b><span>met meer dan één artiest</span></div>
         <div className="stat"><b>{nf.format(rows.length - (bpmCounts.get(EMPTY_FILTER) ?? 0))}</b><span>met een dkj_bpm</span></div>
-        <div className="stat"><b>{nf.format(rows.length - (albumCounts.get(EMPTY_FILTER) ?? 0))}</b><span>met een dkj_album</span></div>
+        <div className="stat"><b>{nf.format(rows.length - (albumCounts.get(EMPTY_FILTER) ?? 0) - (albumCounts.get(CANDIDATES_FILTER) ?? 0))}</b><span>met een dkj_album</span></div>
       </div>
 
       <div className="register-controls">
@@ -704,6 +705,7 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
               </optgroup>
             ))}
             <option className="register-option-meta" value={EMPTY_FILTER}>{label("Leeg", albumCounts.get(EMPTY_FILTER))}</option>
+            <option className="register-option-meta" value={CANDIDATES_FILTER}>{label("Meerdere kandidaten", albumCounts.get(CANDIDATES_FILTER))}</option>
           </select>
         </label>
         <label className="register-filter" htmlFor="register-group">
