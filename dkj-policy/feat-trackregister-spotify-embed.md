@@ -39,19 +39,39 @@
 
 ### PLAN
 
+Optie 2 uit de verkenning (Dave, 29 september 2026): de Spotify-embed-iframe, zonder extra OAuth-scopes.
+Optie 3 (Web Playback SDK) valt af, want die zou de bewust smalle scope-grens in `src/lib/spotify/config.ts`
+oprekken.
+
+- [x] `spotify_track_id` meenemen in `RegisterRow` (`register.ts`)
+- [x] Een embed-URL-helper (`trackEmbed.ts`)
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Een afspeelknop vóór de titel in de kolom dkj_title (`PlayButton`)
+- [x] Eén speler boven de tabel (`Player`), met een sluitknop
+- [x] Styling in `_track-register.scss`
 
 ### TEST
 
+- [x] Fixtures bijgewerkt, en tests voor de speler en voor een track zonder `spotify_track_id`
+- [x] typecheck, eslint en vitest groen (65 files, 907 tests)
+- [~] Automatische browsertest van de embed zelf -- dat is een iframe van Spotify, niet te testen in jsdom; Dave bekijkt het op de dev-server
+
 ### DEPLOY: feat/trackregister-spotify-embed
 
-**Score:**
+In het trackregister staat vóór elke titel een afspeelknop. Die opent één Spotify-speler (embed-iframe)
+boven de tabel, die blijft staan terwijl je door de tabel scrollt, filtert of bladert. Nog een klik op
+dezelfde knop, of op het kruisje, sluit de speler weer. Ben je in dezelfde browser bij Spotify ingelogd,
+dan speelt de hele track, anders een fragment van 30 seconden. Er zijn geen extra OAuth-scopes nodig.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A -- het trackregister is een eigen werkpagina, en bereikt geen andere gebruiker.
+
+**Score:** N/A
 
 #### Pull Request
 

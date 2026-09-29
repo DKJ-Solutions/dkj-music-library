@@ -21,6 +21,7 @@ function stored(over: Partial<StoredTrack> = {}): StoredTrack {
     dkj_title: "Uptown Funk",
     spotify_playlist: [{ id: "p1", name: "Funk" }, { bad: true }],
     djcylow_mix: [{ slug: "red-light-m-edm-128bpm-20260615", name: "Red Mix" }, { slug: 1 }],
+    spotify_track_id: "32OlwWuMpZ6b0aN2RZOeMS",
     ...over,
   };
 }
@@ -46,12 +47,13 @@ describe("toRegisterRow", () => {
       groups: ["MMC"],
       playlists: [{ id: "p1", name: "Funk" }],
       mixes: [{ slug: "red-light-m-edm-128bpm-20260615", name: "Red Mix" }],
+      spotifyTrackId: "32OlwWuMpZ6b0aN2RZOeMS",
     });
   });
 
   it("maakt van ontbrekende of lege velden null en een lege lijst", () => {
-    const row = toRegisterRow(stored({ dkj_artist_id: null, dkj_artist: "", title: null, year: null }), {});
-    expect([row.artistIds, row.artist, row.title, row.year]).toEqual([[], null, "", null]);
+    const row = toRegisterRow(stored({ dkj_artist_id: null, dkj_artist: "", title: null, year: null, spotify_track_id: null }), {});
+    expect([row.artistIds, row.artist, row.title, row.year, row.spotifyTrackId]).toEqual([[], null, "", null, null]);
   });
 });
 

@@ -35,6 +35,7 @@ function row(n: number, over: Partial<RegisterRow> = {}): RegisterRow {
     groups: [],
     playlists: [],
     mixes: [],
+    spotifyTrackId: `sp${n}`,
     ...over,
   };
 }
@@ -329,5 +330,25 @@ describe("TrackRegister", () => {
 
     render(<TrackRegister rows={withGenre} artistCount={1} />);
     expect((screen.getByLabelText(/dkj_genre/) as HTMLSelectElement).value).toBe("");
+  });
+
+  it("speelt een track af in één speler boven de tabel, en sluit hem met dezelfde knop", () => {
+    render(<TrackRegister rows={[row(1), row(2), row(3, { spotifyTrackId: null })]} artistCount={1} />);
+    expect(document.querySelector(".register-player")).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "Nummer 1 afspelen" }));
+    expect(screen.getByTitle("Spotify-speler: Nummer 1").getAttribute("src")).toBe("https://open.spotify.com/embed/track/sp1");
+
+    fireEvent.click(screen.getByRole("button", { name: "Nummer 2 afspelen" }));
+    expect(document.querySelectorAll(".register-player iframe")).toHaveLength(1);
+    expect(screen.getByTitle("Spotify-speler: Nummer 2")).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "Speler van Nummer 2 sluiten" }));
+    expect(document.querySelector(".register-player")).toBeNull();
+  });
+
+  it("geeft een track zonder spotify_track_id geen afspeelknop", () => {
+    render(<TrackRegister rows={[row(1, { spotifyTrackId: null })]} artistCount={1} />);
+    expect(screen.queryByRole("button", { name: /afspelen/ })).toBeNull();
   });
 });

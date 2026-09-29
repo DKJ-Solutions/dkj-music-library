@@ -250,6 +250,93 @@
   color: var(--ink);
 }
 
+// De afspeelknop vóór de titel (PlayButton in TrackRegister.tsx). De titel krijgt de rest van de breedte
+// en wordt nog steeds op één regel afgekapt; een track zonder spotify_track_id houdt een even brede lege plek.
+.register-title-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.register-title-cell .register-oneline {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.register-play {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  font: inherit;
+  font-size: 9px;
+  line-height: 1;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.register-play--none {
+  border-color: transparent;
+  cursor: default;
+}
+
+button.register-play:hover,
+.register-play[aria-pressed="true"] {
+  color: var(--accent-ink);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.register-play:focus-visible,
+.register-player-close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+// De Spotify-speler boven de tabel (Player in TrackRegister.tsx): vaste hoogte, zodat het scrollvak van de
+// tabel eronder de rest van het venster houdt.
+.register-player {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.register-player-frame {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 80px;
+  border: 0;
+  border-radius: 12px;
+}
+
+.register-player-close {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  font: inherit;
+  font-size: 18px;
+  line-height: 1;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.register-player-close:hover {
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
+
 // DRIE VORMEN, ZODAT JE ZONDER KLIKKEN ZIET WAT IETS DOET (Dave):
 //   - een LINK (één playlist) is tekst in de accentkleur, met ↗, zonder rand of vlak: hij opent Spotify;
 //   - een MENU ("3 playlists ▾", "3 artists ▾") is een knop met een gevulde lichte accentachtergrond en

@@ -8,6 +8,7 @@ import { DKJ_ALBUM_COLOURS, DKJ_ALBUM_OPTIONS, DKJ_BPM_OPTIONS, DKJ_GENRE_OPTION
 import { mixUrl } from "@/lib/library/djcylowMix";
 import { playlistUrl } from "@/lib/library/playlistLink";
 import { saveRating } from "@/lib/library/saveRating";
+import { trackEmbedUrl } from "@/lib/library/trackEmbed";
 import {
   CANDIDATES_FILTER,
   EMPTY_FILTER,
@@ -59,9 +60,12 @@ interface Column {
   className?: string;
 }
 
-/** Wat een bewerkbare cel nodig heeft: de waardering van een rij in de tabel zetten (Rating). */
+/** Wat een bewerkbare cel nodig heeft: de waardering van een rij in de tabel zetten (Rating), en de
+ *  track die in de speler staat kiezen (PlayButton). */
 interface CellEdit {
   setRating: (trackId: string, rating: string | null) => void;
+  playingId: string | null;
+  togglePlay: (row: RegisterRow) => void;
 }
 
 /** Klik op een kop: oplopend, nog eens: aflopend, een derde keer: weer de oorspronkelijke volgorde. */
@@ -405,6 +409,48 @@ function OneLine({ text, term, className }: { text: string | null; term: string;
   );
 }
 
+/** De afspeelknop voor de titel: zet de track in de speler boven de tabel, of haalt hem er weer uit. Zonder
+ *  spotify_track_id valt er niets af te spelen, dan staat er een lege plek zodat de titels recht blijven. */
+function PlayButton({ row, edit }: { row: RegisterRow; edit: CellEdit }) {
+  if (!row.spotifyTrackId) return <span className="register-play register-play--none" aria-hidden="true" />;
+  const playing = edit.playingId === row.id;
+  const name = row.dkjTitle || row.title || row.id;
+  return (
+    <button
+      type="button"
+      className="register-play"
+      aria-pressed={playing}
+      aria-label={playing ? `Speler van ${name} sluiten` : `${name} afspelen`}
+      title={playing ? "Speler sluiten" : "Afspelen in de Spotify-speler"}
+      onClick={() => edit.togglePlay(row)}
+    >
+      <span aria-hidden="true">{playing ? "■" : "▶"}</span>
+    </button>
+  );
+}
+
+/** De Spotify-speler boven de tabel (embed-iframe, trackEmbed.ts): één tegelijk, want een iframe per rij
+ *  maakt de pagina traag. Het scrollvak van de tabel eronder scrolt los, dus de speler blijft in beeld. */
+function Player({ row, onClose }: { row: RegisterRow; onClose: () => void }) {
+  if (!row.spotifyTrackId) return null;
+  const name = row.dkjTitle || row.title || row.id;
+  return (
+    <div className="register-player">
+      <iframe
+        key={row.spotifyTrackId}
+        className="register-player-frame"
+        title={`Spotify-speler: ${name}`}
+        src={trackEmbedUrl(row.spotifyTrackId)}
+        height={80}
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      />
+      <button type="button" className="register-player-close" aria-label="Speler sluiten" title="Speler sluiten" onClick={onClose}>
+        ×
+      </button>
+    </div>
+  );
+}
+
 /** Zoveel artiest-ID's staan er als chip; bij meer wordt het een menu, net als bij de playlists (Dave). */
 const ARTIST_IDS_INLINE = 1;
 
@@ -444,7 +490,17 @@ function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term:
 /** De gewone kolommen, in volgorde. dkj_track_id, dkj_file, dkj_artist, dkj_artist_id en djcylow_mix staan
  *  er niet in (Dave); die staan in HIDDEN_COLUMNS, achter de switch, en op alle vijf zoeken kan altijd. */
 const VISIBLE_COLUMNS: readonly Column[] = [
-  { key: "dkjTitle", field: "dkj_title", width: "22%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
+  {
+    key: "dkjTitle",
+    field: "dkj_title",
+    width: "22%",
+    cell: (row, term, edit) => (
+      <span className="register-title-cell">
+        <PlayButton row={row} edit={edit} />
+        <OneLine text={row.dkjTitle} term={term} className="register-title" />
+      </span>
+    ),
+  },
   { key: "albumArtist", field: "dkj_albumartiest", width: "17%", cell: (row, term) => <OneLine text={row.albumArtist} term={term} className="register-album-artist" /> },
   { key: "year", field: "year", width: "5%", cell: (row, term) => <OneLine text={row.year} term={term} className="register-year" /> },
   {
@@ -515,7 +571,13 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
     () => initialRows.map((row) => (row.id in ratings ? { ...row, rating: ratings[row.id] } : row)),
     [initialRows, ratings]
   );
-  const edit: CellEdit = { setRating: (trackId, rating) => setRatings((prev) => ({ ...prev, [trackId]: rating })) };
+  // De track in de speler (Player). Een rij, geen ID: de speler blijft staan als een filter de rij wegfiltert.
+  const [playing, setPlaying] = useState<RegisterRow | null>(null);
+  const edit: CellEdit = {
+    setRating: (trackId, rating) => setRatings((prev) => ({ ...prev, [trackId]: rating })),
+    playingId: playing?.id ?? null,
+    togglePlay: (row) => setPlaying((prev) => (prev?.id === row.id ? null : row)),
+  };
   const [query, setQuery] = useState(DEFAULT_PREFS.query);
   const [yearFrom, setYearFrom] = useState(DEFAULT_PREFS.yearFrom);
   const [yearTo, setYearTo] = useState(DEFAULT_PREFS.yearTo);
@@ -724,6 +786,8 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
           </button>
         )}
       </fieldset>
+
+      {playing && <Player row={playing} onClose={() => setPlaying(null)} />}
 
       <div className="register-table-box" ref={box}>
         <table className="register-table">
