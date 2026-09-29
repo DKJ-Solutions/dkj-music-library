@@ -175,6 +175,15 @@ describe("TrackRegister", () => {
     expect(screen.getByText("star-8", { selector: ".register-tag" })).toBeTruthy();
   });
 
+  it("zet per paar stars een eigen symbool voor de waardering", () => {
+    const ratings = ["star-1", "star-2", "star-3", "star-4", "star-5", "star-6", "star-7", "star-8"];
+    const { container } = render(<TrackRegister rows={ratings.map((rating, i) => row(i + 1, { rating }))} artistCount={1} />);
+    const shapes = [...container.querySelectorAll(".register-rating-symbol")].map((el) =>
+      el.className.replace(/.*register-rating-symbol--/, "")
+    );
+    expect(shapes).toEqual(["circle", "circle", "triangle", "triangle", "diamond", "diamond", "pentagon", "pentagon"]);
+  });
+
   it("wijzigt dkj_rating via het potloodje en slaat de keuze meteen op", async () => {
     const fetchMock = vi.fn(async () => new Response(JSON.stringify({ trackId: "ART01-001", rating: "star-6" }), { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);

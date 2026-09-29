@@ -415,6 +415,36 @@ a.register-menu-item:hover {
   background: var(--accent-soft);
 }
 
+// Het symbool voor een waardering: één vorm en kleur per paar stars (RATING_SYMBOLS in TrackRegister.tsx).
+.register-menu-choice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.register-rating-symbol {
+  width: 10px;
+  height: 10px;
+  background: var(--c);
+  flex: none;
+}
+
+.register-rating-symbol--circle {
+  border-radius: 50%;
+}
+
+.register-rating-symbol--triangle {
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.register-rating-symbol--diamond {
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.register-rating-symbol--pentagon {
+  clip-path: polygon(50% 0, 100% 38%, 82% 100%, 18% 100%, 0 38%);
+}
+
 .register-rating-edit:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 1px;

@@ -39,19 +39,32 @@
 
 ### PLAN
 
+Dave wil de vier symbolen uit zijn screenshot (groene cirkel, blauwe driehoek, paarse ruit, oranje
+vijfhoek) als teken voor dkj_rating, één symbool per paar stars.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `RatingSymbol` in `TrackRegister.tsx`: star-1/2 cirkel, star-3/4 driehoek, star-5/6 ruit, star-7/8 vijfhoek
+- [x] Vormen in `_track-register.scss` via `clip-path`, kleur uit de `--emotion-*`-tokens (licht en donker)
+- [x] Symbool in de cel én in het keuzemenu van het potloodje
 
 ### TEST
 
+- [x] Test in `TrackRegister.test.tsx`: de juiste vorm per paar stars; suite en typecheck groen
+- [ ] Dave bekijkt het trackregister in de browser
+
 ### DEPLOY: feat/rating-symbols
 
-**Score:**
+Interne weergave: het trackregister toont bij elke waardering een gekleurd symbool.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+De eigen waardering is in één oogopslag te lezen: star-1/2 een groene cirkel, star-3/4 een blauwe
+driehoek, star-5/6 een paarse ruit en star-7/8 een oranje vijfhoek, in de tabel en in het keuzemenu.
+
+**Score:** 3
 
 #### Pull Request
 
