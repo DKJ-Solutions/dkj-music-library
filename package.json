@@ -13,7 +13,8 @@
     "library:import": "tsx scripts/library/import-tracks.ts",
     "library:assign-ids": "tsx scripts/library/assign-track-ids.ts",
     "library:sync": "tsx scripts/library/sync-library.ts",
-    "library:release-years": "tsx scripts/library/fetch-release-years.ts"
+    "library:release-years": "tsx scripts/library/fetch-release-years.ts",
+    "library:publish": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/library/publish-library.ps1"
   },
   "dependencies": {
     "next": "^16.2.4",

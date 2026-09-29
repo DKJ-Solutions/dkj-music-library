@@ -50,6 +50,11 @@ veld leeg is, net als de afgeleide velden, zodat een zelf gekozen waardering bli
 Daarna (Dave): `dkj_rating` wordt het eerste veld dat je in de frontend zelf aanpast en opslaat -- eerst
 gevraagd als dropdown, direct daarna bijgesteld naar een potloodje achter de waarde: klik erop, de acht
 stars verschijnen, een klik maakt het de nieuwe waarde en slaat hem meteen op.
+Daarna (Dave): "ik had niet verwacht dat het via een branch zou moeten". De app schrijft de export, die
+in git staat, en direct op main mag niet. Dave koos uit drie routes voor één commando dat de export via
+een eigen chore/-branch zelf op main zet. Hier gebouwd, omdat het bij "velden in de app bewerken" hoort
+en de checkout voor de visuele check op deze branch moet blijven. Daves eigen `star-3` op
+AAR01-HAR04-01 zit bewust NIET in deze branch: die gaat na de merge met `library:publish` naar main.
 
 ### CREATE
 
@@ -60,6 +65,8 @@ stars verschijnen, een klik maakt het de nieuwe waarde en slaat hem meteen op.
 - [x] `djcylow_mix` naar de verborgen kolommen (switch); vrijgekomen ruimte naar `dkj_title` (25%) en `spotify_playlist` (19%)
 - [x] `rating.ts` (`setTrackRating`: alleen bestaande tracks, alleen de options) en `POST /api/spotify/rating` (same-origin-guard, via `withLibrary`, dus de export meteen bij)
 - [x] `Rating`-cel in `TrackRegister.tsx`: potloodje opent het bestaande `Dropdown`-menu (nu met een sluit-callback), optimistisch, bij een fout terug met de reden in de tooltip; opslaan in `saveRating.ts`
+- [x] `npm run library:publish` (`scripts/library/publish-library.ps1`): weigert buiten main of bij andere wijzigingen dan de export; branch, ingevuld branchdocument, commit, `open-pr` en `ship-pr` van de dkj-policy-installatie van deze checkout (nieuwste van project- en user-record); `-DryRun`
+- [x] `exportDiff.ts` + `scripts/library/export-diff.ts`: de samenvatting voor het changelog-item
 - [x] `sameOrigin.ts`-kop noemde "de drie" routes; nu alle acht
 - [x] Export bijgewerkt: alle 11.639 tracks `"dkj_rating":"star-4"`; README-sectie
 - [ ] Visuele check door Dave op `/spotify/trackregister`
@@ -67,6 +74,8 @@ stars verschijnen, een klik maakt het de nieuwe waarde en slaat hem meteen op.
 ### TEST
 
 - [x] `register.test.ts`, `TrackRegister.test.tsx`, `trackStore.test.ts` (options) en `artistIds.test.ts` (standaard) uitgebreid, nieuw `rating.test.ts`, en de potloodflow (opslaan, en terugzetten bij een fout) in `TrackRegister.test.tsx`; `npm test` (889), typecheck en lint groen
+- [x] `exportDiff.test.ts`; `npm test` (892), typecheck en lint groen
+- [x] `library:publish`: weigert op deze feature-branch; in een tijdelijke worktree van main -DryRun groen en weigert een los bestand; plugin-lookup en het invullen van een echte scaffold apart getest. Het echte schip (PR + merge) is nog niet gedraaid, omdat dat pas na deze merge vanaf main kan
 - [x] Route tegen de dev-server: onbekende track 404, `star-9` 400, andere origin 403; data ongewijzigd
 
 ### DEPLOY: feat/dkj-rating-field
@@ -78,7 +87,9 @@ staan. De export is meteen gevuld: alle 11.639 tracks staan op `star-4`. Het tra
 kolom `dkj_rating` na `dkj_genre`, en je kunt erop sorteren en zoeken. Het is het eerste veld dat je in
 de frontend zelf wijzigt: klik op het potloodje achter de waarde, kies een star, en hij wordt meteen
 opgeslagen in de database en de export (`POST /api/spotify/rating`); mislukt dat, dan komt de vorige
-waarde terug met de reden in de tooltip. Daarnaast staat `djcylow_mix` niet meer in de gewone tabel maar bij de verborgen kolommen
+waarde terug met de reden in de tooltip. Zulke wijzigingen zet `npm run library:publish` in één keer op
+main: het maakt een eigen branch voor alleen de export, vult het changelog-item met wat er veranderde, en
+draait de PR, de merge en de fold. Daarnaast staat `djcylow_mix` niet meer in de gewone tabel maar bij de verborgen kolommen
 (achter de switch); zoeken op de mixnamen blijft werken.
 
 **Score:** 3
