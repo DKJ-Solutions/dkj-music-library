@@ -53,7 +53,7 @@ vijfhoek) als teken voor dkj_rating, één symbool per paar tiers.
 ### TEST
 
 - [x] Test in `TrackRegister.test.tsx`: de juiste vorm per paar tiers; suite en typecheck groen
-- [ ] Dave bekijkt het trackregister in de browser
+- [x] Dave bekijkt het trackregister in de browser (goedgekeurd: "merge")
 
 ### DEPLOY: feat/rating-symbols
 
