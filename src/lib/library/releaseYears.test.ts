@@ -65,6 +65,18 @@ describe("planReleaseYears", () => {
     expect(plan.get("T1")).toBe(1966);
     expect(plan.get("T2")).toBe(2010);
   });
+
+  it("een vastgezet jaar wint van het minimum, ook als een andere variant vroeger is (issue #47)", () => {
+    const ids = new Map([["album", "T1"], ["compilatie", "T1"], ["ander", "T2"]]);
+    const plan = planReleaseYears(
+      snap(playlist("p1", track("album", "2006"), track("compilatie", "2010"), track("ander", "2006"))),
+      ids,
+      new Map([["compilatie", 1995], ["ander", 1995]]),
+      new Map([["album", 2006]])
+    );
+    expect(plan.get("T1")).toBe(2006);
+    expect(plan.get("T2")).toBe(1995);
+  });
 });
 
 describe("applyReleaseYears", () => {

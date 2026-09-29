@@ -7,12 +7,14 @@
 // jaar is daarom het VROEGSTE van drie bronnen (issue #45): het MusicBrainz-jaar (de lokale cache, zie
 // musicbrainz/cacheStore.ts), het `year` van het Trackregister (het vroegste jaar over alle
 // Spotify-varianten, of wat je zelf hebt ingevuld, zie releaseYears.ts) en het albumjaar. Kent geen van
-// de drie een jaar, dan blijft de cel leeg.
+// de drie een jaar, dan blijft de cel leeg. Een handmatig vastgezet jaar (musicbrainz/
+// releaseYearOverrides.ts, issue #47) gaat boven alle drie.
 import type { DatabaseSync } from "node:sqlite";
 import { openLibrary } from "@/lib/library/libraryFile";
 import { yearOf } from "@/lib/library/releaseYears";
 import { readTrackIdOf } from "@/lib/library/trackIds";
 import { listTracks } from "@/lib/library/trackStore";
+import { RELEASE_YEAR_OVERRIDES } from "@/lib/musicbrainz/releaseYearOverrides";
 import { classicPopLabel, isClassicPopPlaylist, type ClassicPopRow } from "./classicPopTable";
 import type { PlaylistTableRow } from "./playlistTable";
 import type { Playlist, Snapshot } from "./types";
@@ -69,15 +71,25 @@ function earliestYear(...years: (number | null | undefined)[]): number | null {
   return earliest;
 }
 
+/** Het jaar van een rij: het vastgezette jaar als dat er is, anders het vroegste van de drie bronnen. */
+function rowYear(
+  spotifyId: string,
+  sources: (number | null | undefined)[],
+  yearOverrides: ReadonlyMap<string, number>
+): number | null {
+  return yearOverrides.get(spotifyId) ?? earliestYear(...sources);
+}
+
 /** Eén rij per nummer, in de volgorde van de playlist. Een item zonder track (een lokaal bestand zonder
  *  metadata, een podcast-aflevering) valt weg, maar telt wel mee in de positie, zodat die met Spotify
  *  blijft kloppen. Een toevoeger die niet in `userNames` staat, blijft als user-id staan; het jaar is het
- *  vroegste van MusicBrainz, het Trackregister en het albumjaar (zie de kop hierboven). */
+ *  vroegste van MusicBrainz, het Trackregister en het albumjaar, tenzij het vastgezet is (zie de kop hierboven). */
 export function toPlaylistTableRows(
   playlist: Playlist,
   userNames: ReadonlyMap<string, string> = new Map(),
   libraryYears: ReadonlyMap<string, number> = new Map(),
-  musicBrainzYears: ReadonlyMap<string, number> = new Map()
+  musicBrainzYears: ReadonlyMap<string, number> = new Map(),
+  yearOverrides: ReadonlyMap<string, number> = RELEASE_YEAR_OVERRIDES
 ): PlaylistTableRow[] {
   return playlist.tracks.flatMap((item, index) =>
     item.track
@@ -88,10 +100,10 @@ export function toPlaylistTableRows(
             title: item.track.name,
             artists: item.track.artists.map((artist) => artist.name),
             album: item.track.album.name,
-            year: earliestYear(
-              musicBrainzYears.get(item.track.id),
-              libraryYears.get(item.track.id),
-              yearOf(item.track.album.releaseDate)
+            year: rowYear(
+              item.track.id,
+              [musicBrainzYears.get(item.track.id), libraryYears.get(item.track.id), yearOf(item.track.album.releaseDate)],
+              yearOverrides
             ),
             albumYear: yearOf(item.track.album.releaseDate),
             durationMs: item.track.durationMs,
@@ -111,7 +123,8 @@ export function toPlaylistTableRows(
 export function toClassicPopRows(
   playlists: readonly Playlist[],
   libraryYears: ReadonlyMap<string, number> = new Map(),
-  musicBrainzYears: ReadonlyMap<string, number> = new Map()
+  musicBrainzYears: ReadonlyMap<string, number> = new Map(),
+  yearOverrides: ReadonlyMap<string, number> = RELEASE_YEAR_OVERRIDES
 ): ClassicPopRow[] {
   const rows = new Map<string, ClassicPopRow>();
   for (const playlist of playlists) {
@@ -128,7 +141,7 @@ export function toClassicPopRows(
           title: track.name,
           artists: track.artists.map((artist) => artist.name),
           album: track.album.name,
-          year: earliestYear(musicBrainzYears.get(track.id), libraryYears.get(track.id), albumYear),
+          year: rowYear(track.id, [musicBrainzYears.get(track.id), libraryYears.get(track.id), albumYear], yearOverrides),
           albumYear,
           durationMs: track.durationMs,
           playlists: [],

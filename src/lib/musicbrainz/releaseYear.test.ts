@@ -146,6 +146,39 @@ describe("chooseRelease", () => {
     expect(result).toEqual({ year: 1966, recordingId: "r1" });
   });
 
+  it("negeert een naamgenoot: alleen de artiest (MBID) van de hoogste score telt (issue #47)", () => {
+    const morrison = (id: string) => [{ name: "James Morrison", artist: { id, name: "James Morrison" } }];
+    const result = chooseRelease(
+      response([
+        { id: "r1", score: 100, "first-release-date": "2006", "artist-credit": morrison("singer") },
+        { id: "r2", score: 98, "first-release-date": "1996", "artist-credit": morrison("trompettist") },
+        { id: "r3", score: 95, "first-release-date": "2007", "artist-credit": morrison("singer") },
+      ]),
+      "James Morrison"
+    );
+    expect(result).toEqual({ year: 2006, recordingId: "r1" });
+  });
+
+  it("houdt een samenwerking met de vastgezette artiest, en een kandidaat zonder MBID's, erbij", () => {
+    const result = chooseRelease(
+      response([
+        { id: "r1", score: 100, "first-release-date": "1983", "artist-credit": [{ name: "Michael Jackson", artist: { id: "mj", name: "Michael Jackson" } }] },
+        {
+          id: "r2",
+          score: 95,
+          "first-release-date": "1982",
+          "artist-credit": [
+            { name: "Michael Jackson", artist: { id: "mj", name: "Michael Jackson" } },
+            { name: "Paul McCartney", artist: { id: "pm", name: "Paul McCartney" } },
+          ],
+        },
+        { id: "r3", score: 92, "first-release-date": "1981", "artist-credit": [{ name: "Michael Jackson" }] },
+      ]),
+      "Michael Jackson"
+    );
+    expect(result).toEqual({ year: 1981, recordingId: "r3" });
+  });
+
   it("geeft null zonder recordings in de response", () => {
     expect(chooseRelease({}, "Iemand")).toBeNull();
   });

@@ -128,14 +128,40 @@ function creditsInclude(recording: MusicBrainzRecording, artist: string): boolea
   return haystack.includes(needle);
 }
 
+/** De MusicBrainz-artiest (MBID) achter de gezochte naam in deze kandidaat: de eerste credit waarvan de naam
+ *  de gezochte artiest bevat en die een id heeft. null als geen credit dat heeft. */
+function artistIdOf(recording: MusicBrainzRecording, artist: string): string | null {
+  const needle = fold(artist);
+  for (const credit of recording["artist-credit"] ?? []) {
+    const id = credit.artist?.id;
+    if (id && fold(credit.artist?.name ?? credit.name).includes(needle)) return id;
+  }
+  return null;
+}
+
 /** Kiest uit een MusicBrainz-response: alleen kandidaten met een hoge score (>= MIN_SCORE) waarvan de
  *  artist-credit de gezochte artiest bevat, en daarvan het VROEGSTE `first-release-date`-jaar (net als
  *  het vroegste-jaar-over-alle-varianten-principe in library/releaseYears.ts). Geen bruikbare kandidaat
- *  -> null. */
+ *  -> null.
+ *
+ *  Een naamgenoot telt niet mee (issue #47): de artiest van de kandidaat met de hoogste score ligt vast
+ *  op zijn MBID, en een kandidaat die een ANDERE artiest met dezelfde naam credit, valt af. Zo trok een
+ *  opname van een tweede "James Morrison" het jaar van "Wonderful World" terug naar 1996. Een kandidaat
+ *  zonder MBID's in zijn credits kan dat niet laten zien en telt op de naam alleen. */
 export function chooseRelease(response: MusicBrainzSearchResponse, artist: string): ChosenRelease | null {
+  const matching = (response.recordings ?? []).filter(
+    (recording) => scoreOf(recording) >= MIN_SCORE && creditsInclude(recording, artist)
+  );
+  const top = matching.reduce<MusicBrainzRecording | null>(
+    (best, recording) => (best === null || scoreOf(recording) > scoreOf(best) ? recording : best),
+    null
+  );
+  const pinnedId = top ? artistIdOf(top, artist) : null;
+
   let best: ChosenRelease | null = null;
-  for (const recording of response.recordings ?? []) {
-    if (scoreOf(recording) < MIN_SCORE || !creditsInclude(recording, artist)) continue;
+  for (const recording of matching) {
+    const hasIds = (recording["artist-credit"] ?? []).some((credit) => credit.artist?.id);
+    if (pinnedId && hasIds && artistIdOf(recording, artist) !== pinnedId) continue;
     const year = yearOf(recording["first-release-date"]);
     if (year !== null && (best === null || year < best.year)) best = { year, recordingId: recording.id };
   }

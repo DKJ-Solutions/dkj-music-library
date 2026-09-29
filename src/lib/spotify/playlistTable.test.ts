@@ -92,6 +92,17 @@ describe("toPlaylistTableRows", () => {
     );
     expect(rows.map((r) => r.year)).toEqual([1966, 1997, 1980]);
   });
+
+  it("een vastgezet jaar wint van alle drie, ook van een vroeger jaar (issue #47)", () => {
+    const rows = toPlaylistTableRows(
+      playlist([item("a", "Vastgezet", { releaseDate: "2006" }), item("b", "Niet vastgezet", { releaseDate: "2006" })]),
+      new Map(),
+      new Map([["a", 1995]]), // bibliotheekjaar, al gevuld met het te vroege jaar
+      new Map([["a", 1995], ["b", 1995]]), // MusicBrainz-uitschieter
+      new Map([["a", 2006]])
+    );
+    expect(rows.map((r) => r.year)).toEqual([2006, 1995]);
+  });
 });
 
 describe("toevoeger", () => {

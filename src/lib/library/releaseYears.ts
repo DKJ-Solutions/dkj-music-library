@@ -7,7 +7,8 @@
 // verscheen -- dus telt het VROEGSTE jaar over alle varianten in de snapshot, én over de
 // MusicBrainz-cache erbij. Een compilatie van 2015 maakt een single uit 1997 dus niet jonger. Kent de
 // snapshot alleen de compilatie en heeft MusicBrainz geen jaar voor die track, dan is het compilatiejaar
-// het beste wat er is.
+// het beste wat er is. Een handmatig vastgezet jaar (musicbrainz/releaseYearOverrides.ts, issue #47)
+// doet niet mee in dat minimum maar wint: het is er juist voor een MusicBrainz-jaar dat te vroeg is.
 //
 // Net als de andere eigen velden wordt `year` alleen gevuld zolang het leeg is: wat je zelf invult (met
 // `library:import`), blijft staan. Het veld heette tot 28 september 2026 `release_year` en was toen nog
@@ -21,6 +22,7 @@
 import type { DatabaseSync } from "node:sqlite";
 import type { Snapshot } from "@/lib/spotify/types";
 import { foundReleaseYears, readReleaseYearCache } from "@/lib/musicbrainz/cacheStore";
+import { RELEASE_YEAR_OVERRIDES } from "@/lib/musicbrainz/releaseYearOverrides";
 import { TRACKS_TABLE } from "./db";
 import { TRACK_ID_KEY, YEAR_KEY } from "./fields";
 import { readTrackIdOf } from "./trackIds";
@@ -34,13 +36,16 @@ export function yearOf(releaseDate: string | null | undefined): number | null {
 
 /** dkj_track_id -> het vroegste jaar over alle Spotify-varianten van die track in de snapshot, plus --
  *  als die er is en vroeger -- het MusicBrainz-jaar (`musicBrainzYears`, sleutel: Spotify-track-id;
- *  leeg als er geen cache is, bv. in een test). */
+ *  leeg als er geen cache is, bv. in een test). Heeft een variant een vastgezet jaar (`yearOverrides`,
+ *  sleutel: Spotify-track-id), dan is dat het jaar van die track. */
 export function planReleaseYears(
   snapshot: Snapshot,
   trackIdOf: ReadonlyMap<string, string>,
-  musicBrainzYears: ReadonlyMap<string, number> = new Map()
+  musicBrainzYears: ReadonlyMap<string, number> = new Map(),
+  yearOverrides: ReadonlyMap<string, number> = RELEASE_YEAR_OVERRIDES
 ): Map<string, number> {
   const plan = new Map<string, number>();
+  const fixed = new Map<string, number>();
   const consider = (trackId: string | undefined, year: number | null) => {
     if (!trackId || year === null) return;
     const current = plan.get(trackId);
@@ -53,8 +58,11 @@ export function planReleaseYears(
       const trackId = trackIdOf.get(track.id);
       consider(trackId, yearOf(track.album.releaseDate));
       consider(trackId, musicBrainzYears.get(track.id) ?? null);
+      const override = yearOverrides.get(track.id);
+      if (trackId && override !== undefined) fixed.set(trackId, override);
     }
   }
+  for (const [trackId, year] of fixed) plan.set(trackId, year);
   return plan;
 }
 
