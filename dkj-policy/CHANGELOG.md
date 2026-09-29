@@ -2,7 +2,30 @@
 
 ## [Unreleased]
 
-**45 / 59 minor entries** <!-- pending-tally -->
+**45 / 60 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/album-candidates-filter · 20260929-123514Z
+
+"Leeg" in het `dkj_album`-filter toonde ook de tracks waarvan de playlists verschillende albums noemen:
+die hebben geen `dkj_album`, maar de cel toont hun kandidaten als menu "N albums", dus ze leken er een
+te hebben. Die staan nu onder een eigen keuze "Meerdere kandidaten" (2.451 tracks); "Leeg" toont alleen
+nog de tracks zonder enig album (933).
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Alleen een filterkeuze in een eigen overzicht; niemand buiten de repo merkt het.
+
+**Score:** N/A
+
+#### Pull Request
+
+Het albumfilter scheidt Leeg van Meerdere kandidaten
+
+[PR #67](https://github.com/DKJ-Solutions/dkj-music-library/pull/67)
+
+---
 
 ### DEPLOY: feat/filter-meta-options-dim · 20260929-122730Z
 
