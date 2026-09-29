@@ -74,9 +74,11 @@ describe("TrackRegister", () => {
     expect(screen.queryByRole("link", { name: "Drie" })).toBeNull();
   });
 
-  it("toont één mix als link naar djcylow.com, en meer dan één als menu", () => {
+  it("toont djcylow_mix alleen in de verborgen kolommen: één mix als link naar djcylow.com, meer dan één als menu", () => {
     const mixes = ["Een", "Twee"].map((name, i) => ({ slug: `red-light-m-edm-128bpm-2026061${i}`, name }));
     render(<TrackRegister rows={[row(1, { mixes: [mixes[0]] }), row(2, { mixes })]} artistCount={1} />);
+    expect(screen.queryByRole("button", { name: /djcylow_mix/ })).toBeNull();
+    fireEvent.click(screen.getByRole("switch", { name: "verborgen kolommen" }));
     expect(screen.getByRole("link", { name: "Een" }).getAttribute("href")).toBe(
       "https://djcylow.com/luister/mix/red-light-m-edm-128bpm-20260610"
     );
@@ -109,7 +111,7 @@ describe("TrackRegister", () => {
 
     fireEvent.click(toggle);
     expect(toggle.getAttribute("aria-checked")).toBe("true");
-    expect(headers()).toEqual(["dkj_track_id", "dkj_file", "dkj_artist", "dkj_artist_id"]);
+    expect(headers()).toEqual(["dkj_track_id", "dkj_file", "dkj_artist", "dkj_artist_id", "djcylow_mix"]);
     expect(screen.getByTitle(file)).toBeTruthy();
     expect(screen.getByText("ART01-001")).toBeTruthy();
 

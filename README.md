@@ -258,7 +258,8 @@ regels staan in `src/lib/library/playlistLinks.ts`.
 ### De mixen: `djcylow_mix`
 
 `djcylow_mix` is de lijst mixen op djcylow.com waarin een track zit, elk met de slug van de mixpagina en
-de titel van de mix; in het register linkt elke naam naar `https://djcylow.com/luister/mix/<slug>`. De
+de titel van de mix. In het register staat hij bij de verborgen kolommen (de switch boven de tabel), en
+daar linkt elke naam naar `https://djcylow.com/luister/mix/<slug>`. De
 koppeling loopt via Spotify, net als bij `spotify_playlist`: de brug koppelt elke mix aan zijn eigen
 MMC-playlist, en een track zit in een mix als hij in die playlist staat. Een mix die alleen in een grote
 kleur-emmer is teruggevonden, telt niet. Ook dit veld wordt bij elke sync opnieuw gezet, maar alleen als

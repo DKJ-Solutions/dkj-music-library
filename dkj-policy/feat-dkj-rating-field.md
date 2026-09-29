@@ -42,12 +42,15 @@
 Dave (29 september 2026): een nieuw dataveld `dkj_rating`, als kolom in het trackregister. Het type
 stond niet in de vraag; gekozen is een geheel getal van 1 (laag) tot 5 (hoog), zelf in te vullen en
 niet afgeleid. Een ander type later kost geen data: een typewissel in `fields.ts` laat de kolom staan.
+Daarna (zelfde dag, vóór de visuele check): verberg de kolom `djcylow_mix`. Die komt op deze branch mee,
+zodat beide wijzigingen aan dezelfde tabel in één blik te beoordelen zijn.
 
 ### CREATE
 
 - [x] `fields.ts`: veld `dkj_rating` (integer) en `RATING_KEY`
 - [x] `register.ts`: `rating` in de rij, in het zoeken en als sorteerkolom
 - [x] `TrackRegister.tsx`: kolom `dkj_rating` (4%) na `dkj_genre`; `dkj_title` van 21% naar 17%
+- [x] `djcylow_mix` naar de verborgen kolommen (switch); vrijgekomen ruimte naar `dkj_title` (25%) en `spotify_playlist` (19%)
 - [x] Export bijgewerkt: elke track `"dkj_rating":null`, verder byte-gelijk (gecontroleerd); README-sectie
 - [ ] Visuele check door Dave op `/spotify/trackregister`
 
@@ -60,17 +63,19 @@ niet afgeleid. Een ander type later kost geen data: een typewissel in `fields.ts
 Nieuw veld `dkj_rating`: je eigen waardering van een nummer, een geheel getal van 1 (laag) tot 5
 (hoog). Je vult het zelf in; het wordt niet afgeleid, dus in de export staat het eerst bij elke track op
 `null`. Het trackregister toont het als kolom `dkj_rating` na `dkj_genre`, en je kunt erop sorteren en
-zoeken.
+zoeken. Daarnaast staat `djcylow_mix` niet meer in de gewone tabel maar bij de verborgen kolommen
+(achter de switch); zoeken op de mixnamen blijft werken.
 
 **Score:** 2
 
 #### What makes this deploy extra special
 
-Het trackregister heeft een kolom voor je eigen waardering, waarop je kunt sorteren.
+Het trackregister heeft een kolom voor je eigen waardering, waarop je kunt sorteren, en de mixkolom staat
+niet meer in de weg: die zit nu achter de switch.
 
 **Score:** 2
 
 #### Pull Request
 
-Trackregister krijgt dkj_rating (1-5)
+Trackregister krijgt dkj_rating (1-5) en verbergt djcylow_mix
 

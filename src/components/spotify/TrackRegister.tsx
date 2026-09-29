@@ -331,36 +331,22 @@ function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term:
   );
 }
 
-/** De gewone kolommen, in volgorde. dkj_track_id, dkj_file, dkj_artist en dkj_artist_id staan er niet in
- *  (Dave); die staan in HIDDEN_COLUMNS, achter de switch, en op alle vier zoeken kan altijd. */
+/** De gewone kolommen, in volgorde. dkj_track_id, dkj_file, dkj_artist, dkj_artist_id en djcylow_mix staan
+ *  er niet in (Dave); die staan in HIDDEN_COLUMNS, achter de switch, en op alle vijf zoeken kan altijd. */
 const VISIBLE_COLUMNS: readonly Column[] = [
-  { key: "dkjTitle", field: "dkj_title", width: "17%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
+  { key: "dkjTitle", field: "dkj_title", width: "25%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
   { key: "albumArtist", field: "dkj_albumartiest", width: "17%", cell: (row, term) => <OneLine text={row.albumArtist} term={term} className="register-album-artist" /> },
   { key: "year", field: "year", width: "5%", cell: (row, term) => <OneLine text={row.year} term={term} className="register-year" /> },
   {
     key: "playlists",
     field: "spotify_playlist",
-    width: "14%",
+    width: "19%",
     className: "register-playlists-cell",
     cell: (row, term) => (
       <OutLinkLabels
         links={row.playlists.map((p) => ({ key: p.id, name: p.name, href: playlistUrl(p.id) }))}
         site="Spotify"
         noun="playlists"
-        term={term}
-      />
-    ),
-  },
-  {
-    key: "mixes",
-    field: "djcylow_mix",
-    width: "13%",
-    className: "register-playlists-cell",
-    cell: (row, term) => (
-      <OutLinkLabels
-        links={row.mixes.map((m) => ({ key: m.slug, name: m.name, href: mixUrl(m.slug) }))}
-        site="djcylow.com"
-        noun="mixes"
         term={term}
       />
     ),
@@ -384,10 +370,24 @@ const VISIBLE_COLUMNS: readonly Column[] = [
 
 /** De kolommen die uit de gewone tabel zijn gelaten, te zien via de switch. */
 const HIDDEN_COLUMNS: readonly Column[] = [
-  { key: "id", field: "dkj_track_id", width: "12%", cell: (row, term) => <OneLine text={row.id} term={term} className="register-id" /> },
-  { key: "file", field: "dkj_file", width: "45%", cell: (row, term) => <OneLine text={row.file} term={term} className="register-file" /> },
-  { key: "artist", field: "dkj_artist", width: "25%", cell: (row, term) => <OneLine text={row.artist} term={term} className="register-artist" /> },
-  { key: "artistIds", field: "dkj_artist_id", width: "18%", cell: (row, term) => <ArtistIds ids={row.artistIds} names={row.artistNames} term={term} /> },
+  { key: "id", field: "dkj_track_id", width: "10%", cell: (row, term) => <OneLine text={row.id} term={term} className="register-id" /> },
+  { key: "file", field: "dkj_file", width: "35%", cell: (row, term) => <OneLine text={row.file} term={term} className="register-file" /> },
+  { key: "artist", field: "dkj_artist", width: "20%", cell: (row, term) => <OneLine text={row.artist} term={term} className="register-artist" /> },
+  { key: "artistIds", field: "dkj_artist_id", width: "15%", cell: (row, term) => <ArtistIds ids={row.artistIds} names={row.artistNames} term={term} /> },
+  {
+    key: "mixes",
+    field: "djcylow_mix",
+    width: "20%",
+    className: "register-playlists-cell",
+    cell: (row, term) => (
+      <OutLinkLabels
+        links={row.mixes.map((m) => ({ key: m.slug, name: m.name, href: mixUrl(m.slug) }))}
+        site="djcylow.com"
+        noun="mixes"
+        term={term}
+      />
+    ),
+  },
 ];
 
 const COLUMN_SETS: Record<ColumnSet, readonly Column[]> = { visible: VISIBLE_COLUMNS, hidden: HIDDEN_COLUMNS };
