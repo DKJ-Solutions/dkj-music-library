@@ -43,6 +43,7 @@
 
 - [x] `.kicker` en `.stats` op `display: none` in `_masthead.scss`; de markup blijft staan
 - [x] Padding-top van `.wrap` van `clamp(28px, 5vw, 64px)` naar `clamp(16px, 3vw, 36px)`
+- [x] De `border-bottom` van `.masthead` weggehaald
 
 ### TEST
 
@@ -53,7 +54,7 @@
 
 De kicker boven de paginatitel en de rij tellers eronder zijn op elke pagina verborgen, omdat ze te veel
 ruimte innamen. Alleen via CSS: de markup blijft, dus terugzetten is één regel weghalen. De ruimte boven de pagina (padding-top van `.wrap`) is ook
-kleiner geworden.
+kleiner geworden, en de horizontale lijn onder de kop is weg.
 
 **Score:** 2
 
