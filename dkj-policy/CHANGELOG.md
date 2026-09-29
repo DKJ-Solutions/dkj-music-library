@@ -2,7 +2,31 @@
 
 ## [Unreleased]
 
-**44 / 56 minor entries** <!-- pending-tally -->
+**45 / 57 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/rating-symbols · 20260929-121212Z
+
+Interne weergave: het trackregister toont bij elke waardering een gekleurd symbool, en de waarden van
+`dkj_rating` heten `tier-1` tot `tier-8` in plaats van `star-1` tot `star-8`. De sync zet een oude
+`star-N` in de database om naar `tier-N` met hetzelfde getal.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+De eigen waardering is in één oogopslag te lezen: tier-1/2 een groene cirkel, tier-3/4 een blauwe
+driehoek, tier-5/6 een paarse ruit en tier-7/8 een oranje vijfhoek, in de tabel en in het keuzemenu. De waarden heten nu `tier-1` tot `tier-8` (was `star-1` tot `star-8`),
+want je ziet geen ster; je eigen keuzes blijven staan met hetzelfde getal.
+
+**Score:** 3
+
+#### Pull Request
+
+De eigen waardering heet tier en krijgt een gekleurd symbool per paar
+
+[PR #64](https://github.com/DKJ-Solutions/dkj-music-library/pull/64)
+
+---
 
 ### DEPLOY: fix/62-bachman-bto-1974 · 20260929-115839Z
 
