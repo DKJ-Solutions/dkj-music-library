@@ -6,7 +6,8 @@ machine.
 - **Spotify-mirror** (`/spotify`): een read-only back-up van de Spotify-playlists, met doorzoeken,
   groeperen en filteren, een dashboard, de BPM- en wereld-indeling, en de brug naar de DJ Cylow-mixen.
   Er gaat maar één ding terug naar Spotify, en dat staat in `src/lib/spotify/playlistApi.ts`: de naam
-  en beschrijving van een playlist die bij een mix hoort. Verder schrijft de app niets.
+  en beschrijving van een playlist die bij een mix hoort. Verder schrijft de app niets naar Spotify. In
+  de eigen bibliotheek kun je één veld zelf aanpassen: `dkj_rating`, in het trackregister.
 - **Desktop-mirror**: moet nog gebouwd worden.
 
 De app kwam op 2026-09-27 uit de private repo `life-hub`, en is daar in zijn geheel weggehaald.
@@ -282,6 +283,12 @@ krijgt standaard `star-4`: bij elke sync (en bij `npm run library:assign-ids`) w
 gezet zolang het leeg is, dus een waardering die je zelf hebt gekozen blijft staan
 (`fillDefaultRatings` in `src/lib/library/artistIds.ts`). Het trackregister toont het in de kolom
 `dkj_rating`, en je kunt erop sorteren en zoeken.
+
+Het is het eerste veld dat je in de frontend zelf wijzigt: klik op het potloodje achter de waarde, kies
+een star, en hij wordt meteen opgeslagen (`POST /api/spotify/rating`, zie
+`src/lib/library/rating.ts`). Dat schrijft in de database én in de export, dus commit
+`data/library/export/` daarna om de waardering op je andere machines te hebben. Mislukt het opslaan,
+dan komt de vorige waarde terug en staat de reden in de tooltip.
 
 ### Velden met vaste keuzes
 

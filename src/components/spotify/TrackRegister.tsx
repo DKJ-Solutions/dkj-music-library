@@ -4,9 +4,10 @@
 // zit in register.ts; hier alleen de weergave en de filterstand.
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { DKJ_ALBUM_COLOURS, DKJ_ALBUM_OPTIONS, DKJ_BPM_OPTIONS, DKJ_GENRE_OPTIONS, TRACK_FIELDS } from "@/lib/library/fields";
+import { DKJ_ALBUM_COLOURS, DKJ_ALBUM_OPTIONS, DKJ_BPM_OPTIONS, DKJ_GENRE_OPTIONS, DKJ_RATING_OPTIONS, TRACK_FIELDS } from "@/lib/library/fields";
 import { mixUrl } from "@/lib/library/djcylowMix";
 import { playlistUrl } from "@/lib/library/playlistLink";
+import { saveRating } from "@/lib/library/saveRating";
 import {
   EMPTY_FILTER,
   SORT_KEYS,
@@ -53,8 +54,13 @@ interface Column {
   key: SortKey;
   field: string;
   width: string;
-  cell: (row: RegisterRow, term: string) => ReactNode;
+  cell: (row: RegisterRow, term: string, edit: CellEdit) => ReactNode;
   className?: string;
+}
+
+/** Wat een bewerkbare cel nodig heeft: de waardering van een rij in de tabel zetten (Rating). */
+interface CellEdit {
+  setRating: (trackId: string, rating: string | null) => void;
 }
 
 /** Klik op een kop: oplopend, nog eens: aflopend, een derde keer: weer de oorspronkelijke volgorde. */
@@ -136,8 +142,23 @@ function placeMenu(toggle: HTMLElement): MenuPlace {
 /** Een knop die een menu opent, voor een cel die anders op twee regels zou komen. Het menu ligt ALTIJD
  *  OVER DE TABEL HEEN (Dave): het staat in een portal op <body> met position: fixed, zodat het scrollvak
  *  van de tabel (overflow: auto) het niet meer afkapt. Het sluit bij een klik ernaast, met Escape, en bij
- *  scrollen of een ander venstermaat, want dan klopt de plek naast de knop niet meer. */
-function Dropdown({ label, children }: { label: ReactNode; children: ReactNode }) {
+ *  scrollen of een ander venstermaat, want dan klopt de plek naast de knop niet meer. `children` mag een
+ *  functie zijn die het menu kan sluiten, voor een menu waarin je iets kiest (Rating). */
+function Dropdown({
+  label,
+  children,
+  toggleClassName = "register-menu-toggle",
+  ariaLabel,
+  title,
+  caret = true,
+}: {
+  label: ReactNode;
+  children: ReactNode | ((close: () => void) => ReactNode);
+  toggleClassName?: string;
+  ariaLabel?: string;
+  title?: string;
+  caret?: boolean;
+}) {
   const [place, setPlace] = useState<MenuPlace | null>(null);
   const toggle = useRef<HTMLButtonElement>(null);
   const list = useRef<HTMLDivElement>(null);
@@ -175,13 +196,15 @@ function Dropdown({ label, children }: { label: ReactNode; children: ReactNode }
       <button
         ref={toggle}
         type="button"
-        className="register-menu-toggle"
+        className={toggleClassName}
         aria-expanded={open}
         aria-haspopup="true"
+        aria-label={ariaLabel}
+        title={title}
         onClick={() => setPlace(open || !toggle.current ? null : placeMenu(toggle.current))}
       >
         {label}
-        <span aria-hidden="true"> ▾</span>
+        {caret && <span aria-hidden="true"> ▾</span>}
       </button>
       {place &&
         createPortal(
@@ -190,11 +213,67 @@ function Dropdown({ label, children }: { label: ReactNode; children: ReactNode }
             className="register-menu-list"
             style={{ left: place.left, top: place.top, bottom: place.bottom, maxHeight: place.maxHeight }}
           >
-            {children}
+            {typeof children === "function" ? children(() => setPlace(null)) : children}
           </div>,
           document.body,
         )}
     </div>
+  );
+}
+
+/** De waardering met een potloodje erachter (Dave): klik erop en de acht stars verschijnen; een klik op
+ *  een star maakt hem de nieuwe waarde en slaat hem meteen op (saveRating, POST /api/spotify/rating).
+ *  Optimistisch: de tabel toont de keuze direct, zodat sorteren en zoeken er meteen mee werken. Mislukt
+ *  het opslaan, dan komt de vorige waarde terug en staat de reden in de tooltip -- een waardering die
+ *  alleen in de browser staat, zou bij de volgende paginalading stilletjes verdwijnen. */
+function Rating({ row, term, setRating }: { row: RegisterRow; term: string; setRating: CellEdit["setRating"] }) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function choose(next: string) {
+    if (next === row.rating) return;
+    const previous = row.rating;
+    setRating(row.id, next);
+    setBusy(true);
+    setError(null);
+    try {
+      await saveRating(row.id, next);
+    } catch (err) {
+      setRating(row.id, previous);
+      setError(err instanceof Error ? err.message : "onbekende fout");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <span className={`register-rating${error ? " is-error" : ""}${busy ? " is-busy" : ""}`} title={error ? `Opslaan mislukt: ${error}` : undefined}>
+      {row.rating ? <span className="register-tag"><Highlight text={row.rating} term={term} /></span> : <Empty />}
+      <Dropdown
+        label="✎"
+        caret={false}
+        toggleClassName="register-rating-edit"
+        ariaLabel={`dkj_rating van ${row.id} wijzigen`}
+        title="Waardering wijzigen"
+      >
+        {(close) =>
+          DKJ_RATING_OPTIONS.map((option) => (
+            <button
+              key={option}
+              type="button"
+              className="register-menu-item register-menu-choice"
+              aria-current={option === row.rating ? "true" : undefined}
+              onClick={() => {
+                close();
+                void choose(option);
+              }}
+            >
+              {option}
+            </button>
+          ))
+        }
+      </Dropdown>
+    </span>
   );
 }
 
@@ -334,7 +413,7 @@ function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term:
 /** De gewone kolommen, in volgorde. dkj_track_id, dkj_file, dkj_artist, dkj_artist_id en djcylow_mix staan
  *  er niet in (Dave); die staan in HIDDEN_COLUMNS, achter de switch, en op alle vijf zoeken kan altijd. */
 const VISIBLE_COLUMNS: readonly Column[] = [
-  { key: "dkjTitle", field: "dkj_title", width: "23%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
+  { key: "dkjTitle", field: "dkj_title", width: "22%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
   { key: "albumArtist", field: "dkj_albumartiest", width: "17%", cell: (row, term) => <OneLine text={row.albumArtist} term={term} className="register-album-artist" /> },
   { key: "year", field: "year", width: "5%", cell: (row, term) => <OneLine text={row.year} term={term} className="register-year" /> },
   {
@@ -366,8 +445,8 @@ const VISIBLE_COLUMNS: readonly Column[] = [
   {
     key: "rating",
     field: "dkj_rating",
-    width: "6%",
-    cell: (row, term) => (row.rating ? <span className="register-tag"><Highlight text={row.rating} term={term} /></span> : <Empty />),
+    width: "7%",
+    cell: (row, term, edit) => <Rating row={row} term={term} setRating={edit.setRating} />,
   },
   { key: "album", field: "dkj_album", width: "11%", cell: (row, term) => <Album album={row.album} candidates={row.albumCandidates} term={term} /> },
   { key: "groups", field: "dkj_group", width: "8%", cell: (row, term) => <Groups groups={row.groups} term={term} /> },
@@ -397,7 +476,15 @@ const HIDDEN_COLUMNS: readonly Column[] = [
 
 const COLUMN_SETS: Record<ColumnSet, readonly Column[]> = { visible: VISIBLE_COLUMNS, hidden: HIDDEN_COLUMNS };
 
-export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
+export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterProps) {
+  // De waarderingen die je op deze pagina hebt gekozen (Rating), over de rijen van de server
+  // heen gelegd: zo sorteren, zoeken en tellen ze meteen mee, zonder de pagina opnieuw te laden.
+  const [ratings, setRatings] = useState<Record<string, string | null>>({});
+  const rows = useMemo(
+    () => initialRows.map((row) => (row.id in ratings ? { ...row, rating: ratings[row.id] } : row)),
+    [initialRows, ratings]
+  );
+  const edit: CellEdit = { setRating: (trackId, rating) => setRatings((prev) => ({ ...prev, [trackId]: rating })) };
   const [query, setQuery] = useState(DEFAULT_PREFS.query);
   const [yearFrom, setYearFrom] = useState(DEFAULT_PREFS.yearFrom);
   const [yearTo, setYearTo] = useState(DEFAULT_PREFS.yearTo);
@@ -641,7 +728,7 @@ export function TrackRegister({ rows, artistCount }: TrackRegisterProps) {
               slice.map((row) => (
                 <tr key={row.id}>
                   {columns.map(({ key, cell, className }) => (
-                    <td key={key} className={className}>{cell(row, term)}</td>
+                    <td key={key} className={className}>{cell(row, term, edit)}</td>
                   ))}
                 </tr>
               ))

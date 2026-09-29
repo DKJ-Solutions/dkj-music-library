@@ -47,6 +47,9 @@ zodat beide wijzigingen aan dezelfde tabel in één blik te beoordelen zijn.
 Daarna (Dave): de waardering gaat van 1 tot 8 als acht opties, `star-1` tot `star-8`, en elke track
 krijgt standaard `star-4`. Het veld wordt daarom tekst met options; de standaard wordt gezet zolang het
 veld leeg is, net als de afgeleide velden, zodat een zelf gekozen waardering blijft staan.
+Daarna (Dave): `dkj_rating` wordt het eerste veld dat je in de frontend zelf aanpast en opslaat -- eerst
+gevraagd als dropdown, direct daarna bijgesteld naar een potloodje achter de waarde: klik erop, de acht
+stars verschijnen, een klik maakt het de nieuwe waarde en slaat hem meteen op.
 
 ### CREATE
 
@@ -55,12 +58,16 @@ veld leeg is, net als de afgeleide velden, zodat een zelf gekozen waardering bli
 - [x] `register.ts`: `rating` in de rij, in het zoeken en als sorteerkolom
 - [x] `TrackRegister.tsx`: kolom `dkj_rating` (6%, als label) na `dkj_genre`
 - [x] `djcylow_mix` naar de verborgen kolommen (switch); vrijgekomen ruimte naar `dkj_title` (25%) en `spotify_playlist` (19%)
+- [x] `rating.ts` (`setTrackRating`: alleen bestaande tracks, alleen de options) en `POST /api/spotify/rating` (same-origin-guard, via `withLibrary`, dus de export meteen bij)
+- [x] `Rating`-cel in `TrackRegister.tsx`: potloodje opent het bestaande `Dropdown`-menu (nu met een sluit-callback), optimistisch, bij een fout terug met de reden in de tooltip; opslaan in `saveRating.ts`
+- [x] `sameOrigin.ts`-kop noemde "de drie" routes; nu alle acht
 - [x] Export bijgewerkt: alle 11.639 tracks `"dkj_rating":"star-4"`; README-sectie
 - [ ] Visuele check door Dave op `/spotify/trackregister`
 
 ### TEST
 
-- [x] `register.test.ts`, `TrackRegister.test.tsx`, `trackStore.test.ts` (options) en `artistIds.test.ts` (standaard) uitgebreid; `npm test` (884), typecheck en lint groen
+- [x] `register.test.ts`, `TrackRegister.test.tsx`, `trackStore.test.ts` (options) en `artistIds.test.ts` (standaard) uitgebreid, nieuw `rating.test.ts`, en de potloodflow (opslaan, en terugzetten bij een fout) in `TrackRegister.test.tsx`; `npm test` (889), typecheck en lint groen
+- [x] Route tegen de dev-server: onbekende track 404, `star-9` 400, andere origin 403; data ongewijzigd
 
 ### DEPLOY: feat/dkj-rating-field
 
@@ -68,19 +75,23 @@ Nieuw veld `dkj_rating`: je eigen waardering van een nummer, van `star-1` (laag)
 een andere waarde breekt de import af. Elke track krijgt standaard `star-4`: bij elke sync en bij
 `npm run library:assign-ids` wordt het gezet zolang het leeg is, dus een zelf gekozen waardering blijft
 staan. De export is meteen gevuld: alle 11.639 tracks staan op `star-4`. Het trackregister toont het als
-kolom `dkj_rating` na `dkj_genre`, en je kunt erop sorteren en zoeken. Daarnaast staat `djcylow_mix` niet meer in de gewone tabel maar bij de verborgen kolommen
+kolom `dkj_rating` na `dkj_genre`, en je kunt erop sorteren en zoeken. Het is het eerste veld dat je in
+de frontend zelf wijzigt: klik op het potloodje achter de waarde, kies een star, en hij wordt meteen
+opgeslagen in de database en de export (`POST /api/spotify/rating`); mislukt dat, dan komt de vorige
+waarde terug met de reden in de tooltip. Daarnaast staat `djcylow_mix` niet meer in de gewone tabel maar bij de verborgen kolommen
 (achter de switch); zoeken op de mixnamen blijft werken.
 
-**Score:** 2
+**Score:** 3
 
 #### What makes this deploy extra special
 
-Het trackregister heeft een kolom voor je eigen waardering, waarop je kunt sorteren, en de mixkolom staat
+Je kunt voor het eerst zelf iets in de bibliotheek aanpassen: je waardering van elk nummer, met één klik
+op het potloodje in het trackregister, meteen opgeslagen. Je kunt erop sorteren, en de mixkolom staat
 niet meer in de weg: die zit nu achter de switch.
 
-**Score:** 2
+**Score:** 4
 
 #### Pull Request
 
-Trackregister krijgt dkj_rating (star-1 t/m star-8) en verbergt djcylow_mix
+Trackregister krijgt een bewerkbare dkj_rating (star-1 t/m star-8) en verbergt djcylow_mix
 
