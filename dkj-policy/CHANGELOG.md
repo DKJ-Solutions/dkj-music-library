@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**41 / 52 minor entries** <!-- pending-tally -->
+**41 / 53 minor entries** <!-- pending-tally -->
+
+### DEPLOY: chore/library-20260929-122809 · 20260929-103010Z
+
+Wijzigingen die in de app zelf zijn gemaakt, zoals een star via het potloodje in het trackregister, staan nu op main: 1 track gewijzigd (dkj_rating 1). Er verandert niets aan de code.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+N/A -- alleen de eigen bibliotheekdata; de app zelf verandert niet.
+
+**Score:** N/A
+
+#### Pull Request
+
+Bibliotheek bijgewerkt vanuit de app: 1 track gewijzigd (dkj_rating 1)
+
+[PR #59](https://github.com/DKJ-Solutions/dkj-music-library/pull/59)
+
+---
 
 ### DEPLOY: feat/dkj-rating-field · 20260929-102745Z
 
