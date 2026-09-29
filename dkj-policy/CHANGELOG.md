@@ -2,7 +2,28 @@
 
 ## [Unreleased]
 
-**46 / 63 minor entries** <!-- pending-tally -->
+**47 / 64 minor entries** <!-- pending-tally -->
+
+### DEPLOY: chore/top100-tier8 · 20260929-141602Z
+
+De 959 tracks die in een Top 100-playlist op Spotify staan, hebben nu als eigen waardering tier-8. Het ging
+om 29 playlists. Van die tracks stonden er 958 op de standaard tier-4 en één op tier-3.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+In het trackregister staan de Top 100-tracks nu op de hoogste waardering, zodat je erop kunt filteren en sorteren.
+
+**Score:** 3
+
+#### Pull Request
+
+Tracks in een Top 100-playlist op tier-8
+
+[PR #72](https://github.com/DKJ-Solutions/dkj-music-library/pull/72)
+
+---
 
 ### DEPLOY: style/hide-stats-kicker · 20260929-141228Z
 
