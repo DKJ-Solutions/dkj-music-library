@@ -41,17 +41,25 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Eenmalig script (niet in de repo): elke track met een `spotify_playlist` waarvan de naam
+  "Top 100" bevat (hoofdletterongevoelig, 29 playlists) via `setTrackRating()` binnen `withLibrary()` op tier-8
 
 ### TEST
 
+- [x] 959 gevonden, 959 gezet; daarvoor 958 × tier-4 en 1 × tier-3. Nu staan er in de export 959 × tier-8 en 10.680 × tier-4
+
 ### DEPLOY: chore/top100-tier8
 
-**Score:**
+De 959 tracks die in een Top 100-playlist op Spotify staan, hebben nu als eigen waardering tier-8. Het ging
+om 29 playlists. Van die tracks stonden er 958 op de standaard tier-4 en één op tier-3.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+In het trackregister staan de Top 100-tracks nu op de hoogste waardering, zodat je erop kunt filteren en sorteren.
+
+**Score:** 3
 
 #### Pull Request
 
