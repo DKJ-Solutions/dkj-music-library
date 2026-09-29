@@ -434,15 +434,28 @@ function PlayButton({ row, edit }: { row: RegisterRow; edit: CellEdit }) {
   );
 }
 
-/** De Spotify-speler boven de tabel: één tegelijk, want een iframe per rij maakt de pagina traag. Het
- *  scrollvak van de tabel eronder scrolt los, dus de speler blijft in beeld.
+/** De Spotify-speler ONDERIN HET TABELVAK (Dave): hij schuift omhoog zodra een track begint en weer omlaag
+ *  bij sluiten. Hij ligt over het scrollvak heen, dat zelf onder de speler door scrolt; de ruimte onderin
+ *  (.has-player) houdt de laatste rij bereikbaar. Eén speler tegelijk, want een iframe per rij maakt de
+ *  pagina traag. Bij sluiten speelt eerst de animatie omlaag (`closing`), en pas daarna `onClosed`, dat de
+ *  speler weghaalt.
  *
  *  De speler komt uit Spotify's iFrame API (trackEmbed.ts), zodat de afspeelknop hem meteen laat spelen:
  *  bij de eerste track zodra de speler klaar is, bij een volgende track via loadUri + play in dezelfde
  *  speler. De API vervangt het element dat hij krijgt door zijn iframe, dus dat element maakt dit effect
  *  zelf aan in `host`, buiten React om. Laadt de API niet, dan komt de kale embed, waarin je zelf op play
  *  klikt. */
-function Player({ row, onClose }: { row: RegisterRow; onClose: () => void }) {
+function Player({
+  row,
+  closing,
+  onClose,
+  onClosed,
+}: {
+  row: RegisterRow;
+  closing: boolean;
+  onClose: () => void;
+  onClosed: () => void;
+}) {
   const id = row.spotifyTrackId;
   const host = useRef<HTMLDivElement>(null);
   const controller = useRef<SpotifyEmbedController | null>(null);
@@ -491,7 +504,14 @@ function Player({ row, onClose }: { row: RegisterRow; onClose: () => void }) {
   if (!id) return null;
   const name = row.dkjTitle || row.title || row.id;
   return (
-    <div className="register-player" aria-label={`Spotify-speler: ${name}`} role="region">
+    <div
+      className={`register-player${closing ? " is-closing" : ""}`}
+      aria-label={`Spotify-speler: ${name}`}
+      role="region"
+      onAnimationEnd={(event) => {
+        if (closing && event.target === event.currentTarget) onClosed();
+      }}
+    >
       {failed ? (
         <iframe
           key={id}
@@ -633,10 +653,21 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
   );
   // De track in de speler (Player). Een rij, geen ID: de speler blijft staan als een filter de rij wegfiltert.
   const [playing, setPlaying] = useState<RegisterRow | null>(null);
+  // Waar tijdens de animatie omlaag (Player); daarna gaat de speler echt weg.
+  const [closing, setClosing] = useState(false);
+  const closePlayer = () => {
+    // Zonder animatie (prefers-reduced-motion) komt er geen animationend, dus dan meteen weg.
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) setPlaying(null);
+    else setClosing(true);
+  };
   const edit: CellEdit = {
     setRating: (trackId, rating) => setRatings((prev) => ({ ...prev, [trackId]: rating })),
-    playingId: playing?.id ?? null,
-    togglePlay: (row) => setPlaying((prev) => (prev?.id === row.id ? null : row)),
+    playingId: playing && !closing ? playing.id : null,
+    togglePlay: (row) => {
+      if (playing?.id === row.id && !closing) return closePlayer();
+      setClosing(false);
+      setPlaying(row);
+    },
   };
   const [query, setQuery] = useState(DEFAULT_PREFS.query);
   const [yearFrom, setYearFrom] = useState(DEFAULT_PREFS.yearFrom);
@@ -847,54 +878,65 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
         )}
       </fieldset>
 
-      {playing && <Player row={playing} onClose={() => setPlaying(null)} />}
-
-      <div className="register-table-box" ref={box}>
-        <table className="register-table">
-          {/* Vaste verdeling van de breedte (table-layout: fixed), zodat alle kolommen altijd passen. */}
-          <colgroup>
-            {columns.map(({ key, width }) => (
-              <col key={key} style={{ width }} />
-            ))}
-          </colgroup>
-          <thead>
-            <tr>
-              {columns.map(({ key, field }) => {
-                const dir = sort?.key === key ? sort.dir : null;
-                return (
-                  <th key={key} aria-sort={dir === "asc" ? "ascending" : dir === "desc" ? "descending" : "none"}>
-                    <button
-                      type="button"
-                      className="register-sort"
-                      title={`Sorteer op ${field}`}
-                      onClick={() => reset(setSort)(nextSort(sort, key))}
-                    >
-                      <code>{field}</code>
-                      <span className="register-sort-mark" aria-hidden="true">
-                        {dir === "asc" ? "▲" : dir === "desc" ? "▼" : "↕"}
-                      </span>
-                    </button>
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            {slice.length === 0 ? (
+      <div className="register-table-area">
+        <div className="register-table-box" ref={box}>
+          <table className="register-table">
+            {/* Vaste verdeling van de breedte (table-layout: fixed), zodat alle kolommen altijd passen. */}
+            <colgroup>
+              {columns.map(({ key, width }) => (
+                <col key={key} style={{ width }} />
+              ))}
+            </colgroup>
+            <thead>
               <tr>
-                <td colSpan={columns.length} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
+                {columns.map(({ key, field }) => {
+                  const dir = sort?.key === key ? sort.dir : null;
+                  return (
+                    <th key={key} aria-sort={dir === "asc" ? "ascending" : dir === "desc" ? "descending" : "none"}>
+                      <button
+                        type="button"
+                        className="register-sort"
+                        title={`Sorteer op ${field}`}
+                        onClick={() => reset(setSort)(nextSort(sort, key))}
+                      >
+                        <code>{field}</code>
+                        <span className="register-sort-mark" aria-hidden="true">
+                          {dir === "asc" ? "▲" : dir === "desc" ? "▼" : "↕"}
+                        </span>
+                      </button>
+                    </th>
+                  );
+                })}
               </tr>
-            ) : (
-              slice.map((row) => (
-                <tr key={row.id}>
-                  {columns.map(({ key, cell, className }) => (
-                    <td key={key} className={className}>{cell(row, term, edit)}</td>
-                  ))}
+            </thead>
+            <tbody>
+              {slice.length === 0 ? (
+                <tr>
+                  <td colSpan={columns.length} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                slice.map((row) => (
+                  <tr key={row.id}>
+                    {columns.map(({ key, cell, className }) => (
+                      <td key={key} className={className}>{cell(row, term, edit)}</td>
+                    ))}
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+        {playing && (
+          <Player
+            row={playing}
+            closing={closing}
+            onClose={closePlayer}
+            onClosed={() => {
+              setPlaying(null);
+              setClosing(false);
+            }}
+          />
+        )}
       </div>
 
       <div className="register-pager">

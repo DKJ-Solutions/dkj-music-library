@@ -339,7 +339,7 @@ describe("TrackRegister", () => {
     expect((screen.getByLabelText(/dkj_genre/) as HTMLSelectElement).value).toBe("");
   });
 
-  it("speelt een track met één klik af in één speler boven de tabel, en sluit hem met dezelfde knop", async () => {
+  it("speelt een track met één klik af in één speler onderin de tabel, en sluit hem met dezelfde knop", async () => {
     const ctrl = { loadUri: vi.fn(), play: vi.fn(), destroy: vi.fn(), addListener: vi.fn() };
     const createController = vi.fn((_el: HTMLElement, _opts: { uri: string }, cb: (c: typeof ctrl) => void) => cb(ctrl));
     vi.mocked(loadSpotifyIframeApi).mockResolvedValue({ createController });
@@ -361,9 +361,26 @@ describe("TrackRegister", () => {
     expect(ctrl.play).toHaveBeenCalledTimes(2);
     expect(createController).toHaveBeenCalledTimes(1);
 
+    // Sluiten: eerst schuift de speler omlaag, pas aan het eind van die animatie is hij weg.
     fireEvent.click(screen.getByRole("button", { name: "Speler van Nummer 2 sluiten" }));
+    const player = document.querySelector(".register-player") as HTMLElement;
+    expect(player.classList.contains("is-closing")).toBe(true);
+    expect(screen.getByRole("button", { name: "Nummer 2 afspelen" })).toBeTruthy();
+    // jsdom kent geen AnimationEvent, dus React luistert daar naar de naam met prefix: vuur ze allebei.
+    fireEvent.animationEnd(player);
+    fireEvent(player, new Event("webkitAnimationEnd", { bubbles: true }));
     expect(document.querySelector(".register-player")).toBeNull();
     expect(ctrl.destroy).toHaveBeenCalled();
+  });
+
+  it("haalt de speler zonder animatie meteen weg bij prefers-reduced-motion", async () => {
+    vi.stubGlobal("matchMedia", (query: string) => ({ matches: query.includes("reduce") }));
+    const ctrl = { loadUri: vi.fn(), play: vi.fn(), destroy: vi.fn(), addListener: vi.fn() };
+    vi.mocked(loadSpotifyIframeApi).mockResolvedValue({ createController: (_el, _opts, cb) => cb(ctrl) });
+    render(<TrackRegister rows={[row(1)]} artistCount={1} />);
+    fireEvent.click(screen.getByRole("button", { name: "Nummer 1 afspelen" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Speler sluiten" }));
+    expect(document.querySelector(".register-player")).toBeNull();
   });
 
   it("valt terug op de kale embed als de iFrame API van Spotify niet laadt", async () => {
