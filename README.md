@@ -310,10 +310,9 @@ en `ship-pr` van de dkj-policy-plugin. Je eindigt op een bijgewerkte `main`.
 `dkj_bpm`, `dkj_genre`, `dkj_rating`, `dkj_album` en `dkj_group` accepteren alleen hun eigen opties; elke andere waarde breekt de import af.
 Hoofdletters en spaties tellen niet mee (`128 bpm` wordt `128BPM`).
 
-- **`dkj_group`**: een lijst uit `MMC`, `DJ CYLOW`, `Prive` en `Overige`. De sync vult hem zolang hij
-  leeg is met de werelden van de playlists van de track (een playlist met een beschrijving telt
-  sowieso als MMC); staat een track in meer werelden, dan heeft hij meer groepen. `Overige` zet je
-  zelf (`src/lib/library/groupFromWorlds.ts`).
+- **`dkj_group`**: een lijst uit `MMC`, `DJ CYLOW` en `Prive`. De sync vult hem zolang hij leeg is met
+  de werelden van de playlists van de track (een playlist met een beschrijving telt sowieso als MMC);
+  staat een track in meer werelden, dan heeft hij meer groepen (`src/lib/library/groupFromWorlds.ts`).
 - **`dkj_genre`**: `EDM`, `POP`, `ALT` of `OST`. Het veld wordt bij elke sync uit de playlists afgeleid
   zolang het leeg is: het genre als los woord in de naam (`128BPM EDM`, `Classic Pop`, `🟢 ALT`,
   `| OST`), en House Mix, Drum & Bass en D&B/DNB zijn EDM. Noemen de playlists verschillende genres, dan

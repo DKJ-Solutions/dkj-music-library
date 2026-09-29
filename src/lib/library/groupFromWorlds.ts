@@ -6,7 +6,6 @@
 //     djcylow -> DJ CYLOW, prive -> Prive. Staat hij in meer werelden, dan heeft hij meer groepen
 //     (het register toont die als menu);
 //   - een playlist met een beschrijving hoort sowieso bij MMC;
-//   - "Overige" wordt niet afgeleid; die zet je zelf.
 // Alleen zolang het veld leeg is, net als de andere afgeleide velden: wat je zelf invult, blijft staan.
 //
 // De werelden komen uit de snapshot en de worldStore, die allebei niet in git staan; de uitkomst wel
@@ -21,7 +20,7 @@ import { GROUP_KEY, PLAYLISTS_KEY, TRACK_ID_KEY } from "./fields";
 const GROUP_OF_WORLD: Record<SpotifyWorld, string> = { mmc: "MMC", djcylow: "DJ CYLOW", prive: "Prive" };
 
 /** De volgorde van de groepen in de lijst, gelijk aan de options van dkj_group. */
-const GROUP_ORDER = ["MMC", "DJ CYLOW", "Prive", "Overige"];
+const GROUP_ORDER = ["MMC", "DJ CYLOW", "Prive"];
 
 export interface WorldPlaylist {
   id: string;

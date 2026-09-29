@@ -24,7 +24,7 @@ describe("fillGroupsFromWorlds", () => {
     const { db } = openLibraryDb(":memory:");
     upsertTracks(db, [
       { dkj_track_id: "T1", spotify_playlist: [{ id: "p1", name: "A" }, { id: "p2", name: "B" }] },
-      { dkj_track_id: "T2", spotify_playlist: [{ id: "p1", name: "A" }], dkj_group: ["Overige"] },
+      { dkj_track_id: "T2", spotify_playlist: [{ id: "p1", name: "A" }], dkj_group: ["MMC"] },
       { dkj_track_id: "T3", spotify_playlist: [{ id: "p9", name: "?" }] },
     ]);
     const playlists = [
@@ -33,7 +33,7 @@ describe("fillGroupsFromWorlds", () => {
     ];
     expect(fillGroupsFromWorlds(db, playlists)).toBe(1);
     expect(getTrack(db, "T1")?.dkj_group).toEqual(["MMC", "DJ CYLOW", "Prive"]);
-    expect(getTrack(db, "T2")?.dkj_group).toEqual(["Overige"]);
+    expect(getTrack(db, "T2")?.dkj_group).toEqual(["MMC"]);
     expect(getTrack(db, "T3")?.dkj_group).toBeNull();
     expect(fillGroupsFromWorlds(db, playlists)).toBe(0);
   });

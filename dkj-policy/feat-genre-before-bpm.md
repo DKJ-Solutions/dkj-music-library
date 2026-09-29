@@ -43,16 +43,18 @@
 
 - [x] `TrackRegister.tsx`: de kolom `dkj_genre` staat in `VISIBLE_COLUMNS` voor `dkj_bpm` (de breedtes gaan mee met hun kolom)
 - [x] `fields.ts`: `DKJ_BPM_OPTIONS` loopt van laag naar hoog (96, 112, 128, 144, 176), dus de dropdown van het filter ook; de README volgt. Alleen de weergave leunt op die volgorde: `dkj_bpm` is een tekstveld, dus de lijstsortering van `trackStore.ts` raakt het niet
+- [x] `dkj_group` kent geen `Overige` meer (`fields.ts`, `GROUP_ORDER` in `groupFromWorlds.ts`, README); gemeten in `library.db` en de export: 0 tracks droegen het. De drie tests die het als voorbeeldwaarde gebruikten, gebruiken nu een bestaande groep. Het filter leest zijn keuzes uit `fields.ts`, en een bewaard filter op `Overige` valt via `validOption` terug op Alle
 
 ### TEST
 
-- [x] `TrackRegister.test.tsx` groen (21 tests), daarna de hele suite (899 tests) en `tsc --noEmit` schoon; geen test pint de kolomvolgorde of de BPM-volgorde vast
+- [x] `TrackRegister.test.tsx` groen (21 tests), daarna na elke wijziging de hele suite (899 tests) en `tsc --noEmit` schoon; geen test pint de kolomvolgorde of de BPM-volgorde vast
 - [ ] Dave kijkt naar de tabel op `/spotify/trackregister`
 
 ### DEPLOY: feat/genre-before-bpm
 
 In het trackregister staat de kolom `dkj_genre` nu voor `dkj_bpm`, en de dropdown van het `dkj_bpm`-filter
-loopt van laag naar hoog: 96BPM, 112BPM, 128BPM, 144BPM, 176BPM.
+loopt van laag naar hoog: 96BPM, 112BPM, 128BPM, 144BPM, 176BPM. `dkj_group` kent de lege groep
+`Overige` niet meer: alleen nog MMC, DJ CYLOW en Prive.
 
 **Score:** 1
 
@@ -64,5 +66,5 @@ Alleen volgordes in een eigen overzicht; niemand buiten de repo merkt het.
 
 #### Pull Request
 
-dkj_genre staat in het trackregister voor dkj_bpm
+dkj_genre voor dkj_bpm, BPM van laag naar hoog en geen dkj_group Overige meer
 

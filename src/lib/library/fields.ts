@@ -158,7 +158,7 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
     key: "dkj_group",
     type: "json",
     label: "Eigen groepen, als lijst: de werelden van de playlists van de track (groupFromWorlds.ts)",
-    options: ["MMC", "DJ CYLOW", "Prive", "Overige"],
+    options: ["MMC", "DJ CYLOW", "Prive"],
   },
   { key: "dkj_title", type: "text", label: "Alleen de titel, zoals in dkj_file na de artiesten (fileName.ts), tenzij zelf ingevuld" },
   {
