@@ -7,6 +7,7 @@
 //
 // Pure module: geen fs, geen sqlite -- ook vanuit een client-component te importeren.
 import { albumsOfPlaylists } from "./albumFromPlaylists";
+import { DKJ_ALBUM_COLOURS } from "./fields";
 import type { DjcylowMixLink } from "./djcylowMix";
 import type { PlaylistLink } from "./playlistLink";
 import type { StoredTrack } from "./trackStore";
@@ -50,6 +51,7 @@ export interface RegisterFilter {
   term: string;
   /** "" = alle, EMPTY_FILTER = leeg, anders een optie. */
   bpm: string;
+  /** Ook een kleur uit DKJ_ALBUM_COLOURS: dan past elk album van die kleur (albumMatches). */
   album: string;
   /** Leeg of weggelaten = alle. */
   genre?: string;
@@ -116,6 +118,13 @@ export function searchText(row: RegisterRow): string {
 const matches = (value: string | null, want: string) =>
   want === "" || (want === EMPTY_FILTER ? value === null : value === want);
 
+/** Het albumfilter: een kleur ("Green") past bij elk album van die kleur, Light of Full, (f) of (m)
+ *  (Dave); anders geldt matches(). Een kleur is zelf nooit een album, dus de twee botsen niet. */
+export function albumMatches(album: string | null, want: string): boolean {
+  if ((DKJ_ALBUM_COLOURS as readonly string[]).includes(want)) return album !== null && album.startsWith(`${want} `);
+  return matches(album, want);
+}
+
 /** Een lijst past als hij de gekozen waarde bevat; EMPTY_FILTER past bij een lege lijst. */
 const matchesList = (values: readonly string[], want: string) =>
   want === "" || (want === EMPTY_FILTER ? values.length === 0 : values.includes(want));
@@ -147,7 +156,7 @@ export function filterRegister(
     (row, i) =>
       (term === "" || haystacks[i].includes(term)) && matches(row.bpm, filter.bpm) &&
       matches(row.genre, filter.genre ?? "") &&
-      matches(row.album, filter.album) &&
+      albumMatches(row.album, filter.album) &&
       matchesList(row.groups, filter.group ?? "") &&
       inYearRange(row.year, from, to)
   );

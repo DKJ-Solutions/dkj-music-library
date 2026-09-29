@@ -39,7 +39,7 @@ const GROUP_OPTIONS: readonly string[] = TRACK_FIELDS.find((field) => field.key 
 const PREFS_OPTIONS: RegisterPrefsOptions = {
   bpm: DKJ_BPM_OPTIONS,
   genre: DKJ_GENRE_OPTIONS,
-  album: DKJ_ALBUM_OPTIONS,
+  album: [...DKJ_ALBUM_COLOURS, ...DKJ_ALBUM_OPTIONS],
   group: GROUP_OPTIONS,
   sortKeys: SORT_KEYS,
 };
@@ -670,46 +670,50 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
         <label className="register-filter" htmlFor="register-bpm">
           <span>dkj_bpm</span>
           <select id="register-bpm" value={bpm} onChange={(e) => reset(setBpm)(e.target.value)}>
-            <option value="">{label("Alle", rows.length)}</option>
+            <option className="register-option-meta" value="">{label("Alle", rows.length)}</option>
             {DKJ_BPM_OPTIONS.map((option) => (
               <option key={option} value={option}>{label(option, bpmCounts.get(option))}</option>
             ))}
-            <option value={EMPTY_FILTER}>{label("Leeg", bpmCounts.get(EMPTY_FILTER))}</option>
+            <option className="register-option-meta" value={EMPTY_FILTER}>{label("Leeg", bpmCounts.get(EMPTY_FILTER))}</option>
           </select>
         </label>
         <label className="register-filter" htmlFor="register-genre">
           <span>dkj_genre</span>
           <select id="register-genre" value={genre} onChange={(e) => reset(setGenre)(e.target.value)}>
-            <option value="">{label("Alle", rows.length)}</option>
+            <option className="register-option-meta" value="">{label("Alle", rows.length)}</option>
             {DKJ_GENRE_OPTIONS.map((option) => (
               <option key={option} value={option}>{label(option, genreCounts.get(option))}</option>
             ))}
-            <option value={EMPTY_FILTER}>{label("Leeg", genreCounts.get(EMPTY_FILTER))}</option>
+            <option className="register-option-meta" value={EMPTY_FILTER}>{label("Leeg", genreCounts.get(EMPTY_FILTER))}</option>
           </select>
         </label>
         <label className="register-filter" htmlFor="register-album">
           <span>dkj_album</span>
           <select id="register-album" value={album} onChange={(e) => reset(setAlbum)(e.target.value)}>
-            <option value="">{label("Alle", rows.length)}</option>
+            <option className="register-option-meta" value="">{label("Alle", rows.length)}</option>
             {DKJ_ALBUM_COLOURS.map((colour) => (
               <optgroup key={colour} label={colour}>
+                {/* De hele kleur, Light en Full samen (Dave): het totaal van de vier varianten. */}
+                <option value={colour}>
+                  {label(colour, ALBUM_VARIANTS.reduce((n, variant) => n + (albumCounts.get(`${colour} ${variant}`) ?? 0), 0))}
+                </option>
                 {ALBUM_VARIANTS.map((variant) => {
                   const option = `${colour} ${variant}`;
                   return <option key={option} value={option}>{label(option, albumCounts.get(option))}</option>;
                 })}
               </optgroup>
             ))}
-            <option value={EMPTY_FILTER}>{label("Leeg", albumCounts.get(EMPTY_FILTER))}</option>
+            <option className="register-option-meta" value={EMPTY_FILTER}>{label("Leeg", albumCounts.get(EMPTY_FILTER))}</option>
           </select>
         </label>
         <label className="register-filter" htmlFor="register-group">
           <span>dkj_group</span>
           <select id="register-group" value={group} onChange={(e) => reset(setGroup)(e.target.value)}>
-            <option value="">{label("Alle", rows.length)}</option>
+            <option className="register-option-meta" value="">{label("Alle", rows.length)}</option>
             {GROUP_OPTIONS.map((option) => (
               <option key={option} value={option}>{label(option, groupCounts.get(option))}</option>
             ))}
-            <option value={EMPTY_FILTER}>{label("Leeg", groupCounts.get(EMPTY_FILTER))}</option>
+            <option className="register-option-meta" value={EMPTY_FILTER}>{label("Leeg", groupCounts.get(EMPTY_FILTER))}</option>
           </select>
         </label>
         {showClearFilters && (
