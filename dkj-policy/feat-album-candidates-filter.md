@@ -48,7 +48,7 @@
 
 - [x] Nieuwe tests in `register.test.ts` (filter en telling) en `TrackRegister.test.tsx` (opties en filter); hele suite (903 tests), `tsc --noEmit` en `eslint` groen
 - [x] Gemeten op de export (11.639 tracks): Leeg 933, Meerdere kandidaten 2.451 -- samen de 3.384 die "Leeg" eerst toonde
-- [ ] Dave kijkt naar het dkj_album-filter op `/spotify/trackregister`
+- [x] Dave kijkt naar het dkj_album-filter op `/spotify/trackregister` (akkoord: "ja goed zo")
 
 ### DEPLOY: feat/album-candidates-filter
 
