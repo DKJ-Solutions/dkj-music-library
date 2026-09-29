@@ -48,7 +48,7 @@
 ### TEST
 
 - [x] `TrackRegister.test.tsx` groen (21 tests), daarna na elke wijziging de hele suite (899 tests) en `tsc --noEmit` schoon; geen test pint de kolomvolgorde of de BPM-volgorde vast
-- [ ] Dave kijkt naar de tabel op `/spotify/trackregister`
+- [x] Dave kijkt naar de tabel op `/spotify/trackregister` (akkoord: "merge pr.")
 
 ### DEPLOY: feat/genre-before-bpm
 
