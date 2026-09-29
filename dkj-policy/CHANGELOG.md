@@ -2,7 +2,31 @@
 
 ## [Unreleased]
 
-**43 / 55 minor entries** <!-- pending-tally -->
+**44 / 56 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/62-bachman-bto-1974 · 20260929-115839Z
+
+*You Ain't Seen Nothin' Yet* van Randy Bachman (album *Anthology*) toont op de Maple Classic-pagina
+1974 in plaats van 1993. Het is de opname van Bachman-Turner Overdrive, en die staat bij MusicBrainz
+onder BTO en niet onder Bachman, dus het jaar is vastgezet in
+`src/lib/musicbrainz/releaseYearOverrides.ts`. Resolves #62.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+De gebruiker van de app ziet bij dit nummer het jaar van het origineel in plaats van een live-uitgave
+van bijna twintig jaar later.
+
+**Score:** 1
+
+#### Pull Request
+
+You Ain't Seen Nothin' Yet van Randy Bachman krijgt het jaar 1974
+
+[PR #63](https://github.com/DKJ-Solutions/dkj-music-library/pull/63)
+
+---
 
 ### DEPLOY: fix/47-musicbrainz-year-namesake · 20260929-111618Z
 
