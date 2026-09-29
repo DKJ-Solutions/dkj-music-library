@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**45 / 62 minor entries** <!-- pending-tally -->
+**46 / 63 minor entries** <!-- pending-tally -->
+
+### DEPLOY: style/hide-stats-kicker · 20260929-141228Z
+
+De kicker boven de paginatitel en de rij tellers eronder zijn op elke pagina verborgen, omdat ze te veel
+ruimte innamen. Alleen via CSS: de markup blijft, dus terugzetten is één regel weghalen. De ruimte boven de pagina (padding-top van `.wrap`) is ook
+kleiner geworden, en de horizontale lijn onder de kop is weg, met de ruimte die ervoor zat.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+De gebruiker ziet meer van de inhoud zelf, zonder kopregel en tellers erboven.
+
+**Score:** 2
+
+#### Pull Request
+
+De stats-rij en de kicker verborgen
+
+[PR #71](https://github.com/DKJ-Solutions/dkj-music-library/pull/71)
+
+---
 
 ### DEPLOY: feat/trackregister-spotify-embed · 20260929-132320Z
 
