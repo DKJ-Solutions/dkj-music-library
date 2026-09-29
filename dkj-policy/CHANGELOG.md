@@ -2,7 +2,30 @@
 
 ## [Unreleased]
 
-**45 / 61 minor entries** <!-- pending-tally -->
+**45 / 62 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/trackregister-spotify-embed · 20260929-132320Z
+
+In het trackregister staat in een eigen kolom vóór de titel een afspeelknop. Eén klik laat onderin het tabelkader een Spotify-speler
+omhoog schuiven en start de track meteen (via Spotify's iFrame API). De speler blijft staan terwijl je door de tabel scrollt, filtert of bladert. Nog een klik op
+dezelfde knop, of op het kruisje linksboven op de speler, sluit hem weer. Ben je in dezelfde browser bij Spotify ingelogd,
+dan speelt de hele track, anders een fragment van 30 seconden. Er zijn geen extra OAuth-scopes nodig.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+N/A -- het trackregister is een eigen werkpagina, en bereikt geen andere gebruiker.
+
+**Score:** N/A
+
+#### Pull Request
+
+Spotify-speler in het trackregister
+
+[PR #70](https://github.com/DKJ-Solutions/dkj-music-library/pull/70)
+
+---
 
 ### DEPLOY: feat/feestzaal-cyan-full · 20260929-124453Z
 
