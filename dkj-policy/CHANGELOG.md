@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**45 / 57 minor entries** <!-- pending-tally -->
+**45 / 58 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/genre-before-bpm · 20260929-122115Z
+
+In het trackregister staat de kolom `dkj_genre` nu voor `dkj_bpm`, en de dropdown van het `dkj_bpm`-filter
+loopt van laag naar hoog: 96BPM, 112BPM, 128BPM, 144BPM, 176BPM. `dkj_group` kent de lege groep
+`Overige` niet meer: alleen nog MMC, DJ CYLOW en Prive.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+Alleen volgordes in een eigen overzicht; niemand buiten de repo merkt het.
+
+**Score:** N/A
+
+#### Pull Request
+
+dkj_genre voor dkj_bpm, BPM van laag naar hoog en geen dkj_group Overige meer
+
+[PR #65](https://github.com/DKJ-Solutions/dkj-music-library/pull/65)
+
+---
 
 ### DEPLOY: feat/rating-symbols · 20260929-121212Z
 
