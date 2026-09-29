@@ -49,14 +49,15 @@ oprekken.
 ### CREATE
 
 - [x] Een afspeelknop vóór de titel in de kolom dkj_title (`PlayButton`)
-- [x] Eén speler onderin het tabelkader (`Player`), die omhoog schuift als een track begint en omlaag bij sluiten (Dave); met een sluitknop, en zonder animatie bij prefers-reduced-motion
+- [x] Eén speler onderin het tabelkader (`Player`), die omhoog schuift als een track begint en omlaag bij sluiten (Dave); met een sluitknop als rond knopje op de linkerbovenhoek van de speler (Dave: rechts was het te druk), en zonder animatie bij prefers-reduced-motion
+- [x] Terugval voor `animationend`: in een tabblad dat niet in beeld is slaat de browser de animatie over, en dan bleef de speler halverwege het sluiten hangen -- gemeten in Chrome; nu sluit een timer hem na 300ms
 - [x] Styling in `_track-register.scss`; het afspeel- en stopicoon als SVG, zodat het in het midden van de cirkel staat (Dave)
 - [x] Eén klik: de speler via Spotify's iFrame API (`loadSpotifyIframeApi`), die hem zelf start; de kale embed blijft de terugval (Dave: twee klikken was er één te veel)
 
 ### TEST
 
 - [x] Fixtures bijgewerkt, en tests voor de speler en voor een track zonder `spotify_track_id`
-- [x] typecheck, eslint en vitest groen (65 files, 909 tests)
+- [x] typecheck, eslint en vitest groen (65 files, 910 tests)
 - [x] In Chrome op de dev-server nagelopen: de eerste track en een volgende track starten allebei met één klik; de speler schuift onderin het tabelkader in en bij sluiten weer weg
 - [~] Automatische browsertest van de embed zelf -- dat is een iframe van Spotify, niet te testen in jsdom; de tests geven de component een nep-API
 
@@ -64,7 +65,7 @@ oprekken.
 
 In het trackregister staat vóór elke titel een afspeelknop. Eén klik laat onderin het tabelkader een Spotify-speler
 omhoog schuiven en start de track meteen (via Spotify's iFrame API). De speler blijft staan terwijl je door de tabel scrollt, filtert of bladert. Nog een klik op
-dezelfde knop, of op het kruisje, sluit de speler weer. Ben je in dezelfde browser bij Spotify ingelogd,
+dezelfde knop, of op het kruisje linksboven op de speler, sluit hem weer. Ben je in dezelfde browser bij Spotify ingelogd,
 dan speelt de hele track, anders een fragment van 30 seconden. Er zijn geen extra OAuth-scopes nodig.
 
 **Score:** 3

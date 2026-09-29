@@ -329,10 +329,10 @@ button.register-play:hover,
 $register-player-height: 97px; // 80px iframe + 2 x 8px padding + 1px rand
 
 .register-player {
+  position: relative;
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  gap: 8px;
   height: $register-player-height;
   box-sizing: border-box;
   padding: 8px;
@@ -388,19 +388,35 @@ $register-player-height: 97px; // 80px iframe + 2 x 8px padding + 1px rand
   border-radius: 12px;
 }
 
+// De sluitknop OP DE SPELER (Dave): een rond knopje op de LINKERbovenhoek, half over de rand van de
+// embed -- rechts staan het Spotify-logo en de knoppen van de speler al, en dat werd te druk (Dave). Het kruisje is een SVG, net als
+// het afspeelicoon, zodat het precies in het midden staat.
 .register-player-close {
-  flex: 0 0 auto;
-  width: 28px;
-  height: 28px;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
   padding: 0;
-  font: inherit;
-  font-size: 18px;
-  line-height: 1;
   border: 1px solid var(--line);
   border-radius: 50%;
   background: var(--surface);
   color: var(--muted);
+  box-shadow: var(--shadow);
   cursor: pointer;
+}
+
+.register-player-close svg {
+  display: block;
+  width: 8px;
+  height: 8px;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
 }
 
 .register-player-close:hover {

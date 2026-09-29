@@ -2,7 +2,7 @@
 // De tabel van /spotify/trackregister: zoeken, filteren op een bereik van year, op dkj_bpm, dkj_genre, dkj_album en dkj_group, sorteren via de kopregel, en bladeren per
 // 100 rijen (12.000+ rijen in één keer renderen maakt de pagina traag). Alle logica die geen React is
 // zit in register.ts; hier alleen de weergave en de filterstand.
-import { useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { DKJ_ALBUM_COLOURS, DKJ_ALBUM_OPTIONS, DKJ_BPM_OPTIONS, DKJ_GENRE_OPTIONS, DKJ_RATING_OPTIONS, TRACK_FIELDS } from "@/lib/library/fields";
 import { mixUrl } from "@/lib/library/djcylowMix";
@@ -501,6 +501,15 @@ function Player({
     controller.current.play();
   }, [id]);
 
+  // Terugval voor animationend: in een tabblad dat niet in beeld is slaat de browser de animatie over,
+  // en dan komt dat event nooit -- de speler bleef dan halverwege het sluiten hangen. Iets langer dan de
+  // animatie omlaag (0.18s, _track-register.scss).
+  useEffect(() => {
+    if (!closing) return;
+    const timer = window.setTimeout(onClosed, 300);
+    return () => window.clearTimeout(timer);
+  }, [closing, onClosed]);
+
   if (!id) return null;
   const name = row.dkjTitle || row.title || row.id;
   return (
@@ -525,7 +534,9 @@ function Player({
         <div ref={host} className="register-player-frame" />
       )}
       <button type="button" className="register-player-close" aria-label="Speler sluiten" title="Speler sluiten" onClick={onClose}>
-        ×
+        <svg viewBox="0 0 8 8" aria-hidden="true" focusable="false">
+          <path d="M1 1 7 7M7 1 1 7" />
+        </svg>
       </button>
     </div>
   );
@@ -655,6 +666,10 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
   const [playing, setPlaying] = useState<RegisterRow | null>(null);
   // Waar tijdens de animatie omlaag (Player); daarna gaat de speler echt weg.
   const [closing, setClosing] = useState(false);
+  const finishClose = useCallback(() => {
+    setPlaying(null);
+    setClosing(false);
+  }, []);
   const closePlayer = () => {
     // Zonder animatie (prefers-reduced-motion) komt er geen animationend, dus dan meteen weg.
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) setPlaying(null);
@@ -931,10 +946,7 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
             row={playing}
             closing={closing}
             onClose={closePlayer}
-            onClosed={() => {
-              setPlaying(null);
-              setClosing(false);
-            }}
+            onClosed={finishClose}
           />
         )}
       </div>

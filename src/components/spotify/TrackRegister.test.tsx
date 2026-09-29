@@ -373,6 +373,16 @@ describe("TrackRegister", () => {
     expect(ctrl.destroy).toHaveBeenCalled();
   });
 
+  it("haalt de speler bij sluiten ook weg als animationend nooit komt (tabblad niet in beeld)", async () => {
+    const ctrl = { loadUri: vi.fn(), play: vi.fn(), destroy: vi.fn(), addListener: vi.fn() };
+    vi.mocked(loadSpotifyIframeApi).mockResolvedValue({ createController: (_el, _opts, cb) => cb(ctrl) });
+    render(<TrackRegister rows={[row(1)]} artistCount={1} />);
+    fireEvent.click(screen.getByRole("button", { name: "Nummer 1 afspelen" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Speler sluiten" }));
+    expect(document.querySelector(".register-player.is-closing")).toBeTruthy();
+    await waitFor(() => expect(document.querySelector(".register-player")).toBeNull());
+  });
+
   it("haalt de speler zonder animatie meteen weg bij prefers-reduced-motion", async () => {
     vi.stubGlobal("matchMedia", (query: string) => ({ matches: query.includes("reduce") }));
     const ctrl = { loadUri: vi.fn(), play: vi.fn(), destroy: vi.fn(), addListener: vi.fn() };
