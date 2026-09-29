@@ -69,7 +69,7 @@ AAR01-HAR04-01 zit bewust NIET in deze branch: die gaat na de merge met `library
 - [x] `exportDiff.ts` + `scripts/library/export-diff.ts`: de samenvatting voor het changelog-item
 - [x] `sameOrigin.ts`-kop noemde "de drie" routes; nu alle acht
 - [x] Export bijgewerkt: alle 11.639 tracks `"dkj_rating":"star-4"`; README-sectie
-- [ ] Visuele check door Dave op `/spotify/trackregister`
+- [x] Visuele check door Dave op `/spotify/trackregister`: akkoord, opdracht tot PR + merge
 
 ### TEST
 
