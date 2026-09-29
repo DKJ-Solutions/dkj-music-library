@@ -41,17 +41,25 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `TrackRegister.tsx`: de kolom `dkj_genre` staat in `VISIBLE_COLUMNS` voor `dkj_bpm` (de breedtes gaan mee met hun kolom)
 
 ### TEST
 
+- [x] `TrackRegister.test.tsx` groen (21 tests) en `tsc --noEmit` schoon; geen test pint de kolomvolgorde vast
+- [ ] Dave kijkt naar de tabel op `/spotify/trackregister`
+
 ### DEPLOY: feat/genre-before-bpm
 
-**Score:**
+In het trackregister staat de kolom `dkj_genre` nu voor `dkj_bpm`. De filters bovenaan blijven in hun
+oude volgorde staan.
+
+**Score:** 1
 
 #### What makes this deploy extra special
 
-**Score:**
+Alleen de volgorde van twee kolommen in een eigen overzicht; niemand buiten de repo merkt het.
+
+**Score:** N/A
 
 #### Pull Request
 
