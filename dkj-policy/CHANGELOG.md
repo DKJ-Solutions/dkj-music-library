@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**45 / 58 minor entries** <!-- pending-tally -->
+**45 / 59 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/filter-meta-options-dim · 20260929-122730Z
+
+In de filters van het trackregister staan "Alle" en "Leeg" nu in een gedempte kleur, zodat de waarden
+die je echt kiest eruit springen. Het `dkj_album`-filter kent nu ook alleen een kleur: kies Green en je
+ziet Green Light en Green Full, (f) en (m) samen.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+Alleen een kleur en een extra filterkeuze in een eigen overzicht; niemand buiten de repo merkt het.
+
+**Score:** N/A
+
+#### Pull Request
+
+Alle en Leeg minder fel, en het albumfilter kent ook alleen een kleur
+
+[PR #66](https://github.com/DKJ-Solutions/dkj-music-library/pull/66)
+
+---
 
 ### DEPLOY: feat/genre-before-bpm · 20260929-122115Z
 
