@@ -51,9 +51,10 @@ const PREFS_OPTIONS: RegisterPrefsOptions = {
 const DEFAULT_PREFS: RegisterPrefs = defaultRegisterPrefs();
 
 /** Eén kolom van de tabel: het veld, waarop hij sorteert, zijn deel van de breedte (table-layout: fixed,
- *  zodat alle kolommen altijd passen) en wat er in de cel staat. */
+ *  zodat alle kolommen altijd passen) en wat er in de cel staat. De afspeelkolom ("play") is geen veld en
+ *  sorteert niet; zijn kop heeft alleen een naam voor een schermlezer. */
 interface Column {
-  key: SortKey;
+  key: SortKey | "play";
   field: string;
   width: string;
   cell: (row: RegisterRow, term: string, edit: CellEdit) => ReactNode;
@@ -409,10 +410,10 @@ function OneLine({ text, term, className }: { text: string | null; term: string;
   );
 }
 
-/** De afspeelknop voor de titel: zet de track in de speler boven de tabel, of haalt hem er weer uit. Zonder
- *  spotify_track_id valt er niets af te spelen, dan staat er een lege plek zodat de titels recht blijven. */
+/** De afspeelknop in de eigen kolom vóór de titel: zet de track in de speler onderin de tabel, of haalt
+ *  hem er weer uit. Zonder spotify_track_id valt er niets af te spelen, dan blijft de cel leeg. */
 function PlayButton({ row, edit }: { row: RegisterRow; edit: CellEdit }) {
-  if (!row.spotifyTrackId) return <span className="register-play register-play--none" aria-hidden="true" />;
+  if (!row.spotifyTrackId) return null;
   const playing = edit.playingId === row.id;
   const name = row.dkjTitle || row.title || row.id;
   return (
@@ -581,17 +582,9 @@ function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term:
 /** De gewone kolommen, in volgorde. dkj_track_id, dkj_file, dkj_artist, dkj_artist_id en djcylow_mix staan
  *  er niet in (Dave); die staan in HIDDEN_COLUMNS, achter de switch, en op alle vijf zoeken kan altijd. */
 const VISIBLE_COLUMNS: readonly Column[] = [
-  {
-    key: "dkjTitle",
-    field: "dkj_title",
-    width: "22%",
-    cell: (row, term, edit) => (
-      <span className="register-title-cell">
-        <PlayButton row={row} edit={edit} />
-        <OneLine text={row.dkjTitle} term={term} className="register-title" />
-      </span>
-    ),
-  },
+  // De afspeelknop in een EIGEN KOLOM (Dave): vaste breedte, net genoeg voor het knopje.
+  { key: "play", field: "afspelen", width: "40px", className: "register-play-cell", cell: (row, _term, edit) => <PlayButton row={row} edit={edit} /> },
+  { key: "dkjTitle", field: "dkj_title", width: "22%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
   { key: "albumArtist", field: "dkj_albumartiest", width: "17%", cell: (row, term) => <OneLine text={row.albumArtist} term={term} className="register-album-artist" /> },
   { key: "year", field: "year", width: "5%", cell: (row, term) => <OneLine text={row.year} term={term} className="register-year" /> },
   {
@@ -905,6 +898,13 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
             <thead>
               <tr>
                 {columns.map(({ key, field }) => {
+                  if (key === "play") {
+                    return (
+                      <th key={key} className="register-play-cell">
+                        <span className="register-hidden-label">{field}</span>
+                      </th>
+                    );
+                  }
                   const dir = sort?.key === key ? sort.dir : null;
                   return (
                     <th key={key} aria-sort={dir === "asc" ? "ascending" : dir === "desc" ? "descending" : "none"}>

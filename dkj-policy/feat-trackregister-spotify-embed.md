@@ -48,7 +48,7 @@ oprekken.
 
 ### CREATE
 
-- [x] Een afspeelknop vóór de titel in de kolom dkj_title (`PlayButton`)
+- [x] Een afspeelknop in een eigen, smalle kolom vóór dkj_title (`PlayButton`; Dave), zonder zichtbare kop en niet sorteerbaar
 - [x] Eén speler onderin het tabelkader (`Player`), die omhoog schuift als een track begint en omlaag bij sluiten (Dave); met een sluitknop als rond knopje op de linkerbovenhoek van de speler (Dave: rechts was het te druk), en zonder animatie bij prefers-reduced-motion
 - [x] Terugval voor `animationend`: in een tabblad dat niet in beeld is slaat de browser de animatie over, en dan bleef de speler halverwege het sluiten hangen -- gemeten in Chrome; nu sluit een timer hem na 300ms
 - [x] Styling in `_track-register.scss`; het afspeel- en stopicoon als SVG, zodat het in het midden van de cirkel staat (Dave)
@@ -63,7 +63,7 @@ oprekken.
 
 ### DEPLOY: feat/trackregister-spotify-embed
 
-In het trackregister staat vóór elke titel een afspeelknop. Eén klik laat onderin het tabelkader een Spotify-speler
+In het trackregister staat in een eigen kolom vóór de titel een afspeelknop. Eén klik laat onderin het tabelkader een Spotify-speler
 omhoog schuiven en start de track meteen (via Spotify's iFrame API). De speler blijft staan terwijl je door de tabel scrollt, filtert of bladert. Nog een klik op
 dezelfde knop, of op het kruisje linksboven op de speler, sluit hem weer. Ben je in dezelfde browser bij Spotify ingelogd,
 dan speelt de hele track, anders een fragment van 30 seconden. Er zijn geen extra OAuth-scopes nodig.

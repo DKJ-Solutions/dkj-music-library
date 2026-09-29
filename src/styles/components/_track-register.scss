@@ -260,22 +260,24 @@
   color: var(--ink);
 }
 
-// De afspeelknop vóór de titel (PlayButton in TrackRegister.tsx). De titel krijgt de rest van de breedte
-// en wordt nog steeds op één regel afgekapt; een track zonder spotify_track_id houdt een even brede lege plek.
-.register-title-cell {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
+// De afspeelknop in een EIGEN KOLOM vóór dkj_title (Dave; PlayButton in TrackRegister.tsx): 40px breed,
+// het knopje op de linkermarge van de tabel, en de rest van de ruimte als afstand tot de titel.
+.register-table .register-play-cell {
+  padding-right: 0;
+  vertical-align: middle;
 }
 
-.register-title-cell .register-oneline {
-  flex: 1 1 auto;
-  min-width: 0;
+// Een kopje dat alleen een schermlezer leest (de afspeelkolom heeft geen zichtbare kop).
+.register-hidden-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .register-play {
-  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -302,11 +304,6 @@
   .register-play {
     transition: none;
   }
-}
-
-.register-play--none {
-  border-color: transparent;
-  cursor: default;
 }
 
 button.register-play:hover,
