@@ -318,7 +318,7 @@ Hoofdletters en spaties tellen niet mee (`128 bpm` wordt `128BPM`).
   zolang het leeg is: het genre als los woord in de naam (`128BPM EDM`, `Classic Pop`, `🟢 ALT`,
   `| OST`), en House Mix, Drum & Bass en D&B/DNB zijn EDM. Noemen de playlists verschillende genres, dan
   wint het meest genoemde; bij een gelijke stand blijft het leeg (`src/lib/library/genreFromPlaylists.ts`).
-- **`dkj_bpm`**: `128BPM`, `112BPM`, `176BPM`, `144BPM`, `96BPM`. Het veld wordt bij elke sync uit de
+- **`dkj_bpm`**: `96BPM`, `112BPM`, `128BPM`, `144BPM`, `176BPM`. Het veld wordt bij elke sync uit de
   playlists afgeleid zolang het leeg is: een BPM in de naam (`128BPM EDM`), House Mix is 128, Drum &
   Bass en D&B/DNB zijn 176. Noemen de playlists verschillende BPM's, dan wint de meest genoemde; bij
   een gelijke stand blijft het leeg (`src/lib/library/bpmFromPlaylists.ts`).

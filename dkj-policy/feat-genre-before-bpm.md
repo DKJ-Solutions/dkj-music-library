@@ -42,22 +42,23 @@
 ### CREATE
 
 - [x] `TrackRegister.tsx`: de kolom `dkj_genre` staat in `VISIBLE_COLUMNS` voor `dkj_bpm` (de breedtes gaan mee met hun kolom)
+- [x] `fields.ts`: `DKJ_BPM_OPTIONS` loopt van laag naar hoog (96, 112, 128, 144, 176), dus de dropdown van het filter ook; de README volgt. Alleen de weergave leunt op die volgorde: `dkj_bpm` is een tekstveld, dus de lijstsortering van `trackStore.ts` raakt het niet
 
 ### TEST
 
-- [x] `TrackRegister.test.tsx` groen (21 tests) en `tsc --noEmit` schoon; geen test pint de kolomvolgorde vast
+- [x] `TrackRegister.test.tsx` groen (21 tests), daarna de hele suite (899 tests) en `tsc --noEmit` schoon; geen test pint de kolomvolgorde of de BPM-volgorde vast
 - [ ] Dave kijkt naar de tabel op `/spotify/trackregister`
 
 ### DEPLOY: feat/genre-before-bpm
 
-In het trackregister staat de kolom `dkj_genre` nu voor `dkj_bpm`. De filters bovenaan blijven in hun
-oude volgorde staan.
+In het trackregister staat de kolom `dkj_genre` nu voor `dkj_bpm`, en de dropdown van het `dkj_bpm`-filter
+loopt van laag naar hoog: 96BPM, 112BPM, 128BPM, 144BPM, 176BPM.
 
 **Score:** 1
 
 #### What makes this deploy extra special
 
-Alleen de volgorde van twee kolommen in een eigen overzicht; niemand buiten de repo merkt het.
+Alleen volgordes in een eigen overzicht; niemand buiten de repo merkt het.
 
 **Score:** N/A
 

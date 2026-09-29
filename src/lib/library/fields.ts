@@ -86,8 +86,8 @@ export function albumArtistOf(names: readonly string[]): string | null {
   return names.length > 0 ? names.join(ALBUM_ARTIST_SEPARATOR) : null;
 }
 
-/** De eigen BPM-groepen, in de volgorde waarin ze getoond worden. */
-export const DKJ_BPM_OPTIONS = ["128BPM", "112BPM", "176BPM", "144BPM", "96BPM"] as const;
+/** De eigen BPM-groepen, van laag naar hoog: de volgorde waarin ze getoond worden. */
+export const DKJ_BPM_OPTIONS = ["96BPM", "112BPM", "128BPM", "144BPM", "176BPM"] as const;
 
 /** Het veld met het eigen genre. */
 export const GENRE_KEY = "dkj_genre";
