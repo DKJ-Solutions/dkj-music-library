@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**45 / 60 minor entries** <!-- pending-tally -->
+**45 / 61 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/feestzaal-cyan-full · 20260929-124453Z
+
+Tracks in een playlist met `Feestzaal` in de naam krijgen bij elke sync `dkj_album` Cyan Full (f), zolang
+hun album nog leeg is -- ook als hun andere playlists verschillende albums noemen. Een album dat er al
+staat, blijft staan. Meteen toegepast: 442 tracks hebben nu Cyan Full (f).
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Een afleidingsregel in de eigen bibliotheek; niemand buiten de repo merkt het.
+
+**Score:** N/A
+
+#### Pull Request
+
+Tracks uit een Feestzaal-playlist krijgen dkj_album Cyan Full (f)
+
+[PR #68](https://github.com/DKJ-Solutions/dkj-music-library/pull/68)
+
+---
 
 ### DEPLOY: feat/album-candidates-filter · 20260929-123514Z
 
