@@ -26,6 +26,8 @@ export interface RegisterRow {
   bpm: string | null;
   /** Het eigen genre (dkj_genre). */
   genre: string | null;
+  /** De eigen waardering (dkj_rating), als tekst: zo zoekt en sorteert het als de andere kolommen. */
+  rating: string | null;
   album: string | null;
   /** De albums die de playlists noemen (albumsOfPlaylists). Meer dan één: de playlists verschillen, en
    *  dan blijft `album` leeg tot je zelf kiest. */
@@ -86,6 +88,7 @@ export function toRegisterRow(track: StoredTrack, artistNames: Record<string, st
     year: typeof track.year === "number" ? String(track.year) : null,
     bpm: text(track.dkj_bpm),
     genre: text(track.dkj_genre),
+    rating: typeof track.dkj_rating === "number" ? String(track.dkj_rating) : null,
     album: text(track.dkj_album),
     albumCandidates: albumsOfPlaylists(playlists.map((p) => p.name)),
     file: text(track.dkj_file),
@@ -104,7 +107,7 @@ export function fold(value: string): string {
 /** Alles waarop gezocht wordt, in één gevouwen string. */
 export function searchText(row: RegisterRow): string {
   return fold(
-    [row.id, row.title, ...row.artistIds, ...row.artistNames, row.artist, row.albumArtist, row.year, row.bpm, row.genre, row.album, ...row.groups, row.file, row.dkjTitle, ...row.playlists.map((p) => p.name), ...row.mixes.map((m) => m.name)]
+    [row.id, row.title, ...row.artistIds, ...row.artistNames, row.artist, row.albumArtist, row.year, row.bpm, row.genre, row.rating, row.album, ...row.groups, row.file, row.dkjTitle, ...row.playlists.map((p) => p.name), ...row.mixes.map((m) => m.name)]
       .filter(Boolean)
       .join(" ")
   );
@@ -162,11 +165,11 @@ export function countBy(rows: readonly RegisterRow[], key: "bpm" | "genre" | "al
 }
 
 /** De kolommen waarop de tabel kan sorteren; elke kolom van het register. */
-export type SortKey = "id" | "file" | "dkjTitle" | "artist" | "albumArtist" | "year" | "artistIds" | "playlists" | "mixes" | "bpm" | "genre" | "album" | "groups";
+export type SortKey = "id" | "file" | "dkjTitle" | "artist" | "albumArtist" | "year" | "artistIds" | "playlists" | "mixes" | "bpm" | "genre" | "rating" | "album" | "groups";
 
 /** Dezelfde kolommen als SortKey, maar als waarden -- zodat een opgeslagen sortering (registerPrefs.ts)
  *  gevalideerd kan worden. */
-export const SORT_KEYS: readonly SortKey[] = ["id", "file", "dkjTitle", "artist", "albumArtist", "year", "artistIds", "playlists", "mixes", "bpm", "genre", "album", "groups"];
+export const SORT_KEYS: readonly SortKey[] = ["id", "file", "dkjTitle", "artist", "albumArtist", "year", "artistIds", "playlists", "mixes", "bpm", "genre", "rating", "album", "groups"];
 
 export interface RegisterSort {
   key: SortKey;

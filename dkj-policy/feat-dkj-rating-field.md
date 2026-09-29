@@ -39,19 +39,36 @@
 
 ### PLAN
 
+Dave (29 september 2026): een nieuw dataveld `dkj_rating`, als kolom in het trackregister. Het type
+stond niet in de vraag; gekozen is een geheel getal van 1 (laag) tot 5 (hoog), zelf in te vullen en
+niet afgeleid. Een ander type later kost geen data: een typewissel in `fields.ts` laat de kolom staan.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `fields.ts`: veld `dkj_rating` (integer) en `RATING_KEY`
+- [x] `register.ts`: `rating` in de rij, in het zoeken en als sorteerkolom
+- [x] `TrackRegister.tsx`: kolom `dkj_rating` (4%) na `dkj_genre`; `dkj_title` van 21% naar 17%
+- [x] Export bijgewerkt: elke track `"dkj_rating":null`, verder byte-gelijk (gecontroleerd); README-sectie
+- [ ] Visuele check door Dave op `/spotify/trackregister`
 
 ### TEST
 
+- [x] `register.test.ts` en `TrackRegister.test.tsx` uitgebreid; `npm test` (882), typecheck en lint groen
+
 ### DEPLOY: feat/dkj-rating-field
 
-**Score:**
+Nieuw veld `dkj_rating`: je eigen waardering van een nummer, een geheel getal van 1 (laag) tot 5
+(hoog). Je vult het zelf in; het wordt niet afgeleid, dus in de export staat het eerst bij elke track op
+`null`. Het trackregister toont het als kolom `dkj_rating` na `dkj_genre`, en je kunt erop sorteren en
+zoeken.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Het trackregister heeft een kolom voor je eigen waardering, waarop je kunt sorteren.
+
+**Score:** 2
 
 #### Pull Request
 

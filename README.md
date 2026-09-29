@@ -274,6 +274,12 @@ uit 2015 blijft dus 1997. Kent Spotify alleen de compilatie, dan is dat het jaar
 alleen gevuld zolang het leeg is, en het trackregister toont het in de kolom `year`. De regels staan in
 `src/lib/library/releaseYears.ts`.
 
+### De waardering: `dkj_rating`
+
+`dkj_rating` is je eigen waardering van een nummer: een geheel getal van 1 (laag) tot 5 (hoog). Dit veld
+vul je zelf; het wordt niet afgeleid, dus in de export staat het eerst bij elke track op `null`. Het
+trackregister toont het in de kolom `dkj_rating`, en je kunt erop sorteren en zoeken.
+
 ### Velden met vaste keuzes
 
 `dkj_bpm`, `dkj_genre`, `dkj_album` en `dkj_group` accepteren alleen hun eigen opties; elke andere waarde breekt de import af.

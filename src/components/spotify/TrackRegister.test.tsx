@@ -24,6 +24,7 @@ function row(n: number, over: Partial<RegisterRow> = {}): RegisterRow {
     year: null,
     bpm: null,
     genre: null,
+    rating: null,
     album: null,
     albumCandidates: [],
     file: `Artiest - Nummer ${n}`,
@@ -161,6 +162,12 @@ describe("TrackRegister", () => {
     fireEvent.change(screen.getByLabelText(/dkj_genre/), { target: { value: "OST" } });
     expect(bodyRows()).toHaveLength(1);
     expect(screen.getByText("1 van 3 nummers")).toBeTruthy();
+  });
+
+  it("toont dkj_rating als kolom", () => {
+    render(<TrackRegister rows={[row(1, { rating: "2" }), row(2), row(3, { rating: "5" })]} artistCount={1} />);
+    expect(screen.getByRole("columnheader", { name: /dkj_rating/ })).toBeTruthy();
+    expect(screen.getByText("5", { selector: ".register-rating" })).toBeTruthy();
   });
 
   it("filtert op een zelf ingevuld bereik van year", () => {

@@ -334,7 +334,7 @@ function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term:
 /** De gewone kolommen, in volgorde. dkj_track_id, dkj_file, dkj_artist en dkj_artist_id staan er niet in
  *  (Dave); die staan in HIDDEN_COLUMNS, achter de switch, en op alle vier zoeken kan altijd. */
 const VISIBLE_COLUMNS: readonly Column[] = [
-  { key: "dkjTitle", field: "dkj_title", width: "21%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
+  { key: "dkjTitle", field: "dkj_title", width: "17%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
   { key: "albumArtist", field: "dkj_albumartiest", width: "17%", cell: (row, term) => <OneLine text={row.albumArtist} term={term} className="register-album-artist" /> },
   { key: "year", field: "year", width: "5%", cell: (row, term) => <OneLine text={row.year} term={term} className="register-year" /> },
   {
@@ -377,6 +377,7 @@ const VISIBLE_COLUMNS: readonly Column[] = [
     width: "6%",
     cell: (row, term) => (row.genre ? <span className="register-tag"><Highlight text={row.genre} term={term} /></span> : <Empty />),
   },
+  { key: "rating", field: "dkj_rating", width: "4%", cell: (row, term) => <OneLine text={row.rating} term={term} className="register-rating" /> },
   { key: "album", field: "dkj_album", width: "11%", cell: (row, term) => <Album album={row.album} candidates={row.albumCandidates} term={term} /> },
   { key: "groups", field: "dkj_group", width: "8%", cell: (row, term) => <Groups groups={row.groups} term={term} /> },
 ];

@@ -95,6 +95,9 @@ export const GENRE_KEY = "dkj_genre";
 /** De eigen genres, in de volgorde waarin ze getoond worden. */
 export const DKJ_GENRE_OPTIONS = ["EDM", "POP", "ALT", "OST"] as const;
 
+/** Het veld met de eigen waardering: een geheel getal van 1 (laag) tot 5 (hoog). */
+export const RATING_KEY = "dkj_rating";
+
 /** Het veld met het eigen album (zie albumFromPlaylists.ts). */
 export const ALBUM_KEY = "dkj_album";
 
@@ -158,6 +161,7 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
     label: "Mixen op djcylow.com waarin de track zit, als { slug, name }; bij elke sync ververst zolang de mix-bron er is (djcylowMixes.ts)",
   },
   { key: "dkj_genre", type: "text", label: "Eigen genre", options: DKJ_GENRE_OPTIONS },
+  { key: "dkj_rating", type: "integer", label: "Eigen waardering, 1 (laag) tot 5 (hoog); zelf in te vullen, niet afgeleid" },
   // Nieuw veld? Voeg het hier toe, bv.:
   // { key: "energy", type: "integer", label: "Energie 1-10" },
 ];
