@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { albumFromPlaylists, albumOfPlaylist, albumsOfPlaylists } from "./albumFromPlaylists";
+import { albumFromPlaylists, albumOfPlaylist, albumsOfPlaylists, isFeestzaalPlaylist } from "./albumFromPlaylists";
 
 describe("albumOfPlaylist", () => {
   it("haalt kleur, dichtheid en geslacht uit de naam, in elke volgorde", () => {
@@ -25,6 +25,21 @@ describe("albumFromPlaylists", () => {
     expect(albumFromPlaylists(["Cyan Full (f) 🧊 Classic Pop", "Green Full (f) 🟢 Classic Pop"])).toBeNull();
     expect(albumFromPlaylists(["Green Full | OST"])).toBeNull();
     expect(albumFromPlaylists([])).toBeNull();
+  });
+
+  it("geeft Cyan Full (f) bij een Feestzaal-playlist, ook als de andere playlists iets anders noemen", () => {
+    expect(albumFromPlaylists(["Phase 2A, Feestzaal (2026)"])).toBe("Cyan Full (f)");
+    expect(albumFromPlaylists(["ALLES | Feestzaal (2026) | DJ Cylow", "Cyan Light (f) 🧊 Classic Pop"])).toBe("Cyan Full (f)");
+    expect(albumFromPlaylists(["Green Full (f) 🟢 Classic Pop", "Cyan Light (f) 🧊 Classic Pop", "phase 1, feestzaal"])).toBe("Cyan Full (f)");
+  });
+});
+
+describe("isFeestzaalPlaylist", () => {
+  it("herkent Feestzaal als los woord, zonder op hoofdletters te letten", () => {
+    expect(isFeestzaalPlaylist("Phase 3D, Feestzaal (2026)")).toBe(true);
+    expect(isFeestzaalPlaylist("FEESTZAAL")).toBe(true);
+    expect(isFeestzaalPlaylist("Feestzaalhuur")).toBe(false);
+    expect(isFeestzaalPlaylist("Magenta Light (m) ♦️ 128BPM EDM")).toBe(false);
   });
 });
 

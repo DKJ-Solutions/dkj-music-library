@@ -41,17 +41,27 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `albumFromPlaylists.ts`: een playlist met `Feestzaal` als los woord in de naam (`isFeestzaalPlaylist`) maakt het album `Cyan Full (f)` (`FEESTZAAL_ALBUM`), vóór de regel dat alle album-playlists hetzelfde moeten noemen. Dave koos "wint van leeg": `fillMissing` vult alleen lege velden, dus een album dat er al staat blijft staan
+- [x] De regel toegepast op de bibliotheek met alleen `fillAlbumsFromPlaylists` via `withLibrary` (niet de hele `library:assign-ids`, die ook uit de snapshot bijwerkt): 442 tracks gevuld, export bijgewerkt. README volgt
 
 ### TEST
 
+- [x] Nieuwe tests in `albumFromPlaylists.test.ts` (regel, voorrang, los woord); hele suite (905 tests), `tsc --noEmit` en `eslint` groen
+- [x] De export-diff nagelopen tegen `HEAD`: 11.639 tracks voor en na; alleen `dkj_album` en `updated_at` veranderd, bij 442 tracks, alle 442 van leeg naar `Cyan Full (f)`, alle 442 in een Feestzaal-playlist
+
 ### DEPLOY: feat/feestzaal-cyan-full
 
-**Score:**
+Tracks in een playlist met `Feestzaal` in de naam krijgen bij elke sync `dkj_album` Cyan Full (f), zolang
+hun album nog leeg is -- ook als hun andere playlists verschillende albums noemen. Een album dat er al
+staat, blijft staan. Meteen toegepast: 442 tracks hebben nu Cyan Full (f).
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Een afleidingsregel in de eigen bibliotheek; niemand buiten de repo merkt het.
+
+**Score:** N/A
 
 #### Pull Request
 
