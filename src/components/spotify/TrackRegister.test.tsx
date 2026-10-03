@@ -35,6 +35,7 @@ function row(n: number, over: Partial<RegisterRow> = {}): RegisterRow {
     bpm: null,
     genre: null,
     rating: null,
+    playcount: null,
     album: null,
     albumCandidates: [],
     file: `Artiest - Nummer ${n}`,
@@ -181,6 +182,12 @@ describe("TrackRegister", () => {
     render(<TrackRegister rows={[row(1, { rating: "tier-2" }), row(2), row(3, { rating: "tier-8" })]} artistCount={1} />);
     expect(screen.getByRole("columnheader", { name: /dkj_rating/ })).toBeTruthy();
     expect(screen.getByText("tier-8", { selector: ".register-tag" })).toBeTruthy();
+  });
+
+  it("toont spotify_playcount als kolom, leeg zolang er geen aantal is", () => {
+    render(<TrackRegister rows={[row(1, { playcount: "37" }), row(2)]} artistCount={1} />);
+    expect(screen.getByRole("columnheader", { name: /spotify_playcount/ })).toBeTruthy();
+    expect(screen.getByText("37", { selector: ".register-playcount" })).toBeTruthy();
   });
 
   it("zet per paar tiers een eigen symbool voor de waardering", () => {

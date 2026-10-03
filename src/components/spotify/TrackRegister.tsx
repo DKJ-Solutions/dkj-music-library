@@ -621,6 +621,14 @@ const VISIBLE_COLUMNS: readonly Column[] = [
     width: "104px",
     cell: (row, term, edit) => <Rating row={row} term={term} setRating={edit.setRating} />,
   },
+  {
+    key: "playcount",
+    field: "spotify_playcount",
+    // Vaste breedte, zoals dkj_rating: de cel is maar een getal, maar de kop "spotify_playcount" met zijn
+    // pijltje moet er heel in passen. Leeg (—) tot de Extended streaming history van Spotify geïmporteerd is.
+    width: "148px",
+    cell: (row, term) => <OneLine text={row.playcount} term={term} className="register-playcount" />,
+  },
   { key: "album", field: "dkj_album", width: "11%", cell: (row, term) => <Album album={row.album} candidates={row.albumCandidates} term={term} /> },
   { key: "groups", field: "dkj_group", width: "8%", cell: (row, term) => <Groups groups={row.groups} term={term} /> },
 ];

@@ -29,6 +29,8 @@ export interface RegisterRow {
   genre: string | null;
   /** De eigen waardering (dkj_rating), tier-1 tot tier-8. */
   rating: string | null;
+  /** Hoe vaak afgespeeld op Spotify (spotify_playcount), als tekst zoals year; null zolang onbekend. */
+  playcount: string | null;
   album: string | null;
   /** De albums die de playlists noemen (albumsOfPlaylists). Meer dan één: de playlists verschillen, en
    *  dan blijft `album` leeg tot je zelf kiest. */
@@ -97,6 +99,7 @@ export function toRegisterRow(track: StoredTrack, artistNames: Record<string, st
     bpm: text(track.dkj_bpm),
     genre: text(track.dkj_genre),
     rating: text(track.dkj_rating),
+    playcount: typeof track.spotify_playcount === "number" ? String(track.spotify_playcount) : null,
     album: text(track.dkj_album),
     albumCandidates: albumsOfPlaylists(playlists.map((p) => p.name)),
     file: text(track.dkj_file),
@@ -194,11 +197,11 @@ export function countBy(rows: readonly RegisterRow[], key: "bpm" | "genre" | "al
 }
 
 /** De kolommen waarop de tabel kan sorteren; elke kolom van het register. */
-export type SortKey = "id" | "file" | "dkjTitle" | "artist" | "albumArtist" | "year" | "artistIds" | "playlists" | "mixes" | "bpm" | "genre" | "rating" | "album" | "groups";
+export type SortKey = "id" | "file" | "dkjTitle" | "artist" | "albumArtist" | "year" | "artistIds" | "playlists" | "mixes" | "bpm" | "genre" | "rating" | "playcount" | "album" | "groups";
 
 /** Dezelfde kolommen als SortKey, maar als waarden -- zodat een opgeslagen sortering (registerPrefs.ts)
  *  gevalideerd kan worden. */
-export const SORT_KEYS: readonly SortKey[] = ["id", "file", "dkjTitle", "artist", "albumArtist", "year", "artistIds", "playlists", "mixes", "bpm", "genre", "rating", "album", "groups"];
+export const SORT_KEYS: readonly SortKey[] = ["id", "file", "dkjTitle", "artist", "albumArtist", "year", "artistIds", "playlists", "mixes", "bpm", "genre", "rating", "playcount", "album", "groups"];
 
 export interface RegisterSort {
   key: SortKey;
