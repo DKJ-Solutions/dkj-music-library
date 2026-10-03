@@ -15,6 +15,7 @@ function stored(over: Partial<StoredTrack> = {}): StoredTrack {
     dkj_bpm: null,
     dkj_genre: null,
     dkj_rating: null,
+    spotify_playcount: null,
     dkj_album: null,
     dkj_file: "Mark Ronson - Uptown Funk",
     dkj_group: ["MMC"],
@@ -28,7 +29,7 @@ function stored(over: Partial<StoredTrack> = {}): StoredTrack {
 
 describe("toRegisterRow", () => {
   it("neemt de eigen velden over en zoekt de artiestnamen op", () => {
-    const row = toRegisterRow(stored({ dkj_bpm: "112BPM", dkj_genre: "POP", dkj_rating: "tier-6" }), { MAR01: "Mark Ronson" });
+    const row = toRegisterRow(stored({ dkj_bpm: "112BPM", dkj_genre: "POP", dkj_rating: "tier-6", spotify_playcount: 42 }), { MAR01: "Mark Ronson" });
     expect(row).toEqual({
       id: "MAR01-BRU01-01",
       title: "Uptown Funk",
@@ -40,6 +41,7 @@ describe("toRegisterRow", () => {
       bpm: "112BPM",
       genre: "POP",
       rating: "tier-6",
+      playcount: "42",
       album: null,
       albumCandidates: [],
       file: "Mark Ronson - Uptown Funk",
@@ -54,6 +56,11 @@ describe("toRegisterRow", () => {
   it("maakt van ontbrekende of lege velden null en een lege lijst", () => {
     const row = toRegisterRow(stored({ dkj_artist_id: null, dkj_artist: "", title: null, year: null, spotify_track_id: null }), {});
     expect([row.artistIds, row.artist, row.title, row.year, row.spotifyTrackId]).toEqual([[], null, "", null, null]);
+  });
+
+  it("laat spotify_playcount leeg zolang de streaming history niet geïmporteerd is, en houdt 0 als 0", () => {
+    expect(toRegisterRow(stored(), {}).playcount).toBeNull();
+    expect(toRegisterRow(stored({ spotify_playcount: 0 }), {}).playcount).toBe("0");
   });
 });
 
@@ -154,6 +161,16 @@ describe("sortRegister", () => {
     ];
     expect(ids(sortRegister(jaren, { key: "year", dir: "asc" }))).toEqual(["C", "A", "B"]);
     expect(ids(sortRegister(jaren, { key: "year", dir: "desc" }))).toEqual(["A", "C", "B"]);
+  });
+
+  it("sorteert spotify_playcount als getal, met een onbekend aantal onderaan", () => {
+    const plays: RegisterRow[] = [
+      { ...base, id: "A", playcount: "9" },
+      { ...base, id: "B", playcount: null },
+      { ...base, id: "C", playcount: "120" },
+    ];
+    expect(ids(sortRegister(plays, { key: "playcount", dir: "desc" }))).toEqual(["C", "A", "B"]);
+    expect(ids(sortRegister(plays, { key: "playcount", dir: "asc" }))).toEqual(["A", "C", "B"]);
   });
 
   it("zoekt op het jaar", () => {

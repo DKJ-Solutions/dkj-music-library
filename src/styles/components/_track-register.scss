@@ -245,6 +245,11 @@
   font-variant-numeric: tabular-nums;
 }
 
+// spotify_playcount: een aantal, even brede cijfers, zodat ze onder elkaar recht staan.
+.register-playcount {
+  font-variant-numeric: tabular-nums;
+}
+
 // ELKE RIJ IS PRECIES ÉÉN REGEL (Dave). Tekst wordt afgekapt met … en staat volledig in de tooltip
 // (title); wat niet op één regel past aan chips of labels, gaat in een menu (Dropdown in TrackRegister.tsx).
 .register-oneline {

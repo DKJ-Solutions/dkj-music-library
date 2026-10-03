@@ -56,6 +56,8 @@ const DEFAULT_PREFS: RegisterPrefs = defaultRegisterPrefs();
 interface Column {
   key: SortKey | "play";
   field: string;
+  /** Kortere kop in de tabel dan de veldnaam, zodat de kolom smal kan blijven; de tooltip noemt het veld. */
+  label?: string;
   width: string;
   cell: (row: RegisterRow, term: string, edit: CellEdit) => ReactNode;
   className?: string;
@@ -621,6 +623,16 @@ const VISIBLE_COLUMNS: readonly Column[] = [
     width: "104px",
     cell: (row, term, edit) => <Rating row={row} term={term} setRating={edit.setRating} />,
   },
+  {
+    key: "playcount",
+    field: "spotify_playcount",
+    // In de tabel heet hij gewoon "playcount" (Dave), anders maakt de veldnaam de kolom meteen breed.
+    label: "playcount",
+    // Vaste breedte, zoals dkj_rating: de kop met zijn pijltje past er heel in, de cel is maar een getal.
+    // Leeg (—) tot de Extended streaming history van Spotify geïmporteerd is.
+    width: "96px",
+    cell: (row, term) => <OneLine text={row.playcount} term={term} className="register-playcount" />,
+  },
   { key: "album", field: "dkj_album", width: "11%", cell: (row, term) => <Album album={row.album} candidates={row.albumCandidates} term={term} /> },
   { key: "groups", field: "dkj_group", width: "8%", cell: (row, term) => <Groups groups={row.groups} term={term} /> },
 ];
@@ -899,7 +911,7 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
             </colgroup>
             <thead>
               <tr>
-                {columns.map(({ key, field }) => {
+                {columns.map(({ key, field, label }) => {
                   if (key === "play") {
                     return (
                       <th key={key} className="register-play-cell">
@@ -916,7 +928,7 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
                         title={`Sorteer op ${field}`}
                         onClick={() => reset(setSort)(nextSort(sort, key))}
                       >
-                        <code>{field}</code>
+                        <code>{label ?? field}</code>
                         <span className="register-sort-mark" aria-hidden="true">
                           {dir === "asc" ? "▲" : dir === "desc" ? "▼" : "↕"}
                         </span>

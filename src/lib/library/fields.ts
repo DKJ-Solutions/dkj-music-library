@@ -104,6 +104,10 @@ export const DKJ_RATING_OPTIONS = ["tier-1", "tier-2", "tier-3", "tier-4", "tier
 /** De waardering die elke track krijgt zolang je er zelf geen hebt gekozen. */
 export const DEFAULT_RATING = "tier-4";
 
+/** Het veld met hoe vaak je een track op Spotify hebt afgespeeld. Komt uit je Extended streaming history
+ *  (het privacy-export van Spotify); de Web API kent geen afspeelaantallen. Leeg tot die import er is. */
+export const PLAYCOUNT_KEY = "spotify_playcount";
+
 /** Het veld met het eigen album (zie albumFromPlaylists.ts). */
 export const ALBUM_KEY = "dkj_album";
 
@@ -172,6 +176,11 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
     type: "text",
     label: "Eigen waardering, tier-1 (laag) tot tier-8 (hoog); standaard tier-4, tenzij zelf ingevuld",
     options: DKJ_RATING_OPTIONS,
+  },
+  {
+    key: "spotify_playcount",
+    type: "integer",
+    label: "Hoe vaak afgespeeld op Spotify, uit de Extended streaming history; leeg tot die geïmporteerd is",
   },
   // Nieuw veld? Voeg het hier toe, bv.:
   // { key: "energy", type: "integer", label: "Energie 1-10" },
