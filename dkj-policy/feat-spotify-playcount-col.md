@@ -45,18 +45,18 @@ Kolom eerst, leeg; de import uit de Extended streaming history volgt zodra de zi
 
 - [x] Veld `spotify_playcount` (integer) in `TRACK_FIELDS`; de database voegt de kolom zelf toe
 - [x] `playcount` in de registerrij, sorteerbaar (numeriek, leeg onderaan)
-- [x] Kolom in het trackregister naast `dkj_rating`, vaste breedte waarin de kop heel past
+- [x] Kolom in het trackregister naast `dkj_rating`, met de korte kop `playcount` (Dave) en een vaste breedte van 96px
 - [ ] Visuele review door Dave
 
 ### TEST
 
 - [x] Tests voor het veld, de sortering en de kolom; volledige suite groen (65 suites, 913 tests), tsc en eslint schoon
-- [x] In de app gecontroleerd: de kop `spotify_playcount` staat er heel in (148px), elke cel toont nog `—`
+- [x] In de app gecontroleerd: de kop `playcount` staat er heel in (96px), de tooltip noemt `spotify_playcount`, elke cel toont nog `—`
 
 ### DEPLOY: feat/spotify-playcount-col
 
 De trackdatabase heeft een nieuw veld `spotify_playcount`: hoe vaak een track op Spotify is afgespeeld. Het
-trackregister toont het als kolom naast `dkj_rating`, en je kunt erop sorteren. Het veld is nog leeg: de
+trackregister toont het als kolom `playcount` naast `dkj_rating`, en je kunt erop sorteren. Het veld is nog leeg: de
 aantallen komen uit de Extended streaming history van Spotify, want de Web API kent geen afspeelaantallen,
 en die import volgt.
 
