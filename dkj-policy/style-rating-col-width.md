@@ -41,17 +41,26 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] De dkj_rating-kolom in `TrackRegister.tsx` van `7%` naar een vaste `104px`, zoals de afspeelkolom
 
 ### TEST
 
+- [x] `vitest run` op `TrackRegister.test.tsx`: 28 tests groen
+- [x] In de browser gemeten: inhoud 71px in 76px ruimte, 0 van 100 rating-cellen afgekapt, zowel bij een tabel van 900px (de minimale breedte) als bij 1621px
+- [ ] Dave bekijkt het resultaat in de werkkopie
+
 ### DEPLOY: style/rating-col-width
 
-**Score:**
+De kolom `dkj_rating` in het trackregister heeft nu een vaste breedte in plaats van 7% van de tabel. Op
+een smal scherm werd het getal afgekapt; nu zijn het symbool, de tier en het potloodje altijd heel te zien.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+De waardering van een track is altijd leesbaar, ook als het venster smal is.
+
+**Score:** 2
 
 #### Pull Request
 
