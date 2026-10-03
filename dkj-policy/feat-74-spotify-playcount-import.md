@@ -39,19 +39,41 @@
 
 ### PLAN
 
+Issue #74. Beslissingen: een play telt vanaf 30 seconden (Spotify's eigen grens), de zip gaat naar
+`data/spotify/streaming-history/`, en `spotify_playcount` komt gewoon in de publieke export (Dave,
+3 oktober 2026). De history zelf is nog niet binnen, dus de import is gebouwd en getest op fixtures
+en nog niet op echte data gedraaid. Op Daves verzoek meegenomen: de year-kolom krijgt een vaste
+breedte, zodat het jaar altijd zichtbaar is.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `src/lib/library/playcounts.ts`: plays tellen per Spotify-ID, optellen over alle Spotify-varianten van een nummer (koppeltabel), 0 voor een track zonder plays, alleen veranderde aantallen schrijven
+- [x] `scripts/library/import-playcounts.ts` en `npm run library:playcounts` (met `--dir` en `--min-seconds`)
+- [x] year-kolom in het trackregister: vaste breedte van 64px in plaats van 5%
+- [ ] Visuele review door Dave
 
 ### TEST
 
+- [x] `playcounts.test.ts`: drempel, URI's, optellen over varianten, onbekende tracks, 0, herhaalde run
+- [x] vitest (919 groen), tsc, eslint
+- [x] Foutpad van het script zonder history-map
+
 ### DEPLOY: feat/74-spotify-playcount-import
 
-**Score:**
+Nieuw: `npm run library:playcounts` leest de Extended streaming history van Spotify
+(`Streaming_History_Audio_*.json`, uitgepakt in `data/spotify/streaming-history/`) en vult
+`spotify_playcount` bij elke track. Een play telt vanaf 30 seconden, en de plays van alle
+Spotify-varianten van een nummer (single, album, compilatie) tellen op bij de ene track. Een track
+zonder plays krijgt 0; elke run telt opnieuw en overschrijft de vorige aantallen.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+De kolom playcount in het trackregister raakt gevuld zodra de history is geïmporteerd, en de
+year-kolom heeft nu een vaste breedte, zodat het jaar ook op een smalle tabel altijd heel te zien is.
+
+**Score:** 3
 
 #### Pull Request
 

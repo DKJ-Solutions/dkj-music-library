@@ -588,7 +588,14 @@ const VISIBLE_COLUMNS: readonly Column[] = [
   { key: "play", field: "afspelen", width: "40px", className: "register-play-cell", cell: (row, _term, edit) => <PlayButton row={row} edit={edit} /> },
   { key: "dkjTitle", field: "dkj_title", width: "22%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
   { key: "albumArtist", field: "dkj_albumartiest", width: "17%", cell: (row, term) => <OneLine text={row.albumArtist} term={term} className="register-album-artist" /> },
-  { key: "year", field: "year", width: "5%", cell: (row, term) => <OneLine text={row.year} term={term} className="register-year" /> },
+  {
+    key: "year",
+    field: "year",
+    // Vaste breedte, zoals dkj_rating (Dave): het jaar moet altijd heel te zien zijn, ook op de smalste
+    // tabel (900px), waar 5% het afkapte. De kop met zijn pijltje is het breedste wat erin moet.
+    width: "64px",
+    cell: (row, term) => <OneLine text={row.year} term={term} className="register-year" />,
+  },
   {
     key: "playlists",
     field: "spotify_playlist",
