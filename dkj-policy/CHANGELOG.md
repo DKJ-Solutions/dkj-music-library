@@ -2,7 +2,28 @@
 
 ## [Unreleased]
 
-**47 / 64 minor entries** <!-- pending-tally -->
+**48 / 65 minor entries** <!-- pending-tally -->
+
+### DEPLOY: style/rating-col-width · 20261003-130307Z
+
+De kolom `dkj_rating` in het trackregister heeft nu een vaste breedte in plaats van 7% van de tabel. Op
+een smal scherm werd het getal afgekapt; nu zijn het symbool, de tier en het potloodje altijd heel te zien.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+De waardering van een track is altijd leesbaar, ook als het venster smal is.
+
+**Score:** 2
+
+#### Pull Request
+
+De dkj_rating-kolom breed genoeg voor het getal
+
+[PR #73](https://github.com/DKJ-Solutions/dkj-music-library/pull/73)
+
+---
 
 ### DEPLOY: chore/top100-tier8 · 20260929-141602Z
 
