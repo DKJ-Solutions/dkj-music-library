@@ -2,7 +2,31 @@
 
 ## [Unreleased]
 
-**48 / 65 minor entries** <!-- pending-tally -->
+**49 / 66 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/spotify-playcount-col · 20261003-134108Z
+
+De trackdatabase heeft een nieuw veld `spotify_playcount`: hoe vaak een track op Spotify is afgespeeld. Het
+trackregister toont het als kolom `playcount` naast `dkj_rating`, en je kunt erop sorteren. Het veld is nog leeg: de
+aantallen komen uit de Extended streaming history van Spotify, want de Web API kent geen afspeelaantallen,
+en die import volgt.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+De kolom voor het aantal plays staat klaar in het trackregister; zodra de streaming history binnen is,
+zie en sorteer je per track hoe vaak je hem hebt gedraaid.
+
+**Score:** 2
+
+#### Pull Request
+
+De kolom spotify_playcount in het trackregister, klaar voor de streaming history
+
+[PR #75](https://github.com/DKJ-Solutions/dkj-music-library/pull/75)
+
+---
 
 ### DEPLOY: style/rating-col-width · 20261003-130307Z
 
