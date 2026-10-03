@@ -2,7 +2,32 @@
 
 ## [Unreleased]
 
-**49 / 66 minor entries** <!-- pending-tally -->
+**50 / 67 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/74-spotify-playcount-import · 20261003-135057Z
+
+Nieuw: `npm run library:playcounts` leest de Extended streaming history van Spotify
+(`Streaming_History_Audio_*.json`, uitgepakt in `data/spotify/streaming-history/`) en vult
+`spotify_playcount` bij elke track. Een play telt vanaf 30 seconden, en de plays van alle
+Spotify-varianten van een nummer (single, album, compilatie) tellen op bij de ene track. Een track
+zonder plays krijgt 0; elke run telt opnieuw en overschrijft de vorige aantallen.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+De kolom playcount in het trackregister raakt gevuld zodra de history is geïmporteerd, en de
+year-kolom heeft nu een vaste breedte, zodat het jaar ook op een smalle tabel altijd heel te zien is.
+
+**Score:** 3
+
+#### Pull Request
+
+spotify_playcount vullen uit de Extended streaming history, en de year-kolom altijd zichtbaar
+
+[PR #76](https://github.com/DKJ-Solutions/dkj-music-library/pull/76)
+
+---
 
 ### DEPLOY: feat/spotify-playcount-col · 20261003-134108Z
 
