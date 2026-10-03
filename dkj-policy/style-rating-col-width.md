@@ -47,7 +47,7 @@
 
 - [x] `vitest run` op `TrackRegister.test.tsx`: 28 tests groen
 - [x] In de browser gemeten: inhoud 71px in 76px ruimte, 0 van 100 rating-cellen afgekapt, zowel bij een tabel van 900px (de minimale breedte) als bij 1621px
-- [ ] Dave bekijkt het resultaat in de werkkopie
+- [x] Dave bekijkt het resultaat in de werkkopie: "precies zoals ik het wilde"
 
 ### DEPLOY: style/rating-col-width
 
