@@ -616,7 +616,9 @@ const VISIBLE_COLUMNS: readonly Column[] = [
   {
     key: "rating",
     field: "dkj_rating",
-    width: "7%",
+    // Vaste breedte (Dave): symbool, "tier-8" en het potloodje moeten er altijd heel in passen, ook op
+    // de smalste tabel (900px), waar 7% het getal afkapte.
+    width: "104px",
     cell: (row, term, edit) => <Rating row={row} term={term} setRating={edit.setRating} />,
   },
   { key: "album", field: "dkj_album", width: "11%", cell: (row, term) => <Album album={row.album} candidates={row.albumCandidates} term={term} /> },
