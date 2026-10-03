@@ -46,7 +46,7 @@ Kolom eerst, leeg; de import uit de Extended streaming history volgt zodra de zi
 - [x] Veld `spotify_playcount` (integer) in `TRACK_FIELDS`; de database voegt de kolom zelf toe
 - [x] `playcount` in de registerrij, sorteerbaar (numeriek, leeg onderaan)
 - [x] Kolom in het trackregister naast `dkj_rating`, met de korte kop `playcount` (Dave) en een vaste breedte van 96px
-- [ ] Visuele review door Dave
+- [x] Visuele review door Dave
 
 ### TEST
 
