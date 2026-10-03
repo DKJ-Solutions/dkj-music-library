@@ -50,7 +50,7 @@ breedte, zodat het jaar altijd zichtbaar is.
 - [x] `src/lib/library/playcounts.ts`: plays tellen per Spotify-ID, optellen over alle Spotify-varianten van een nummer (koppeltabel), 0 voor een track zonder plays, alleen veranderde aantallen schrijven
 - [x] `scripts/library/import-playcounts.ts` en `npm run library:playcounts` (met `--dir` en `--min-seconds`)
 - [x] year-kolom in het trackregister: vaste breedte van 64px in plaats van 5%
-- [ ] Visuele review door Dave
+- [x] Visuele review door Dave
 
 ### TEST
 
