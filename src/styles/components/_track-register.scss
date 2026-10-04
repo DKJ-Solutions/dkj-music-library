@@ -189,7 +189,11 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  max-width: 100%;
+  // De veldnaam staat in een <code> met 5px padding en een eigen vlakje (base/_reset.scss). De knop
+  // schuift die 5px naar links (Dave): dan staat de TEKST van de kop recht boven de tekst in de kolom,
+  // en steekt alleen het vlakje iets uit.
+  margin-left: -5px;
+  max-width: calc(100% + 5px);
   padding: 0;
   border: 0;
   background: none;
