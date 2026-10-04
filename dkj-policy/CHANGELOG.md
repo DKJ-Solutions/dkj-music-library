@@ -2,7 +2,30 @@
 
 ## [Unreleased]
 
-**50 / 67 minor entries** <!-- pending-tally -->
+**51 / 68 minor entries** <!-- pending-tally -->
+
+### DEPLOY: chore/spotify-playcounts-import · 20261004-074256Z
+
+`spotify_playcount` is voor het eerst gevuld, uit de Extended streaming history die Spotify op
+3 oktober 2026 leverde (2012 tot en met 2026). 7.337 van de 11.639 tracks hebben plays, samen 54.291;
+de rest staat op 0. Koploper: Sigma feat. Shakka - Lost Away (Hybrid Minds Remix), 130 keer.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+De playcount-kolom in het trackregister toont nu echte aantallen in plaats van leeg, dus je kunt
+zien en sorteren wat je het vaakst hebt gedraaid.
+
+**Score:** 3
+
+#### Pull Request
+
+spotify_playcount gevuld uit de eerste echte Extended streaming history
+
+[PR #77](https://github.com/DKJ-Solutions/dkj-music-library/pull/77)
+
+---
 
 ### DEPLOY: feat/74-spotify-playcount-import · 20261003-135057Z
 
