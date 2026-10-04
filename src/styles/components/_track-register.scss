@@ -472,12 +472,6 @@ $register-player-height: 97px; // 80px iframe + 2 x 8px padding + 1px rand
   transition: background-color 0.12s ease, border-color 0.12s ease;
 }
 
-// In een cel schuift de knop zijn rand + padding (1px + 6px) naar links (Dave): dan staat de TEKST
-// erin onder de kop en onder gewone tekst in dezelfde kolom, en steekt alleen de rand iets uit.
-.register-table td .register-menu-toggle {
-  margin-left: -7px;
-}
-
 .register-menu-toggle:hover,
 .register-menu-toggle[aria-expanded="true"] {
   border-color: var(--accent);

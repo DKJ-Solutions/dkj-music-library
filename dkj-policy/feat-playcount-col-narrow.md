@@ -43,7 +43,6 @@
 
 - [x] Kop van de playcount-kolom ingekort tot `plays`, breedte van 96px naar 76px (de kop bepaalt de breedte; het hoogste aantal is 130, drie cijfers)
 - [x] Test op de kopnaam bijgewerkt
-- [x] Menu-knoppen in een cel (playlists, groepen, album, artiest-ID's) 7px naar links, zodat hun tekst onder de kop staat in plaats van hun rand
 
 ### TEST
 
@@ -53,15 +52,13 @@
 ### DEPLOY: feat/playcount-col-narrow
 
 De playcount-kolom in het trackregister heet in de kop nu `plays` en is 76px breed in plaats van
-96px; de veldnaam `spotify_playcount` blijft in de tooltip van de kop staan. De menu-knoppen in de
-cellen (playlists, groepen, album, artiest-ID's) schuiven hun rand en padding naar links, zodat de
-tekst erin recht onder de kolomkop staat.
+96px; de veldnaam `spotify_playcount` blijft in de tooltip van de kop staan.
 
 **Score:** 2
 
 #### What makes this deploy extra special
 
-De playcount-kolom neemt minder ruimte in, en de tekst in de menu-knoppen staat recht onder de kolomkop.
+De playcount-kolom neemt minder ruimte in, zodat de andere kolommen meer plek houden.
 
 **Score:** 2
 
