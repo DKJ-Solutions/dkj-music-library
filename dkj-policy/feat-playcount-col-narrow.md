@@ -44,6 +44,7 @@
 - [x] Kop van de playcount-kolom ingekort tot `plays`, breedte van 96px naar 76px (de kop bepaalt de breedte; het hoogste aantal is 130, drie cijfers)
 - [x] Test op de kopnaam bijgewerkt
 - [x] Kolomkoppen 5px naar links (de padding van hun `code`-vlakje), zodat de koptekst recht boven de tekst in de kolom staat; een eerdere poging met de menu-knoppen in de cellen is teruggedraaid
+- [x] Daarna de menu-knoppen in een cel alsnog 7px naar links (rand + padding), zodat "N playlists" gelijk staat met een enkele playlist en met de kop
 
 ### TEST
 
@@ -54,7 +55,8 @@
 
 De playcount-kolom in het trackregister heet in de kop nu `plays` en is 76px breed in plaats van
 96px; de veldnaam `spotify_playcount` blijft in de tooltip van de kop staan. De tekst van elke
-kolomkop staat nu recht boven de tekst in die kolom; alleen het vlakje rond de kop steekt iets uit.
+kolomkop staat nu recht boven de tekst in die kolom, en de tekst in een menuknop ("3 playlists")
+staat gelijk met een enkele playlist of groep eronder; alleen de randjes steken iets uit.
 
 **Score:** 2
 
