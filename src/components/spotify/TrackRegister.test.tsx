@@ -184,10 +184,10 @@ describe("TrackRegister", () => {
     expect(screen.getByText("tier-8", { selector: ".register-tag" })).toBeTruthy();
   });
 
-  it("toont spotify_playcount als kolom met de korte kop playcount, leeg zolang er geen aantal is", () => {
+  it("toont spotify_playcount als kolom met de korte kop plays, leeg zolang er geen aantal is", () => {
     render(<TrackRegister rows={[row(1, { playcount: "37" }), row(2)]} artistCount={1} />);
-    const header = screen.getByRole("columnheader", { name: /playcount/ });
-    expect(header.querySelector("code")?.textContent).toBe("playcount");
+    const header = screen.getByRole("columnheader", { name: /plays/ });
+    expect(header.querySelector("code")?.textContent).toBe("plays");
     expect(header.querySelector("button")?.getAttribute("title")).toBe("Sorteer op spotify_playcount");
     expect(screen.getByText("37", { selector: ".register-playcount" })).toBeTruthy();
   });

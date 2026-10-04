@@ -41,17 +41,26 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Kop van de playcount-kolom ingekort tot `plays`, breedte van 96px naar 76px (de kop bepaalt de breedte; het hoogste aantal is 130, drie cijfers)
+- [x] Test op de kopnaam bijgewerkt
 
 ### TEST
 
+- [x] In de app gemeten: bij 72px kapte de kop 1px af (35px nodig, 34px ruimte), dus 76px
+- [~] Visuele review door Dave -- buiten de gates, de PR wacht daarop
+
 ### DEPLOY: feat/playcount-col-narrow
 
-**Score:**
+De playcount-kolom in het trackregister heet in de kop nu `plays` en is 76px breed in plaats van
+96px; de veldnaam `spotify_playcount` blijft in de tooltip van de kop staan.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+De playcount-kolom neemt minder ruimte in, zodat de andere kolommen meer plek houden.
+
+**Score:** 2
 
 #### Pull Request
 
