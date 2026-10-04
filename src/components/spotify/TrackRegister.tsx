@@ -633,11 +633,11 @@ const VISIBLE_COLUMNS: readonly Column[] = [
   {
     key: "playcount",
     field: "spotify_playcount",
-    // In de tabel heet hij gewoon "playcount" (Dave), anders maakt de veldnaam de kolom meteen breed.
-    label: "playcount",
-    // Vaste breedte, zoals dkj_rating: de kop met zijn pijltje past er heel in, de cel is maar een getal.
-    // Leeg (—) tot de Extended streaming history van Spotify geïmporteerd is.
-    width: "96px",
+    // In de tabel heet hij "plays" (Dave): de kop bepaalt de breedte, want de cel is maar een getal van
+    // hooguit drie cijfers. Met "playcount" was de kolom 96px, nu 76px; de veldnaam staat in de tooltip.
+    label: "plays",
+    // Vaste breedte, zoals year: de kop met zijn pijltje past er net heel in.
+    width: "76px",
     cell: (row, term) => <OneLine text={row.playcount} term={term} className="register-playcount" />,
   },
   { key: "album", field: "dkj_album", width: "11%", cell: (row, term) => <Album album={row.album} candidates={row.albumCandidates} term={term} /> },

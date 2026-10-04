@@ -189,7 +189,11 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  max-width: 100%;
+  // De veldnaam staat in een <code> met 5px padding en een eigen vlakje (base/_reset.scss). De knop
+  // schuift die 5px naar links (Dave): dan staat de TEKST van de kop recht boven de tekst in de kolom,
+  // en steekt alleen het vlakje iets uit.
+  margin-left: -5px;
+  max-width: calc(100% + 5px);
   padding: 0;
   border: 0;
   background: none;
@@ -470,6 +474,12 @@ $register-player-height: 97px; // 80px iframe + 2 x 8px padding + 1px rand
   color: var(--accent-ink);
   cursor: pointer;
   transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+// In een cel schuift de knop zijn rand + padding (1px + 6px) naar links (Dave): dan staat de TEKST erin
+// recht onder de kop, net als een enkele playlist of groep zonder knop in dezelfde kolom.
+.register-table td .register-menu-toggle {
+  margin-left: -7px;
 }
 
 .register-menu-toggle:hover,
