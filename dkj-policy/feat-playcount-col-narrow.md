@@ -47,7 +47,7 @@
 ### TEST
 
 - [x] In de app gemeten: bij 72px kapte de kop 1px af (35px nodig, 34px ruimte), dus 76px
-- [~] Visuele review door Dave -- buiten de gates, de PR wacht daarop
+- [ ] Visuele review door Dave
 
 ### DEPLOY: feat/playcount-col-narrow
 
