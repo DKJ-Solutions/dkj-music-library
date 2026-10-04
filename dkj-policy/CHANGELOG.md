@@ -2,7 +2,30 @@
 
 ## [Unreleased]
 
-**51 / 68 minor entries** <!-- pending-tally -->
+**52 / 69 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/playcount-col-narrow · 20261004-075916Z
+
+De playcount-kolom in het trackregister heet in de kop nu `plays` en is 76px breed in plaats van
+96px; de veldnaam `spotify_playcount` blijft in de tooltip van de kop staan. De tekst van elke
+kolomkop staat nu recht boven de tekst in die kolom, en de tekst in een menuknop ("3 playlists")
+staat gelijk met een enkele playlist of groep eronder; alleen de randjes steken iets uit.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+De playcount-kolom neemt minder ruimte in, en de kolomkoppen staan recht boven de tekst eronder.
+
+**Score:** 2
+
+#### Pull Request
+
+playcount-kolom smaller, met de korte kop plays
+
+[PR #78](https://github.com/DKJ-Solutions/dkj-music-library/pull/78)
+
+---
 
 ### DEPLOY: chore/spotify-playcounts-import · 20261004-074256Z
 
