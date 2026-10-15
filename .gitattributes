@@ -1,2 +1,7 @@
 # De bibliotheek-export altijd met LF: dan is een regel op elke machine byte-gelijk (libraryFile.ts).
 data/library/export/*.ndjson text eol=lf
+
+# De gevendorde huisstijl (#80) byte-gelijk aan dkj-brandbook house-style-v3: de checksum in de
+# house-style-skill en de CI-gate lezen precies deze bytes, dus geen regeleinde-conversie.
+src/styles/house/house-style.css -text
+public/house-style/house-theme.js -text

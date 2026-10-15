@@ -508,3 +508,15 @@ function Get-InternalNoteWording {
     <# Overrides for the internal note's headings, audience line and fill-in hints. Empty = English. #>
     return $script:InternalNoteWording
 }
+
+# The house-style gate's false positives (#80, check-house-style.ps1 from the dkj-solutions plugin).
+# Its redefine check greps .ts files for a house class name after a dot, and these three hits are
+# TypeScript, not CSS: an Array.prototype.sort call and an object spread. No element in this app
+# carries the house classes .sort or .meta.
+function Get-HouseStyleAllowlist {
+    return @(
+        @{ Path = 'src/lib/library/exportDiff.ts'; Name = '.sort'; Reason = 'Array.prototype.sort() on the next line, not a CSS class' }
+        @{ Path = 'src/lib/sortRows.ts'; Name = '.sort'; Reason = 'Array.prototype.sort() call, not a CSS class' }
+        @{ Path = 'src/lib/spotify/ingest.ts'; Name = '.meta'; Reason = 'object spread (...meta), not a CSS class' }
+    )
+}

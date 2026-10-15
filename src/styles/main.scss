@@ -1,8 +1,9 @@
 // Aggregator — geïmporteerd door src/app/layout.tsx. Meegekomen uit life-hub (BASE -> LAYOUT ->
-// COMPONENTS), zonder de dossier-lagen (markdown, print, PDF) die daar achterbleven.
+// COMPONENTS), zonder de dossier-lagen (markdown, print, PDF) die daar achterbleven. Alles hier is de
+// eigen laag van de app en komt NA de huisstijl (src/styles/house/house-style.css, #80).
 
 // BASE
-@use "base/root"; // 1. CSS-variabelen (licht/donker + data-theme)
+@use "base/root"; // 1. De domeinlaag: eigen tokens bovenop de huisstijl (house-style.css, zie layout.tsx)
 @use "base/reset"; // 2. Browser-reset & body-basis
 
 // LAYOUT

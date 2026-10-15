@@ -122,7 +122,7 @@ export function MissingMixes({ mixes }: { mixes: readonly MissingMix[] }) {
               {mix.title || "(zonder titel)"}
             </span>
             <span
-              className={mix.color ? "swatch" : "swatch swatch--neutral"}
+              className={mix.color ? "color-dot" : "color-dot color-dot--neutral"}
               style={mix.color ? { background: `var(--emotion-${mix.color.toLowerCase()})` } : undefined}
               role="img"
               title={mix.color ?? "Geen kleur herkend"}

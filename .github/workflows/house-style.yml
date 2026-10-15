@@ -1,0 +1,19 @@
+# The house-style gate (#80): every vendored house-style.css / house-theme.js is the copy the
+# dkj-solutions house-style skill pins, and the app's own layer redefines no house token or class.
+#
+# The runner is not in this file: it is a reusable workflow in DKJ-Solutions/dkj-claude-plugins
+# (DKJ-Solutions/dkj-claude-plugins#3035), which runs check-house-style.ps1 against the checksums on
+# the skill page. NEVER pull_request_target: the gate dot-sources this PR's scripts/repo-config.ps1.
+#
+# @main IS DELIBERATE, for the reason branch-entry.yml states.
+name: House style
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  house-style:
+    uses: DKJ-Solutions/dkj-claude-plugins/.github/workflows/reusable-house-style.yml@main

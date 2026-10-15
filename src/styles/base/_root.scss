@@ -1,47 +1,48 @@
-// Design-tokens 1-op-1 hergebruikt uit de vorige Vite-hub (apps/src/index.css), zelf weer
-// hergebruikt uit specialisten-overzicht.html, zodat de hub en de self-contained tools in
-// public/ als één visueel geheel ogen. Licht/donker via prefers-color-scheme + data-theme (een
-// handmatige toggle overschrijft de OS-voorkeur in beide richtingen).
+// De domeinlaag bovenop de DKJ-Solutions-huisstijl (#80). De huisstijl zelf -- house-style.css, de
+// twaalf thema's en hun tokens -- komt ongewijzigd uit dkj-brandbook (tag house-style-v3) en wordt in
+// src/app/layout.tsx vóór deze laag geladen. Hier staat alleen wat deze app zelf toevoegt: de eigen
+// tokennamen die de componenten al gebruikten, nu als verwijzing naar een house-token, en de
+// domeinkleuren die geen house-equivalent hebben. Geen enkele naam hieronder is een house-token: de
+// huisstijl wordt uitgebreid, nooit overschreven. Een waarde die voor elke app fout is, gaat als
+// issue naar DKJ-Solutions/dkj-brandbook.
+//
+// Licht/donker: de huisstijl zet `color-scheme` per thema (licht of donker), dus een domeinkleur die
+// per modus verschilt, gebruikt `light-dark()` en volgt daarmee vanzelf elk van de twaalf thema's.
 :root {
-  --bg: #f4f6f8;
-  --surface: #ffffff;
-  --surface-2: #edf1f4;
-  --tile: #e7edf1;
-  --ink: #191d24;
-  --ink-soft: #495260;
-  --muted: #7b8695;
-  --line: #e0e5eb;
-  --accent: #0e7a6e;
-  --accent-ink: #0b5c53;
-  --accent-soft: #ddeeea;
-  --gold: #9a6a12;
-  --gold-soft: #f3e7ce;
-  // Status-palette voor de fase-badges van het dossier-overzicht — schaars en betekenisvol,
-  // nooit voor iets anders dan kritiek/afgerond hergebruikt. "Lopend" krijgt bewust geen kleur
-  // uit deze set (outline-badge, zie components/_dossier-card.scss) zodat een normale actieve
-  // werkvoorraad niet als waarschuwing oogt. --meter-fill is een aparte sequentiële blauwe hue
-  // voor de neutrale voortgangsmeter, losstaand van --accent zodat de meter niet met de
-  // status-kleuren concurreert.
-  --status-critical: #d03b3b;
-  --status-done: #0ca30c;
-  --meter-fill: #2f6fed;
+  // Vlakken, lijnen en tekst -- de rollen uit de house-README.
+  --bg: var(--primary-1); // de pagina
+  --surface-2: var(--primary-3); // getint vlak (hover, code)
+  --tile: var(--primary-3);
+  --line: var(--primary-3); // elke lijn
+  --ink-soft: var(--primary-6); // sub-regels en notities
+  // De themakleur: --accent voor vullingen, focusringen en randen (-5), --accent-ink voor tekst die
+  // moet opvallen (-7, de highlight), --accent-soft voor een getint vlak (-3).
+  --accent: var(--primary-5);
+  --accent-ink: var(--primary-7);
+  --accent-soft: var(--primary-3);
+  --gold: var(--warning-5);
+  --gold-soft: var(--warning-1);
+  // Status: schaars en betekenisvol, nooit voor iets anders dan kritiek/afgerond.
+  --status-critical: var(--negative-3);
+  --status-done: var(--positive-3);
+  --meter-fill: var(--primary-5);
   // Spotify playlist manager (fase 5) — het 8-kleuren Plutchik-emotiepalet, Gwen's ontwerpspec.
   // Naamgeving lowercase-matchend met plutchikColors.ts' PlutchikColor-waarden zodat de UI
-  // `var(--emotion-${color.toLowerCase()})` kan opbouwen.
-  --emotion-cyan: #0369a1;
-  --emotion-green: #15803d;
-  --emotion-yellow: #a16207;
-  --emotion-orange: #c2410c;
-  --emotion-red: #dc2626;
-  --emotion-magenta: #a21caf;
-  --emotion-purple: #6d28d9;
-  --emotion-blue: #1d4ed8;
+  // `var(--emotion-${color.toLowerCase()})` kan opbouwen. Domeinkleuren: een eigen waarde per modus.
+  --emotion-cyan: light-dark(#0369a1, #38bdf8);
+  --emotion-green: light-dark(#15803d, #4ade80);
+  --emotion-yellow: light-dark(#a16207, #facc15);
+  --emotion-orange: light-dark(#c2410c, #fb923c);
+  --emotion-red: light-dark(#dc2626, #f87171);
+  --emotion-magenta: light-dark(#a21caf, #e879f9);
+  --emotion-purple: light-dark(#6d28d9, #a78bfa);
+  --emotion-blue: light-dark(#1d4ed8, #60a5fa);
   // De symbolen van dkj_rating, exact uit Daves voorbeeld (29 september 2026); gelijk in licht en donker.
   --rating-green: #35fb39;
   --rating-blue: #35b7ef;
   --rating-magenta: #c828ec;
   --rating-orange: #f99c2d;
-  --font-display: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
+  --font-display: var(--font-serif);
   --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   // Smal, voor tabellen met veel kolommen (Dave): Bahnschrift zit in Windows 10/11 en heeft een traploze
   // breedte (wdth 75-100). SemiCondensed (87.5) was te smal; 94 zit ertussen. Daarbuiten Arial Narrow, en
@@ -49,94 +50,7 @@
   --font-narrow: Bahnschrift, "Arial Narrow", ui-sans-serif, system-ui, sans-serif;
   --font-narrow-width: 94;
   --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
-  --shadow: 0 1px 2px rgba(19, 26, 34, 0.04), 0 6px 20px rgba(19, 26, 34, 0.06);
+  --shadow: 0 1px 2px light-dark(rgba(19, 26, 34, 0.04), rgba(0, 0, 0, 0.3)),
+    0 6px 20px light-dark(rgba(19, 26, 34, 0.06), rgba(0, 0, 0, 0.4));
   --radius: 14px;
-
-  color-scheme: light dark;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0d0f13;
-    --surface: #171b22;
-    --surface-2: #1e242d;
-    --tile: #232b35;
-    --ink: #eceff3;
-    --ink-soft: #aeb7c3;
-    --muted: #79828f;
-    --line: #28303a;
-    --accent: #34b6a4;
-    --accent-ink: #4fcfbd;
-    --accent-soft: #0f312c;
-    --gold: #d6981f;
-    --gold-soft: #2c2410;
-    --status-critical: #e66767;
-    --status-done: #0ca30c;
-    --meter-fill: #6f9bff;
-    --emotion-cyan: #38bdf8;
-    --emotion-green: #4ade80;
-    --emotion-yellow: #facc15;
-    --emotion-orange: #fb923c;
-    --emotion-red: #f87171;
-    --emotion-magenta: #e879f9;
-    --emotion-purple: #a78bfa;
-    --emotion-blue: #60a5fa;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 26px rgba(0, 0, 0, 0.4);
-  }
-}
-
-:root[data-theme="light"] {
-  --bg: #f4f6f8;
-  --surface: #ffffff;
-  --surface-2: #edf1f4;
-  --tile: #e7edf1;
-  --ink: #191d24;
-  --ink-soft: #495260;
-  --muted: #7b8695;
-  --line: #e0e5eb;
-  --accent: #0e7a6e;
-  --accent-ink: #0b5c53;
-  --accent-soft: #ddeeea;
-  --gold: #9a6a12;
-  --gold-soft: #f3e7ce;
-  --status-critical: #d03b3b;
-  --status-done: #0ca30c;
-  --meter-fill: #2f6fed;
-  --emotion-cyan: #0369a1;
-  --emotion-green: #15803d;
-  --emotion-yellow: #a16207;
-  --emotion-orange: #c2410c;
-  --emotion-red: #dc2626;
-  --emotion-magenta: #a21caf;
-  --emotion-purple: #6d28d9;
-  --emotion-blue: #1d4ed8;
-  --shadow: 0 1px 2px rgba(19, 26, 34, 0.04), 0 6px 20px rgba(19, 26, 34, 0.06);
-}
-
-:root[data-theme="dark"] {
-  --bg: #0d0f13;
-  --surface: #171b22;
-  --surface-2: #1e242d;
-  --tile: #232b35;
-  --ink: #eceff3;
-  --ink-soft: #aeb7c3;
-  --muted: #79828f;
-  --line: #28303a;
-  --accent: #34b6a4;
-  --accent-ink: #4fcfbd;
-  --accent-soft: #0f312c;
-  --gold: #d6981f;
-  --gold-soft: #2c2410;
-  --status-critical: #e66767;
-  --status-done: #0ca30c;
-  --meter-fill: #6f9bff;
-  --emotion-cyan: #38bdf8;
-  --emotion-green: #4ade80;
-  --emotion-yellow: #facc15;
-  --emotion-orange: #fb923c;
-  --emotion-red: #f87171;
-  --emotion-magenta: #e879f9;
-  --emotion-purple: #a78bfa;
-  --emotion-blue: #60a5fa;
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 26px rgba(0, 0, 0, 0.4);
 }

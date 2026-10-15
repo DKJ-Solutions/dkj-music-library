@@ -225,7 +225,7 @@ function UnmirroredPlaylists({ playlists }: { playlists: MixMatchCandidate[] }) 
           {playlists.map((p) => (
             <li key={p.id}>
               <span className="name">{p.name}</span>
-              <span className="meta">{p.trackCount} tracks</span>
+              <span className="mix-orphan-meta">{p.trackCount} tracks</span>
             </li>
           ))}
         </ul>
@@ -280,7 +280,7 @@ function MixLinkRow({ link }: { link: MixLink }) {
       <span className="mix-dims">
         {mix.color && (
           <span
-            className="swatch"
+            className="color-dot"
             style={{ background: `var(--emotion-${mix.color.toLowerCase()})` }}
             aria-hidden="true"
           />

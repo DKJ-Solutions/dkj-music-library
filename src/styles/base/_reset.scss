@@ -1,28 +1,19 @@
 // Geport uit apps/src/index.css (Vite-versie). #root bestond alleen omdat Vite in een losse
 // <div id="root"> rendert; de Next.js app-router rendert direct in <body>, dus die regel is
 // vervangen door min-height op body zelf.
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
+//
+// Sinds de huisstijl (#80) zet house-style.css de basis: box-sizing, de body-achtergrond, de
+// tekstkleur, het lettertype en de linkkleur van het thema. Hier blijft alleen wat de app daar zelf
+// aan toevoegt.
+html {
   margin: 0;
   padding: 0;
 }
 
 body {
   min-height: 100vh;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--font-body);
-  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-}
-
-a {
-  color: inherit;
 }
 
 code {
@@ -34,6 +25,7 @@ code {
   border-radius: 5px;
 }
 
+// De eigen knoppen en velden van de app: dezelfde focusring als de house-klassen (--primary-5).
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;

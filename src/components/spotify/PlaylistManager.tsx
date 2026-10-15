@@ -959,7 +959,7 @@ function PlaylistRow({
       {/* De kleur-kolom: alleen de cirkel, met de kleurnaam als tooltip -- de naam uitschrijven zou
           een kolom van 60+px kosten voor informatie die de kleur zelf al geeft. */}
       <span
-        className={parsed.color ? "swatch col-color" : "swatch swatch--neutral col-color"}
+        className={parsed.color ? "color-dot col-color" : "color-dot color-dot--neutral col-color"}
         style={parsed.color ? { background: `var(--emotion-${parsed.color.toLowerCase()})` } : undefined}
         role="img"
         title={parsed.color ?? "Geen kleur herkend"}
