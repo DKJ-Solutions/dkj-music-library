@@ -57,7 +57,7 @@ tracker beside `enhancement` (a rename would collide), so only step 2 remains.
 A `feat/` pull request in this repo is now labelled `feature` instead of `enhancement`, and a
 `docs/` pull request gets no label, as in every other DKJ-Solutions repo.
 
-**Score:** N/A
+**Score:** 1
 
 #### What makes this deploy extra special
 
