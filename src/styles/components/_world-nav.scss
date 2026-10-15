@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: var(--surface);
+  background: var(--primary-2);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 16px 18px;
@@ -57,7 +57,7 @@
   font-weight: 600;
   font-size: 16px;
   letter-spacing: -0.005em;
-  color: var(--ink);
+  color: var(--primary-9);
 }
 
 .world-tile .count {
@@ -78,7 +78,7 @@
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.06em;
-  color: var(--muted);
+  color: var(--primary-6);
   text-decoration: none;
   margin-bottom: 14px;
 }

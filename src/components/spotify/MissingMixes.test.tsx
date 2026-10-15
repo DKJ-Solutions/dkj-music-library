@@ -219,7 +219,7 @@ describe("MissingMixes", () => {
       />
     );
     expect(screen.getByText("(zonder titel)")).toBeInTheDocument();
-    expect(document.querySelector(".swatch--neutral")).not.toBeNull();
+    expect(document.querySelector(".color-dot--neutral")).not.toBeNull();
     expect(document.querySelector(".missing-vol")?.textContent).toBe("—");
   });
 });

@@ -110,7 +110,7 @@ $playlist-cols: (
 
 // Uitzondering: de kleur-swatch is zelf de gekleurde cirkel. Padding zou de achtergrond meerekken en er
 // een pil van maken -- die staat al gecentreerd in zijn kolom en heeft de lucht dus niet nodig.
-.playlist-row > .swatch {
+.playlist-row > .color-dot {
   padding-inline: 0;
 }
 
@@ -122,7 +122,7 @@ $playlist-cols: (
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--muted);
+  color: var(--primary-6);
 }
 
 // Elke kop is een sorteerknop (zie playlistSort.ts): een kale button die de kop-typografie van zijn
@@ -211,7 +211,7 @@ $playlist-cols: (
 
 // De swatch is smaller dan zijn kolom (zie de toelichting bij $playlist-columns) -- vandaar
 // justify-self i.p.v. de cel vullen: een cirkel van 10px, gecentreerd onder de kop "KLEUR".
-.playlist-row .swatch {
+.playlist-row .color-dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -219,14 +219,14 @@ $playlist-cols: (
   justify-self: center;
 }
 
-.playlist-row .swatch--neutral {
+.playlist-row .color-dot--neutral {
   background: transparent;
-  border: 1.5px dashed var(--muted);
+  border: 1.5px dashed var(--primary-6);
 }
 
 .playlist-row .name {
   font-size: 13.5px;
-  color: var(--ink);
+  color: var(--primary-9);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -253,10 +253,10 @@ $playlist-cols: (
 }
 
 // Geen muzieksoort af te leiden (geen mix, en de playlistnaam zegt niets over het genre): geen
-// gevulde pil, alleen het streepje -- zelfde geest als .swatch--neutral, geen kleur/nadruk toekennen
+// gevulde pil, alleen het streepje -- zelfde geest als .color-dot--neutral, geen kleur/nadruk toekennen
 // waar er niets bekend is.
 .playlist-row .type[data-empty="true"] {
-  color: var(--muted);
+  color: var(--primary-6);
   background: none;
   padding-inline: 0;
 }
@@ -267,7 +267,7 @@ $playlist-cols: (
 .playlist-row .mix-id {
   font-family: var(--font-mono);
   font-size: 10.5px;
-  color: var(--muted);
+  color: var(--primary-6);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   overflow: hidden;
@@ -331,7 +331,7 @@ $playlist-cols: (
 
 .playlist-row .mix-id-write:disabled {
   cursor: progress;
-  color: var(--muted);
+  color: var(--primary-6);
 }
 
 .playlist-row .mix-id-write::-moz-focus-inner {
@@ -374,7 +374,7 @@ $playlist-cols: (
 
 .playlist-row .name-write:disabled {
   cursor: progress;
-  color: var(--muted);
+  color: var(--primary-6);
   opacity: 1;
 }
 
@@ -408,7 +408,7 @@ $playlist-cols: (
 }
 
 .playlist-row .subgenre {
-  color: var(--muted);
+  color: var(--primary-6);
 }
 
 .playlist-row .density {
@@ -421,13 +421,13 @@ $playlist-cols: (
 }
 
 .playlist-row .density[data-density="Light"] {
-  color: var(--muted);
+  color: var(--primary-6);
 }
 
 .playlist-row .gender {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--muted);
+  color: var(--primary-6);
   text-align: center;
 }
 
@@ -448,7 +448,7 @@ $playlist-cols: (
 .playlist-row .vol {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--muted);
+  color: var(--primary-6);
   font-variant-numeric: tabular-nums;
   text-align: center;
 }
@@ -456,7 +456,7 @@ $playlist-cols: (
 .playlist-row .tracks {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--muted);
+  color: var(--primary-6);
   font-variant-numeric: tabular-nums;
   text-align: right;
   white-space: nowrap;
@@ -477,7 +477,7 @@ $playlist-cols: (
   font-family: var(--font-mono);
   font-size: 10.5px;
   color: var(--ink-soft);
-  background: var(--surface);
+  background: var(--primary-2);
   border: 1px solid var(--line);
   border-radius: 6px;
   padding: 3px 6px;
@@ -504,7 +504,7 @@ $playlist-cols: (
   margin: 0;
   font-size: 12px;
   line-height: 1;
-  color: var(--muted);
+  color: var(--primary-6);
   cursor: pointer;
 }
 
@@ -526,7 +526,7 @@ $playlist-cols: (
   font-family: var(--font-mono);
   font-size: 10.5px;
   color: var(--ink-soft);
-  background: var(--surface);
+  background: var(--primary-2);
   border: 1px solid var(--line);
   border-radius: 6px;
   padding: 3px 6px;
@@ -551,7 +551,7 @@ $playlist-cols: (
   margin: 0;
   font-size: 12px;
   line-height: 1;
-  color: var(--muted);
+  color: var(--primary-6);
   cursor: pointer;
 }
 
@@ -595,7 +595,7 @@ $playlist-cols: (
 .playlist-empty-note {
   margin-top: 26px;
   font-size: 13.5px;
-  color: var(--muted);
+  color: var(--primary-6);
   font-family: var(--font-mono);
 }
 

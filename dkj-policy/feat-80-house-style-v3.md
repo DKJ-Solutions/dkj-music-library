@@ -39,19 +39,48 @@
 
 ### PLAN
 
+Issue #80: adopt the DKJ-Solutions house style at `house-style-v3`, per the `house-style` skill of
+dkj-solutions 5.20.0. A visible result, so the branch stops for the owner's look and opens no PR.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Vendor `house-style.css` (`src/styles/house/`) and `house-theme.js` (`public/house-style/`)
+  from dkj-brandbook at `house-style-v3`, unchanged; both sha256 match the skill's table, and
+  `.gitattributes` keeps their bytes (`-text`).
+- [x] Load the house stylesheet before `main.scss`, and `house-theme.js` synchronously in `<head>`
+  (`src/app/layout.tsx`), with this app's default pair Petrol (light) / Cyaan (dark).
+- [x] Turn `_root.scss` into a domain layer: the app's own token names now point at house tokens,
+  the emotion colours use `light-dark()` so they follow all twelve themes; `_reset.scss` no longer
+  sets what the house base sets (body ground, text colour, font, link colour).
+- [x] Replace the retired names `--ink`, `--muted`, `--surface` with `--primary-9`, `--primary-6`,
+  `--primary-2` everywhere they were read.
+- [x] Rename the app's own `.swatch` to `.color-dot` and `.meta` to `.mix-orphan-meta`: both are
+  reserved house classes.
+- [x] The settings button: `src/components/ThemeSettings.tsx` calls `DKJTheme.settings(el)` on a
+  floating element in the root layout. The app had no theme toggle of its own to replace.
+- [x] The CI gate `.github/workflows/house-style.yml` (reusable-house-style.yml), with the gate's
+  three TypeScript false positives answered in `Get-HouseStyleAllowlist` (`scripts/repo-config.ps1`).
 
 ### TEST
 
+- [x] `check-house-style.ps1`: OK at house-style-v3, both copies pinned, 3 answered by the allowlist.
+- [x] typecheck, eslint and the vitest suite (919 tests) green.
+
 ### DEPLOY: feat/80-house-style-v3
 
-**Score:**
+The app now renders in the DKJ-Solutions house style: the page, cards, lines, text and headings take
+their colours from the theme, and a round settings button at the top right opens a picker with the
+twelve house themes and a reset. Without a choice the app shows Petrol on a light system and Cyaan on
+a dark one; a choice is remembered on this device.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+The music library looks like the other DKJ-Solutions apps and can be given any of the twelve house
+colours, and a fix to the shared look now arrives through the brand book instead of a local copy.
+
+**Score:** 3
 
 #### Pull Request
 
