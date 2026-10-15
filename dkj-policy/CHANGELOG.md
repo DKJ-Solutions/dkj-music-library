@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**54 / 71 minor entries** <!-- pending-tally -->
+**55 / 72 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/81-dev-preview · 20261015-152515Z
+
+Every session in this repo now starts the music library's dev server, or reuses the one already
+running, and opens `http://localhost:3000/` in VS Code's Simple Browser. It stays on port 3000,
+where the Spotify login works.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+The app is open beside the conversation the moment a session starts, without typing `npm run dev`.
+
+**Score:** 2
+
+#### Pull Request
+
+Opt in to the dev-preview hook: a Simple Browser link at session start
+
+[PR #84](https://github.com/DKJ-Solutions/dkj-music-library/pull/84)
+
+---
 
 ### DEPLOY: feat/80-house-style-v3 · 20261015-152152Z
 
