@@ -39,19 +39,33 @@
 
 ### PLAN
 
+Issue #81: opt in to the dkj-solutions `dev-preview` SessionStart hook.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `Get-DevPreview` in `scripts/repo-config.ps1`: `npm run dev -- -p {port}` on port 3000 only (the
+  Spotify redirect URI is registered there), `Requires = 'node_modules'`, `OpenInVsCode`. No
+  `-H 127.0.0.1`: the app is deliberately used from the LAN address too (`sameOrigin.ts`).
+- [x] `.vscode/settings.json` routes `localhost:3000` to the Simple Browser.
 
 ### TEST
 
+- [x] Ran `dev-preview-sessionstart.ps1` by hand: it found the server already running from this
+  checkout on 3000, reused it and opened `http://localhost:3000/` in VS Code; exit 0.
+
 ### DEPLOY: feat/81-dev-preview
 
-**Score:**
+Every session in this repo now starts the music library's dev server, or reuses the one already
+running, and opens `http://localhost:3000/` in VS Code's Simple Browser. It stays on port 3000,
+where the Spotify login works.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+The app is open beside the conversation the moment a session starts, without typing `npm run dev`.
+
+**Score:** 2
 
 #### Pull Request
 

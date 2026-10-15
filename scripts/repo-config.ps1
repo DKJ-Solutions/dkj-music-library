@@ -520,3 +520,20 @@ function Get-HouseStyleAllowlist {
         @{ Path = 'src/lib/spotify/ingest.ts'; Name = '.meta'; Reason = 'object spread (...meta), not a CSS class' }
     )
 }
+
+# The dev-preview hook of the dkj-solutions plugin (#81): at session start it starts `next dev`, or
+# reuses the one already running from this checkout, and hands out the localhost link -- in VS Code's
+# Simple Browser through .vscode/settings.json. Port 3000 and only 3000: the Spotify redirect URI is
+# registered on it (src/lib/spotify/config.ts), so a server on another port could never log in.
+# No `-H 127.0.0.1`, unlike the plugin README's advice: this app is deliberately used from the LAN
+# address too (src/lib/http/sameOrigin.ts, September 28, 2026), and the hook starts it exactly the way
+# `npm run dev` already does.
+function Get-DevPreview {
+    @{
+        Command      = 'npm run dev -- -p {port}'
+        Ports        = 3000
+        Requires     = 'node_modules'
+        Name         = 'music-library'
+        OpenInVsCode = $true
+    }
+}
