@@ -39,19 +39,31 @@
 
 ### PLAN
 
+Issue #82: the branch table still mapped `feat` to `enhancement`. The plugin README's two-step
+move: step 1 (rename the tracker label) is already satisfied, because `feature` exists on this
+tracker beside `enhancement` (a rename would collide), so only step 2 remains.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `scripts/lib/branch-info.ps1`: `feat` -> `feature`. In the same paragraph of the README rule a
+  `docs/` branch carries no label, so `docs` -> `$null` (open-pr handles an empty label, #1395).
 
 ### TEST
 
+- [x] `Get-BranchInfo` resolves `feat/x` to `feature` and `docs/x` to no label (checked by hand).
+
 ### DEPLOY: fix/82-feature-label
 
-**Score:**
+A `feat/` pull request in this repo is now labelled `feature` instead of `enhancement`, and a
+`docs/` pull request gets no label, as in every other DKJ-Solutions repo.
+
+**Score:** N/A
 
 #### What makes this deploy extra special
 
-**Score:**
+The tracker labels match the rest of DKJ-Solutions, so a filter on `feature` finds this repo's work too.
+
+**Score:** 1
 
 #### Pull Request
 

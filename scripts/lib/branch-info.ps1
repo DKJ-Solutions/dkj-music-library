@@ -14,11 +14,13 @@
 # Canonical branch types in release notes order.
 $script:BranchTypeOrder = @('Feat', 'Fix', 'Docs', 'Chore')
 
-# Prefix -> GitHub label (PR) + branch type (changelog entry). Labels are the tracker's defaults.
+# Prefix -> GitHub label (PR) + branch type (changelog entry). The labels follow the dkj-solutions
+# extension (#82, DKJ-Solutions/dkj-claude-plugins#2961): a feat/ PR carries 'feature', a fix/ PR
+# 'bug', never 'enhancement', and a docs/ PR no label at all ($null is a legitimate answer to open-pr).
 $script:BranchPrefixTable = @{
-    feat  = @{ Label = 'enhancement';   Type = 'Feat' }
+    feat  = @{ Label = 'feature';       Type = 'Feat' }
     fix   = @{ Label = 'bug';           Type = 'Fix' }
-    docs  = @{ Label = 'documentation'; Type = 'Docs' }
+    docs  = @{ Label = $null;           Type = 'Docs' }
     chore = @{ Label = 'documentation'; Type = 'Chore' }
 }
 
