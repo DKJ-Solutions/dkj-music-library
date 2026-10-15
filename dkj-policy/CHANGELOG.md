@@ -2,7 +2,31 @@
 
 ## [Unreleased]
 
-**53 / 70 minor entries** <!-- pending-tally -->
+**54 / 71 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/80-house-style-v3 · 20261015-152152Z
+
+The app now renders in the DKJ-Solutions house style: the page, cards, lines, text and headings take
+their colours from the theme, and a round settings button at the top right opens a picker with the
+twelve house themes and a reset. Without a choice the app shows Petrol on a light system and Cyaan on
+a dark one; a choice is remembered on this device.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+The music library looks like the other DKJ-Solutions apps and can be given any of the twelve house
+colours, and a fix to the shared look now arrives through the brand book instead of a local copy.
+
+**Score:** 3
+
+#### Pull Request
+
+Adopt the DKJ-Solutions house style (house-style-v3) and its settings button
+
+[PR #83](https://github.com/DKJ-Solutions/dkj-music-library/pull/83)
+
+---
 
 ### DEPLOY: feat/enable-dkj-solutions · 20261013-084825Z
 
