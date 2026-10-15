@@ -2,7 +2,28 @@
 
 ## [Unreleased]
 
-**55 / 72 minor entries** <!-- pending-tally -->
+**56 / 73 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/82-feature-label · 20261015-152832Z
+
+A `feat/` pull request in this repo is now labelled `feature` instead of `enhancement`, and a
+`docs/` pull request gets no label, as in every other DKJ-Solutions repo.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+The tracker labels match the rest of DKJ-Solutions, so a filter on `feature` finds this repo's work too.
+
+**Score:** 1
+
+#### Pull Request
+
+Label a feat/ PR 'feature', not 'enhancement', as the dkj-solutions extension requires
+
+[PR #85](https://github.com/DKJ-Solutions/dkj-music-library/pull/85)
+
+---
 
 ### DEPLOY: feat/81-dev-preview · 20261015-152515Z
 
