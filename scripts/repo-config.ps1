@@ -528,13 +528,15 @@ function Get-HouseStyleAllowlist {
 # registered on it (src/lib/spotify/config.ts), so a server on another port could never log in.
 # No `-H 127.0.0.1`, unlike the plugin README's advice: this app is deliberately used from the LAN
 # address too (src/lib/http/sameOrigin.ts, September 28, 2026), and the hook starts it exactly the way
-# `npm run dev` already does.
+# `npm run dev` already does. Since DKJ-Solutions/dkj-claude-plugins#3245 this server is the PRODUCT on
+# the plugin's hub (localhost:4890-4899), and `OpenInVsCode` opens the hub; `Name` is no longer read
+# there, so it is gone (#87). The port and the LAN bind stay as they are until #87's open question is
+# answered: moving off 3000 needs a new redirect URI in the Spotify Developer Dashboard first.
 function Get-DevPreview {
     @{
         Command      = 'npm run dev -- -p {port}'
         Ports        = 3000
         Requires     = 'node_modules'
-        Name         = 'music-library'
         OpenInVsCode = $true
     }
 }

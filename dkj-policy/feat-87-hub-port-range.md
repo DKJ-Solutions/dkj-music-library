@@ -39,21 +39,40 @@
 
 ### PLAN
 
+#### Scope
+
+#87 asks for four things. Two are taken here: drop `Name` from `Get-DevPreview` (ignored since
+DKJ-Solutions/dkj-claude-plugins#3245) and route the hub's ports 4890-4899 to the Simple Browser. The
+third, moving the product to 3010-3019 bound to 127.0.0.1, collides with two decisions recorded in
+the code: the Spotify redirect URI is registered on `127.0.0.1:3000` (`src/lib/spotify/config.ts`), and
+the app is deliberately used from the LAN address (`next.config.ts`, `src/lib/http/sameOrigin.ts`). It
+stays open on #87 as the owner's decision. `DefaultTheme` waits for #86, which moves the product to
+`pink`; until then the product does not open in one theme the hub could state.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `scripts/repo-config.ps1`: `Name` dropped from `Get-DevPreview`, its comment names the hub and
+      why the port stays
+- [x] `.vscode/settings.json`: `localhost:4890` to `localhost:4899` open in the Simple Browser
 
 ### TEST
 
+- [x] Verified by the gates `ship-pr` runs; the session check named exactly these two drifts
+      (`OpenInVsCode but no hub port routed`, `Get-DevPreview states Name`)
+
 ### DEPLOY: feat/87-hub-port-range
 
-**Score:**
+The plugin's hub now opens in VS Code's Simple Browser instead of the system browser: `.vscode/settings.json` routes all ten hub ports (`localhost:4890` to `4899`) beside the product's `localhost:3000`. `Get-DevPreview` no longer states `Name`, which the hub stopped reading. The product stays on port 3000 without a loopback bind, because the Spotify login and the LAN use depend on both; whether to move it is open on #87.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A -- the hub opens beside the conversation instead of in a separate browser window; nothing to learn or decide.
+
+**Score:** N/A
 
 #### Pull Request
 
-Hub: own port range, loopback bind and Simple Browser routes
+Route the plugin's hub to the Simple Browser and drop the ignored Name
 
