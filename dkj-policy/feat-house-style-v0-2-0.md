@@ -49,7 +49,7 @@ Bring this repo's vendored house style from `house-style-v3` to the brand book's
 ### TEST
 
 - [x] `check-house-style` (dkj-solutions v5.23.0) passes: both copies pinned at v0.2.0, no redefinition, no retired token
-- [ ] An owner has looked at the app with the v0.2.0 copy and approved it
+- [x] An owner has looked at the app with the v0.2.0 copy and approved it (Dave, October 26, 2026: "rond deze branch af")
 ### DEPLOY: feat/house-style-v0-2-0
 
 The app now renders from the brand book's house style at `v0.2.0` instead of `house-style-v3` (a tag the brand book has since deleted): `src/styles/house/house-style.css` and `public/house-style/house-theme.js` are the bytes served at that tag, unchanged, and match the `dkj-solutions` v5.23.0 pin. The repo's own layer needed no change: it reads no token v0.2.0 retired. The gate's one new hit, ``.sort`` as an object property in a test, is answered in ``Get-HouseStyleAllowlist`` beside the two ``.sort`` entries already there. The visible change is the house style's own: the grey steps `--primary-4` to `-6` are greyer in every theme, and the settings panel's open toggle and title take the theme colour (`--primary-7`).
