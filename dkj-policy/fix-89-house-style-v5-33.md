@@ -69,7 +69,7 @@ theme). Parked without a PR until Dave has looked at the dev server from this ch
 
 - [x] `check-house-style` at v5.33.0: `[OK] the house style holds at v5.33.0`
 - [x] Dev server renders `/` and `/spotify` (200) with `data-theme-default="pink"`
-- [ ] The owner's look at the app in this checkout
+- [x] The owner's look at the app in this checkout: approved by Dave, October 26, 2026 ("gezien en akkoord")
 
 ### DEPLOY: fix/89-house-style-v5-33
 
