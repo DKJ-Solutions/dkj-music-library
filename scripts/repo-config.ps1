@@ -517,6 +517,7 @@ function Get-HouseStyleAllowlist {
     return @(
         @{ Path = 'src/lib/library/exportDiff.ts'; Name = '.sort'; Reason = 'Array.prototype.sort() on the next line, not a CSS class' }
         @{ Path = 'src/lib/sortRows.ts'; Name = '.sort'; Reason = 'Array.prototype.sort() call, not a CSS class' }
+        @{ Path = 'src/lib/library/registerPrefs.test.ts'; Name = '.sort'; Reason = 'the .sort property of a parsed prefs object, not a CSS class' }
         @{ Path = 'src/lib/spotify/ingest.ts'; Name = '.meta'; Reason = 'object spread (...meta), not a CSS class' }
     )
 }
