@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**56 / 74 minor entries** <!-- pending-tally -->
+**56 / 75 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/87-hub-port-range · 20261026-213452Z
+
+The plugin's hub now opens in VS Code's Simple Browser instead of the system browser: `.vscode/settings.json` routes all ten hub ports (`localhost:4890` to `4899`) beside the product's `localhost:3000`. `Get-DevPreview` no longer states `Name`, which the hub stopped reading. The product stays on port 3000 without a loopback bind, because the Spotify login and the LAN use depend on both; whether to move it is open on #87.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+N/A -- the hub opens beside the conversation instead of in a separate browser window; nothing to learn or decide.
+
+**Score:** N/A
+
+#### Pull Request
+
+Route the plugin's hub to the Simple Browser and drop the ignored Name
+
+[PR #90](https://github.com/DKJ-Solutions/dkj-music-library/pull/90)
+
+---
 
 ### DEPLOY: feat/house-style-v0-2-0 · 20261026-212704Z
 
