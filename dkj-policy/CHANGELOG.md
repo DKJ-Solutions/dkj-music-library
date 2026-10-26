@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**56 / 73 minor entries** <!-- pending-tally -->
+**56 / 74 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/house-style-v0-2-0 · 20261026-212704Z
+
+The app now renders from the brand book's house style at `v0.2.0` instead of `house-style-v3` (a tag the brand book has since deleted): `src/styles/house/house-style.css` and `public/house-style/house-theme.js` are the bytes served at that tag, unchanged, and match the `dkj-solutions` v5.23.0 pin. The repo's own layer needed no change: it reads no token v0.2.0 retired. The gate's one new hit, ``.sort`` as an object property in a test, is answered in ``Get-HouseStyleAllowlist`` beside the two ``.sort`` entries already there. The visible change is the house style's own: the grey steps `--primary-4` to `-6` are greyer in every theme, and the settings panel's open toggle and title take the theme colour (`--primary-7`).
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+N/A -- the same app in slightly greyer neutrals; nothing new for its user to learn or decide.
+
+**Score:** N/A
+
+#### Pull Request
+
+Take the house style at v0.2.0
+
+[PR #88](https://github.com/DKJ-Solutions/dkj-music-library/pull/88)
+
+---
 
 ### DEPLOY: fix/82-feature-label · 20261015-152832Z
 
