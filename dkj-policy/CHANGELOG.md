@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**56 / 75 minor entries** <!-- pending-tally -->
+**57 / 76 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/89-house-style-v5-33 · 20261026-214805Z
+
+The app now renders from the house style at `dkj-policy` v5.33.0, and opens in its own default theme, Roze (`pink`, dark), instead of the Petrol/Cyaan pair. `src/styles/house/house-style.css` and `public/house-style/house-theme.js` are the pinned v5.33.0 bytes, unchanged; the domain layer reads the new paper, primary, muted and text tokens instead of the retired `--primary-1` to `-9`, and takes `--font-mono` from the house style instead of defining its own. The plugin's hub opens in the same theme (`DefaultTheme = 'pink'`). The `house-style` CI check is green again.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+The library has a colour of its own: it opens in Roze unless you pick another theme in the settings panel.
+
+**Score:** 2
+
+#### Pull Request
+
+Take the house style at v5.33.0, with pink as the default theme
+
+[PR #91](https://github.com/DKJ-Solutions/dkj-music-library/pull/91)
+
+---
 
 ### DEPLOY: feat/87-hub-port-range · 20261026-213452Z
 
