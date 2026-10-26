@@ -39,19 +39,49 @@
 
 ### PLAN
 
+#### Scope
+
+Resolves #89 and #86 together: both come down to taking the house style at `dkj-policy` v5.33.0. #89
+needs the new pinned copies of both files and the domain layer moved off the retired `--primary-*`
+steps; #86 is the same `house-theme.js` copy plus `data-theme-default="pink"` on `<html>`.
+
+The domain layer was on the nine-step scale of October 15, 2026, so the rename goes through the README's
+October 19 and October 21 tables: `-1`/`-2`/`-3` to `--paper-1`/`-2`/`-3`, `-5` and `-6` to `--muted`, `-7`
+to `--primary`, `-9` to `--fg-1` (`-4` and `-8` were not used). No domain surface is inverted, so no grey
+needed `--muted-inverse`.
+
+#### Waiting for the owner's look
+
+A visible result: the whole app changes colour (pink by default, new paper and text steps in every
+theme). Parked without a PR until Dave has looked at the dev server from this checkout.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `src/styles/house/house-style.css` and `public/house-style/house-theme.js`: the bytes served at
+      `dkj-claude-plugins` v5.33.0, sha256 matching the `house-style` skill's pin
+- [x] Domain layer: every retired `--primary-N` renamed (12 files under `src/`)
+- [x] `src/styles/base/_root.scss`: `--font-mono` no longer defined here, the house style defines it now
+- [x] `src/app/layout.tsx`: `data-theme-default="pink"` replaces the `teal`/`cyan` pair (#86)
+- [x] `scripts/repo-config.ps1`: `DefaultTheme = 'pink'` in `Get-DevPreview`, so the hub opens in the
+      product's theme (#87 step 5)
 
 ### TEST
 
+- [x] `check-house-style` at v5.33.0: `[OK] the house style holds at v5.33.0`
+- [x] Dev server renders `/` and `/spotify` (200) with `data-theme-default="pink"`
+- [ ] The owner's look at the app in this checkout
+
 ### DEPLOY: fix/89-house-style-v5-33
 
-**Score:**
+The app now renders from the house style at `dkj-policy` v5.33.0, and opens in its own default theme, Roze (`pink`, dark), instead of the Petrol/Cyaan pair. `src/styles/house/house-style.css` and `public/house-style/house-theme.js` are the pinned v5.33.0 bytes, unchanged; the domain layer reads the new paper, primary, muted and text tokens instead of the retired `--primary-1` to `-9`, and takes `--font-mono` from the house style instead of defining its own. The plugin's hub opens in the same theme (`DefaultTheme = 'pink'`). The `house-style` CI check is green again.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+The library has a colour of its own: it opens in Roze unless you pick another theme in the settings panel.
+
+**Score:** 2
 
 #### Pull Request
 

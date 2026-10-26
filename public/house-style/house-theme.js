@@ -6,13 +6,23 @@
 
    Which theme applies, in this order:
      1. the user's own choice, remembered per app on this device;
-     2. otherwise the app's own default for the OS mode, declared on <html>:
-        <html data-theme-light="purple" data-theme-dark="cyan">
-        (an app picks its own pair, so apps are told apart before anyone chooses);
-     3. otherwise the house defaults, Blauw (light) and Cyaan (dark).
+     2. otherwise the app's own default theme, declared on <html>:
+        <html data-theme-default="teal">
+        (an app picks its own, so apps are told apart before anyone chooses;
+        its mode is then fixed by the theme, whatever the OS mode is; a page
+        that ships data-theme="light"/"dark" ignores a default of the other mode);
+     3. otherwise, for apps that have not moved to that yet, their default for
+        the OS mode: <html data-theme-light="purple" data-theme-dark="lilac">;
+     4. otherwise the house defaults, Blauw (light) and Cyaan (dark).
    Without this script the stylesheet still works: no data-theme follows the
    OS with the house defaults. A page that ships data-theme="light" or "dark"
    keeps that mode: the script then picks that mode's default, not the OS's.
+
+   The page width, set as <html data-width="fluid|phone|full"> (house-style.css keys
+   main and .container off it): fluid is the house column, phone a 360px column, full
+   the whole width. The user's choice is remembered per app on this device, like the
+   theme; otherwise the app's own default, <html data-width-default="fluid">; otherwise
+   full. Without this script there is no data-width and the column is fluid.
 
    Use:
      a script element with src="house-theme.js"     (in <head>, so nothing flashes;
@@ -20,30 +30,35 @@
      DKJTheme.picker(document.getElementById('theme'))   (draws the picker)
      DKJTheme.picker(el, { light: 'Light', dark: 'Dark' }) (row labels for an app in another language)
      DKJTheme.settings(el, options)                  (draws the settings button: a round toggle
-                                                     and a panel with the picker and a reset; returns
-                                                     the panel's slot for the app's own controls)
+                                                     and a panel with the picker, the width and a
+                                                     reset; returns the panel's slot for the app's
+                                                     own controls)
      DKJTheme.set('ochre') / DKJTheme.reset() / DKJTheme.current()
+     DKJTheme.setWidth('full') / DKJTheme.width()
    ========================================================================== */
 (function () {
   var THEMES = [
-    { id: 'magenta', name: 'Magenta',     mode: 'light', hex: '#720252' },
-    { id: 'purple',  name: 'Paars',       mode: 'light', hex: '#4f0399' },
-    { id: 'blue',    name: 'Blauw',       mode: 'light', hex: '#0704c0' },
-    { id: 'teal',    name: 'Petrol',      mode: 'light', hex: '#02494f' },
-    { id: 'ochre',   name: 'Oker',        mode: 'light', hex: '#494001' },
-    { id: 'rust',    name: 'Roest',       mode: 'light', hex: '#633001' },
-    { id: 'pink',    name: 'Roze',        mode: 'dark',  hex: '#fe97d0' },
-    { id: 'lilac',   name: 'Lila',        mode: 'dark',  hex: '#c2affe' },
-    { id: 'sky',     name: 'Hemelsblauw', mode: 'dark',  hex: '#b5b5fe' },
-    { id: 'cyan',    name: 'Cyaan',       mode: 'dark',  hex: '#0fd6e8' },
-    { id: 'yellow',  name: 'Geel',        mode: 'dark',  hex: '#e8b70c' },
-    { id: 'orange',  name: 'Oranje',      mode: 'dark',  hex: '#fea56e' }
+    { id: 'magenta', name: 'Magenta',     mode: 'light', hex: '#dc009d' },
+    { id: 'purple',  name: 'Paars',       mode: 'light', hex: '#8100ff' },
+    { id: 'blue',    name: 'Blauw',       mode: 'light', hex: '#0400ff' },
+    { id: 'teal',    name: 'Petrol',      mode: 'light', hex: '#00818c' },
+    { id: 'ochre',   name: 'Oker',        mode: 'light', hex: '#847400' },
+    { id: 'rust',    name: 'Roest',       mode: 'light', hex: '#ba5900' },
+    { id: 'pink',    name: 'Roze',        mode: 'dark',  hex: '#ff018e' },
+    { id: 'lilac',   name: 'Lila',        mode: 'dark',  hex: '#a143ff' },
+    { id: 'sky',     name: 'Hemelsblauw', mode: 'dark',  hex: '#6363ff' },
+    { id: 'cyan',    name: 'Cyaan',       mode: 'dark',  hex: '#00eaff' },
+    { id: 'yellow',  name: 'Geel',        mode: 'dark',  hex: '#ffc702' },
+    { id: 'orange',  name: 'Oranje',      mode: 'dark',  hex: '#ff6100' }
   ];
   var HOUSE_DEFAULT = { light: 'blue', dark: 'cyan' };
   var root = document.documentElement;
   /* storage is per origin, so each app on its own origin keeps its own choice; two apps sharing
      an origin tell their choices apart with <html data-theme-key="app-name"> */
-  var key = 'dkj-theme' + (root.getAttribute('data-theme-key') ? ':' + root.getAttribute('data-theme-key') : '');
+  var suffix = root.getAttribute('data-theme-key') ? ':' + root.getAttribute('data-theme-key') : '';
+  var key = 'dkj-theme' + suffix;
+  var WIDTHS = ['fluid', 'phone', 'full'];
+  var widthKey = 'dkj-width' + suffix;
   var byId = function (id) { for (var i = 0; i < THEMES.length; i++) if (THEMES[i].id === id) return THEMES[i]; return null; };
 
   function stored() { try { return localStorage.getItem(key); } catch (e) { return null; } }
@@ -56,8 +71,34 @@
   /* a page that ships data-theme="light"/"dark" has fixed its mode; honour it */
   var shipped = root.getAttribute('data-theme');
   var fixedMode = shipped === 'light' || shipped === 'dark' ? shipped : null;
-  function resolve() { var s = stored(); return byId(s) ? s : appDefault(fixedMode || osMode()); }
+  /* the app's own default theme, read live like data-theme-light/dark; a page with a fixed mode ignores
+     a default of the other mode and falls through to that mode's default */
+  function ownDefault() {
+    var t = byId(root.getAttribute('data-theme-default'));
+    return t && (!fixedMode || t.mode === fixedMode) ? t.id : null;
+  }
+  function resolve() { var s = stored(); return byId(s) ? s : ownDefault() || appDefault(fixedMode || osMode()); }
   function apply() { root.setAttribute('data-theme', resolve()); render(); }
+
+  /* the page width: the stored choice, else the app's data-width-default, else full */
+  function isWidth(w) { return WIDTHS.indexOf(w) >= 0; }
+  function resolveWidth() {
+    var s = null;
+    try { s = localStorage.getItem(widthKey); } catch (e) {}
+    if (isWidth(s)) return s;
+    var d = root.getAttribute('data-width-default');
+    return isWidth(d) ? d : 'full';
+  }
+  var widthGroups = [];
+  function applyWidth() {
+    var now = resolveWidth();
+    root.setAttribute('data-width', now);
+    for (var i = 0; i < widthGroups.length; i++) {
+      var buttons = widthGroups[i].querySelectorAll('button');
+      for (var j = 0; j < buttons.length; j++) buttons[j].setAttribute('aria-pressed', String(buttons[j].getAttribute('data-width') === now));
+    }
+  }
+  function setWidth(w) { if (!isWidth(w)) return; try { localStorage.setItem(widthKey, w); } catch (e) {} applyWidth(); }
 
   var pickers = [];
   function render() {
@@ -96,11 +137,12 @@
     if (pickers.indexOf(el) < 0) { el.addEventListener('click', onPick); pickers.push(el); }
     render();
   }
-  /* The settings button: a round toggle that opens a panel with the picker and a reset.
-     settings(el, { label, title, theme, reset, light, dark }) -- every text is optional (Dutch by
-     default, like the picker) and goes in as HTML, like the picker's labels: pass the app's own
-     texts, never user input. Returns the panel's .theme-settings__extra element, where an app
-     adds controls of its own. The panel closes on the toggle, Escape (focus goes back to the
+  /* The settings button: a round toggle that opens a panel with the picker, the page width and a
+     reset. settings(el, { label, title, theme, reset, light, dark, width, fluid, phone, full }) --
+     every text is optional (Dutch by default, like the picker) and goes in as HTML, like the
+     picker's labels: pass the app's own texts, never user input. widths: false leaves the width
+     group out, for an app whose layout has no page column to widen. Returns the panel's
+     .theme-settings__extra element, where an app adds controls of its own. The panel closes on the toggle, Escape (focus goes back to the
      toggle), a click outside it and focus leaving it -- never on a click inside it. Drawing the
      same element twice returns the existing slot. */
   var ICON = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"';
@@ -122,6 +164,13 @@
         '<p class="theme-settings__title" id="' + id + '-title">' + (opts.title || label) + '</p>' +
         '<div class="theme-settings__group"><span class="theme-settings__label">' + (opts.theme || 'Thema') + '</span>' +
           '<div class="theme-settings__picker"></div></div>' +
+        (opts.widths === false ? '' :
+          '<div class="theme-settings__group"><span class="theme-settings__label" id="' + id + '-width">' + (opts.width || 'Breedte') + '</span>' +
+            '<span class="seg theme-settings__width" role="group" aria-labelledby="' + id + '-width">' +
+              '<button type="button" data-width="fluid" aria-pressed="false">' + (opts.fluid || 'Vloeiend') + '</button>' +
+              '<button type="button" data-width="phone" aria-pressed="false">' + (opts.phone || 'Telefoon') + '</button>' +
+              '<button type="button" data-width="full" aria-pressed="false">' + (opts.full || 'Volledig') + '</button>' +
+            '</span></div>') +
         '<div class="theme-settings__group theme-settings__foot"><div class="theme-settings__extra"></div>' +
           '<button type="button" class="btn theme-settings__reset">' + (opts.reset || 'Standaardthema') + '</button></div>' +
       '</div>';
@@ -130,9 +179,20 @@
     function show(open) { panel.hidden = !open; toggle.setAttribute('aria-expanded', String(open)); }
     toggle.addEventListener('click', function () { show(panel.hidden); });
     el.querySelector('.theme-settings__reset').addEventListener('click', reset);
+    var widthGroup = el.querySelector('.theme-settings__width');
+    if (widthGroup) {
+      widthGroup.addEventListener('click', function (e) {
+        for (var node = e.target; node && node !== widthGroup; node = node.parentNode)
+          if (node.getAttribute && node.getAttribute('data-width')) { setWidth(node.getAttribute('data-width')); return; }
+      });
+      widthGroups.push(widthGroup);
+      applyWidth();
+    }
     /* the document listeners remove themselves once el has left the page, so a redraw leaks nothing */
     function gone() {
       if (document.documentElement.contains(el)) return false;
+      var at = widthGroups.indexOf(widthGroup);
+      if (at >= 0) widthGroups.splice(at, 1);
       document.removeEventListener('keydown', onKey);
       document.removeEventListener('pointerdown', onPointer);
       return true;
@@ -161,5 +221,7 @@
     if (mq.addEventListener) mq.addEventListener('change', onChange); else if (mq.addListener) mq.addListener(onChange);
   }
   apply();
-  window.DKJTheme = { themes: THEMES.slice(), set: set, reset: reset, picker: picker, settings: settings, current: function () { return root.getAttribute('data-theme'); } };
+  applyWidth();
+  window.DKJTheme = { themes: THEMES.slice(), set: set, reset: reset, picker: picker, settings: settings, current: function () { return root.getAttribute('data-theme'); },
+    widths: WIDTHS.slice(), setWidth: setWidth, width: function () { return root.getAttribute('data-width'); } };
 })();

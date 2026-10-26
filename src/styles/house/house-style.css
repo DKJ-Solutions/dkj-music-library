@@ -18,12 +18,15 @@
        dark, both with those house defaults.
      The dark token block therefore appears twice; keep both in sync.
 
-   How far a theme reaches: every use of --primary-5 (a grey of the colour; links and text in the colour are -7:
-   links, titles, values) (the pressed .seg,
-   .badge--info, .meter--info, the settings toggle, focus rings), the text caret and the selection;
-   .btn--primary (a filled main action, owner's decision, October 15, 2026, #109) and native checkboxes, radios, sliders and progress bars take --primary-7 through accent-color. Beyond that, by default: the page, the
-   cards and tiles carry a tint of the primary (--primary-1, --primary-2), and every line and tinted surface
-   is --primary-3, with --primary-9 as the text on it. There are no untinted neutrals: text is --primary-9, and --primary-7 is the highlight (h1, h2, a state, a value that stands out) (owner's decisions, October 14 and 15, 2026). Status, direction and categorical colours are never tinted. The
+   How far a theme reaches: every use of --muted (a grey of the colour: the pressed .seg, .badge--info,
+   .meter--info, focus rings), the text caret and the selection; --primary, the colour itself,
+   for links, titles and values, the settings toggle's edge and the breadcrumb bar (#3235), .btn--primary (a filled main action, owner's decision, October 15, 2026, #109) and
+   native checkboxes, radios, sliders and progress bars through accent-color. Beyond that, by default: the page,
+   the cards and tiles stand on the paper (--paper-1, --paper-2), every line and tinted surface is --paper-3, and
+   the text on them is --fg-1 to --fg-4. There are no untinted neutrals: text is --fg-1, and --primary is the
+   highlight (h1, a state, a value that stands out) (owner's decisions, October 14 and 15, 2026; h2 is --fg-2 and
+   h3 --fg-3, #3235).
+   Status, direction and categorical colours are never tinted. The
    --accent modifiers (header, table) carry it further where an app opts in.
 
    Categorical colours: --cat-1 .. --cat-3 are series slots. Pick a slot per
@@ -37,36 +40,48 @@
 :root {
   color-scheme: light;
 
-  /* the theme's nine steps, fixed values per theme (owner's decision, October 14, 2026). On light every theme
-     behaves the same and only the hue differs (owner's decision, October 15, 2026): each step has one OKLCH
-     lightness and one chroma in all six, capped at a share of what the hue can hold (relative chroma) where the hue
-     holds less. -1 L 0.989 C 0.0053, -2 L 0.972 C 0.0136 (the owner's Petrol #faffff and #f2ffff, at the lightest
-     lightness every hue holds); -3 L 0.848 C 0.066, at most 0.45 relative (Petrol #9adae2); -4 L 0.70 (October 15, 2026: a big step towards the ground, keeping its hue and chroma) and -6 L 0.39 in -5's hue at half its base chroma (October 15, 2026: the greys a step either side, extra grey); -5 L 0.47 C 0.1135, at
-     most 0.486 relative (the owner's Paars #5d458b, Magenta #954c7a, Blauw #49498d), its base chroma, taken at 0.6 (October 15, 2026: greyer); -7 L 0.369 at 0.99, -8 L 0.289
-     at 0.83 and -9 L 0.131 at 0.99 relative (the owner's Blauw #0707bf, #181873, #00002b). Each step keeps its hue,
-     and Blauw's sit on #0000ff's HSL hue 240, from 264 to 286 in OKLCH as their chroma falls. Dark follows the same rule,
-     mirrored (owner's decision, October 15, 2026): -1 L 0.19 C 0.035, -2 L 0.21 C 0.045, -3 L 0.32 C 0.08 at most
-     0.6 relative, -4 L 0.38 (October 15, 2026: a big step towards the ground, as on light) and -6 L 0.70 (October 15, 2026: a big step lighter, keeping its hue and chroma; 6.58:1 or better on -2), -5 L 0.538 C 0.105 at most 0.49 relative (the owner's Oranje #8f6249, at most the chroma of the owner's
-     Hemelsblauw #4c4c8d) its base chroma, taken at 0.6, -7 L 0.80 at 0.99, -8 L 0.90 at 0.83 relative, -9 L
-     0.981 C 0.008. -4, -5 and -6 are the greys, -5 in the middle of the scale with a little more colour than -4 and -6, and -7 and -8 carry
-     the colour. A role takes the same step in both modes, never light-dark() between two steps (owner's
-     decision, October 15, 2026): on dark that puts -1 on a -5 fill, and -5 text and rings on -1 and -2, at about
-     3.3:1 (owner accepted). Hemelsblauw sits on #0000ff's HSL hue 240 like Blauw. -1 and -2 are the ground end (lightest
-     on light, darkest on dark), -8 and -9 the far end (darkest on light, whitest on dark). Blauw here; each [data-theme]
-     below sets its own nine.
-     -1 the page, and the text on a -5 fill; -2 the cards (tiles, tooltips); -3 every line (borders, row
-     dividers, meter track, gridlines) and the tinted surfaces (an accent table head, a hover, a today row, the
-     accent dialog); -5 the fills (switches, info badges), focus rings, meters and text in
-     the colour (values); -4 no role yet; -6 sub lines, notes and .muted; -7 the highlight: links (owner's decision, October 15, 2026), the primary button's fill (#109), the picker's dot, h1 and h2, the states (hover, focus outlines, sorted, pressed) and native controls through accent-color; -8 h3-h6 (owner's decision, October 14, 2026; on -9 h1 and h2 are -3 and h3-h6 are -2); -9 the far end: every paragraph, and an inverted
-     surface (the showcase's panel on dark). Measured (WCAG relative luminance) worst cases: -5 on the card 6.25:1
-     on light (Oker), -1 on -5 6.54:1 on light (Oker) and 3.51:1 on dark (Roze), -5 on the card 3.38:1 on dark (Roze), -7 on -3 6.53:1 on light (Petrol);
-     -7, the highlight, on -1 and -2 at 9.42:1 or better on light (Petrol) and 9.02:1 on dark (Roze), and 6.42:1 or better
-     on a status background (Roze on dark). */
-  --primary-1: #fbfbff; --primary-2: #f5f5ff; --primary-3: #cacae4; --primary-4: #9a9db0; --primary-5: #57596e; --primary-6: #424354;
-  --primary-7: #0704c0; --primary-8: #181675; --primary-9: #000325;
+  /* the theme's eleven colours (owner, issue #3235, October 21, 2026, replacing the paper and ink of October 20),
+     computed by scripts/build/build-house-palette.ps1 from the theme's hue and mode -- never tuned by hand. Blauw
+     here; each [data-theme] below sets its own eleven. In the owner's words, on a light theme (a dark one is the
+     mirror, with black and white swapped):
+       --primary         ONE colour: the most saturated colour of the theme's HSL hue (saturation 100%) that reads at
+                         4.55:1 on all four paper steps, so white, and every paper step, reads on it too. On a dark
+                         theme the floor is 9:1, so the primary is a light tint of the colour rather than the colour
+                         at full strength (owner, October 21, 2026: at 4.55:1 a primary fill was a vivid band under
+                         near-black text), and no more saturated than OKLCH chroma 0.13: Cyaan and Geel reach 9:1 at
+                         full strength already, so above the cap they are taken again at chroma 0.13 (Cyaan at 0.10, still too vivid
+                         at 0.13).
+       --paper-1..4      FOUR colours that read on the primary, from white towards a little darker: what sits BEHIND
+                         the text (the page, the cards, the lines, the stronger border) and the text ON a primary fill.
+       --muted           a grey of the colour that reads extra well (7:1) on the page: what may recede.
+       --muted-inverse   the same grey for the far end: 7:1 on --fg-1, for an inverted surface (.fill-inverse).
+       --fg-1..4         FOUR text colours that read on the paper, near black (on dark: near white), in very small
+                         steps: fg-4 is still very dark, only a little less so than fg-1.
+     The steps of each group run away from the page, so a higher number never means "darker" in both modes.
+     In OKLCH, in the hue of the theme's saturated colour: on light paper L 0.995 / 0.975 / 0.945 / 0.905 (C 0.006 to
+     0.045) and fg L 0.12 / 0.16 / 0.20 / 0.24 (C 0.03); on dark paper L 0.13 / 0.155 / 0.19 / 0.235 (C 0.02 to 0.045)
+     and fg L 0.99 / 0.955 / 0.92 / 0.885. The greys are C 0.03, as close to their ground as 7.05:1 allows, so they
+     recede by colour while they still read. The hue is the HSL hue of the owner's original theme colour (Blauw and
+     Hemelsblauw 240), held in HSL because at a constant OKLCH hue a saturated blue turns violet; Lila takes Paars's 270.
+     A role takes the same step in both modes, never light-dark() between two steps (owner's decision, October 15, 2026).
+     paper-1 the page, and the text on a --primary or --muted fill; paper-2 the cards (tiles, tooltips); paper-3 every
+     line (borders, row dividers, meter track, gridlines) and the tinted surfaces (an accent table head, a hover, a
+     today row, the accent dialog); paper-4 a stronger border (an open card, a selected box). --primary the
+     highlight: links (owner's decision, October 15, 2026), the primary button's fill (#109), the picker's dot, h1,
+     the states (hover, sorted) and native controls through accent-color. --muted the eyebrow, sub lines, notes,
+     .muted, the tile label, the fills (switches, info badges, a pressed .seg), most focus
+     rings and meters (a ring on a sort header, a .seg button, a chart bar or the read-more toggle is --primary). fg-1 every paragraph and an inverted surface (.fill-inverse, the showcase's panel); fg-2 h2 and .meta on a span; fg-3 h3;
+     fg-4 no role yet. The breadcrumb bar stands on --primary, with the paper steps as its text. On a fill the text switches: on .fill-primary the paper is the text, so an h2
+     is --paper-1 there and --fg-2 on the page (owner, #3235: "h2 heeft niet altijd dezelfde kleur", an h2 does not always have the same colour).
+     Measured (WCAG relative luminance, October 21, 2026), worst and best over the twelve themes: primary on paper-1
+     5.9:1 to 8.5:1 on light and 10.7:1 to 13.6:1 on dark, on paper-4 4.56:1 to 6.5:1 on light and 9.0:1 to 11.2:1 on
+     dark; on dark the primary sits close to the text (1.4:1 to 1.8:1 against fg-1), so it stands out by colour; fg-1 on paper-1 19.5:1 to 20.1:1, fg-4 on paper-4
+     11.8:1 to 12.5:1; muted on paper-1 7.05:1 to 7.13:1, on paper-2 6.6:1 to 6.9:1; muted-inverse on fg-1 7.05:1 to
+     7.10:1; a paper-3 line on a paper-2 card 1.05:1 (Pink) to 1.10:1 (Blauw), a paper-4 border on it 1.16:1 to 1.25:1. */
+  --paper-1: #fdfdff; --paper-2: #f3f7ff; --paper-3: #e4edff; --paper-4: #d1e0ff; --primary: #0000ff; --muted: #4f5769; --muted-inverse: #8f99ab; --fg-1: #020511; --fg-2: #070d1a; --fg-3: #101623; --fg-4: #191f2c;
 
   /* categorical palette (series slots) */
-  --cat-1: #2574d1;          /* dark enough for --primary-1 text on it at 4.5:1 in every light theme (4.51:1, worst Roest; #92) */
+  --cat-1: #2574d1;          /* dark enough for --paper-1 text on it at 4.5:1 in every light theme (4.51:1, worst Roest; #92) */
   --cat-2: #eb6834;
   --cat-3: #1baf7a;
 
@@ -102,12 +117,17 @@
   --spacing-64: 256px; --spacing-72: 288px; --spacing-80: 320px; --spacing-96: 384px;
 
   /* type scale: the Figma library's text variables (same file and collection as the spacing
-     scale), names and values exactly as defined there. Headings take the heading token of their
-     own level; body text is --text-base. Same in both modes. */
-  --text-h0: 48px; --text-h1: 40px; --text-h2: 32px; --text-h3: 24px;
-  --text-h4: 22px; --text-h5: 18px; --text-h6: 16px;
+     scale), with two deliberate departures: the library's h0 is retired and h1 takes its 48px, so
+     h1 stands clearly above h2; and the library's 24px h3 is retired and every level below moved
+     up one, so h3 stands clearly below h2 and there is no h6 (owner's decision, October 20, 2026). On October 25,
+     2026 the owner cut the scale to three headings: h3 is 14px, the body size, set apart by weight and
+     colour alone, and h4 and h5 were retired with their tokens.
+     Headings take the heading token of their own level; body text is --text-base. Same in both modes. */
+  /* No heading above 32px (owner, October 22, 2026): a page shows as much content as it can on a 900px-high screen,
+     so h1 is the top step and stands apart by its size and the theme's colour. The hero figure takes it too. */
+  --text-h1: 32px; --text-h2: 18px; --text-h3: 14px;
   --text-lg: 18px; --text-base: 14px; --text-sm: 12px; --text-xs: 11px;
-  /* the serif h1 and h2 are set in; a component whose title keeps that face at another level takes it from here */
+  /* the serif h1 and h2 were set in until October 24, 2026 (both are in the sans now); a component whose title keeps that face takes it from here */
   --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Noto Serif", serif;
 
   /* app-shell sizes, same in both modes (built from the spacing scale; see "App components" at the end):
@@ -117,10 +137,17 @@
   --tap: var(--spacing-11);
   --topbar-h: var(--spacing-14);
   --column-narrow: 512px;
+  --control-lg: 52px;     /* the large stepper in a dialog (.stepper--lg) */
+  --datecol: 10ch;        /* the fixed date column of .date-row: fits "09:00-10:30" at 12px, so titles line up down a list */
+
+  /* corner radii, same in both modes: the Brand-book components use these (the older classes above keep their literals) */
+  --radius-xs: 4px; --radius-sm: 6px; --radius-md: 8px; --radius-md-plus: 10px; --radius-lg: 12px; --radius-pill: 999px;
+  /* the face of code in .prose */
+  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
 
   /* native controls (checkbox, radio, range, progress) and the text caret take the theme */
-  accent-color: var(--primary-7);
-  caret-color: var(--primary-5);
+  accent-color: var(--primary);
+  caret-color: var(--muted);
 }
 
 /* ---- Tokens: dark, following the OS unless the page forces a theme -------- */
@@ -130,8 +157,8 @@
   :root:not([data-theme]) {
     color-scheme: dark;
     --cat-1: #3987e5; --cat-2: #d95926; --cat-3: #199e70;
-    --positive-5: #3fc23f; --negative-5: #ff7a7a; --positive-3: #25b225; --negative-3: #e66767; --warning-3: #ffc61a; --warning-5: #ffd75e; --warning-1: #3a2a10; --negative-1: #3a1414; --positive-1: #133a13;
-    --primary-1: #00181a; --primary-2: #001d20; --primary-3: #1d383a; --primary-4: #3c4445; --primary-5: #657171; --primary-6: #96a1a2; --primary-7: #0fd6e8; --primary-8: #97eff9; --primary-9: #f3fbfb;
+    --positive-5: #3fc23f; --negative-5: #ff7a7a; --positive-3: #25b225; --negative-3: #e66767; --warning-3: #ffc61a; --warning-5: #ffd75e; --warning-1: #2b1f0c; --negative-1: #3a1414; --positive-1: #133a13;
+    --paper-1: #01090b; --paper-2: #010f11; --paper-3: #00181b; --paper-4: #002328; --primary: #63cfdc; --muted: #839ea1; --muted-inverse: #435b5e; --fg-1: #f7fdfe; --fg-2: #e9f2f3; --fg-3: #dce7e8; --fg-4: #cfdcde;
   }
 }
 
@@ -141,33 +168,33 @@
 :root[data-theme="cyan"], :root[data-theme="yellow"], :root[data-theme="orange"] {
   color-scheme: dark;
   --cat-1: #3987e5; --cat-2: #d95926; --cat-3: #199e70;
-  --positive-5: #3fc23f; --negative-5: #ff7a7a; --positive-3: #25b225; --negative-3: #e66767; --warning-3: #ffc61a; --warning-5: #ffd75e; --warning-1: #3a2a10; --negative-1: #3a1414; --positive-1: #133a13;
-  --primary-1: #00181a; --primary-2: #001d20; --primary-3: #1d383a; --primary-4: #3c4445; --primary-5: #657171; --primary-6: #96a1a2; --primary-7: #0fd6e8; --primary-8: #97eff9; --primary-9: #f3fbfb;
+  --positive-5: #3fc23f; --negative-5: #ff7a7a; --positive-3: #25b225; --negative-3: #e66767; --warning-3: #ffc61a; --warning-5: #ffd75e; --warning-1: #2b1f0c; --negative-1: #3a1414; --positive-1: #133a13;
+  --paper-1: #01090b; --paper-2: #010f11; --paper-3: #00181b; --paper-4: #002328; --primary: #63cfdc; --muted: #839ea1; --muted-inverse: #435b5e; --fg-1: #f7fdfe; --fg-2: #e9f2f3; --fg-3: #dce7e8; --fg-4: #cfdcde;
 }
 
-/* ---- Themes: the primary colour ------------------------------------------ */
+/* ---- Themes: the theme's colour --------------------------------------------- */
 /* Twelve themes the user picks from (house-theme.js draws the picker). A light theme takes the
-   light tokens of :root, a dark theme the dark block above; each sets its own nine --primary-*, and the
+   light tokens of :root, a dark theme the dark block above; each sets its own eleven colours, and the
    two whose primary sits next to the warning colour move the warning away from it. No red and
    no green theme: those hues mean bad and good. Order: magenta, purple, blue, teal, ochre, rust (light);
    pink, lilac, sky, cyan, yellow, orange (dark). */
-:root[data-theme="magenta"], .theme-swatch[data-id="magenta"] { --primary-1: #fefafc; --primary-2: #fdf2f8; --primary-3: #e5c1d4; --primary-4: #aa99a2; --primary-5: #68555f; --primary-6: #4f4049; --primary-7: #720252; --primary-8: #4b0e37; --primary-9: #15000d; }
-:root[data-theme="purple"], .theme-swatch[data-id="purple"] { --primary-1: #fcfbff; --primary-2: #f6f4fe; --primary-3: #cfc9e4; --primary-4: #a09caf; --primary-5: #5d576c; --primary-6: #474353; --primary-7: #4f0399; --primary-8: #331263; --primary-9: #0c0020; }
-:root[data-theme="blue"], .theme-swatch[data-id="blue"] { --primary-1: #fbfbff; --primary-2: #f5f5ff; --primary-3: #cacae4; --primary-4: #9a9db0; --primary-5: #57596e; --primary-6: #424354; --primary-7: #0704c0; --primary-8: #181675; --primary-9: #000325; }
-:root[data-theme="teal"], .theme-swatch[data-id="teal"] { --primary-1: #f8fdfd; --primary-2: #ecf9f9; --primary-3: #9adae2; --primary-4: #98a0a1; --primary-5: #535c5e; --primary-6: #3f4647; --primary-7: #02494f; --primary-8: #0d3135; --primary-9: #000a0c; }
-:root[data-theme="ochre"], .theme-swatch[data-id="ochre"] { --primary-1: #fcfbf8; --primary-2: #f8f6ec; --primary-3: #d7cf9d; --primary-4: #a09f96; --primary-5: #5c5c52; --primary-6: #47463e; --primary-7: #494001; --primary-8: #312c0a; --primary-9: #0a0700; }
-:root[data-theme="rust"], .theme-swatch[data-id="rust"] { --primary-1: #fffaf8; --primary-2: #fef4ee; --primary-3: #e5c6b4; --primary-4: #a69c96; --primary-5: #635852; --primary-6: #4b443e; --primary-7: #633001; --primary-8: #41220a; --primary-9: #110400; --warning-3: #b88a00; }
-:root[data-theme="pink"], .theme-swatch[data-id="pink"] { --primary-1: #1e0d18; --primary-2: #260f1e; --primary-3: #4d203f; --primary-4: #4d3d45; --primary-5: #7c6771; --primary-6: #ac98a2; --primary-7: #fe97d0; --primary-8: #fad0e5; --primary-9: #fef7f9; }
-:root[data-theme="lilac"], .theme-swatch[data-id="lilac"] { --primary-1: #161021; --primary-2: #1b132a; --primary-3: #392855; --primary-4: #43404f; --primary-5: #6f6b7f; --primary-6: #9f9cae; --primary-7: #c2affe; --primary-8: #e0d9f9; --primary-9: #faf8fd; }
-:root[data-theme="sky"], .theme-swatch[data-id="sky"] { --primary-1: #121223; --primary-2: #15152c; --primary-3: #2c2c5a; --primary-4: #3f4150; --primary-5: #6b6c80; --primary-6: #9c9daf; --primary-7: #b5b5fe; --primary-8: #dbdbf9; --primary-9: #f8f8fe; }
-:root[data-theme="cyan"], .theme-swatch[data-id="cyan"] { --primary-1: #00181a; --primary-2: #001d20; --primary-3: #1d383a; --primary-4: #3c4445; --primary-5: #657171; --primary-6: #96a1a2; --primary-7: #0fd6e8; --primary-8: #97eff9; --primary-9: #f3fbfb; }
-:root[data-theme="yellow"], .theme-swatch[data-id="yellow"] { --primary-1: #1a1302; --primary-2: #1f1800; --primary-3: #3a321b; --primary-4: #45423a; --primary-5: #726e64; --primary-6: #a19f95; --primary-7: #e8b70c; --primary-8: #f9db90; --primary-9: #fbf9f3; --warning-3: #f08a24; }
-:root[data-theme="orange"], .theme-swatch[data-id="orange"] { --primary-1: #200f05; --primary-2: #281105; --primary-3: #472b1a; --primary-4: #4a403a; --primary-5: #796b64; --primary-6: #a89c95; --primary-7: #fea56e; --primary-8: #fad6c1; --primary-9: #fef7f5; }
+:root[data-theme="magenta"], .theme-swatch[data-id="magenta"] { --paper-1: #fffdfe; --paper-2: #fef3f9; --paper-3: #fce6f1; --paper-4: #f7d4e6; --primary: #b90085; --muted: #66525d; --muted-inverse: #a8929d; --fg-1: #0d0208; --fg-2: #160810; --fg-3: #1f1119; --fg-4: #281a22; }
+:root[data-theme="purple"], .theme-swatch[data-id="purple"] { --paper-1: #fdfdff; --paper-2: #f7f5ff; --paper-3: #edeafe; --paper-4: #e1dbfb; --primary: #7f00ff; --muted: #595568; --muted-inverse: #9996aa; --fg-1: #060410; --fg-2: #0e0b19; --fg-3: #171422; --fg-4: #201d2b; }
+:root[data-theme="blue"], .theme-swatch[data-id="blue"] { --paper-1: #fdfdff; --paper-2: #f3f7ff; --paper-3: #e4edff; --paper-4: #d1e0ff; --primary: #0000ff; --muted: #4f5769; --muted-inverse: #8f99ab; --fg-1: #020511; --fg-2: #070d1a; --fg-3: #101623; --fg-4: #191f2c; }
+:root[data-theme="teal"], .theme-swatch[data-id="teal"] { --paper-1: #fafeff; --paper-2: #edfafb; --paper-3: #d8f3f6; --paper-4: #bee9ef; --primary: #006e79; --muted: #435b5f; --muted-inverse: #839ea1; --fg-1: #000809; --fg-2: #001113; --fg-3: #051a1c; --fg-4: #0f2325; }
+:root[data-theme="ochre"], .theme-swatch[data-id="ochre"] { --paper-1: #fefef9; --paper-2: #f9f7ed; --paper-3: #f1eed9; --paper-4: #e6e1bf; --primary: #716300; --muted: #5c5845; --muted-inverse: #9d9984; --fg-1: #080600; --fg-2: #100d01; --fg-3: #191607; --fg-4: #222011; }
+:root[data-theme="rust"], .theme-swatch[data-id="rust"] { --paper-1: #fffdfc; --paper-2: #fff4ef; --paper-3: #fde8dc; --paper-4: #f9d8c5; --primary: #9c4b00; --muted: #665449; --muted-inverse: #a99488; --fg-1: #0e0300; --fg-2: #170903; --fg-3: #20120a; --fg-4: #291c14; --warning-3: #b88a00; }
+:root[data-theme="pink"], .theme-swatch[data-id="pink"] { --paper-1: #0e0507; --paper-2: #14080c; --paper-3: #1f0d13; --paper-4: #2f141e; --primary: #ff9fd4; --muted: #ab9399; --muted-inverse: #665157; --fg-1: #fffafc; --fg-2: #f6edf0; --fg-3: #ece1e4; --fg-4: #e2d5d9; }
+:root[data-theme="lilac"], .theme-swatch[data-id="lilac"] { --paper-1: #08060e; --paper-2: #0d0a15; --paper-3: #151121; --paper-4: #1f1a31; --primary: #d6adff; --muted: #9a97ab; --muted-inverse: #585467; --fg-1: #fcfbff; --fg-2: #f0eff6; --fg-3: #e5e3ec; --fg-4: #d9d7e2; }
+:root[data-theme="sky"], .theme-swatch[data-id="sky"] { --paper-1: #04070f; --paper-2: #070c16; --paper-3: #0c1322; --paper-4: #131d33; --primary: #b8b8ff; --muted: #909aac; --muted-inverse: #4f5768; --fg-1: #fafcff; --fg-2: #edf0f7; --fg-3: #e0e5ed; --fg-4: #d4d9e3; }
+:root[data-theme="cyan"], .theme-swatch[data-id="cyan"] { --paper-1: #01090b; --paper-2: #010f11; --paper-3: #00181b; --paper-4: #002328; --primary: #63cfdc; --muted: #839ea1; --muted-inverse: #435b5e; --fg-1: #f7fdfe; --fg-2: #e9f2f3; --fg-3: #dce7e8; --fg-4: #cfdcde; }
+:root[data-theme="yellow"], .theme-swatch[data-id="yellow"] { --paper-1: #0a0701; --paper-2: #100c02; --paper-3: #1a1303; --paper-4: #271d02; --primary: #e2ba51; --muted: #a19985; --muted-inverse: #5e5644; --fg-1: #fdfcf7; --fg-2: #f3f0e9; --fg-3: #e8e4dc; --fg-4: #ddd9cf; --warning-3: #f08a24; }
+:root[data-theme="orange"], .theme-swatch[data-id="orange"] { --paper-1: #0e0503; --paper-2: #150905; --paper-3: #200f08; --paper-4: #30160c; --primary: #ffaa74; --muted: #ab948c; --muted-inverse: #67524b; --fg-1: #fffbf9; --fg-2: #f6eeeb; --fg-3: #ece2de; --fg-4: #e2d6d2; }
 
 /* ---- Base ---------------------------------------------------------------- */
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--primary-1); color: var(--primary-9);
-  font: var(--text-base)/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+body { margin: 0; background: var(--paper-1); color: var(--fg-1);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: var(--text-base); line-height: 1.45; }
 
 /* ---- Layout -------------------------------------------------------------- */
 main, .container { max-width: 1080px; margin: 0 auto; padding: var(--spacing-6) var(--spacing-4) var(--spacing-12); }
@@ -176,112 +203,135 @@ body > header, main > header { display: flex; justify-content: space-between; al
 .controls { display: flex; align-items: center; gap: var(--spacing-2); flex-wrap: wrap; }
 .controls .seg, .controls .btn { height: 30px; box-sizing: border-box; }
 .controls .btn { display: inline-flex; align-items: center; padding: 0 var(--spacing-2-5); }
-/* Page column (#141): put it on <main> and its blocks stack with one --spacing-5 gap between them, the Repo dashboard's
+/* Page column (#141): put it on <main> and its blocks stack with one --spacing-5 gap between them, the hub's
    rhythm. .card, .tiles, .notice and .footer-note carry a margin-top of their own, which would add to the gap, so a
    direct child of the column gives it up. .page-cta is the spacing of a primary button under the lead (a <p> that holds
    the button). */
-.page-column { display: grid; gap: var(--spacing-5); align-content: start; }
+.page-column { display: grid; gap: var(--spacing-5); align-content: start; padding: var(--spacing-4) var(--spacing-4) var(--spacing-12); }
 .page-column > .card, .page-column > .tiles, .page-column > .notice, .page-column > .footer-note { margin-top: 0; }
 /* An in-page anchor in the column lands with room above it, clear of the settings button (#156). */
 .page-column [id] { scroll-margin-top: 5rem; }
 .page-cta { margin: var(--spacing-4) 0 0; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-4); }
+/* .grid-3: the same group three to a row (owner, October 22, 2026), for short cards such as one link each; it takes
+   .grid__head and .grid__full as .grid-2 does, and steps down to two columns, then one. */
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--spacing-4); }
+/* The grid's gap is the spacing between its rows, so a direct .card, .tiles or .notice gives up its own top
+   margin here too, as in .page-column (#207). */
+:is(.grid-2, .grid-3) > :is(.card, .tiles, .notice) { margin-top: 0; }
+/* A block's heading above its card(s), NEVER inside them (#206, a hard rule since #3175): <div class="grid-2"><div
+   class="grid__head"><h2>Title</h2><p class="card__sub">Sub line</p></div> then the card(s)</div>. An h2 heads a group of
+   cards, so it stands above the group and every card under it is titled with an h3 or not at all. The head spans every
+   column, as does a .grid__full child (a card that takes the whole row). The h2 gives up its bottom margin and the
+   .card__sub supplies the --spacing-1 under it, as in .card__head; the grid's own gap is the space between head and cards.
+   Left-aligned, like .card__head. */
+.grid__head, .grid__full { grid-column: 1 / -1; }
+.grid__head { text-align: left; }
+.grid__head > h2 { margin: 0; }
+/* In the page column a headed group takes extra room above its h2 (#3175), so the h2 sits clearly closer to its own cards
+   (the grid's --spacing-4) than to the group before it (the column's --spacing-5 plus this): the h2s group the page. */
+.page-column > :is(.grid-2, .grid-3):has(> .grid__head):not(:first-child) { margin-top: var(--spacing-5); }
 .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--spacing-3); margin-top: var(--spacing-4); }
 .item-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); column-gap: var(--spacing-4); }
 .mini-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: var(--spacing-2-5); margin-top: var(--spacing-3); }
-@media (max-width: 760px) { .grid-2 { grid-template-columns: 1fr; } .hero .value { font-size: var(--text-h1); } }
+@media (max-width: 1000px) { .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } .hero .value { font-size: var(--text-h1); } }
 
 /* ---- Typography ----------------------------------------------------------- */
-/* Headings set in a serif so they stand off from the sans body text. System fonts only (no
-   external requests): Iowan Old Style (macOS/iOS), Palatino Linotype (Windows), Georgia,
-   Noto Serif (Android/Linux). Their bold is heavier than the sans 600, so the tracking is
-   pulled in slightly. h3-h6 stay in the body sans. */
-h1, h2 { font-family: var(--font-serif);
-  font-weight: 600; letter-spacing: -0.01em; }
-/* h1 and h2 are -7, h3-h6 are -8 (owner's decision, October 14, 2026). On a --primary-9 surface h1 and h2 take
-   -3 and h3-h6 take -2 instead, set where that surface is. :where() keeps them at
+/* Every heading is in the body sans: h1 since October 24, 2026 (the owner; it was set in --font-serif, and in
+   capitals), h2 since the same day. h1 stands apart from h2 by its size step and the weight it shares with it,
+   with its tracking pulled in slightly, as a large sans wants. */
+h1 { font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-weight: 700; }   /* 700 since October 24, 2026 (owner); it was 600 */
+/* h1 and h2 are --primary, h3 --fg-3 (owner, October 24, 2026: h2 back in the colour, now 24px in the sans under
+   the h1; from October 19 it was --fg-2, because an h2 in the h1's colour read too much like it, and #3235 moved h2
+   and h3 to the text steps). On a fill the paper is the text: .fill-primary and
+   .fill-inverse at the end of this file switch every heading to --paper-1, so an h2 reads on the page and on the
+   primary alike (owner, #3235). :where() keeps them at
    zero specificity, so a heading inside a coloured container (or one an app colours itself) wins without an override. */
-:where(h1, h2) { color: var(--primary-7); }
-:where(h3, h4, h5, h6) { color: var(--primary-8); }
+:where(h1) { color: var(--primary); }
+:where(h2) { color: var(--primary); }
+:where(h3) { color: var(--fg-3); }
+/* h1 is in its own case (owner, October 24, 2026; it was set in capitals from #3247). */
 h1 { font-size: var(--text-h1); margin: 0; }
 h2 { font-size: var(--text-h2); margin: 0 0 var(--spacing-1); }
-/* Flex so an .info-button sits on the heading's vertical centre, not on its baseline; the serif's
-   capitals sit almost exactly mid-line, so 1px corrects the rest. */
+/* Flex so an .info-button sits on the heading's vertical centre, not on its baseline; the capitals
+   sit almost exactly mid-line, so 1px corrects the rest. */
 h2 { display: flex; align-items: center; }
 h2 .info-button { top: 1px; }
 h3 { font-size: var(--text-h3); margin: 0 0 var(--spacing-2); font-weight: 600; }
-/* h4-h6 take the token of their own level too, in the body sans like h3. */
-h4 { font-size: var(--text-h4); margin: 0 0 var(--spacing-2); font-weight: 600; }
-h5 { font-size: var(--text-h5); margin: 0 0 var(--spacing-1-5); font-weight: 600; }
-h6 { font-size: var(--text-h6); margin: 0 0 var(--spacing-1); font-weight: 600; }
-.sub { color: var(--primary-6); font-size: var(--text-sm); margin: 0 0 var(--spacing-4); }   /* line under a heading */
-.muted { color: var(--primary-6); font-size: var(--text-sm); }
-.meta { font-size: var(--text-sm); color: var(--primary-8); white-space: nowrap; }
-.note { font-size: var(--text-sm); color: var(--primary-6); margin-top: var(--spacing-1); }
-.footer-note { color: var(--primary-6); font-size: var(--text-sm); margin-top: var(--spacing-6); }
-/* Sub lines (.sub, .dialog__sub) , notes (.note, .footer-note) and .muted are --primary-6, on a <p> too (owner's decision,
-   October 15, 2026). Any other paragraph is --primary-9, the far end (owner's decision, October 14, 2026): .meta on a <p> takes
-   it too, while the same class on a span or a div stays -7. A <p> in a status colour, or on a --primary-9 surface,
+/* There is no h4, h5 or h6: the scale ends at h3 (owner, October 25, 2026; h6 went on October 20). */
+.sub { color: var(--muted); font-size: var(--text-sm); margin: 0 0 var(--spacing-4); }   /* line under a heading */
+.muted { color: var(--muted); font-size: var(--text-sm); }
+.meta { font-size: var(--text-sm); color: var(--fg-2); white-space: nowrap; }
+.note { font-size: var(--text-sm); color: var(--muted); margin-top: var(--spacing-1); }
+.footer-note { color: var(--muted); font-size: var(--text-sm); margin-top: var(--spacing-6); }
+/* Sub lines (.sub, .dialog__sub) , notes (.note, .footer-note) and .muted are --muted, on a <p> too (owner's decision,
+   October 15, 2026). Any other paragraph is --fg-1, the far end (owner's decision, October 14, 2026): .meta on a <p> takes
+   it too, while the same class on a span or a div stays --fg-2. A <p> in a status colour, or on an --fg-1 surface,
    sets its own. */
-p, p.meta { color: var(--primary-9); }
-/* Eyebrow: a small uppercase line above a page title, the Repo dashboard's <owner>/<repo> (#141). Put it on a <p>
-   (the class beats the paragraph colour). The colour is --primary-5, the greyed middle of the scale, as the approved
-   dashboard draws it; semibold, with the same 0.04em tracking as the settings panel's uppercase labels. */
-.eyebrow { margin: 0 0 var(--spacing-1); font-size: var(--text-sm); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--primary-5); }   /* 0.04em mirrors the brand book's --dkj-tracking-label */
+p, p.meta { color: var(--fg-1); }
+/* Eyebrow: a small uppercase line above a page title, the hub's <owner>/<repo> (#141). Put it on a <p>
+   (the class beats the paragraph colour). The colour is --muted, a muted grey: the grey that recedes furthest while
+   still reading extra well (7:1 on the page, #3235), so it stands back behind the h1 (owner, October 19, 2026); semibold, with the same 0.04em tracking as the settings panel's uppercase labels. */
+.eyebrow { margin: 0 0 var(--spacing-1); font-size: var(--text-sm); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }   /* 0.04em mirrors the brand book's --dkj-tracking-label */
 /* Lead: the one paragraph under a page title that says what the page is for (#141). On a <p>, in the paragraph
    colour, at the large running size, held to a readable measure. */
-.lead { max-width: 46rem; margin: var(--spacing-2) 0 0; font-size: var(--text-lg); line-height: 1.35; color: var(--primary-9); }   /* 1.35 mirrors the brand book's --dkj-lh-snug */
+.lead { max-width: 46rem; margin: var(--spacing-2) 0 0; font-size: var(--text-base); line-height: 1.35; color: var(--fg-1); }   /* 1.35 mirrors the brand book's --dkj-lh-snug */
 .num { font-variant-numeric: tabular-nums; }                        /* aligned digits */
 .delta { font-weight: 600; }
 .delta--up, .pos { color: var(--positive-5); }
 .delta--down, .neg { color: var(--negative-5); }
 
 /* ---- Links and selection ---------------------------------------------------- */
-/* A link (an <a> with an href) takes the theme's colour as text (--primary-7, owner's decision, October 15, 2026), visited or not: it reaches 6:1
-   on the tinted page and surface in every theme. :where() keeps each rule at zero specificity, so any class on an
+/* A link (an <a> with an href) takes the theme's colour as text (--primary, owner's decision, October 15, 2026), visited or not: it reaches 4.55:1
+   on every paper step in every theme (#3235). :where() keeps each rule at zero specificity, so any class on an
    <a> (a .btn, a .menu-item, an app's own) wins over it without an override. */
-:where(a:any-link) { color: var(--primary-7); text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+:where(a:any-link) { color: var(--primary); text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
 :where(a:any-link:hover) { text-decoration-thickness: 2px; }
-:where(a:any-link:focus-visible) { outline: 2px solid var(--primary-5); outline-offset: 2px; border-radius: 2px; }
-::selection { background: var(--primary-3); }
+:where(a:any-link:focus-visible) { outline: 2px solid var(--muted); outline-offset: 2px; border-radius: 2px; }
+::selection { background: var(--paper-3); }
 
 /* ---- Surfaces ------------------------------------------------------------- */
-.card { background: var(--primary-2); border: 1px solid var(--primary-3); border-radius: 12px; padding: var(--spacing-5); margin-top: var(--spacing-4); }
-/* Data-card head (#141): <section class="card"><div class="card__head"><h2 class="card__title">Title</h2>
+.card { background: var(--paper-2); border: 1px solid var(--paper-3); border-radius: 12px; padding: var(--spacing-6); margin-top: var(--spacing-4); }
+/* Data-card head (#141): <section class="card"><div class="card__head"><h3 class="card__title">Title</h3>
    <p class="card__sub">Sub line</p></div> a .table-wrap or .facts</section>. The head is left-aligned, with no rule between it
-   and the body; whatever follows it sits --spacing-4 below. The title is an <h2> and takes its size from --text-h2, in the
-   house serif, but in --primary-8 rather than the h2 highlight --primary-7, as the approved dashboard draws it. Flex keeps
-   an .info-button on the title's centre line, as it does on a bare h2. */
+   and the body; whatever follows it sits --spacing-4 below. The title is an <h3> at --text-h3 in --fg-3; a card may
+   instead be titled by a plain h2 (#3175, retired October 24, 2026). Flex keeps an .info-button on the title's centre
+   line. */
 .card__head { text-align: left; }
-.card__title { display: flex; align-items: center; justify-content: flex-start; margin: 0; font-size: var(--text-h2); font-weight: 600; color: var(--primary-8); }
+.card__title { display: flex; align-items: center; justify-content: flex-start; margin: 0; font-size: var(--text-h3); font-weight: 600; color: var(--fg-3); }
 /* A status .badge before the title text (#153); the badge is decorative, so the .card__sub says the status too. */
 .card__title > .badge { margin-right: var(--spacing-2); }
-.card__sub { margin: var(--spacing-1) 0 0; font-size: var(--text-sm); color: var(--primary-6); }
+/* A card titled with a plain h3, where its h2 stands above a group of cards (#206): no margin of its own, so the
+   .card__sub sits --spacing-1 under it as under a .card__title, which is the same h3 with room for a badge. */
+.card__head > h3 { margin: 0; }
+.card__sub { margin: var(--spacing-1) 0 0; font-size: var(--text-sm); color: var(--muted); }
 .card > .card__head + * { margin-top: var(--spacing-4); }   /* (0,2,0): beats a body's own margin: 0, such as .facts */
 .hero { display: flex; flex-wrap: wrap; gap: var(--spacing-6) var(--spacing-12); align-items: flex-end; }   /* use with .card */
-.hero .value { font-size: var(--text-h0); font-weight: 600; line-height: 1.1; color: var(--primary-9); }
-.tile { background: var(--primary-2); border: 1px solid var(--primary-3); border-radius: 12px; padding: var(--spacing-3-5) var(--spacing-4); }
-.tile .label { color: var(--primary-9); font-size: var(--text-sm); }
-.tile .v { font-size: var(--text-h4); font-weight: 600; margin-top: var(--spacing-0-5); }
-.mini-card { border: 1px solid var(--primary-3); border-radius: 10px; padding: var(--spacing-3) var(--spacing-3-5); }
+.hero .value { font-size: var(--text-h1); font-weight: 600; line-height: 1.1; color: var(--fg-1); }
+.tile { background: var(--paper-2); border: 1px solid var(--paper-3); border-radius: 12px; padding: var(--spacing-3-5) var(--spacing-4); }
+.tile .label { color: var(--muted); font-size: var(--text-sm); }   /* a muted grey, as .muted: the figure leads (owner, October 20, 2026) */
+.tile .v { font-size: var(--text-lg); font-weight: 600; margin-top: var(--spacing-0-5); }
+.mini-card { border: 1px solid var(--paper-3); border-radius: 10px; padding: var(--spacing-3) var(--spacing-3-5); }
 .mini-card--highlight { border-color: var(--warning-3); }
-.mini-card__label { font-size: var(--text-sm); color: var(--primary-9); }
+.mini-card__label { font-size: var(--text-sm); color: var(--fg-1); }
 .mini-card__value { font-size: var(--text-lg); font-weight: 600; margin: var(--spacing-0-5) 0 var(--spacing-2); font-variant-numeric: tabular-nums; }
-.notice { background: var(--warning-1); border: 1px solid var(--primary-3); border-radius: 12px; padding: var(--spacing-3) var(--spacing-4); margin-top: var(--spacing-4); }
+.notice { background: var(--warning-1); border: 1px solid var(--paper-3); border-radius: 12px; padding: var(--spacing-3) var(--spacing-4); margin-top: var(--spacing-4); }
 /* Message line: one plain line for a state, a loading line or a warning that data could not be read (#141). A <p>,
    in the paragraph colour at the running size; --warn is the warning in text, --warning-5, semibold. A link in it is
    an ordinary house link. For a boxed message use .notice. */
-.msg { margin: 0; font-size: var(--text-base); color: var(--primary-9); }
+.msg { margin: 0; font-size: var(--text-base); color: var(--fg-1); }
 .msg--warn { color: var(--warning-5); font-weight: 600; }
-.item { border-top: 1px solid var(--primary-3); padding: var(--spacing-2-5) 0; }
+.item { border-top: 1px solid var(--paper-3); padding: var(--spacing-2-5) 0; }
 .item b { display: block; font-size: var(--text-sm); margin-bottom: var(--spacing-0-5); }
-.item p { margin: 0; font-size: var(--text-sm); color: var(--primary-9); }
+.item p { margin: 0; font-size: var(--text-sm); color: var(--fg-1); }
 
 /* ---- Tables --------------------------------------------------------------- */
 .table-wrap { overflow-x: auto; }
 .table { border-collapse: collapse; width: 100%; font-size: var(--text-sm); }
-.table th, .table td { padding: var(--spacing-2) var(--spacing-2-5); text-align: right; border-bottom: 1px solid var(--primary-3); white-space: nowrap; }
-.table th { color: var(--primary-9); font-weight: 600; }
+.table th, .table td { padding: var(--spacing-2) var(--spacing-2-5); text-align: right; border-bottom: 1px solid var(--paper-3); white-space: nowrap; }
+.table th { color: var(--fg-1); font-weight: 600; }
 .table th:first-child, .table td:first-child { text-align: left; white-space: normal; min-width: 180px; }
 .table td { font-variant-numeric: tabular-nums; }
 .table .row-total td { font-weight: 600; border-bottom: none; }
@@ -290,34 +340,40 @@ p, p.meta { color: var(--primary-9); }
    <path class="d" d="M1 7.5 4 10.5 7 7.5"/></svg></span></button></th>. The hit area grows beyond the
    text (::before) without moving it; the underline (::after) spans the text only. The arrow takes no
    width: it hangs in the cell's padding, so the header text lines up with the figures below it.
-   Idle: two faint chevrons, brighter on hover. Active: only the current direction, in full ink. */
+   Idle: two faint chevrons, brighter on hover. Active: only the current direction, at full strength. */
 .table th .sort { position: relative; background: none; border: 0; padding: 0; margin: 0; font: inherit; color: inherit; cursor: pointer; border-radius: 3px; }
 .table th .sort::before { content: ""; position: absolute; left: -4px; right: -4px; top: 50%; height: var(--tap); transform: translateY(-50%); }   /* a 44px-high hit area around the label */
-.table th .sort::after { content: ""; position: absolute; left: 0; right: 0; bottom: -5px; height: 2px; border-radius: 1px; background: var(--primary-7); opacity: 0; transition: opacity .15s; }
-.table th .sort:hover, .table th .sort:focus-visible { color: var(--primary-7); }
+.table th .sort::after { content: ""; position: absolute; left: 0; right: 0; bottom: -5px; height: 2px; border-radius: 1px; background: var(--primary); opacity: 0; transition: opacity .15s; }
+.table th .sort:hover, .table th .sort:focus-visible { color: var(--primary); }
 .table th .sort:hover::after, .table th .sort:focus-visible::after { opacity: .3; }
-.table th .sort:focus-visible { outline: 2px solid var(--primary-7); outline-offset: 4px; }
-.table th[aria-sort="ascending"] .sort, .table th[aria-sort="descending"] .sort { color: var(--primary-7); }
+.table th .sort:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+.table th[aria-sort="ascending"] .sort, .table th[aria-sort="descending"] .sort { color: var(--primary); }
 .table th[aria-sort="ascending"] .sort::after, .table th[aria-sort="descending"] .sort::after { opacity: 1; }
 .table th .arrow { position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 3px; width: 8px; height: 12px; line-height: 0; pointer-events: none; }
-.table th .arrow svg { display: block; width: 8px; height: 12px; fill: none; stroke: var(--primary-7); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.table th .arrow svg { display: block; width: 8px; height: 12px; fill: none; stroke: var(--primary); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .table th .arrow path { opacity: .5; transition: opacity .15s, stroke .15s; }
-.table th .sort:hover .arrow path, .table th .sort:focus-visible .arrow path { opacity: 1; stroke: var(--primary-7); }
+.table th .sort:hover .arrow path, .table th .sort:focus-visible .arrow path { opacity: 1; stroke: var(--primary); }
 .table th[aria-sort="ascending"] .arrow .d, .table th[aria-sort="descending"] .arrow .u { opacity: 0; }
-.table th[aria-sort="ascending"] .arrow .u, .table th[aria-sort="descending"] .arrow .d { opacity: 1; stroke: var(--primary-7); stroke-width: 2; }
+.table th[aria-sort="ascending"] .arrow .u, .table th[aria-sort="descending"] .arrow .d { opacity: 1; stroke: var(--primary); stroke-width: 2; }
 @media (prefers-reduced-motion: reduce) { .table th .sort::after, .table th .arrow path { transition: none; } }
 
 /* Facts list (#141): <dl class="facts"><div><dt>Term</dt><dd>Value</dd></div>...</dl>. A term on the left in the text
-   colour, its value on the right in semibold and tabular figures, a --primary-3 rule under every row. Put it in a
+   colour, its value on the right in semibold and tabular figures, a --paper-3 rule under every row. Put it in a
    .card whose .card__head sits above it. */
 .facts { margin: 0; font-variant-numeric: tabular-nums; }
-.facts > div { display: flex; justify-content: space-between; align-items: baseline; gap: var(--spacing-4); padding: var(--spacing-1-5) 0; border-bottom: 1px solid var(--primary-3); }
-.facts dt { min-width: 0; color: var(--primary-9); }
+.facts > div { display: flex; justify-content: space-between; align-items: baseline; gap: var(--spacing-4); padding: var(--spacing-1-5) 0; border-bottom: 1px solid var(--paper-3); }
+.facts dt { min-width: 0; color: var(--fg-1); }
 .facts dd { margin: 0; white-space: nowrap; font-weight: 600; text-align: right; }
+/* .facts--row: the same list as one row on the page, not in a card (owner, October 22, 2026): each fact its label
+   small and muted over its value, no surface and no lines, so it reads as information and never as a link. It wraps. */
+.facts--row { display: flex; flex-wrap: wrap; gap: var(--spacing-3) var(--spacing-8); }
+.facts--row > div { flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: var(--spacing-0-5); padding: 0; border-bottom: 0; }
+.facts--row dt { font-size: var(--text-sm); color: var(--muted); }
+.facts--row dd { text-align: left; }
 
 /* ---- Legend and swatches -------------------------------------------------- */
 /* Set the colour per item with style="--c: var(--cat-1)". */
-.legend { display: flex; gap: var(--spacing-4); flex-wrap: wrap; font-size: var(--text-sm); color: var(--primary-9); margin: var(--spacing-1) 0 var(--spacing-3); }
+.legend { display: flex; gap: var(--spacing-4); flex-wrap: wrap; font-size: var(--text-sm); color: var(--fg-1); margin: var(--spacing-1) 0 var(--spacing-3); }
 .legend__item::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 3px;
   background: var(--c); margin-right: var(--spacing-1-5); vertical-align: -1px; }
 .legend__item--line::before { height: 2px; border-radius: 1px; vertical-align: 3px; width: 14px; }
@@ -325,28 +381,28 @@ p, p.meta { color: var(--primary-9); }
 
 /* ---- Charts (inline SVG inside .chart) ------------------------------------ */
 .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
-.chart svg text { fill: var(--primary-9); font-size: var(--text-sm); }
-.chart svg .axis-note { fill: var(--primary-9); font-size: var(--text-xs); }
-.chart svg .val { fill: var(--primary-9); font-variant-numeric: tabular-nums; }
+.chart svg text { fill: var(--fg-1); font-size: var(--text-sm); }
+.chart svg .axis-note { fill: var(--fg-1); font-size: var(--text-xs); }
+.chart svg .val { fill: var(--fg-1); font-variant-numeric: tabular-nums; }
 .chart .bar:hover, .chart .bar:focus-visible { opacity: 0.8; }
 .chart .bar:focus { outline: none; }
-.chart .bar:focus-visible { stroke: var(--primary-7); stroke-width: 2px; }   /* an SVG shape takes no reliable outline, so focus is a stroke */
+.chart .bar:focus-visible { stroke: var(--primary); stroke-width: 2px; }   /* an SVG shape takes no reliable outline, so focus is a stroke */
 
 /* ---- Meter ---------------------------------------------------------------- */
 /* Fill colour via --m: <span style="--m: var(--positive-3)"> or a .meter--* class on the meter. */
-.meter { height: 6px; border-radius: 3px; background: var(--primary-3); overflow: hidden; }
+.meter { height: 6px; border-radius: 3px; background: var(--paper-3); overflow: hidden; }
 .meter span { display: block; height: 100%; border-radius: 3px; background: var(--m); }
 .meter--good { --m: var(--positive-3); } .meter--warn { --m: var(--warning-3); }
-.meter--bad { --m: var(--negative-3); }   .meter--info { --m: var(--primary-5); }
+.meter--bad { --m: var(--negative-3); }   .meter--info { --m: var(--muted); }
 
 /* ---- Badge ---------------------------------------------------------------- */
 .badge { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%;
-  font: 700 var(--text-sm)/1 system-ui, sans-serif; color: var(--primary-1); background: var(--b); flex: none; }
+  font-family: system-ui, sans-serif; font-size: var(--text-sm); font-weight: 700; line-height: 1; color: var(--paper-1); background: var(--b); flex: none; }
 .badge--good    { --b: var(--positive-3); }
 .badge--warn    { --b: var(--warning-3); }
 .badge--bad     { --b: var(--negative-3); }
-.badge--info    { --b: var(--primary-5); color: var(--primary-1); }
-.badge--neutral { --b: var(--primary-3); color: var(--primary-9); }
+.badge--info    { --b: var(--muted); color: var(--paper-1); }
+.badge--neutral { --b: var(--paper-3); color: var(--fg-1); }
 .badge--sm { width: 18px; height: 18px; font-size: var(--text-xs); }
 .badge-row { display: flex; align-items: center; gap: var(--spacing-1-5); font-size: var(--text-sm); margin-top: var(--spacing-2); }
 /* A list of badged items (#155): a <ul> of .badge-row <li>s, so a screen reader hears it as a list and its length.
@@ -356,25 +412,25 @@ p, p.meta { color: var(--primary-9); }
 .badge-list > .badge-row:first-child { margin-top: 0; }
 
 /* ---- Buttons -------------------------------------------------------------- */
-.btn { background: none; border: 1px solid var(--primary-3); color: var(--primary-9); border-radius: 8px;
+.btn { background: none; border: 1px solid var(--paper-3); color: var(--fg-1); border-radius: 8px;
   padding: var(--spacing-1) var(--spacing-2-5); font: inherit; font-size: var(--text-sm); cursor: pointer; text-decoration: none; }   /* none: a .btn on an <a> (a link that looks like a button) draws no underline */
 /* Segmented switch: <span class="seg" role="group"><button aria-pressed="true">A</button><button aria-pressed="false">B</button></span>. */
-.seg { display: inline-flex; border: 1px solid var(--primary-3); border-radius: 8px; overflow: hidden; vertical-align: middle; }
-.seg button { background: none; border: 0; color: var(--primary-9); padding: 0 var(--spacing-2-5); height: 100%; font: inherit; font-size: var(--text-sm); cursor: pointer; }
-.seg button + button { border-left: 1px solid var(--primary-3); }
-.seg button[aria-pressed="true"] { background: var(--primary-5); color: var(--primary-1); }
-.seg button:focus-visible { outline: 2px solid var(--primary-7); outline-offset: -2px; }   /* inset: .seg clips its overflow; ink shows on the page and on the primary */
+.seg { display: inline-flex; border: 1px solid var(--paper-3); border-radius: 8px; overflow: hidden; vertical-align: middle; }
+.seg button { background: none; border: 0; color: var(--fg-1); padding: 0 var(--spacing-2-5); height: 100%; font: inherit; font-size: var(--text-sm); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--paper-3); }
+.seg button[aria-pressed="true"] { background: var(--muted); color: var(--paper-1); }
+.seg button:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }   /* inset: .seg clips its overflow; the primary shows on the page and on a muted fill */
 /* The round "?" button that opens an explanation tooltip. */
 .info-button { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px;
-  margin-left: 5px; padding: 0; border-radius: 50%; border: 1px solid var(--primary-3); background: none;
-  color: var(--primary-9); font: 600 var(--text-xs)/1 system-ui, sans-serif; cursor: help; vertical-align: 1px; position: relative; }
+  margin-left: 5px; padding: 0; border-radius: 50%; border: 1px solid var(--paper-3); background: none;
+  color: var(--fg-1); font-family: system-ui, sans-serif; font-size: var(--text-xs); font-weight: 600; line-height: 1; cursor: help; vertical-align: 1px; position: relative; }
 .info-button::after { content: ""; position: absolute; inset: -14px; }  /* a 44px hit target around the 16px mark */
-.info-button:hover, .info-button:focus-visible, .info-button[aria-expanded="true"] { border-color: var(--primary-7); color: var(--primary-7); }
-.info-button:focus-visible { outline: 2px solid var(--primary-5); outline-offset: 2px; }
+.info-button:hover, .info-button:focus-visible, .info-button[aria-expanded="true"] { border-color: var(--primary); color: var(--primary); }
+.info-button:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
 
 /* ---- Tooltip -------------------------------------------------------------- */
-.tooltip { position: fixed; pointer-events: none; background: var(--primary-2); color: var(--primary-9);
-  border: 1px solid var(--primary-3); border-radius: 8px; padding: var(--spacing-2) var(--spacing-2-5); font-size: var(--text-sm);
+.tooltip { position: fixed; pointer-events: none; background: var(--paper-2); color: var(--fg-1);
+  border: 1px solid var(--paper-3); border-radius: 8px; padding: var(--spacing-2) var(--spacing-2-5); font-size: var(--text-sm);
   box-shadow: var(--shadow-pop); display: none; max-width: 280px; z-index: 10; }
 .tooltip b { display: block; margin-bottom: var(--spacing-0-5); }
 .tooltip--explain { max-width: 320px; line-height: 1.45; }
@@ -385,102 +441,115 @@ p, p.meta { color: var(--primary-9); }
 
 /* ---- Disclosure (details/summary) ------------------------------------------ */
 .more { margin-top: var(--spacing-2); }
-.more summary { cursor: pointer; font-size: var(--text-sm); font-weight: 600; color: var(--primary-9); list-style: none; }
+.more summary { cursor: pointer; font-size: var(--text-sm); font-weight: 600; color: var(--fg-1); list-style: none; }
 .more summary::-webkit-details-marker { display: none; }
 .more summary::after { content: " \25BE"; }
 .more[open] summary::after { content: " \25B4"; }
 .more[open] summary { margin-bottom: var(--spacing-1); }
-.more summary:focus-visible { outline: 2px solid var(--primary-5); outline-offset: 2px; border-radius: 4px; }
+.more summary:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; border-radius: 4px; }
 /* A full-width "read more" button under a block; the extra detail opens ABOVE it, so the toggle
    moves down with the text it reveals. Set aria-expanded from the script. */
 .moretoggle { display: flex; justify-content: center; align-items: center; gap: var(--spacing-1); width: 100%; min-height: var(--tap); cursor: pointer; text-align: center; padding: var(--spacing-2) var(--spacing-4); background: none; border: 0;
-  border-top: 1px solid var(--primary-3); font: 600 var(--text-sm)/1.4 system-ui, sans-serif; color: var(--primary-9); }
+  border-top: 1px solid var(--paper-3); font-family: system-ui, sans-serif; font-size: var(--text-sm); font-weight: 600; line-height: 1.4; color: var(--fg-1); }
 .moretoggle::after { content: " \25BE"; }
 .moretoggle[aria-expanded="true"]::after { content: " \25B4"; }
-.moretoggle:focus-visible { outline: 2px solid var(--primary-7); outline-offset: -2px; }
+.moretoggle:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
 
 /* ---- Primary button -------------------------------------------------------- */
-.btn--primary { background: var(--primary-7); border-color: var(--primary-7); color: var(--primary-1); font-weight: 600; }
-.btn--primary:focus-visible { outline: 2px solid var(--primary-5); outline-offset: 2px; }
+.btn--primary { background: var(--primary); border-color: var(--primary); color: var(--paper-1); font-weight: 600; }
+.btn--primary:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
 /* Disabled: one rule for every .btn variant, so an app never adds its own on this reserved class. */
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* ---- Theme accents (opt-in) ------------------------------------------------- */
 /* Carry the theme beyond the primary controls, on the surfaces a page is built from. Add one to a
-   house element; an app that does not keeps the base look. Text stays --primary-7, on a tinted
-   surface (--primary-3) too. */
-.header--accent { padding-bottom: var(--spacing-3); border-bottom: 2px solid var(--primary-5); }   /* on the page header */
-.table--accent th { background: var(--primary-3); color: var(--primary-9); }
+   house element; an app that does not keeps the base look. Text stays --primary, on a tinted
+   surface (--paper-3) too. */
+.header--accent { padding-bottom: var(--spacing-3); border-bottom: 2px solid var(--muted); }   /* on the page header */
+.table--accent th { background: var(--paper-3); color: var(--fg-1); }
 
 /* ---- Theme picker (drawn by house-theme.js: DKJTheme.picker(el)) ------------ */
 /* Two rows of round swatches, light and dark; each swatch is the theme's page colour with its
    primary as a dot, so the choice shows both halves of the theme. */
 .theme-picker { display: grid; gap: var(--spacing-3); }
 .theme-picker__row { display: grid; grid-template-columns: 64px 1fr; gap: var(--spacing-4); align-items: center; }
-.theme-picker__label { font-size: var(--text-sm); font-weight: 600; color: var(--primary-9); }
+.theme-picker__label { font-size: var(--text-sm); font-weight: 600; color: var(--fg-1); }
 .theme-picker__swatches { display: flex; gap: var(--spacing-2); flex-wrap: wrap; }
-.theme-swatch { width: 40px; height: 40px; padding: 0; border-radius: 50%; border: 1px solid var(--primary-3); cursor: pointer; display: grid; place-items: center; }
+.theme-swatch { width: 40px; height: 40px; padding: 0; border-radius: 50%; border: 1px solid var(--paper-3); cursor: pointer; display: grid; place-items: center; }
 /* Each swatch previews its own theme, whichever theme is current: the theme blocks above also match
-   .theme-swatch[data-id="<id>"], so inside a swatch every --primary-* is that theme's own. The swatch is its
-   page (--primary-1) and the dot its colour (--primary-7). */
-.theme-swatch { background: var(--primary-1); }
-.theme-swatch i { display: block; width: 18px; height: 18px; border-radius: 50%; background: var(--primary-7); }
-.theme-swatch[aria-pressed="true"] { outline: 2px solid var(--primary-7); outline-offset: 2px; }   /* the chosen theme */
-.theme-swatch:focus-visible { outline: 2px dashed var(--primary-5); outline-offset: 4px; }       /* keyboard focus: a different ring */
+   .theme-swatch[data-id="<id>"], so inside a swatch every one of its eleven colours is that theme's own. The swatch is its
+   page (--paper-1) and the dot its colour (--primary). */
+.theme-swatch { background: var(--paper-1); }
+.theme-swatch i { display: block; width: 18px; height: 18px; border-radius: 50%; background: var(--primary); }
+.theme-swatch[aria-pressed="true"] { outline: 2px solid var(--primary); outline-offset: 2px; }   /* the chosen theme */
+.theme-swatch:focus-visible { outline: 2px dashed var(--muted); outline-offset: 4px; }       /* keyboard focus: a different ring */
 
 /* ---- Settings button (drawn by house-theme.js: DKJTheme.settings(el)) ------- */
-/* A round toggle that opens a panel with the theme picker, a reset and the app's own controls
+/* A round toggle that opens a panel with the theme picker, the page width, a reset and the app's own controls
    (.theme-settings__extra). Inline by default, e.g. in a .topbar; --floating fixes it top right.
-   The panel lies over the page, so nothing moves when it opens. */
+   The panel lies over the page, so nothing moves when it opens. The toggle stands on the card (--paper-2) with
+   its edge in the theme's colour (owner, #3235): a --primary border, a --fg-1 icon that turns --primary under the
+   pointer and while open. */
 .theme-settings { position: relative; display: inline-block; }
 .theme-settings--floating { position: fixed; top: var(--spacing-3); right: var(--spacing-3); z-index: 20; }
 .theme-settings__toggle { display: inline-flex; align-items: center; justify-content: center; width: var(--tap); height: var(--tap);
-  padding: 0; color: var(--primary-9); background: var(--primary-2); border: 1px solid var(--primary-3); border-radius: 50%;
+  padding: 0; color: var(--fg-1); background: var(--paper-2); border: 1px solid var(--primary); border-radius: 50%;
   box-shadow: var(--shadow-pop); cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-.theme-settings__toggle:hover { background: var(--primary-3); color: var(--primary-7); }
-.theme-settings__toggle[aria-expanded="true"] { color: var(--primary-7); border-color: var(--primary-7); }   /* open: a state, so the highlight */
-.theme-settings__toggle:focus-visible { outline: 2px solid var(--primary-5); outline-offset: 2px; }
+.theme-settings__toggle:hover { background: var(--paper-3); color: var(--primary); }
+.theme-settings__toggle[aria-expanded="true"] { color: var(--primary); }   /* open: a state, so the highlight */
+.theme-settings__toggle:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
 .theme-settings__close, .theme-settings__toggle[aria-expanded="true"] .theme-settings__open { display: none; }
 .theme-settings__toggle[aria-expanded="true"] .theme-settings__close { display: block; }
 .theme-settings__panel { position: absolute; top: calc(100% + var(--spacing-2)); right: 0; z-index: 20; display: grid; gap: var(--spacing-4);
   width: max-content; max-width: calc(100vw - 2 * var(--spacing-4)); max-height: calc(100dvh - var(--tap) - 2 * var(--spacing-5));
-  overflow-y: auto; padding: var(--spacing-4); text-align: left; background: var(--primary-2); border: 1px solid var(--primary-3);
+  overflow-y: auto; padding: var(--spacing-4); text-align: left; background: var(--paper-2); border: 1px solid var(--paper-3);
   border-radius: 12px; box-shadow: var(--shadow-pop); }
 .theme-settings__panel[hidden] { display: none; }
-.theme-settings__title { margin: 0; font-size: var(--text-lg); font-weight: 600; color: var(--primary-7); }   /* the highlight, as an h2 */
-.theme-settings__group { display: grid; gap: var(--spacing-2); padding-top: var(--spacing-4); border-top: 1px solid var(--primary-3); }
-.theme-settings__label { font-size: var(--text-sm); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--primary-9); }
+.theme-settings__title { margin: 0; font-size: var(--text-lg); font-weight: 600; color: var(--primary); }   /* the highlight, as an h2 */
+.theme-settings__group { display: grid; gap: var(--spacing-2); padding-top: var(--spacing-4); border-top: 1px solid var(--paper-3); }
+.theme-settings__label { font-size: var(--text-sm); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--fg-1); }
 .theme-settings__foot { display: flex; flex-wrap: wrap; align-items: end; gap: var(--spacing-4); }
 .theme-settings__extra:empty { display: none; }
 .theme-settings__reset { margin-left: auto; }
+.theme-settings__width { justify-self: start; height: var(--tap); }   /* the page width: a .seg at tap height */
 
 /* ==========================================================================
    App components: the generic, mobile-first parts of an app shell (lifted from MesoWise).
    A form field, touch buttons, a dialog, a side drawer, a top bar and a menu list. Domain
    components stay in the app. Touch targets are at least --tap (44px) high. Every colour
-   pairing below is an existing token pair (--primary-7 on --primary-1 or --primary-2,
-   --negative-5 on --primary-2, --primary-1 on --primary-5) and holds 4.5:1 in every theme.
+   pairing below is an existing token pair (--primary on --paper-1 or --paper-2,
+   --negative-5 on --paper-2, --paper-1 on --muted) and holds 4.5:1 in every theme.
    ========================================================================== */
 
 /* ---- Narrow column --------------------------------------------------------- */
 /* The mobile app column: a phone, and on a computer the same 512px. Use on main or .container. */
 .container--narrow, main.narrow { max-width: var(--column-narrow); }
 
+/* ---- Page width (house-theme.js: <html data-width="fluid|phone|full">) ------ */
+/* The width a user picks in the settings panel. fluid is the column above, so it needs no rule; phone
+   narrows the page column to 360px (the smallest phone an app supports) and full lifts its maximum. Both
+   reach the breadcrumb bar's .container, so the trail still lines up with the column, and the narrow
+   column too. The attribute sits in :where(), so an app's own column class still wins. */
+:where(:root[data-width="phone"]) main, :where(:root[data-width="phone"]) .container,
+:where(:root[data-width="phone"]) main.narrow, :where(:root[data-width="phone"]) .container--narrow { max-width: 360px; }
+:where(:root[data-width="full"]) main, :where(:root[data-width="full"]) .container,
+:where(:root[data-width="full"]) main.narrow, :where(:root[data-width="full"]) .container--narrow { max-width: none; }
+
 /* ---- Form field ------------------------------------------------------------ */
 /* <label class="field"><span>Label</span><input></label>, or a <select>. The error line sits
    under the control and is hidden while empty: <p class="field__error" role="alert"></p>. */
 .field { display: block; margin-bottom: var(--spacing-3-5); }
 .field:last-child { margin-bottom: 0; }
-.field > span { display: block; font-size: var(--text-base); color: var(--primary-9); margin-bottom: var(--spacing-1); }
+.field > span { display: block; font-size: var(--text-base); color: var(--fg-1); margin-bottom: var(--spacing-1); }
 .field input, .field select { display: block; width: 100%; min-height: var(--control-h);
   font: inherit; font-size: 16px;   /* literal: iOS zooms in on focus below 16px, a platform constraint, not a type step */
-  padding: var(--spacing-2) var(--spacing-3); border: 1px solid var(--primary-3); border-radius: 8px;
-  background: var(--primary-1); color: var(--primary-9); }
+  padding: var(--spacing-2) var(--spacing-3); border: 1px solid var(--paper-3); border-radius: 8px;
+  background: var(--paper-1); color: var(--fg-1); }
 /* A select draws its own chevron, in the muted colour, with room to the edge. */
 .field select { -webkit-appearance: none; appearance: none; padding-right: var(--spacing-10); text-overflow: ellipsis;
-  background-image: linear-gradient(45deg, transparent 50%, var(--primary-7) 50%), linear-gradient(135deg, var(--primary-7) 50%, transparent 50%);
+  background-image: linear-gradient(45deg, transparent 50%, var(--primary) 50%), linear-gradient(135deg, var(--primary) 50%, transparent 50%);
   background-position: right 18px center, right 13px center; background-size: 5px 5px; background-repeat: no-repeat; }
-.field input:focus-visible, .field select:focus-visible { outline: 2px solid var(--primary-5); outline-offset: 2px; }
+.field input:focus-visible, .field select:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
 .field__error { margin: var(--spacing-1) 0 0; font-size: var(--text-base); color: var(--negative-5); }
 .field__error:empty { display: none; }
 
@@ -488,20 +557,20 @@ p, p.meta { color: var(--primary-9); }
 /* .btn--touch makes a .btn a touch target; .btn--block makes it full width. Both combine with
    .btn--primary (restated below, because this block comes after it). */
 .btn--touch { display: inline-flex; align-items: center; justify-content: center; min-height: var(--tap);
-  padding: var(--spacing-2-5) var(--spacing-4); font-size: var(--text-base); font-weight: 600; color: var(--primary-9);
-  background: var(--primary-2); -webkit-tap-highlight-color: transparent; }
-.btn--touch.btn--primary { background: var(--primary-7); border-color: var(--primary-7); color: var(--primary-1); }
-.btn--touch:focus-visible { outline: 2px solid var(--primary-5); outline-offset: 2px; }
+  padding: var(--spacing-2-5) var(--spacing-4); font-size: var(--text-base); font-weight: 600; color: var(--fg-1);
+  background: var(--paper-2); -webkit-tap-highlight-color: transparent; }
+.btn--touch.btn--primary { background: var(--primary); border-color: var(--primary); color: var(--paper-1); }
+.btn--touch:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
 .btn--block { width: 100%; }
 
 /* ---- Icon button and action row --------------------------------------------- */
 /* A filled icon button: an svg that takes the text colour, as tall as a touch target; it grows
    to the width of its row where .action-row stretches it. --ghost is the quiet one (menu button). */
 .icon-btn { display: inline-flex; align-items: center; justify-content: center; min-width: var(--tap); height: var(--tap); padding: 0;
-  border: 0; border-radius: 8px; background: var(--primary-7); color: var(--primary-1); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  border: 0; border-radius: 8px; background: var(--primary); color: var(--paper-1); cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .icon-btn svg { flex: none; }
-.icon-btn:focus-visible { outline: 2px solid var(--primary-5); outline-offset: 2px; }
-.icon-btn--ghost { background: transparent; color: var(--primary-9); }
+.icon-btn:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+.icon-btn--ghost { background: transparent; color: var(--fg-1); }
 /* A row of icon buttons that share the full width. */
 .action-row { display: flex; gap: var(--spacing-2-5); width: 100%; }
 .action-row > * { flex: 1; min-width: 0; }
@@ -511,27 +580,27 @@ p, p.meta { color: var(--primary-9); }
    on top of a dialog sets --dialog-scale smaller. The page behind stands still while one is open. */
 .dialog { width: calc(min(100vw, var(--column-narrow)) * var(--dialog-scale, 0.95)); max-width: none; max-height: calc(100% - var(--spacing-8));
   margin: auto; padding: 0; overflow-y: auto; overscroll-behavior: contain; text-align: left;
-  color: var(--primary-9); background: var(--primary-2); border: 1px solid var(--primary-3); border-radius: 16px; }
-.dialog::backdrop { background: var(--primary-1); opacity: 0.45; }
+  color: var(--fg-1); background: var(--paper-2); border: 1px solid var(--paper-3); border-radius: 16px; }
+.dialog::backdrop { background: var(--paper-1); opacity: 0.45; }
 html:has(dialog:modal) { overflow: hidden; }
 /* The padding sits in the body, so a tap on empty space in the dialog never counts as a tap outside it. */
 .dialog__body { position: relative; padding: var(--spacing-4); }
 /* The head keeps the right edge free for the close button and is at least as tall, so a
    one-line title sits level with it. */
 .dialog__head { display: flex; align-items: center; min-height: var(--tap); padding-right: calc(var(--tap) + var(--spacing-2)); margin-bottom: var(--spacing-4); }
-.dialog__title { margin: 0; min-width: 0; font-size: var(--text-h6); font-weight: 600; overflow-wrap: anywhere; }
-.dialog__sub { margin: var(--spacing-0-5) 0 0; font-size: var(--text-sm); color: var(--primary-6); }
+.dialog__title { margin: 0; min-width: 0; font-size: var(--text-h3); font-weight: 600; overflow-wrap: anywhere; }
+.dialog__sub { margin: var(--spacing-0-5) 0 0; font-size: var(--text-sm); color: var(--muted); }
 /* The close button, top right, with no visible border. Variants: --save (a filled plate, the
    check that saves), --cancel (an outlined plate to the left of save, the undo arrow), --back
    (on the left instead, for a second panel). The plates are 36px, the tap area stays 44px, and
    the two tap areas overlap by 2px so the plates stand 6px apart. */
 .dialog__close { position: absolute; top: var(--spacing-4); right: var(--spacing-4); display: flex; align-items: center; justify-content: center;
-  width: var(--tap); height: var(--tap); padding: 0; color: var(--primary-9); background: transparent; border: 1px solid transparent; border-radius: 8px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.dialog__close:focus-visible { outline: 2px solid var(--primary-5); outline-offset: 2px; }
+  width: var(--tap); height: var(--tap); padding: 0; color: var(--fg-1); background: transparent; border: 1px solid transparent; border-radius: 8px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.dialog__close:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
 .dialog__close svg { position: relative; }   /* above the plate */
 .dialog__close--save::before, .dialog__close--cancel::before { content: ""; position: absolute; inset: var(--spacing-1); border: 1px solid; border-radius: var(--spacing-1-5); }
-.dialog__close--save { color: var(--primary-1); }
-.dialog__close--save::before { background: var(--primary-5); border-color: var(--primary-5); }
+.dialog__close--save { color: var(--paper-1); }
+.dialog__close--save::before { background: var(--muted); border-color: var(--muted); }
 .dialog__close--cancel { right: calc(var(--spacing-4) + var(--tap) - 2px); color: var(--negative-5); }
 .dialog__close--cancel::before { border-color: var(--negative-5); }
 .dialog__close--back { right: auto; left: var(--spacing-4); }
@@ -548,10 +617,10 @@ html:has(dialog:modal) { overflow: hidden; }
 .dialog--drawer .dialog__body { display: flex; flex-direction: column; min-height: 100%; box-sizing: border-box;
   padding-top: calc(var(--spacing-4) + env(safe-area-inset-top)); padding-bottom: calc(var(--spacing-4) + env(safe-area-inset-bottom)); }
 .dialog--drawer .dialog__head { box-sizing: border-box; height: var(--topbar-h); min-height: 0; margin: calc(-1 * var(--spacing-4)) calc(-1 * var(--spacing-4)) 0;
-  padding: 0 calc(var(--spacing-4) + var(--tap) + var(--spacing-2)) 0 var(--spacing-4); border-bottom: 1px solid var(--primary-3); }
+  padding: 0 calc(var(--spacing-4) + var(--tap) + var(--spacing-2)) 0 var(--spacing-4); border-bottom: 1px solid var(--paper-3); }
 .dialog--drawer .dialog__head--two { padding-right: calc(var(--spacing-4) + 2 * var(--tap) + var(--spacing-4)); }
 .dialog--drawer .dialog__head--back { padding: 0 var(--spacing-4) 0 calc(var(--spacing-4) + var(--tap) + var(--spacing-2)); }
-.dialog--drawer .dialog__title { font-size: var(--text-h5); font-weight: 700; }   /* as the name in the top bar */
+.dialog--drawer .dialog__title { font-weight: 700; }   /* as the name in the top bar */
 .dialog--drawer .dialog__close { top: calc((var(--topbar-h) - var(--tap)) / 2 + env(safe-area-inset-top)); }
 .dialog--drawer::backdrop { animation: house-backdrop-in 220ms ease-out; }
 @keyframes house-drawer-in { from { transform: translateX(100%); } }
@@ -562,7 +631,7 @@ html:has(dialog:modal) { overflow: hidden; }
 /* <header class="topbar"><div class="topbar__inner"><div class="topbar__brand">...</div> a .icon-btn--ghost</div></header>.
    Always at the top, in the surface colour, over the full width; its content lines up with
    the narrow column. A field scrolled into view stays below it. */
-.topbar { display: block; position: sticky; top: 0; z-index: 2; background: var(--primary-2); box-shadow: 0 1px 0 var(--primary-3); }
+.topbar { display: block; position: sticky; top: 0; z-index: 2; background: var(--paper-2); box-shadow: 0 1px 0 var(--paper-3); }
 .topbar__inner { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: var(--column-narrow); height: var(--topbar-h);
   margin: 0 auto; padding: 0 var(--spacing-1) 0 var(--spacing-4); }
 .topbar__brand { display: flex; align-items: center; gap: var(--spacing-3); min-width: 0; }
@@ -572,43 +641,518 @@ html:has(.topbar) { scroll-padding-top: var(--topbar-h); }
 /* ---- Breadcrumbs ---------------------------------------------------------------- */
 /* Where the page sits, on every page a dev server serves: the first thing in <body>, above <main>.
    <div class="breadcrumbs-bar"><div class="container"><nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
-   <li><a href="/">Repo dashboard</a></li><li><span class="breadcrumbs__sep" aria-hidden="true">/</span>
-   <span aria-current="page">Current page</span></li></ol></nav></div></div>.
-   The slash is muted, the ancestors are links, the current page is the strongest.
-   The bar spans the full width on the surface tint and sticks to the top of the screen, so it is always visible. It is
+   <li><a href="/">Home</a></li><li><span class="breadcrumbs__sep" aria-hidden="true"><svg viewBox="0 0 24 24">
+   (the chevron path, in the house-style README)</svg></span><span aria-current="page">Current page</span></li></ol></nav></div></div>.
+   The bar stands on the theme's colour (owner, #3235, October 21, 2026), so the trail is in the paper steps, all of
+   which read on it: the chevron --paper-3, the ancestor links --paper-2, the current page --paper-1, so it stands out
+   the most; every crumb at weight 400. A link shows its underline only under the pointer, and its focus ring is
+   --paper-1, because the usual --muted ring would not show on the primary.
+   The bar spans the full width on --primary and sticks to the top of the screen, so it is always visible. It is
    one --tap high and one line: a trail longer than the screen scrolls sideways inside the bar rather than wrapping, so
    the height stays fixed and whatever else sticks to the top sits right under it. Its trail lines up with the page
    column (.container). */
-.breadcrumbs ol { display: flex; align-items: center; gap: var(--spacing-1-5); margin: 0; padding: 0; list-style: none; font-size: var(--text-sm); white-space: nowrap; }
+.breadcrumbs ol { display: flex; align-items: center; gap: var(--spacing-1-5); margin: 0; padding: 0; list-style: none; font-size: var(--text-base); white-space: nowrap; }   /* --text-base since October 24, 2026 (owner); it was --text-sm */
 .breadcrumbs li { display: inline-flex; align-items: center; gap: var(--spacing-1-5); }
-.breadcrumbs a { color: var(--primary-7); text-underline-offset: 2px; }
-.breadcrumbs__sep { color: var(--primary-5); }
-.breadcrumbs [aria-current='page'] { color: var(--primary-9); font-weight: 600; }
-.breadcrumbs-bar { position: sticky; top: 0; z-index: 4; background: var(--primary-2); box-shadow: 0 1px 0 var(--primary-3); }
+.breadcrumbs a { color: var(--paper-2); text-decoration: none; text-underline-offset: 4px; }
+.breadcrumbs a:focus-visible { outline-color: var(--paper-1); }
+.breadcrumbs a:hover { text-decoration: underline; }
+.breadcrumbs__sep { display: inline-flex; color: var(--paper-3); }
+.breadcrumbs__sep svg { width: 1.25rem; height: 1.25rem; }
+.breadcrumbs__sep path { stroke: currentColor; stroke-width: 0.75; stroke-linejoin: round; }   /* thickens the filled chevron */
+.breadcrumbs [aria-current='page'] { color: var(--paper-1); font-weight: 400; }
+.breadcrumbs-bar { position: sticky; top: 0; z-index: 4; background: var(--primary); }
 .breadcrumbs-bar > .container { display: flex; align-items: center; height: var(--tap); padding-top: 0; padding-bottom: 0; overflow-x: auto; }
 /* Under the bar: an anchor lands below it, and the floating settings button moves down by its height. */
 html:has(.breadcrumbs-bar) { scroll-padding-top: var(--tap); }
 html:has(.breadcrumbs-bar) .theme-settings--floating { top: calc(var(--tap) + var(--spacing-3)); }
+
+/* ---- Site header ------------------------------------------------------------------ */
+/* The app's own header above the breadcrumb bar (owner, October 22, 2026): at most --spacing-18 (72px) high, on the
+   theme's colour, the app's mark and name on the left as the way home, the settings button on the far right.
+   <header class="site-header"><div class="container"><a class="site-header__brand" href="/"><span class="site-header__mark"
+   aria-hidden="true">DKJ</span><span class="site-header__name">name</span></a><div id="settings"></div></div></header>,
+   then the .breadcrumbs-bar. It scrolls away; the bar under it still sticks. Under a site header the bar leaves the
+   primary to the header: the paper, a subtle line under it, and the trail in the text steps. A bar with no header
+   above it is unchanged. The mark hugs its initials (#3301): no fixed square, a thin padding round a large line. */
+.site-header { display: block; background: var(--primary); color: var(--paper-1); }
+.site-header > .container { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-3);
+  max-height: var(--spacing-18); padding-top: var(--spacing-3); padding-bottom: var(--spacing-3); }
+.site-header__brand { display: inline-flex; align-items: center; gap: var(--spacing-3); min-width: 0; color: var(--paper-1); text-decoration: none; }
+.site-header__brand:focus-visible { outline: 2px solid var(--paper-1); outline-offset: 4px; }
+.site-header__mark { display: inline-block; flex: none; padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--spacing-2); background: var(--paper-1); color: var(--primary); font-size: var(--text-h1); font-weight: 800;
+  line-height: 1; letter-spacing: 0.02em; }
+.site-header__name { overflow: hidden; font-size: var(--text-lg); font-weight: 700; white-space: nowrap; text-overflow: ellipsis; }
+.site-header__tag { font-weight: 400; color: var(--paper-3); }
+.site-header + .breadcrumbs-bar { background: var(--paper-1); border-bottom: 1px solid var(--paper-3); }
+.site-header + .breadcrumbs-bar .breadcrumbs a { color: var(--fg-3); }
+.site-header + .breadcrumbs-bar .breadcrumbs a:focus-visible { outline-color: var(--muted); }
+.site-header + .breadcrumbs-bar .breadcrumbs__sep { color: var(--muted); }
+.site-header + .breadcrumbs-bar .breadcrumbs [aria-current='page'] { color: var(--primary); }   /* owner, October 24, 2026; it was --fg-1 */
 
 /* ---- Menu list and menu item ---------------------------------------------------- */
 /* Settings as rows: <ul class="menu-list"><li class="menu-row"><span class="menu-row__label">..</span>
    <span class="menu-row__value">..</span> an .icon-btn</li></ul>. A line between rows, not above or below. */
 .menu-list { margin: 0; padding: 0; list-style: none; }
 .menu-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; column-gap: var(--spacing-3); min-height: var(--tap); padding: var(--spacing-2); }
-.menu-row + .menu-row { border-top: 1px solid var(--primary-3); }
-.menu-row__label { font-size: var(--text-h6); font-weight: 600; }
-.menu-row__value { min-width: 0; font-size: var(--text-h6); text-align: right; overflow-wrap: anywhere; }
+.menu-row + .menu-row { border-top: 1px solid var(--paper-3); }
+.menu-row__label { font-size: var(--text-base); font-weight: 600; }
+.menu-row__value { min-width: 0; font-size: var(--text-base); text-align: right; overflow-wrap: anywhere; }
 /* A button at the end of the row is control-h tall and its centre sits under a close button's. */
 .menu-row .icon-btn { height: var(--control-h); margin-right: calc((var(--tap) - var(--control-h)) / 2); }
 /* A navigation row: a full-width button with icon, label and chevron; a line between items.
    <button class="menu-item"><svg class="menu-item__icon"/><span class="menu-item__label">..</span><svg class="menu-item__chevron"/></button> */
-.menu-item { display: flex; align-items: center; gap: var(--spacing-3); width: 100%; min-height: var(--tap); margin: 0; padding: var(--spacing-2);
-  border: 0; border-radius: 8px; background: none; font: inherit; text-align: left; text-decoration: none; color: var(--primary-9); cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.menu-item + .menu-item { border-top: 1px solid var(--primary-3); border-top-left-radius: 0; border-top-right-radius: 0; }
-.menu-item:focus-visible { outline: 2px solid var(--primary-5); outline-offset: -2px; }   /* inset, so the ring is not cut off by the panel */
+.menu-item { display: flex; align-items: center; gap: var(--spacing-4); width: 100%; min-height: var(--tap); margin: 0; padding: 0;
+  border: 0; border-radius: 8px; background: none; font: inherit; text-align: left; text-decoration: none; color: var(--fg-1); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.menu-item + .menu-item { border-top: 1px solid var(--paper-3); border-top-left-radius: 0; border-top-right-radius: 0; }
+.menu-item:focus-visible { outline: 2px solid var(--muted); outline-offset: -2px; }   /* inset, so the ring is not cut off by the panel */
 .menu-item__icon, .menu-item__chevron { flex: none; }
 .menu-item__label { flex: 1; min-width: 0; }
-.menu-item__chevron { color: var(--primary-9); }
+.menu-item__chevron { color: var(--fg-1); }
+/* A navigation row that is a link (#200): <nav class="menu-list"><a class="menu-item" href>..</a><a class="menu-item"..>,
+   optionally with a one-line description under the label: <span class="menu-item__label">Label<span class="menu-item__sub">..</span></span>. */
+.menu-item__sub { display: block; font-size: var(--text-sm); font-weight: 400; color: var(--muted); }
+a.menu-item:hover { background: var(--paper-3); }
+/* A card that is one link (#3298): <section class="card card--link"> around a single <a>. The link's area stretches
+   over the whole card, so a click anywhere on it follows the link, and the whole card tints on hover rather than the
+   row alone. The <a> must not be positioned itself; one link per card, or the last one covers the rest. */
+.card--link { position: relative; }
+.card--link a::after { content: ""; position: absolute; inset: 0; }
+.card--link:hover { background: var(--paper-3); }
+.card--link a.menu-item:hover { background: none; }
 
 /* ---- Screen readers only --------------------------------------------------------- */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* ---- Fills ---------------------------------------------------------------- */
+/* A block on the theme's colour, or on the far end (#3235). The text switches with the ground. On .fill-primary the
+   paper steps are the text, because all four read on the primary (4.55:1 or better): an h2 is --paper-1 there and
+   --fg-2 on the page (the owner: an h2 does not always have the same colour), a quieter line --paper-3. On
+   .fill-inverse the ground is --fg-1, the paper is the text and --muted-inverse the quieter grey (7:1 on it).
+   The text and the quieter lines weigh (0,2,0): :is() takes the weight of its strongest argument, a class, so they
+   beat .sub, .muted, p.meta and the zero-weight headings, and the quieter line wins over the text because it comes
+   after it. A link weighs (0,1,0), enough to beat the zero-weight house link and light enough that a .btn or an app's
+   own class on an <a> keeps its colours. A component inside a fill keeps its own colours, so a .btn--primary on
+   .fill-primary does not show: use an outline button there. */
+.fill-primary { background: var(--primary); color: var(--paper-1); }
+.fill-inverse { background: var(--fg-1); color: var(--paper-1); }
+.fill-primary :is(h1, h2, h3, p, .lead, .msg, .meta, .card__title),
+.fill-inverse :is(h1, h2, h3, p, .lead, .msg, .meta, .card__title) { color: var(--paper-1); }
+.fill-primary :is(.sub, .muted, .note, .footer-note, .card__sub, .eyebrow) { color: var(--paper-3); }
+.fill-inverse :is(.sub, .muted, .note, .footer-note, .card__sub, .eyebrow) { color: var(--muted-inverse); }
+.fill-primary :where(a:any-link), .fill-inverse :where(a:any-link) { color: var(--paper-1); }
+.fill-primary :where(a:any-link:focus-visible), .fill-inverse :where(a:any-link:focus-visible) { outline-color: var(--paper-1); }
+
+/* ==========================================================================
+   Brand-book components (#3493): the parts the house style lacked, lifted from the brand-book app when it was
+   retired (components from MesoWise and the ETF tracker, and brand-book originals). Only what the house style had
+   no class for is here; a family it already had (button, card, dialog, drawer, top bar, menu, breadcrumbs, field,
+   table, tooltip, badge, meter, tile, hero, legend, seg, facts) stays that class, and where one lacked a general
+   modifier or part it is added to that class below ("Additions to existing classes"). Every colour is a house
+   token pair, so all of it follows the twelve themes; interactive parts keep a 44px (--tap) hit area and a focus
+   ring (--muted, or --paper-1 where a fill is behind it).
+   ========================================================================== */
+
+/* ---- Additions to existing classes ------------------------------------------- */
+/* A card the user has opened (the stronger border, --paper-4) or one whose content is invalid (--negative-3). */
+.card--open { border-color: var(--paper-4); }
+.card--invalid { border-color: var(--negative-3); }
+/* A message line that reports an error, in the text colour of a negative (beside .msg--warn). */
+.msg--error { color: var(--negative-5); }
+/* A scrolling .table-wrap is focusable (tabindex="0"), so a keyboard can scroll it, and shows the ring. */
+.table-wrap:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; border-radius: var(--radius-xs); }
+/* A row tinted by its status, with the -1 background steps the notices use, and a column that sets its own alignment over
+   the table's default (first column left, the rest right): .col-start, .col-end. */
+.table .row-negative { background: var(--negative-1); }
+.table .row-positive { background: var(--positive-1); }
+.table .row-warn { background: var(--warning-1); }
+.table .col-start { text-align: left; }
+.table .col-end, .table .col-end:first-child { text-align: right; }
+/* Facts: a muted line under a term, and a last row that sums up (bold, no rule under it). */
+.facts__detail { display: block; margin-top: var(--spacing-0-5); font-size: var(--text-sm); color: var(--fg-1); }
+.facts > .facts__total { border-bottom: 0; font-weight: 700; }
+/* A chart bar the pointer or the keyboard is on, driven by the script: the same look as .bar:hover. */
+.chart .bar--active { opacity: 0.8; }
+
+/* ---- Alert, banner, panel ------------------------------------------------------ */
+/* Alert: a danger box, a 2px --negative-3 border on --negative-1 with an icon and a title in --negative-5. */
+.alert { padding: var(--spacing-4); border: 2px solid var(--negative-3); border-radius: var(--radius-lg); background: var(--negative-1); color: var(--fg-1); }
+.alert__title { display: flex; align-items: center; gap: var(--spacing-2); margin: 0 0 var(--spacing-1); font-size: var(--text-h3); color: var(--negative-5); }
+.alert__icon { flex: none; }
+.alert > :last-child { margin-bottom: 0; }
+/* Banner: a bordered line or two of text; --accent is a centred statement on the tint, its <strong> the highlight.
+   A boxed warning is the house .notice. */
+.banner { margin: 0; padding: var(--spacing-3) var(--spacing-4); line-height: 1.35; color: var(--fg-1); border: 1px solid var(--paper-3); border-radius: var(--radius-lg); }
+.banner--accent { font-size: var(--text-lg); text-align: center; background: var(--paper-3); border-color: var(--paper-4); }
+.banner--accent strong { color: var(--primary); white-space: nowrap; }
+.banner__lead { display: inline-flex; align-items: center; gap: var(--spacing-1-5); font-weight: 700; }
+/* Panel: a tinted box (--paper-3) with a --paper-4 border; --accent a --muted border, --positive the green message
+   colours, --button a panel that is one full-width button (<button class="panel panel--button">). Inside, __label is a
+   small uppercase line and __value the figure. */
+.panel { padding: var(--spacing-3); border: 1px solid var(--paper-4); border-radius: var(--radius-lg); background: var(--paper-3); color: var(--fg-1); }
+.panel--accent { border-color: var(--muted); }
+.panel--positive { border-color: var(--positive-3); background: var(--positive-1); }
+.panel--button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--spacing-0-5); width: 100%; min-height: var(--tap);
+  padding: var(--spacing-2-5) var(--spacing-2); border-radius: var(--radius-md); font: inherit; font-weight: 600; cursor: pointer; }
+.panel--button:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+.panel__label { font-size: var(--text-sm); font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: var(--fg-1); }
+.panel__value { font-size: var(--text-lg); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ---- Chip, tag, filter chips -------------------------------------------------- */
+/* Chip: a pill that states an answer: --yes filled, --no on the page, --todo dashed. */
+.chip { display: inline-block; max-width: 100%; padding: var(--spacing-0-5) var(--spacing-3); border: 1px solid var(--paper-3); border-radius: var(--radius-pill);
+  font-size: var(--text-base); font-weight: 700; overflow-wrap: anywhere; }
+.chip--yes { background: var(--muted); border-color: var(--muted); color: var(--paper-1); }
+.chip--no { background: var(--paper-1); }
+.chip--todo { color: var(--fg-1); border-style: dashed; }
+/* Tag: a small uppercase pill above a title; --muted fill, --info on --cat-1, --warn in text on the warning tint. */
+.tag { display: inline-block; padding: var(--spacing-0-5) var(--spacing-2); border-radius: var(--radius-pill); background: var(--muted); color: var(--paper-1);
+  font-size: var(--text-xs); font-weight: 700; line-height: 1.2; letter-spacing: 0.06em; text-transform: uppercase; }
+.tag--info { background: var(--cat-1); }
+.tag--warn { background: var(--warning-1); color: var(--warning-5); }
+/* Filter chips: a wrapping row of pressed-state buttons (wrapping, not scrolling: a scrolling row hides chips and their
+   state off-screen at 360px). <div class="filter-chips"><button class="filter-chip" aria-pressed="false">..</button>
+   <button class="filter-chips__clear">Clear</button></div>. A dot takes its colour from --c, as .legend__item does. */
+.filter-chips { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2); }
+.filter-chip { display: inline-flex; align-items: center; gap: var(--spacing-1-5); min-height: var(--tap); padding: 0 var(--spacing-3); border: 1px solid var(--paper-3);
+  border-radius: var(--radius-pill); background: var(--paper-2); color: var(--fg-1); font: inherit; font-size: var(--text-sm); cursor: pointer;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.filter-chip:hover:not([aria-pressed="true"]) { border-color: var(--primary); color: var(--primary); }
+.filter-chip[aria-pressed="true"] { background: var(--muted); border-color: var(--muted); color: var(--paper-1); font-weight: 600; }
+.filter-chip__check { flex: none; }
+.filter-chip__dot { flex: none; width: var(--spacing-3); height: var(--spacing-3); border: 1px solid var(--primary); border-radius: 50%; background: var(--c); }   /* the ring keeps a pale or dark colour visible */
+.filter-chip[aria-pressed="true"] .filter-chip__dot { border-color: var(--paper-1); }
+.filter-chips__clear { min-height: var(--tap); padding: 0 var(--spacing-2); border: 0; background: none; color: var(--muted); font: inherit; font-size: var(--text-sm);
+  font-weight: 600; text-decoration: underline; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.filter-chip:focus-visible, .filter-chips__clear:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+
+/* ---- Toggles, help and disclosure ---------------------------------------------- */
+/* Round toggle: a 44px round button around an icon that opens a text (aria-expanded). It takes the row's height, not
+   44px of it (the negative margin), and its ring sits inside the tap area. An inline "?" in a label is .info-button. */
+.round-toggle { display: inline-flex; align-items: center; justify-content: center; flex: none; width: var(--tap); height: var(--tap); margin: calc(-1 * var(--spacing-1-5)) 0; padding: 0;
+  color: var(--fg-1); background: transparent; border: 0; border-radius: 50%; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.round-toggle[aria-expanded="true"] { color: var(--muted); }
+.round-toggle:focus-visible { outline: 2px solid var(--muted); outline-offset: -4px; }
+/* Badge toggle: the same on a 28px bordered circle that holds a character; the tap area grows to 44px (::after). */
+.badge-toggle { position: relative; display: inline-flex; align-items: center; justify-content: center; width: var(--spacing-7); height: var(--spacing-7); padding: 0; vertical-align: middle;
+  font-size: var(--text-sm); font-weight: 700; line-height: 1; color: var(--fg-1); background: var(--paper-1); border: 1px solid var(--paper-3); border-radius: var(--radius-pill);
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.badge-toggle::after { content: ""; position: absolute; inset: calc(-1 * var(--spacing-2)); }
+.badge-toggle[aria-expanded="true"] { color: var(--muted); border-color: var(--muted); }
+.badge-toggle:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+/* Help: a toggle at the right and, under it, the .msg it opens (full width). */
+.help { display: flex; flex-direction: column; align-items: flex-end; }
+.help > .msg { align-self: stretch; margin-top: var(--spacing-2); }
+/* A .more whose summary is a row: <details class="more more--structured"><summary><span class="more__title">..</span>
+   <span class="more__meta">..</span><span class="more__trailing">..</span></summary>..</details>. A wrapping row with the
+   marker last; on a narrow row (under 24rem, of the .more itself) the meta and trailing drop under the title. The
+   containment makes the box take the full width. */
+.more--structured { container-type: inline-size; width: 100%; }
+.more--structured > summary { display: flex; flex-wrap: wrap; align-items: baseline; align-content: center; column-gap: var(--spacing-2); row-gap: var(--spacing-0-5); min-height: var(--tap); }
+.more--structured > summary::after { flex: none; order: 1; }
+.more__title { flex: 1 1 12ch; min-width: 0; overflow-wrap: anywhere; font-weight: 700; color: var(--fg-1); }
+.more__meta, .more__trailing { margin-inline-start: auto; white-space: nowrap; }
+.more__meta + .more__trailing { margin-inline-start: 0; }
+.more__meta { font-size: var(--text-sm); font-weight: 400; color: var(--fg-1); font-variant-numeric: tabular-nums; }
+.more__version { color: var(--muted); font-weight: 700; }
+@container (max-width: 24rem) { .more__meta, .more__trailing { order: 2; margin-inline-start: 0; } }
+
+/* ---- Headings and answers ------------------------------------------------------ */
+/* Group heading: a section label that stays a heading for the outline (any level) but is --text-base, uppercase and
+   tracked; __count is a figure at the right, --over when it is past its limit. */
+.group-heading { display: flex; justify-content: space-between; align-items: baseline; gap: var(--spacing-2); margin: 0 0 var(--spacing-1);
+  font-size: var(--text-base); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--fg-1); }
+.group-heading__count { font-variant-numeric: tabular-nums; letter-spacing: 0; text-transform: none; white-space: nowrap; }
+.group-heading__count--over { color: var(--negative-5); }
+/* A question: a title with its answer .chip at the right, then the .verdict line. */
+.question-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--spacing-1) var(--spacing-3); margin: 0 0 var(--spacing-2); }
+.question-head h3 { margin: 0; font-size: var(--text-h3); font-weight: 700; line-height: 1.2; }
+.question-head .chip { min-width: 0; margin-left: auto; text-align: right; }
+.verdict { margin: 0 0 var(--spacing-1-5); font-size: var(--text-base); font-weight: 600; line-height: 1.35; }
+/* Amount: a figure with a small icon (an svg) beside it, right-aligned, tabular. */
+.amount { display: inline-flex; align-items: center; justify-content: flex-end; gap: var(--spacing-0-5); font-variant-numeric: tabular-nums; }
+.amount svg { flex: none; width: 0.75rem; height: 0.75rem; }
+/* Answer box: the result of a calculation, a label and the figure in --primary on the tint. */
+.answer { display: flex; align-items: center; gap: var(--spacing-3); margin-top: var(--spacing-2); padding: var(--spacing-2) var(--spacing-3); border-radius: var(--radius-md-plus); background: var(--paper-3); }
+.answer__label { flex: 1; font-weight: 600; }
+.answer__value { font-size: var(--text-lg); font-weight: 700; color: var(--primary); white-space: nowrap; font-variant-numeric: tabular-nums; }
+/* A value the app changed for you flashes once, in --muted and fading out. */
+@keyframes house-flash { from { background: var(--muted); color: var(--paper-1); } }
+.flash { animation: house-flash 1.2s ease-out; }
+@media (prefers-reduced-motion: reduce) { .flash { animation: none; } }
+/* The header of a block that is not a direct child of main, which the rule for main > header would miss. */
+.page-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--spacing-3); }
+
+/* ---- Form parts: checkbox, stepper, search combobox ----------------------------- */
+/* A read-only value in a .field's place, as tall as a tap target: <p class="field__fixed">. */
+.field__fixed { margin: 0; display: flex; align-items: center; min-height: var(--tap); padding: var(--spacing-1) var(--spacing-3); font-size: var(--text-base); font-weight: 600; line-height: 1.2;
+  overflow-wrap: anywhere; background: var(--paper-1); border: 1px solid var(--paper-3); border-radius: var(--radius-md); }
+/* Checkbox: <label class="check"><input type="checkbox"><span>Label</span><small>help</small></label>. The box is the native
+   one, so it takes the theme through accent-color; 24px, in a 44px row. */
+.check { display: flex; align-items: flex-start; gap: var(--spacing-2-5); min-height: var(--tap); font-size: var(--text-base); font-weight: 600; color: var(--fg-1); cursor: pointer; }
+.check input { flex: none; width: 1.5rem; height: 1.5rem; margin: var(--spacing-2-5) 0 0; }
+.check input:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+.check span { padding: var(--spacing-2) 0; }
+.check small { display: block; margin-top: var(--spacing-0-5); font-size: var(--text-sm); font-weight: 400; color: var(--fg-1); }
+/* Stepper: <div class="stepper"><button>-</button><input type="number"><button>+</button></div>; --lg is the larger
+   one for a dialog. The number input shows no spin buttons. */
+.stepper { display: grid; grid-template-columns: var(--tap) 3.5rem var(--tap); gap: var(--spacing-1); }
+.stepper--lg { grid-template-columns: var(--control-lg) 5rem var(--control-lg); gap: var(--spacing-2); }
+.stepper :is(button, input) { height: var(--tap); margin: 0; padding: 0; font: inherit; font-size: var(--text-lg); color: var(--fg-1); border: 1px solid var(--paper-3); border-radius: var(--radius-md); }
+.stepper button { line-height: 1; background: var(--paper-2); cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.stepper input { display: block; padding: 0 var(--spacing-1); text-align: center; font-variant-numeric: tabular-nums; background: var(--paper-1); -moz-appearance: textfield; appearance: textfield; }
+.stepper input::-webkit-inner-spin-button, .stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.stepper--lg :is(button, input) { height: var(--control-lg); }
+.stepper--lg input { font-weight: 700; }
+.stepper button:disabled { opacity: 0.5; cursor: not-allowed; }
+.stepper button:active { background: var(--paper-3); border-color: var(--muted); }
+.stepper :is(button, input):focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+/* Search combobox: a text input over a list of options (role="combobox" and "listbox"); once an option is picked a
+   __picked button covers the input, showing it, and a click opens the list again. The magnifier (__glass) is at the
+   right while there is something to tap. An option is .combo__option, active on aria-selected="true" (a tint and a
+   bar at the left), --own the "add what I typed" option and --more a line that is not an option. */
+.combo { display: grid; grid-template-columns: minmax(0, 1fr); }
+.combo__input, .combo__picked { grid-row: 1; grid-column: 1; min-height: var(--tap); font: inherit; color: var(--fg-1); background: var(--paper-1); border: 1px solid var(--paper-3); border-radius: var(--radius-md); }
+.combo__input { width: 100%; padding: var(--spacing-2-5) var(--spacing-3); font-size: var(--text-lg); }   /* 16px or more: iOS zooms in below it */
+.combo__input:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; border-color: var(--muted); }
+.combo__input--under { opacity: 0; pointer-events: none; }
+.combo__picked { z-index: 1; min-width: 0; padding: var(--spacing-1) var(--spacing-3); text-align: left; font-size: var(--text-base); font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; cursor: pointer; }
+.combo__picked:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+.combo__input:not(:focus), .combo__picked { padding-right: var(--spacing-10); }
+.combo__glass { grid-row: 1; grid-column: 1; z-index: 2; justify-self: end; align-self: center; margin-right: var(--spacing-3); color: var(--fg-1); pointer-events: none; }
+.combo__input:focus ~ .combo__glass { display: none; }
+.combo__list { grid-row: 2; margin: var(--spacing-1-5) 0 0; padding: var(--spacing-1); list-style: none; background: var(--paper-1); border: 1px solid var(--paper-3); border-radius: var(--radius-md); }
+.combo__option { display: flex; flex-direction: column; justify-content: center; min-height: var(--tap); padding: var(--spacing-1-5) var(--spacing-2-5); border-radius: var(--radius-sm);
+  font-size: var(--text-base); line-height: 1.3; overflow-wrap: anywhere; cursor: pointer; }
+.combo__name { color: var(--fg-1); }
+.combo__meta { font-size: var(--text-sm); color: var(--fg-1); }
+.combo__option[aria-selected="true"] { background: var(--paper-3); box-shadow: inset 3px 0 0 var(--muted); }
+.combo__option[aria-selected="true"] .combo__name { font-weight: 600; }
+.combo__option[aria-selected="true"] .combo__meta { color: var(--primary); }
+.combo__option--own { flex-direction: row; align-items: center; justify-content: flex-start; gap: var(--spacing-2); border: 1px dashed var(--primary); }
+.combo__option--own::before { content: "+"; flex: none; font-weight: 700; color: var(--muted); }
+.combo__option--more { min-height: 0; padding-top: var(--spacing-1); padding-bottom: var(--spacing-1); cursor: default; }
+
+/* ---- Value box and stat rows -------------------------------------------------- */
+/* Value box: a figure in a box as tall as a control (--control-h), so it lines up with the button beside it. __num is the
+   figure (--regular, --lg, --negative, --positive), __was the old value, __unit the unit; --changed marks a value the
+   user changed (a --muted border on the tint), --flush drops the side padding. */
+.value-box { display: flex; align-items: center; justify-content: center; gap: var(--spacing-1-5); min-width: var(--spacing-12); height: var(--control-h); padding: var(--spacing-1) var(--spacing-2-5);
+  border: 1px solid transparent; border-radius: var(--radius-md); font-variant-numeric: tabular-nums; }
+.value-box__num { display: flex; align-items: baseline; gap: var(--spacing-1); font-size: var(--text-base); font-weight: 600; line-height: 1.2; color: var(--fg-1); }
+.value-box__num--regular { font-weight: 400; }
+.value-box__num--lg { font-size: var(--text-lg); }
+.value-box__num--negative { color: var(--negative-5); }
+.value-box__num--positive { color: var(--positive-5); }
+.value-box__was { font-size: var(--text-sm); font-weight: 400; color: var(--fg-1); }
+.value-box__unit { font-size: var(--text-sm); font-weight: 600; color: var(--fg-1); }
+.value-box--changed { border: 2px solid var(--muted); background: var(--paper-3); }
+.value-box--flush { padding-left: 0; padding-right: 0; }
+/* Stat rows: <div class="stat-rows"><div class="stat-row"><span class="stat-row__name">Name<span class="stat-row__sub">..</span></span>
+   a .value-box and an .icon-btn</div>..</div>. Name, value, action, a --paper-3 rule between rows; the button is
+   --control-h square, as the box. --help adds a column for a .round-toggle (on one row, or on all of them through
+   .stat-rows--help, so the values stay in line); --formula is name, a + b = total and the button; --head a row of
+   column heads. */
+.stat-row { display: grid; grid-template-columns: minmax(0, 1fr) auto var(--control-h); column-gap: var(--spacing-3); align-items: center; padding: var(--spacing-2) 0; border-bottom: 1px solid var(--paper-3); }
+.stat-rows > .stat-row:last-child { border-bottom: 0; }
+.stat-row .icon-btn { width: var(--control-h); min-width: var(--control-h); height: var(--control-h); }
+.stat-row__name { min-width: 0; font-size: var(--text-base); color: var(--fg-1); overflow-wrap: anywhere; }
+.stat-row__sub { display: block; font-size: var(--text-sm); color: var(--muted); font-variant-numeric: tabular-nums; }
+.stat-row__help { display: flex; justify-content: center; }
+.stat-row--help, .stat-rows--help > .stat-row:not(.stat-row--formula) { grid-template-columns: minmax(0, 1fr) auto var(--spacing-9) var(--control-h); }
+.stat-rows--help > .stat-row:not(.stat-row--help):not(.stat-row--formula) > :nth-child(3) { grid-column: 4; }
+.stat-row--formula { column-gap: var(--spacing-1);
+  grid-template-columns: minmax(0, 1fr) var(--spacing-10) var(--spacing-2) var(--spacing-10) var(--spacing-2) var(--spacing-12) calc(var(--control-h) + var(--spacing-3)); }
+.stat-row--formula .value-box { min-width: 0; padding: var(--spacing-1); }
+.stat-row--formula > .icon-btn { justify-self: end; }
+.stat-row__op { text-align: center; font-weight: 600; color: var(--fg-1); }
+.stat-row--head { padding-bottom: 0; border-bottom: 0; font-size: var(--text-sm); font-weight: 600; color: var(--fg-1); text-align: center; }
+/* Step header: a previous button, a large value (an h1-size figure, trimmed to its cap height so the box centre is the
+   letters' centre) and a next button, on 5.5rem columns. The buttons are .btn. */
+.step-head { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr) 5.5rem; align-items: center; gap: var(--spacing-2); }
+.step-head .btn { width: 100%; margin: 0; }
+.step-head__value { margin: 0; padding: var(--spacing-3) 0; font-size: var(--text-h1); font-weight: 700; line-height: 1; text-align: center; text-box: trim-both cap alphabetic; }   /* text-box is ignored where unsupported */
+
+/* ---- Info rows ---------------------------------------------------------------- */
+/* Rows of a label and a value in a tinted box, each with a .round-toggle at the end: <div class="info-rows"><p
+   class="info-rows__head">..</p><div class="info-rows__list"><div class="info-row"><div class="info-row__box">
+   <button class="info-row__named">..</button><span class="info-row__value">..</span></div></div></div></div>. --info
+   puts the box on the card with a --cat-1 edge. The "i" of an info icon is cut out in the surface below it: .info-dot
+   and .info-stem take that surface's colour. */
+.info-dot { fill: var(--paper-2); }
+.info-stem { stroke: var(--paper-2); }
+.info-rows:not(.info-rows--info) .info-row__box { background: var(--paper-3); color: var(--fg-1); }
+.info-rows:not(.info-rows--info) .info-row__box .info-dot { fill: var(--paper-3); }
+.info-rows:not(.info-rows--info) .info-row__box .info-stem { stroke: var(--paper-3); }
+.info-rows--info .info-row__box { background: var(--paper-2); box-shadow: inset 0 0 0 1px var(--cat-1); }
+.info-rows__head { margin: 0 0 var(--spacing-1-5); font-size: var(--text-base); font-weight: 600; color: var(--fg-1); }
+.info-rows__list { display: flex; flex-direction: column; gap: var(--spacing-1-5); }
+.info-row { display: flex; align-items: center; gap: var(--spacing-1-5); }
+.info-row__box { flex: 1 1 auto; min-width: 0; min-height: calc(1.5rem + 2 * var(--spacing-2)); display: flex; align-items: center; padding: var(--spacing-2); border-radius: var(--radius-md); }
+.info-row__box .round-toggle { margin: calc(-1 * var(--spacing-2-5)) calc(-1 * var(--spacing-2-5)) calc(-1 * var(--spacing-2-5)) auto; }
+.info-row__named { flex: 0 1 auto; min-width: 0; min-height: var(--tap); margin: calc(-1 * var(--spacing-2-5)) calc(-1 * var(--spacing-2)); padding: 0 var(--spacing-2);
+  display: flex; align-items: center; gap: var(--spacing-1); font: inherit; text-align: left; color: var(--fg-1); background: transparent; border: 0; border-radius: var(--radius-md); cursor: pointer; }
+.info-row__named > svg { flex: none; }
+.info-row__named:focus-visible { outline: 2px solid var(--muted); outline-offset: -4px; }
+.info-row__value { min-width: 0; font-size: var(--text-base); line-height: 1.5rem; font-weight: 600; color: var(--primary); overflow-wrap: anywhere; }
+.info-row__value--placeholder { font-weight: 400; color: var(--fg-1); }
+
+/* ---- Tables: bill, comparison, calculation ------------------------------------ */
+/* Bill: one table per invoice: small uppercase column heads, a row per line (a __slot, an item __name that truncates, an
+   optional quantity, a price at the right, an action), groups that close with a __subtotal between stronger rules, and a
+   __total under a --primary rule. Add --qty when there is a quantity column, and .num to the figures' cells. */
+.bill, .compare { width: 100%; border-collapse: collapse; }
+.bill { table-layout: fixed; }
+.bill .num, .compare .num { text-align: right; white-space: nowrap; }
+.bill th, .bill td { height: 2.25rem; padding: var(--spacing-0-5) 0 var(--spacing-0-5) var(--spacing-1); vertical-align: middle; text-align: left; }
+.bill tr > :first-child { padding-left: 0; }
+.bill thead tr { border-bottom: 1px solid var(--paper-3); }
+.bill .bill__head > * { height: auto; padding-top: 0; padding-bottom: var(--spacing-1); vertical-align: bottom; font-size: var(--text-sm); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--fg-1); }
+.bill__head > :nth-child(1) { width: 4.75rem; }
+.bill__head > :nth-last-child(2) { width: 5rem; }
+.bill__head > :last-child { width: calc(var(--control-h) + var(--spacing-1)); }
+.bill--qty .bill__head > :nth-child(3) { width: var(--spacing-10); }
+.bill tbody tr { border-bottom: 1px solid var(--paper-3); }
+.bill tbody:last-of-type tr:last-child { border-bottom: 0; }
+.bill__slot { font-size: var(--text-base); font-weight: 600; color: var(--fg-1); }
+.bill__name { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--text-base); line-height: 1.3; }
+.bill__qty { font-size: var(--text-base); color: var(--fg-1); }
+.bill__price { font-size: var(--text-base); font-weight: 600; }
+.bill__action { text-align: right; }
+.bill__action .icon-btn { width: var(--control-h); min-width: var(--control-h); height: var(--control-h); margin-left: auto; }
+.bill__action .round-toggle { margin: calc(-1 * var(--spacing-2)) calc(-1 * var(--spacing-2)) calc(-1 * var(--spacing-2)) auto; }
+.bill .bill__subtotal { border-top: 2px solid var(--muted); border-bottom: 2px solid var(--muted); }
+.bill .bill__subtotal > * { height: auto; padding-top: var(--spacing-1-5); padding-bottom: var(--spacing-1-5); vertical-align: baseline; }
+.bill__subtotal th, .bill__total th { padding-right: var(--spacing-4); font-size: var(--text-base); font-weight: 600; text-align: right; }
+.bill__subtotal strong, .bill__total strong { font-size: var(--text-base); font-variant-numeric: tabular-nums; }
+.bill tfoot tr { border-top: 1px solid var(--primary); }
+.bill .bill__total > * { height: auto; padding-top: var(--spacing-2); padding-bottom: var(--spacing-2); vertical-align: baseline; }
+.bill__total strong { color: var(--muted); }
+/* Comparison: row labels at the left and a column of figures per option, the closing row (a tfoot) large over a --muted rule. */
+.compare { font-variant-numeric: tabular-nums; }
+.compare th, .compare td { padding: var(--spacing-2) 0; border-bottom: 1px solid var(--paper-3); vertical-align: baseline; }
+.compare tbody th { text-align: left; font-weight: 400; overflow-wrap: anywhere; }
+.compare td.num { padding-left: var(--spacing-2); }
+.compare thead th { padding: 0 0 var(--spacing-2) var(--spacing-2); font-size: var(--text-sm); font-weight: 700; line-height: 1.2; color: var(--fg-1); text-align: right; vertical-align: bottom; }
+.compare thead td { padding: 0; }
+.compare tbody tr:last-child > * { padding-bottom: var(--spacing-3); border-bottom: 0; }
+.compare tfoot th, .compare tfoot td { padding-top: var(--spacing-3-5); border-bottom: 0; border-top: 2px solid var(--muted); font-weight: 700; font-size: var(--text-lg); text-align: left; }
+.compare tfoot td { text-align: right; }
+/* Calculation: a grid of rows (a subgrid, so the columns line up through every box), each a __what, an __op (+ - x =)
+   and a __num; a __box rings a group of rows and nests; --boxed lets boxes span in from an edge column; a __result row
+   sums up, large in --muted. A .calc-section holds one question's calculation (its __question) and an .answer. */
+.calc { display: grid; grid-template-columns: [what] minmax(0, 1fr) [op] auto [num] auto; font-variant-numeric: tabular-nums; }
+.calc__row, .calc__box { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; }
+.calc__row { align-items: baseline; border-bottom: 1px solid var(--paper-3); line-height: 1.35; }
+.calc__row > * { padding: var(--spacing-2) 0; }
+.calc__row:has(+ .calc__result) { margin-bottom: var(--spacing-2); border-bottom: 0; }
+.calc__what { grid-column: what; padding-left: var(--spacing-3); font-size: var(--text-base); overflow-wrap: anywhere; }
+.calc__sub { display: block; font-size: var(--text-sm); color: var(--muted); }
+.calc__op { grid-column: op; min-width: 1rem; padding-inline: var(--spacing-2); font-size: var(--text-base); text-align: center; color: var(--fg-1); }
+.calc__num { grid-column: num; padding-inline: var(--spacing-3); text-align: right; font-size: var(--text-base); font-weight: 600; white-space: nowrap; }
+.calc--boxed { --gutter: var(--spacing-1-5); grid-template-columns: [edge-l] var(--gutter) [what] minmax(0, 1fr) [op] auto [num] auto [edge-r] var(--gutter); }
+.calc--boxed .calc__what { padding-left: var(--spacing-2); }
+.calc--boxed .calc__op { padding-inline: var(--spacing-1); }
+.calc--boxed .calc__num { padding-inline: var(--spacing-2); }
+.calc__box { margin: 0; padding: var(--gutter, var(--spacing-1-5)) 0; border: 1.5px solid var(--paper-4); border-radius: var(--radius-md-plus); }
+.calc--boxed .calc__box > .calc__row, .calc--boxed .calc__box > .calc__box { grid-column: 2 / -2; }   /* boxes only exist in a boxed calculation */
+.calc__box > .calc__row:last-child { border-bottom: 0; }
+.calc__result { border-bottom: 0; }
+.calc__result .calc__num { font-size: var(--text-lg); font-weight: 700; color: var(--muted); }
+.calc-section + .calc-section { margin-top: var(--spacing-6); }
+.calc-section__question { margin: 0 0 var(--spacing-0-5); font-size: var(--text-h3); font-weight: 700; color: var(--fg-1); }
+
+/* ---- Date list ---------------------------------------------------------------- */
+/* A list of dated items: a fixed date column (--datecol), a title with a muted line, an optional trailing label that
+   wraps under the title on a narrow row by itself. --near and --today: a bar, the tint and the date in --primary;
+   --invalid: a --negative-3 bar, the date and the reason (__reason) in --negative-5; --link: the title's link stretches
+   over the row. <ul class="date-list"><li class="date-row"><div class="date-row__when">..</div><div class="date-row__main">
+   <div class="date-row__body"><span class="date-row__title">..</span><span class="date-row__sub">..</span></div>
+   <span class="date-row__trailing">..</span></div></li></ul>. */
+.date-list { list-style: none; margin: 0; padding: 0; }
+.date-row { position: relative; display: grid; grid-template-columns: var(--datecol) minmax(0, 1fr); column-gap: var(--spacing-3); align-items: start; min-height: var(--tap); padding: var(--spacing-2) var(--spacing-3); border-top: 1px solid var(--paper-3); }
+.date-list > .date-row:first-child { border-top: 0; }
+.date-row__when { display: flex; flex-direction: column; align-items: flex-start; gap: var(--spacing-1); font-size: var(--text-sm); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--fg-1); }
+.date-row__main { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--spacing-1) var(--spacing-3); min-width: 0; }
+.date-row__body { display: flex; flex-direction: column; flex: 1 1 10rem; min-width: 0; }
+.date-row__title { font-size: var(--text-base); color: var(--fg-1); overflow-wrap: anywhere; }
+.date-row__sub { font-size: var(--text-sm); color: var(--muted); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.date-row__trailing { margin-left: auto; font-size: var(--text-sm); color: var(--fg-1); overflow-wrap: anywhere; }
+.date-row--near, .date-row--today { background: var(--paper-3); box-shadow: inset 3px 0 0 var(--muted); }
+.date-row--near .date-row__when, .date-row--today .date-row__when { font-weight: 700; color: var(--primary); }
+.date-row--invalid { box-shadow: inset 3px 0 0 var(--negative-3); }
+.date-row--invalid .date-row__when { flex-direction: row; align-items: center; gap: var(--spacing-1); color: var(--negative-5); }
+.date-row__icon { flex: none; }
+.date-row__reason { font-size: var(--text-sm); color: var(--negative-5); overflow-wrap: anywhere; }
+.date-row__title a { color: inherit; text-decoration: underline; text-underline-offset: 0.15em; }
+.date-row__title a::after { content: ""; position: absolute; inset: 0; }
+.date-row__title a:focus-visible { outline: none; }
+.date-row__title a:focus-visible::after { outline: 2px solid var(--muted); outline-offset: -2px; }
+.date-row--link { cursor: pointer; }
+.date-row--link:hover { background: var(--paper-3); }
+
+/* ---- Figure and prose ----------------------------------------------------------- */
+/* Figure: a framed image of a fixed aspect ratio (16:9; --ratio-4-3, -3-2, -1-1, -3-4, -9-16), with an optional __caption
+   and, where there is no image yet, a __placeholder (a __glyph and a __label). The image covers the frame, or --contain
+   fits inside it. <figure class="figure"><div class="figure__frame"><img ...></div><figcaption class="figure__caption">. */
+.figure { margin: 0; min-width: 0; }
+.figure__frame { position: relative; width: 100%; max-width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid var(--paper-3); border-radius: var(--radius-lg); background: var(--paper-3); }
+.figure--ratio-4-3 .figure__frame { aspect-ratio: 4 / 3; }
+.figure--ratio-3-2 .figure__frame { aspect-ratio: 3 / 2; }
+.figure--ratio-1-1 .figure__frame { aspect-ratio: 1 / 1; }
+.figure--ratio-3-4 .figure__frame { aspect-ratio: 3 / 4; }
+.figure--ratio-9-16 .figure__frame { aspect-ratio: 9 / 16; }
+.figure__frame > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+.figure--contain .figure__frame > img { object-fit: contain; }
+.figure__placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--spacing-2); padding: var(--spacing-2); text-align: center; color: var(--fg-1); }
+.figure__glyph { flex: none; }
+.figure__label { font-size: var(--text-sm); color: var(--fg-1); overflow-wrap: break-word; }
+.figure__caption { margin-top: var(--spacing-2); font-size: var(--text-sm); line-height: 1.35; color: var(--fg-2); text-align: left; overflow-wrap: break-word; }
+.prose .figure__frame > img { border-radius: 0; height: 100%; }   /* the frame already rounds and clips */
+/* Prose: a rendered long-form body (Markdown output): plain elements inside .prose are styled, so the markup needs no
+   classes. A 70ch measure at a 1.55 line height, headings one step down the scale (the page has its own h1; there is no
+   h4), --primary on <strong> and list markers, code in --font-mono, tables left-aligned and wrapping. --sm is the
+   smaller size, --fill lifts the measure. A scrolling pre or table needs tabindex="0" so a keyboard can reach it. */
+.prose { --prose-h1: var(--text-lg); --prose-h2: var(--text-h3); --prose-h3: var(--text-base); max-width: 70ch; font-size: var(--text-base); line-height: 1.55; color: var(--fg-1); }
+.prose--sm { --prose-h1: var(--text-base); --prose-h2: var(--text-sm); --prose-h3: var(--text-sm); font-size: var(--text-sm); }
+.prose--fill { max-width: none; }
+.prose > * { margin: 0; }
+.prose > * + * { margin-top: var(--spacing-3); }
+.prose > :first-child { margin-top: 0; }
+.prose :is(h1, h2, h3) { display: block; margin: 0; font-weight: 600; line-height: 1.35; }
+.prose h1 { font-size: var(--prose-h1); }
+.prose h2 { font-size: var(--prose-h2); }
+.prose h3 { font-size: var(--prose-h3); }
+.prose > * + :is(h1, h2) { margin-top: var(--spacing-6); }
+.prose > * + h3 { margin-top: var(--spacing-5); }
+.prose > :is(h1, h2, h3) + * { margin-top: var(--spacing-2); }
+.prose p { overflow-wrap: break-word; }
+.prose strong { font-weight: 600; color: var(--primary); }
+.prose :is(ul, ol) { padding-left: var(--spacing-6); }
+.prose li + li { margin-top: var(--spacing-1); }
+.prose li::marker { color: var(--primary); }
+.prose li :is(ul, ol) { margin-top: var(--spacing-1); }
+.prose li:has(> input[type="checkbox"]) { list-style: none; display: flex; flex-wrap: wrap; gap: var(--spacing-2); margin-left: calc(-1 * var(--spacing-6)); }
+.prose li:has(> input[type="checkbox"]) > :is(ul, ol) { flex-basis: 100%; }
+.prose li > input[type="checkbox"] { flex: none; width: 1rem; height: 1rem; margin: 0; transform: translateY(0.3em); }
+.prose :is(code, pre) { font-family: var(--font-mono); }
+.prose code { font-size: 0.9em; padding: 0.1em 0.35em; border-radius: var(--radius-xs); background: var(--paper-3); }
+.prose pre { font-size: var(--text-sm); padding: var(--spacing-3) var(--spacing-4); border: 1px solid var(--paper-3); border-radius: var(--radius-md); background: var(--paper-3); overflow-x: auto; white-space: pre; tab-size: 2; }
+.prose pre code { padding: 0; border-radius: 0; background: none; font-size: inherit; }
+.prose table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+.prose :is(th, td) { padding: var(--spacing-2) var(--spacing-2-5); text-align: left; border-bottom: 1px solid var(--paper-3); }
+.prose th { color: var(--fg-1); font-weight: 600; }
+.prose :is(th, td)[align="right"] { text-align: right; }
+.prose blockquote { margin-inline: 0; padding-left: var(--spacing-4); border-left: 3px solid var(--paper-3); color: var(--fg-1); }
+.prose hr { border: 0; border-top: 1px solid var(--paper-3); margin-block: var(--spacing-6); }
+.prose > hr + * { margin-top: 0; }
+.prose img { max-width: 100%; height: auto; border-radius: var(--radius-sm); }
+.prose :is(pre, table):focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+
+/* ---- Chart extras --------------------------------------------------------------- */
+/* In a chart's tooltip and its table: a second line under a label, and a series row (a swatch in the series colour --
+   set it with style="background: var(--cat-1)" -- the name, the figure at the end). */
+.chart-detail { display: block; font-size: var(--text-xs); color: var(--fg-1); }
+.chart-row { display: flex; align-items: center; gap: var(--spacing-1-5); }
+.chart-swatch { flex: none; width: 8px; height: 8px; border-radius: 50%; }
+.chart-figure { margin-left: auto; padding-left: var(--spacing-3); }

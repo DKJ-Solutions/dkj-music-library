@@ -17,7 +17,7 @@ $mix-link-columns: minmax(180px, 2.2fr) 150px 110px 62px 56px minmax(160px, 2fr)
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--primary-6);
+  color: var(--muted);
 }
 
 .mix-link-heads span:nth-child(4),
@@ -63,14 +63,14 @@ $mix-link-columns: minmax(180px, 2.2fr) 150px 110px 62px 56px minmax(160px, 2fr)
   flex-direction: column;
   gap: 2px;
   font-size: 13px;
-  color: var(--primary-9);
+  color: var(--fg-1);
   min-width: 0;
 }
 
 .mix-link-row .mix-name > small {
   font-family: var(--font-mono);
   font-size: 10px;
-  color: var(--primary-6);
+  color: var(--muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -144,7 +144,7 @@ $mix-link-columns: minmax(180px, 2.2fr) 150px 110px 62px 56px minmax(160px, 2fr)
 .mix-link-row .mix-score {
   font-family: var(--font-mono);
   font-size: 10.5px;
-  color: var(--primary-6);
+  color: var(--muted);
   font-variant-numeric: tabular-nums;
   text-align: center;
 }
@@ -190,7 +190,7 @@ $mix-link-columns: minmax(180px, 2.2fr) 150px 110px 62px 56px minmax(160px, 2fr)
 
 .mix-link-row .mix-tag-fix:hover:not(:disabled) {
   background: var(--status-critical);
-  color: var(--primary-2);
+  color: var(--paper-2);
 }
 
 .mix-link-row .mix-tag-fix:disabled {
@@ -205,7 +205,7 @@ $mix-link-columns: minmax(180px, 2.2fr) 150px 110px 62px 56px minmax(160px, 2fr)
 }
 
 .mix-link-row .muted-cell {
-  color: var(--primary-6);
+  color: var(--muted);
 }
 
 // ---------------------------------------------------------------------------------------------------
@@ -227,7 +227,7 @@ $mix-key-columns: minmax(180px, 2fr) 82px minmax(120px, 1.2fr) minmax(150px, 1.6
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--primary-6);
+  color: var(--muted);
 }
 
 .mix-key-row {
@@ -263,14 +263,14 @@ $mix-key-columns: minmax(180px, 2fr) 82px minmax(120px, 1.2fr) minmax(150px, 1.6
   flex-direction: column;
   gap: 2px;
   font-size: 13px;
-  color: var(--primary-9);
+  color: var(--fg-1);
   min-width: 0;
 }
 
 .mix-key-row .mix-name > small {
   font-family: var(--font-mono);
   font-size: 10px;
-  color: var(--primary-6);
+  color: var(--muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -297,7 +297,7 @@ $mix-key-columns: minmax(180px, 2fr) 82px minmax(120px, 1.2fr) minmax(150px, 1.6
 // Wat er nú staat is de oude stand: gedempt. Wat er kómt te staan is het doel: accent-kleur, want dat
 // is de enige waarde op deze rij die je met de bron wil vergelijken.
 .mix-key-row .mix-key-now {
-  color: var(--primary-6);
+  color: var(--muted);
 }
 
 .mix-key-row .mix-key-next {
@@ -323,7 +323,7 @@ $mix-key-columns: minmax(180px, 2fr) 82px minmax(120px, 1.2fr) minmax(150px, 1.6
 }
 
 .mix-key-row .muted-cell {
-  color: var(--primary-6);
+  color: var(--muted);
 }
 
 // De schrijfknop is dezelfde vorm als op de brug-rij (.mix-tag-fix), maar in de accent-kleur: dit is
@@ -337,7 +337,7 @@ $mix-key-columns: minmax(180px, 2fr) 82px minmax(120px, 1.2fr) minmax(150px, 1.6
 
 .mix-key-row .mix-tag-fix:hover:not(:disabled) {
   background: var(--accent-ink);
-  color: var(--primary-2);
+  color: var(--paper-2);
 }
 
 @media (max-width: 860px) {
@@ -386,13 +386,13 @@ $mix-key-columns: minmax(180px, 2fr) 82px minmax(120px, 1.2fr) minmax(150px, 1.6
 
 .mix-orphan-list .name {
   font-size: 13px;
-  color: var(--primary-9);
+  color: var(--fg-1);
 }
 
 .mix-orphan-list .mix-orphan-meta {
   font-family: var(--font-mono);
   font-size: 10.5px;
-  color: var(--primary-6);
+  color: var(--muted);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -400,7 +400,7 @@ $mix-key-columns: minmax(180px, 2fr) 82px minmax(120px, 1.2fr) minmax(150px, 1.6
 .band .mix-group-count {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--primary-6);
+  color: var(--muted);
   background: var(--tile);
   padding: 2px 8px;
   border-radius: 999px;
