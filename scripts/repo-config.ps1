@@ -538,5 +538,6 @@ function Get-DevPreview {
         Ports        = 3000
         Requires     = 'node_modules'
         OpenInVsCode = $true
+        DefaultTheme = 'pink'
     }
 }

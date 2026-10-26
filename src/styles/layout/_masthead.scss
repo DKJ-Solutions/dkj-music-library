@@ -29,7 +29,7 @@
   letter-spacing: -0.01em;
   margin: 0 0 14px;
   text-wrap: balance;
-  // Geen eigen kleur: de huisstijl geeft h1 de highlight van het thema (--primary-7).
+  // Geen eigen kleur: de huisstijl geeft h1 de highlight van het thema (--primary).
 }
 
 // Vervangt de inline `style={{ color: "var(--accent-ink)" }}` uit de Vite-versie van App.jsx.
@@ -67,7 +67,7 @@
 
 .stat span {
   font-size: 13px;
-  color: var(--primary-6);
+  color: var(--muted);
 }
 
 // De sync-check achter de DJ Cylow-teller (playlist-manager): komt het aantal playlists met een ID

@@ -15,7 +15,7 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
 .missing-mixes .missing-count {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--primary-6);
+  color: var(--muted);
   background: var(--tile);
   padding: 2px 8px;
   border-radius: 999px;
@@ -45,7 +45,7 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--primary-6);
+  color: var(--muted);
 }
 
 // De koppen zijn sorteerknoppen (`.col-head-sort`, gedeeld met de hoofdtabel -- zie
@@ -86,7 +86,7 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
 
 .missing-row .color-dot--neutral {
   background: transparent;
-  border: 1.5px dashed var(--primary-6);
+  border: 1.5px dashed var(--muted);
 }
 
 .missing-row .missing-id {
@@ -99,7 +99,7 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
 // Zelfde maat als `.playlist-row .name`, zodat de twee tabellen ook typografisch één geheel zijn.
 .missing-row .missing-title {
   font-size: 13.5px;
-  color: var(--primary-9);
+  color: var(--fg-1);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -126,13 +126,13 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
 }
 
 .missing-row .missing-density[data-density="Light"] {
-  color: var(--primary-6);
+  color: var(--muted);
 }
 
 .missing-row .missing-gender {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--primary-6);
+  color: var(--muted);
   text-align: center;
 }
 
@@ -146,13 +146,13 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
 }
 
 .missing-row .missing-subgenre {
-  color: var(--primary-6);
+  color: var(--muted);
 }
 
 .missing-row .missing-vol {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--primary-6);
+  color: var(--muted);
   font-variant-numeric: tabular-nums;
   text-align: center;
 }
@@ -161,7 +161,7 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
 .missing-row .missing-tracks {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--primary-6);
+  color: var(--muted);
   font-variant-numeric: tabular-nums;
   text-align: right;
   white-space: nowrap;

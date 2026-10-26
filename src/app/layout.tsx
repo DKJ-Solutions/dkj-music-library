@@ -16,11 +16,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // data-theme-light/-dark: het eigen standaardpaar van deze app (Petrol en Cyaan, het dichtst bij de
-  // oude teal accentkleur), zolang de gebruiker zelf niets kiest. house-theme.js zet data-theme al in
+  // data-theme-default: het eigen standaardthema van deze app, Roze (donker), zoals de huisstijl het
+  // per repo vastlegt (#86), zolang de gebruiker zelf niets kiest. house-theme.js zet data-theme al in
   // <head>, vóór React hydrateert -- vandaar suppressHydrationWarning op <html>.
   return (
-    <html lang="nl" data-theme-light="teal" data-theme-dark="cyan" suppressHydrationWarning>
+    <html lang="nl" data-theme-default="pink" suppressHydrationWarning>
       <head>
         {/* eslint-disable-next-line @next/next/no-sync-scripts -- synchroon in <head>, zodat het thema niet flitst */}
         <script src="/house-style/house-theme.js" />

@@ -10,22 +10,22 @@
 // per modus verschilt, gebruikt `light-dark()` en volgt daarmee vanzelf elk van de twaalf thema's.
 :root {
   // Vlakken, lijnen en tekst -- de rollen uit de house-README.
-  --bg: var(--primary-1); // de pagina
-  --surface-2: var(--primary-3); // getint vlak (hover, code)
-  --tile: var(--primary-3);
-  --line: var(--primary-3); // elke lijn
-  --ink-soft: var(--primary-6); // sub-regels en notities
+  --bg: var(--paper-1); // de pagina
+  --surface-2: var(--paper-3); // getint vlak (hover, code)
+  --tile: var(--paper-3);
+  --line: var(--paper-3); // elke lijn
+  --ink-soft: var(--muted); // sub-regels en notities
   // De themakleur: --accent voor vullingen, focusringen en randen (-5), --accent-ink voor tekst die
   // moet opvallen (-7, de highlight), --accent-soft voor een getint vlak (-3).
-  --accent: var(--primary-5);
-  --accent-ink: var(--primary-7);
-  --accent-soft: var(--primary-3);
+  --accent: var(--muted);
+  --accent-ink: var(--primary);
+  --accent-soft: var(--paper-3);
   --gold: var(--warning-5);
   --gold-soft: var(--warning-1);
   // Status: schaars en betekenisvol, nooit voor iets anders dan kritiek/afgerond.
   --status-critical: var(--negative-3);
   --status-done: var(--positive-3);
-  --meter-fill: var(--primary-5);
+  --meter-fill: var(--muted);
   // Spotify playlist manager (fase 5) — het 8-kleuren Plutchik-emotiepalet, Gwen's ontwerpspec.
   // Naamgeving lowercase-matchend met plutchikColors.ts' PlutchikColor-waarden zodat de UI
   // `var(--emotion-${color.toLowerCase()})` kan opbouwen. Domeinkleuren: een eigen waarde per modus.
@@ -49,7 +49,7 @@
   // anders het gewone lettertype.
   --font-narrow: Bahnschrift, "Arial Narrow", ui-sans-serif, system-ui, sans-serif;
   --font-narrow-width: 94;
-  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
+  // --font-mono komt sinds v5.33.0 uit de huisstijl zelf (#89).
   --shadow: 0 1px 2px light-dark(rgba(19, 26, 34, 0.04), rgba(0, 0, 0, 0.3)),
     0 6px 20px light-dark(rgba(19, 26, 34, 0.06), rgba(0, 0, 0, 0.4));
   --radius: 14px;

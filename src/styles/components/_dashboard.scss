@@ -18,7 +18,7 @@
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--primary-6);
+  color: var(--muted);
   margin: 0 0 12px;
 }
 
@@ -41,21 +41,21 @@
 .dashboard-bar-row .rank {
   font-family: var(--font-mono);
   font-size: 10.5px;
-  color: var(--primary-6);
+  color: var(--muted);
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
 .dashboard-bar-row .label {
   font-size: 13px;
-  color: var(--primary-9);
+  color: var(--fg-1);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .dashboard-bar-row .label .sublabel {
-  color: var(--primary-6);
+  color: var(--muted);
   font-weight: 400;
 }
 
@@ -76,7 +76,7 @@
 .dashboard-bar-row .value {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--primary-6);
+  color: var(--muted);
   font-variant-numeric: tabular-nums;
   text-align: right;
   white-space: nowrap;
@@ -95,7 +95,7 @@ $dedup-columns: minmax(150px, 2fr) minmax(120px, 1.4fr) 74px minmax(160px, 2fr);
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--primary-6);
+  color: var(--muted);
 }
 
 .dedup-col-heads span:nth-child(3) {
@@ -125,7 +125,7 @@ $dedup-columns: minmax(150px, 2fr) minmax(120px, 1.4fr) 74px minmax(160px, 2fr);
 
 .dedup-row .name {
   font-size: 13.5px;
-  color: var(--primary-9);
+  color: var(--fg-1);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -154,7 +154,7 @@ $dedup-columns: minmax(150px, 2fr) minmax(120px, 1.4fr) 74px minmax(160px, 2fr);
 .dedup-row .in-playlists {
   font-family: var(--font-mono);
   font-size: 10.5px;
-  color: var(--primary-6);
+  color: var(--muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

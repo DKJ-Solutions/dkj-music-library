@@ -122,7 +122,7 @@ export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusP
         {tokens ? (
           <>
             <p className="empty-note">
-              Status: <strong style={{ color: "var(--primary-9)" }}>verbonden</strong>. Toegangstoken verloopt:{" "}
+              Status: <strong style={{ color: "var(--fg-1)" }}>verbonden</strong>. Toegangstoken verloopt:{" "}
               {new Date(tokens.expiresAt).toLocaleString("nl-NL")}. Scope: {tokens.scope}
             </p>
             <form action="/api/auth/logout/spotify" method="POST">
@@ -134,7 +134,7 @@ export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusP
         ) : (
           <>
             <p className="empty-note">
-              Status: <strong style={{ color: "var(--primary-9)" }}>niet verbonden</strong>.
+              Status: <strong style={{ color: "var(--fg-1)" }}>niet verbonden</strong>.
             </p>
             <a className="pill-toggle" href="/api/auth/login/spotify">
               Inloggen bij Spotify
