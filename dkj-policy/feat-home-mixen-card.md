@@ -41,17 +41,24 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `src/app/page.tsx`: een Mixen-card onder de Spotify-card, met daarin een card-link per publieke mix (readMixes, nieuwste eerst) naar djcylow.com
 
 ### TEST
 
+- [x] typecheck, eslint en vitest groen (924 tests)
+- [x] localhost:3000 rendert alle 78 publieke mixen in de Mixen-card
+
 ### DEPLOY: feat/home-mixen-card
 
-**Score:**
+De homepagina draagt naast de Spotify-card een Mixen-card met een card per mix van de DJ Cylow-website, nieuwste eerst, elk met genre, BPM en datum en een link naar de mixpagina op djcylow.com.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Dave ziet op de homepagina meteen elke mix die hij gemaakt heeft en opent er één met één klik.
+
+**Score:** 3
 
 #### Pull Request
 
