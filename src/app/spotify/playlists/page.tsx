@@ -40,6 +40,12 @@ const PAGE_CARDS: PageCard[] = [
     label: pageTitle("/spotify/playlists/maple-classic"),
     sub: "De gedeelde playlist als tabel",
   },
+  {
+    href: "/spotify/playlists/classic-pop",
+    icon: "star",
+    label: pageTitle("/spotify/playlists/classic-pop"),
+    sub: "Elk Classic Pop-nummer één keer, met de playlists waarin het staat",
+  },
 ];
 
 export default function PlaylistsHubPage() {

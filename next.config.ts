@@ -24,6 +24,7 @@ const nextConfig: NextConfig = {
       { source: "/spotify/djcylow", destination: "/spotify/playlists/djcylow", permanent: false },
       { source: "/spotify/prive", destination: "/spotify/playlists/prive", permanent: false },
       { source: "/spotify/maple-classic", destination: "/spotify/playlists/maple-classic", permanent: false },
+      { source: "/spotify/classic-pop", destination: "/spotify/playlists/classic-pop", permanent: false },
     ];
   },
 };

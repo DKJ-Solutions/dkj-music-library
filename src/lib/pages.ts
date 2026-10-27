@@ -22,7 +22,7 @@ export const PAGE_TITLES: Record<string, string> = {
   [WORLD_META.prive.href]: WORLD_META.prive.label,
   "/spotify/playlists/musicmoodcolours/mixen": "Mixen ↔ playlists",
   "/spotify/playlists/maple-classic": "Maple Classic 2026 LAN",
-  "/spotify/classic-pop": "Classic Pop",
+  "/spotify/playlists/classic-pop": "Classic Pop",
   ...Object.fromEntries(MMC_BPM_TIERS.map((bpm) => [BPM_TIER_META[bpm].href, BPM_TIER_META[bpm].label])),
 };
 

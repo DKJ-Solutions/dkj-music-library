@@ -1,7 +1,8 @@
 // De Spotify-hub op /spotify: één grid met een card per pagina eronder, en verder niets. Server
 // Component: leest de tokens (OAuth-status) alleen om de verbinding-card een actueel onderschrift te
 // geven. De verbinding zelf (status, login/logout, sync) staat sinds de cards op /spotify/verbinding;
-// de playlist-pagina's (manager, de drie werelden, Maple Classic) een laag dieper, op /spotify/playlists.
+// de playlist-pagina's (manager, de drie werelden, Maple Classic, Classic Pop) een laag dieper, op
+// /spotify/playlists.
 import { readTokens } from "@/lib/spotify/tokenStore";
 import { PageCardGrid, type PageCard } from "@/components/PageCardGrid";
 import { pageTitle } from "@/lib/pages";
@@ -16,7 +17,7 @@ const PAGE_CARDS: PageCard[] = [
     href: "/spotify/playlists",
     icon: "music",
     label: pageTitle("/spotify/playlists"),
-    sub: "De playlist manager, de drie werelden en Maple Classic",
+    sub: "De playlist manager, de drie werelden, Maple Classic en Classic Pop",
   },
   {
     href: "/spotify/trackregister",
@@ -35,12 +36,6 @@ const PAGE_CARDS: PageCard[] = [
     icon: "link",
     label: pageTitle("/spotify/playlists/musicmoodcolours/mixen"),
     sub: "De mixen van de DJ Cylow-website naast de MMC-playlists",
-  },
-  {
-    href: "/spotify/classic-pop",
-    icon: "star",
-    label: pageTitle("/spotify/classic-pop"),
-    sub: "Elk Classic Pop-nummer één keer, met de playlists waarin het staat",
   },
   {
     href: "/spotify/verbinding",
