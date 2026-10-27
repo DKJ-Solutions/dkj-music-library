@@ -13,7 +13,7 @@
 //
 // Heeft eigen state en hoort dus in de client-boom; dat is het geval, want PlaylistManager rendert hem en
 // die is zelf een Client Component. Het volledige koppelbeeld -- inclusief de mixen die wél een playlist
-// hebben en de afwijkingen daarin -- staat op /spotify/playlists/musicmoodcolours/mixen.
+// hebben en de afwijkingen daarin -- staat op /compare/playlists-mixes.
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { nextSort } from "@/lib/sortRows";
@@ -69,7 +69,7 @@ export function MissingMixes({ mixes }: { mixes: readonly MissingMix[] }) {
         <span className="missing-flag-inline">✗</span> is helemaal niet teruggevonden, en{" "}
         <span className="missing-flag-inline">⇄</span> hoort bij een playlist die via haar{" "}
         <code>mix:</code>-tag al van een andere mix is.{" "}
-        <Link href="/spotify/playlists/musicmoodcolours/mixen" className="accent-text">
+        <Link href="/compare/playlists-mixes" className="accent-text">
           Het volledige koppelbeeld staat op de brug →
         </Link>
       </p>

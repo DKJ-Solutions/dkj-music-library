@@ -62,6 +62,13 @@ const ICONS = {
       <path d="M3 10h18M8 2v4M16 2v4" />
     </>
   ),
+  compare: <path d="M7 4L3 8l4 4M3 8h14M17 12l4 4-4 4M21 16H7" />,
+  monitor: (
+    <>
+      <rect x="3" y="4" width="18" height="12" rx="2" />
+      <path d="M8 20h8M12 16v4" />
+    </>
+  ),
 } satisfies Record<string, ReactNode>;
 
 export type PageIcon = keyof typeof ICONS;

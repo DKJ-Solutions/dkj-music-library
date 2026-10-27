@@ -5,12 +5,13 @@
 // Géén cijfers op deze tegel: die zouden een tweede fs-read (de mix-JSON's + de koppeling over ~350
 // playlists) op de MMC-pagina kosten voor informatie die één klik verder tóch volledig staat.
 import Link from "next/link";
+import { pageTitle } from "@/lib/pages";
 
 export function MixBridgeNav() {
   return (
     <section className="layer">
       <div className="band">
-        <span className="eyebrow">Mixen ↔ playlists</span>
+        <span className="eyebrow">{pageTitle("/compare/playlists-mixes")}</span>
         <span className="rule"></span>
       </div>
       <p className="section-lede">
@@ -20,11 +21,11 @@ export function MixBridgeNav() {
         andere BPM) erbij.
       </p>
       <div className="world-grid">
-        <Link href="/spotify/playlists/musicmoodcolours/mixen" className="world-tile">
+        <Link href="/compare/playlists-mixes" className="world-tile">
           <span className="emoji" aria-hidden="true">
             🎚️
           </span>
-          <span className="label">Mixen ↔ playlists</span>
+          <span className="label">{pageTitle("/compare/playlists-mixes")}</span>
           <span className="count">→</span>
         </Link>
       </div>

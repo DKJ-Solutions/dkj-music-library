@@ -25,6 +25,8 @@ const nextConfig: NextConfig = {
       { source: "/spotify/prive", destination: "/spotify/playlists/prive", permanent: false },
       { source: "/spotify/maple-classic", destination: "/spotify/playlists/maple-classic", permanent: false },
       { source: "/spotify/classic-pop", destination: "/spotify/playlists/classic-pop", permanent: false },
+      // De brug mixen ↔ playlists verhuisde naar de Compare-hub.
+      { source: "/spotify/playlists/musicmoodcolours/mixen", destination: "/compare/playlists-mixes", permanent: false },
     ];
   },
 };

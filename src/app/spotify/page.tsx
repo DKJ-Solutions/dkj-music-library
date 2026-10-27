@@ -32,12 +32,6 @@ const PAGE_CARDS: PageCard[] = [
     sub: "Dedup, top-artiesten en verdelingen over de hele bibliotheek",
   },
   {
-    href: "/spotify/playlists/musicmoodcolours/mixen",
-    icon: "link",
-    label: pageTitle("/spotify/playlists/musicmoodcolours/mixen"),
-    sub: "De mixen van de DJ Cylow-website naast de MMC-playlists",
-  },
-  {
     href: "/spotify/verbinding",
     icon: "plug",
     label: pageTitle("/spotify/verbinding"),

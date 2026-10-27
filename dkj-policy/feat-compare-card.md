@@ -39,19 +39,38 @@
 
 ### PLAN
 
+Dave wil op de homepagina een card die de verschillen tussen zijn bronnen in kaart brengt: Spotify-playlists
+naast de DJ Cylow-mixen, en de tracks op zijn pc naast Spotify. Hij koos een Engelse naam (Compare), liet de
+bestaande brug verhuizen in plaats van hem te dubbelen, en wil de pc-vergelijking eerst als lege pagina: de
+pc-map koppelen we later.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] /compare als hub met twee cards, en een Compare-card op de homepagina
+- [x] De brug verhuisd van /spotify/playlists/musicmoodcolours/mixen naar /compare/playlists-mixes, met een redirect vanaf het oude adres; de card op /spotify is weg, de tegel op de MMC-pagina en de link in MissingMixes wijzen naar het nieuwe adres
+- [x] /compare/pc-spotify als lege pagina, met dezelfde vorm als /mixen/planned
+- [x] Twee nieuwe iconen (compare, monitor) in PageCardGrid
 
 ### TEST
 
+- [x] typecheck, eslint en vitest groen (67 bestanden, 926 tests), met een kruimelpad-test voor /compare
+- [x] De vier routes geven een 200 in de draaiende dev-server, en het oude adres stuurt met een 307 door
+- [ ] Visuele check door Dave
+
 ### DEPLOY: feat/compare-card
 
-**Score:**
+Op de homepagina staat een nieuwe card, Compare, met eronder twee vergelijkingen. Playlists ↔ Mixes is de
+bestaande brug tussen de mixen van djcylow.com en de MMC-playlists, verhuisd vanaf zijn plek onder Music Mood
+Colours (het oude adres stuurt door). PC ↔ Spotify staat er alvast als lege pagina, tot de pc-map gekoppeld is.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+De brug tussen mixen en playlists is nu direct vanaf de homepagina te bereiken, in plaats van drie lagen diep
+onder Spotify, en er is een vaste plek voor de pc-vergelijking.
+
+**Score:** 3
 
 #### Pull Request
 
