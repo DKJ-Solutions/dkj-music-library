@@ -55,7 +55,7 @@ export function MixBridge() {
   return (
     <main className="wrap">
       <header className="masthead">
-        <h1>{pageTitle("/spotify/playlists/musicmoodcolours/mixen")}</h1>
+        <h1>{pageTitle("/compare/playlists-mixes")}</h1>
         <p className="lede">
           De mix-metadata van de DJ Cylow-website ({mixCount} publieke mixen uit{" "}
           <code>djcylow-react</code>) naast de MMC-playlists die er een weerspiegeling van horen te

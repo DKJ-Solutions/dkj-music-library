@@ -1,4 +1,5 @@
-// De brug tussen de twee bronnen: de mix-JSON's van de DJ Cylow-website naast de MMC-playlists.
+// Playlists ↔ Mixes op /compare/playlists-mixes (stond tot oktober 2026 onder
+// /spotify/playlists/musicmoodcolours/mixen). De brug tussen de twee bronnen: de mix-JSON's van de DJ Cylow-website naast de MMC-playlists.
 // Dun schilletje -- de fs-read + koppeling zit in lib/mixes/, de weergave in
 // components/spotify/MixBridge.tsx.
 import { MixBridge } from "@/components/spotify/MixBridge";

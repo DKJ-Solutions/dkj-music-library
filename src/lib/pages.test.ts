@@ -16,6 +16,14 @@ describe("breadcrumbTrail", () => {
     ]);
   });
 
+  it("hangt de vergelijkingen onder Compare", () => {
+    expect(breadcrumbTrail("/compare/playlists-mixes").map((c) => c.label)).toEqual([
+      "Home",
+      "Compare",
+      "Playlists ↔ Mixes",
+    ]);
+  });
+
   it("stopt bij de dichtstbijzijnde bekende ouder voor een onbekende route", () => {
     expect(breadcrumbTrail("/spotify/bestaat-niet").map((c) => c.href)).toEqual(["/", "/spotify"]);
   });
