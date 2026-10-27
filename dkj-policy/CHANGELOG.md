@@ -2,7 +2,30 @@
 
 ## [Unreleased]
 
-**5 / 5 minor entries** <!-- pending-tally -->
+**6 / 6 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/planned-colour-cards · 20261027-155756Z
+
+De pagina Planned onder Mixen toont acht kaarten, één per albumkleur (Cyan, Yellow, Blue, Green, Orange,
+Magenta, Red, Purple), in dezelfde stijl als de andere kaarten, met een stip in de kleur zelf. Elke kaart
+opent een eigen landingspagina voor de geplande mixen in die kleur, voorlopig nog leeg. Daarvoor stond er op
+Planned alleen een lege melding.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Wie de app gebruikt, ziet op Planned meteen de acht kleuren waar de geplande mixen onder komen te vallen.
+
+**Score:** 2
+
+#### Pull Request
+
+Acht kleurkaarten op /mixen/planned
+
+[PR #106](https://github.com/DKJ-Solutions/dkj-music-library/pull/106)
+
+---
 
 ### DEPLOY: feat/compare-card · 20261027-150857Z
 
