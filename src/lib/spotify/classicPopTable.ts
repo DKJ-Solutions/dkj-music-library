@@ -1,4 +1,4 @@
-// De Classic Pop-tabel (/spotify/classic-pop): elk nummer dat in minstens één playlist met "Classic Pop" in
+// De Classic Pop-tabel (/spotify/playlists/classic-pop): elk nummer dat in minstens één playlist met "Classic Pop" in
 // de naam staat, één keer, met de playlists waarin het zit. De rijen zelf bouwt playlistTableRows.ts, aan de
 // serverkant, om dezelfde reden als bij de playlist-tabel: het jaar komt uit releaseYears.ts, en dat bestand
 // neemt de database mee.

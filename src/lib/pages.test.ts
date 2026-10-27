@@ -7,9 +7,10 @@ describe("breadcrumbTrail", () => {
   });
 
   it("loopt via elke ouder met een naam naar de pagina zelf", () => {
-    expect(breadcrumbTrail("/spotify/musicmoodcolours/128bpm").map((c) => c.label)).toEqual([
+    expect(breadcrumbTrail("/spotify/playlists/musicmoodcolours/128bpm").map((c) => c.label)).toEqual([
       "Home",
       "Spotify",
+      "Playlists",
       "Music Mood Colours",
       "128 BPM",
     ]);

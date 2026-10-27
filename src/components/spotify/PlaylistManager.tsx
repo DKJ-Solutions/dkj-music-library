@@ -73,7 +73,7 @@ export function PlaylistManager({
    *  `mixesWithId` alleen meegeven waar de vergelijking opgaat; leeg/weggelaten = geen tweede tabel. */
   missingMixes?: readonly MissingMix[];
   /** Kolommen die op déze pagina niets toevoegen omdat ze er per definitie één waarde hebben -- op
-   *  /spotify/musicmoodcolours is de wereld altijd MMC en het type altijd EDM, en een laag dieper (de
+   *  /spotify/playlists/musicmoodcolours is de wereld altijd MMC en het type altijd EDM, en een laag dieper (de
    *  BPM-sub-routes) is ook de BPM constant. Zie de toelichting bij `$playlist-cols` in
    *  _playlist-list.scss: de kolom krijgt breedte 0 en de cellen verdwijnen, maar ze blijven in de DOM
    *  staan zodat het grid niet verspringt. */
@@ -654,7 +654,7 @@ export function PlaylistManager({
             De keuzelijsten komen uit de data, niet uit een vaste lijst: ROCK en POP zouden anders
             selecteerbaar zijn terwijl geen enkele mix ze heeft -- een keuze die nul rijen oplevert.
 
-            Een select verdwijnt zodra zijn kolom verborgen is: op /spotify/musicmoodcolours (en dus ook
+            Een select verdwijnt zodra zijn kolom verborgen is: op /spotify/playlists/musicmoodcolours (en dus ook
             op de BPM-routes daaronder) is elke rij EDM, en dan is een Type-select met één keuze niets
             meer dan ruis. Dezelfde `hiddenColumns`-prop bepaalt dat, zodat kolom en filter niet uit
             elkaar kunnen lopen. */}

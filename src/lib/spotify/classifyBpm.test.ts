@@ -64,11 +64,11 @@ describe("MMC_BPM_TIERS / BPM_TIER_META", () => {
     expect(MMC_BPM_TIERS).toEqual([96, 112, 128, 176]);
   });
 
-  it("heeft voor elke tier een label en een route onder /spotify/musicmoodcolours", () => {
+  it("heeft voor elke tier een label en een route onder /spotify/playlists/musicmoodcolours", () => {
     for (const tier of MMC_BPM_TIERS) {
       const meta = BPM_TIER_META[tier];
       expect(meta.label.length).toBeGreaterThan(0);
-      expect(meta.href.startsWith("/spotify/musicmoodcolours")).toBe(true);
+      expect(meta.href.startsWith("/spotify/playlists/musicmoodcolours")).toBe(true);
     }
   });
 });

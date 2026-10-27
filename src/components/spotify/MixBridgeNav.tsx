@@ -1,4 +1,4 @@
-// De ingang naar de brug-pagina, als extra sectie op /spotify/musicmoodcolours. Bewust een eigen
+// De ingang naar de brug-pagina, als extra sectie op /spotify/playlists/musicmoodcolours. Bewust een eigen
 // component (en niet inline in de route) zodat musicmoodcolours/page.tsx het dunne schilletje blijft
 // dat het is; hergebruikt het world-tile-idioom van de werelden-/BPM-tegels (_world-nav.scss).
 //
@@ -20,7 +20,7 @@ export function MixBridgeNav() {
         andere BPM) erbij.
       </p>
       <div className="world-grid">
-        <Link href="/spotify/musicmoodcolours/mixen" className="world-tile">
+        <Link href="/spotify/playlists/musicmoodcolours/mixen" className="world-tile">
           <span className="emoji" aria-hidden="true">
             🎚️
           </span>

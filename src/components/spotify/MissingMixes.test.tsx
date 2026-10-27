@@ -42,7 +42,7 @@ describe("MissingMixes", () => {
   });
 
   // De kolomvolgorde is die van de hoofdtabel, met alleen de kolommen die voor een mix bestaan. Op
-  // /spotify/musicmoodcolours (waar de hoofdtabel WERELD en TYPE verbergt) lijnen de twee daardoor uit --
+  // /spotify/playlists/musicmoodcolours (waar de hoofdtabel WERELD en TYPE verbergt) lijnen de twee daardoor uit --
   // deze test legt die orde vast, zodat ze niet stil uit elkaar lopen.
   it("houdt dezelfde kolomvolgorde als de hoofdtabel", () => {
     render(<MissingMixes mixes={[makeMissing()]} />);

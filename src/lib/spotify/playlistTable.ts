@@ -1,4 +1,4 @@
-// De tabel van één playlist (eerste gebruiker: /spotify/maple-classic): de rij, de zoekterm en de
+// De tabel van één playlist (eerste gebruiker: /spotify/playlists/maple-classic): de rij, de zoekterm en de
 // sorteerwaarde per kolom. De rijen zelf bouwt playlistTableRows.ts, aan de serverkant, omdat het jaar
 // uit releaseYears.ts komt en dat bestand de database meeneemt.
 //

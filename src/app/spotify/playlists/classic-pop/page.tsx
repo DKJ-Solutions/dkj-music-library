@@ -1,6 +1,6 @@
-// /spotify/classic-pop -- één tabel met elk nummer uit de playlists met "Classic Pop" in de naam (de
+// /spotify/playlists/classic-pop -- één tabel met elk nummer uit de playlists met "Classic Pop" in de naam (de
 // hoofdplaylist en de kleur-playlists van Music Mood Colours), elk nummer één keer, met de playlists waarin
-// het staat. Leest de Spotify-snapshot, zoals /spotify/maple-classic; de rijen komen uit
+// het staat. Leest de Spotify-snapshot, zoals /spotify/playlists/maple-classic; de rijen komen uit
 // playlistTableRows.ts, de weergave uit ClassicPopTable.tsx.
 import Link from "next/link";
 import { readSnapshot } from "@/lib/spotify/snapshotStore";
@@ -8,7 +8,7 @@ import { foundReleaseYears, readReleaseYearCache } from "@/lib/musicbrainz/cache
 import { readLibraryYears, toClassicPopRows } from "@/lib/spotify/playlistTableRows";
 import { isClassicPopPlaylist } from "@/lib/spotify/classicPopTable";
 import { ClassicPopTable } from "@/components/spotify/ClassicPopTable";
-import SyncButton from "../verbinding/SyncButton";
+import SyncButton from "../../verbinding/SyncButton";
 import { pageTitle } from "@/lib/pages";
 
 // Zelfde reden als /spotify/page.tsx: leest een fs-snapshot die buiten de build kan wijzigen.
@@ -27,7 +27,7 @@ export default function ClassicPopPage() {
     <main className="wrap wrap--full">
       <header className="masthead">
         <p className="kicker">dkj-music-library · Overzicht</p>
-        <h1>{pageTitle("/spotify/classic-pop")}</h1>
+        <h1>{pageTitle("/spotify/playlists/classic-pop")}</h1>
         <p className="lede">
           Elk nummer uit een playlist met &ldquo;Classic Pop&rdquo; in de naam, één keer, met de playlists waarin
           het staat. Zoek op een playlistnaam (bijv. &ldquo;cyan&rdquo;) om één kleur te zien.

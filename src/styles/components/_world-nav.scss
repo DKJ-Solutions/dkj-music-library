@@ -27,7 +27,7 @@
   border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
 }
 
-// Niet-klikbare variant (bv. de "overig"-BPM-tegel op /spotify/musicmoodcolours, zie
+// Niet-klikbare variant (bv. de "overig"-BPM-tegel op /spotify/playlists/musicmoodcolours, zie
 // BpmOverviewSection.tsx): zelfde kaart-vorm, maar zonder hover-affordance -- er is niets om naar
 // door te klikken.
 .world-tile--static {

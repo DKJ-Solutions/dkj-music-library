@@ -29,17 +29,17 @@
 import type { ParsedPlaylistName } from "./parsePlaylistName";
 
 /** De vier BPM-tiers die Dave binnen MMC onderscheidt -- gedeeld door de vier sub-routes, de
- *  BPM-correctie-select en de overzichts-tellers op /spotify/musicmoodcolours. */
+ *  BPM-correctie-select en de overzichts-tellers op /spotify/playlists/musicmoodcolours. */
 export const MMC_BPM_TIERS = [96, 112, 128, 176] as const;
 export type MmcBpmTier = (typeof MMC_BPM_TIERS)[number];
 
 /** Vaste presentatie-metadata per BPM-tier -- label + route, zelfde recept als WORLD_META in
  *  classifyWorld.ts. */
 export const BPM_TIER_META: Record<MmcBpmTier, { label: string; href: string }> = {
-  96: { label: "96 BPM", href: "/spotify/musicmoodcolours/96bpm" },
-  112: { label: "112 BPM", href: "/spotify/musicmoodcolours/112bpm" },
-  128: { label: "128 BPM", href: "/spotify/musicmoodcolours/128bpm" },
-  176: { label: "176 BPM", href: "/spotify/musicmoodcolours/176bpm" },
+  96: { label: "96 BPM", href: "/spotify/playlists/musicmoodcolours/96bpm" },
+  112: { label: "112 BPM", href: "/spotify/playlists/musicmoodcolours/112bpm" },
+  128: { label: "128 BPM", href: "/spotify/playlists/musicmoodcolours/128bpm" },
+  176: { label: "176 BPM", href: "/spotify/playlists/musicmoodcolours/176bpm" },
 };
 
 function isMmcBpmTier(value: number): value is MmcBpmTier {

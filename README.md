@@ -101,7 +101,7 @@ opgebouwd.
 
 ### Maple Classic 2026 LAN
 
-`/spotify/maple-classic` toont één playlist als tabel: Maple Classic 2026 LAN (van Jellootje). Per
+`/spotify/playlists/maple-classic` toont één playlist als tabel: Maple Classic 2026 LAN (van Jellootje). Per
 nummer zie je ook wie het toevoegde. Spotify geeft daarvoor alleen een user-id; de naam komt van de
 eigenaren van de playlists in de snapshot, en wie daar niet bij staat, blijft als id zichtbaar. Je kunt
 zoeken op titel, artiest, album of toevoeger en sorteren op elke kolom. De pagina leest de Spotify-snapshot, dus je
@@ -178,7 +178,7 @@ npm run library:release-years -- --limit 15           # proefrun: hooguit 15 nie
 ```
 
 Het resultaat komt in een lokale cache, `data/musicbrainz/release-years.json` (niet in git, zie de tabel
-hierboven). De trackdatabase en `/spotify/maple-classic` lezen alleen die cache en doen zelf nooit een
+hierboven). De trackdatabase en `/spotify/playlists/maple-classic` lezen alleen die cache en doen zelf nooit een
 netwerkverzoek; het script is de enige plek die met MusicBrainz praat. **MusicBrainz staat zonder
 API-key hooguit 1 verzoek per seconde toe** -- het script houdt dat tempo zelf aan, dus een volledige run
 over de hele bibliotheek duurt een tijd. Draai je hem opnieuw, dan slaat hij tracks die al in de cache

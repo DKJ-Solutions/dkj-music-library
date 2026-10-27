@@ -12,16 +12,17 @@ import { BPM_TIER_META, MMC_BPM_TIERS } from "@/lib/spotify/classifyBpm";
 export const PAGE_TITLES: Record<string, string> = {
   "/": "Home",
   "/spotify": "Spotify",
-  "/spotify/playlists": "Playlist manager",
+  "/spotify/playlists": "Playlists",
+  "/spotify/playlists/manager": "Playlist manager",
   "/spotify/verbinding": "Verbinding",
   "/spotify/trackregister": "DKJ Trackregister",
   "/spotify/dashboard": "Data-dashboard",
   [WORLD_META.mmc.href]: "Music Mood Colours",
   [WORLD_META.djcylow.href]: WORLD_META.djcylow.label,
   [WORLD_META.prive.href]: WORLD_META.prive.label,
-  "/spotify/musicmoodcolours/mixen": "Mixen ↔ playlists",
-  "/spotify/maple-classic": "Maple Classic 2026 LAN",
-  "/spotify/classic-pop": "Classic Pop",
+  "/spotify/playlists/musicmoodcolours/mixen": "Mixen ↔ playlists",
+  "/spotify/playlists/maple-classic": "Maple Classic 2026 LAN",
+  "/spotify/playlists/classic-pop": "Classic Pop",
   ...Object.fromEntries(MMC_BPM_TIERS.map((bpm) => [BPM_TIER_META[bpm].href, BPM_TIER_META[bpm].label])),
 };
 

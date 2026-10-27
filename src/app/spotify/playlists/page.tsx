@@ -1,59 +1,71 @@
-// De playlist manager als eigen pagina (stond eerder onderaan /spotify, dat nu de hub is met de
-// verbinding, de sync en de card per pagina). Server Component: leest de verrijkte playlists (fase 4)
-// en de mix-index van schijf en geeft ze als props door aan PlaylistManager ('use client'), die
-// client-side filtert/groepeert/zoekt over de al-geladen data.
-//
-// Bewust ÉÉN lees van de (grote) snapshot: readSnapshot() hieronder, die getEnrichedSnapshot()
-// aangereikt krijgt (zelfde recept als /spotify/dashboard). Het aantal artiesten komt uit de ruwe
-// snapshot, want EnrichedPlaylist draagt geen tracks (zie enrichedPlaylists.ts).
-import Link from "next/link";
-import { readSnapshot } from "@/lib/spotify/snapshotStore";
+// De Playlists-hub op /spotify/playlists, een laag onder /spotify: één grid met een card per
+// playlist-pagina, in de vorm van de Spotify-hub. Server Component: leest de verrijkte playlists
+// (fase 4) alleen om de wereld-cards hun aantal playlists als onderschrift te geven.
 import { getEnrichedSnapshot } from "@/lib/spotify/enrichedPlaylists";
-import { countDistinctArtists } from "@/lib/spotify/dashboardStats";
-import { getPlaylistMixIndex } from "@/lib/mixes/playlistMixInfo";
-import { PlaylistManager } from "@/components/spotify/PlaylistManager";
+import { countByWorld } from "@/lib/spotify/playlistFilters";
+import { SPOTIFY_WORLDS, WORLD_META } from "@/lib/spotify/classifyWorld";
+import { PageCardGrid, type PageCard } from "@/components/PageCardGrid";
 import { pageTitle } from "@/lib/pages";
 
 export const dynamic = "force-dynamic";
 
-export default function PlaylistManagerPage() {
-  const snapshot = readSnapshot();
-  const enriched = getEnrichedSnapshot(snapshot);
-  const artistCount = snapshot ? countDistinctArtists(snapshot) : null;
-  // Zie WorldPage.tsx: de mix-kant van de tabel is een server-side fs-read, doorgegeven als prop.
-  const mixIndex = enriched
-    ? getPlaylistMixIndex()
-    : { byPlaylistId: {}, missingMixes: [], mixesWithId: null };
+const PAGE_CARDS: PageCard[] = [
+  {
+    href: "/spotify/playlists/manager",
+    icon: "list",
+    label: pageTitle("/spotify/playlists/manager"),
+    sub: "Alle playlists, met filteren, groeperen en cross-playlist zoeken",
+  },
+  {
+    href: WORLD_META.mmc.href,
+    icon: "palette",
+    label: pageTitle(WORLD_META.mmc.href),
+    sub: "De genummerde House- en Drum & Bass-mixen, per BPM",
+  },
+  {
+    href: WORLD_META.djcylow.href,
+    icon: "disc",
+    label: pageTitle(WORLD_META.djcylow.href),
+    sub: "Het DJ-werk: Feestzaal-fases, gigs en compilaties",
+  },
+  {
+    href: WORLD_META.prive.href,
+    icon: "lock",
+    label: pageTitle(WORLD_META.prive.href),
+    sub: "Persoonlijke lijsten en playlists die je alleen volgt",
+  },
+  {
+    href: "/spotify/playlists/maple-classic",
+    icon: "users",
+    label: pageTitle("/spotify/playlists/maple-classic"),
+    sub: "De gedeelde playlist als tabel",
+  },
+  {
+    href: "/spotify/playlists/classic-pop",
+    icon: "star",
+    label: pageTitle("/spotify/playlists/classic-pop"),
+    sub: "Elk Classic Pop-nummer één keer, met de playlists waarin het staat",
+  },
+];
+
+export default function PlaylistsHubPage() {
+  const enriched = getEnrichedSnapshot();
+  const worldCounts = enriched ? countByWorld(enriched.playlists) : null;
+  // De wereld-cards dragen hun aantal playlists zodra er een snapshot is.
+  const cards = PAGE_CARDS.map((card) => {
+    const world = SPOTIFY_WORLDS.find((w) => WORLD_META[w].href === card.href);
+    return world && worldCounts ? { ...card, sub: `${card.sub} · ${worldCounts[world]} playlists` } : card;
+  });
 
   return (
     <main className="wrap">
       <header className="masthead">
         <h1>{pageTitle("/spotify/playlists")}</h1>
-        <p className="lede">
-          Alle playlists uit de back-up, met filteren, groeperen en cross-playlist zoeken. Er wordt
-          niets naar Spotify teruggeschreven.
-        </p>
       </header>
 
-      {enriched ? (
-        <PlaylistManager
-          playlists={enriched.playlists}
-          artistCount={artistCount}
-          mixInfoById={mixIndex.byPlaylistId}
-          mixesWithId={mixIndex.mixesWithId}
-          missingMixes={mixIndex.missingMixes}
-        />
-      ) : (
-        <section className="layer">
-          <p className="empty-note">
-            Nog geen playlists om te tonen -- start eerst een sync op{" "}
-            <Link href="/spotify/verbinding" className="accent-text">
-              /spotify/verbinding
-            </Link>
-            .
-          </p>
-        </section>
-      )}
+      <section className="layer">
+        <PageCardGrid cards={cards} />
+      </section>
     </main>
   );
 }

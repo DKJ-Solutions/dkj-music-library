@@ -13,7 +13,7 @@
 //
 // Heeft eigen state en hoort dus in de client-boom; dat is het geval, want PlaylistManager rendert hem en
 // die is zelf een Client Component. Het volledige koppelbeeld -- inclusief de mixen die wél een playlist
-// hebben en de afwijkingen daarin -- staat op /spotify/musicmoodcolours/mixen.
+// hebben en de afwijkingen daarin -- staat op /spotify/playlists/musicmoodcolours/mixen.
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { nextSort } from "@/lib/sortRows";
@@ -69,7 +69,7 @@ export function MissingMixes({ mixes }: { mixes: readonly MissingMix[] }) {
         <span className="missing-flag-inline">✗</span> is helemaal niet teruggevonden, en{" "}
         <span className="missing-flag-inline">⇄</span> hoort bij een playlist die via haar{" "}
         <code>mix:</code>-tag al van een andere mix is.{" "}
-        <Link href="/spotify/musicmoodcolours/mixen" className="accent-text">
+        <Link href="/spotify/playlists/musicmoodcolours/mixen" className="accent-text">
           Het volledige koppelbeeld staat op de brug →
         </Link>
       </p>
@@ -77,7 +77,7 @@ export function MissingMixes({ mixes }: { mixes: readonly MissingMix[] }) {
       {/* Zelfde kolomvolgorde én -breedtes als de hoofdtabel (Dave, 2026-07-25), met alleen de kolommen
           die voor een mix bestaan. WERELD heeft hier geen tegenhanger en TYPE is voor elke mix in de bron
           EDM -- precies de reden dat de hoofdtabel die kolom op MMC ook verbergt. Op
-          /spotify/musicmoodcolours lijnen beide tabellen daardoor kolom voor kolom uit.
+          /spotify/playlists/musicmoodcolours lijnen beide tabellen daardoor kolom voor kolom uit.
 
           De laatste kolom staat op de plek én de breedte van de done-vink en draagt de uitzondering: een
           ✗ bij een mix die helemaal niet is teruggevonden. Bewust géén brede "waarom"-kolom met tekst --
