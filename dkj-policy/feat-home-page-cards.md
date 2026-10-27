@@ -39,19 +39,28 @@
 
 ### PLAN
 
+The owner asked for a home page on `/` with cards, like the hub, instead of the redirect to `/spotify`.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Replace the `redirect("/spotify")` in `src/app/page.tsx` with a hub-form home page: the breadcrumb bar (Home), one `.grid-3` with a `.card.card--link` per mirror, Spotify the first.
 
 ### TEST
 
+- [x] `tsc --noEmit` and `eslint` clean; `/` renders the Spotify card on the running dev server.
+- [ ] The owner's look at `/` (visible result).
+
 ### DEPLOY: feat/home-page-cards
 
-**Score:**
+`/` no longer redirects to `/spotify`: it is a home page in the hub's form -- the breadcrumb bar and a grid of card links, with Spotify as the first card. A future desktop mirror gets its own card there.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Opening the app lands on a home page with a Spotify card instead of straight in the playlist manager.
+
+**Score:** 2
 
 #### Pull Request
 
