@@ -50,7 +50,7 @@
 
 - [x] tsc, eslint en vitest (925 tests) groen
 - [x] /mixen, /mixen/published en een detailpagina geven 200 op de dev-server; de card telt 78 mixen
-- [ ] Dave kijkt de pagina's na op localhost (visueel resultaat -- geen merge zonder zijn blik)
+- [x] Dave kijkt de pagina's na op localhost (visueel resultaat) -- goedgekeurd met "ship it"
 
 ### DEPLOY: feat/mixen-published-card
 
