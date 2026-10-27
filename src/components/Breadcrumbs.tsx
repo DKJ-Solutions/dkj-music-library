@@ -1,15 +1,16 @@
 // De breadcrumb-balk van de huisstijl ("Page patterns", "Every page: the breadcrumb bar"), op elke
 // pagina direct onder de site-header: het pad begint bij Home, elke volgende kruimel is een niveau
 // dieper, en de laatste is de huidige pagina, zonder link. Client Component, want het pad komt uit
-// usePathname() -- de layout zelf krijgt het niet mee. De namen komen uit src/lib/pages.ts.
+// usePathname() -- de layout zelf krijgt het niet mee. De namen komen uit src/lib/pages.ts, plus de
+// namen uit data (`titles`, de mix-detailpagina's) die de layout op de server leest.
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { breadcrumbTrail } from "@/lib/pages";
 
-export default function Breadcrumbs() {
-  const trail = breadcrumbTrail(usePathname());
+export default function Breadcrumbs({ titles }: { titles?: Record<string, string> }) {
+  const trail = breadcrumbTrail(usePathname(), titles);
   return (
     <div className="breadcrumbs-bar">
       <div className="container">

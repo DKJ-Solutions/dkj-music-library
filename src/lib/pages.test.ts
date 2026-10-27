@@ -20,6 +20,15 @@ describe("breadcrumbTrail", () => {
     expect(breadcrumbTrail("/spotify/bestaat-niet").map((c) => c.href)).toEqual(["/", "/spotify"]);
   });
 
+  it("neemt de naam van een pagina uit data mee, zoals een mix-detailpagina", () => {
+    const extra = { "/mixen/red-light-m-edm-128bpm-20260615": "Tech House Mix · Red Light (m) · Vol. 1" };
+    expect(breadcrumbTrail("/mixen/red-light-m-edm-128bpm-20260615", extra).map((c) => c.label)).toEqual([
+      "Home",
+      "Mixen",
+      "Tech House Mix · Red Light (m) · Vol. 1",
+    ]);
+  });
+
   it("geeft elke pagina met een naam een pad dat op die pagina eindigt", () => {
     for (const [href, label] of Object.entries(PAGE_TITLES)) {
       expect(breadcrumbTrail(href).at(-1)).toEqual({ href, label });
