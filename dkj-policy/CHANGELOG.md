@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**2 / 2 minor entries** <!-- pending-tally -->
+**3 / 3 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/home-mixen-card · 20261027-140441Z
+
+De homepagina draagt naast de Spotify-card een Mixen-card die doorklikt naar /mixen, met daar een card per mix van de DJ Cylow-website, nieuwste eerst, elk met genre, BPM en datum. Elke card opent een eigen detailpagina op /mixen/<slug> met de gegevens van de mix, de top-artiesten, de tracklist en een link naar de mixpagina op djcylow.com.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Dave vindt via de homepagina elke mix die hij gemaakt heeft en opent er één met één klik.
+
+**Score:** 3
+
+#### Pull Request
+
+Mixen-card op de homepagina met een card per mix
+
+[PR #103](https://github.com/DKJ-Solutions/dkj-music-library/pull/103)
+
+---
 
 ### DEPLOY: fix/release-note-audience-only · 20261027-134623Z
 
