@@ -39,19 +39,34 @@
 
 ### PLAN
 
+Dave asked to move every home card except Spotify to the Spotify page. The card grid becomes a shared
+component; the text links on /spotify that the new cards duplicate (trackregister, Maple Classic,
+Classic Pop, data dashboard) go.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `src/components/PageCardGrid.tsx`: the hub card grid, shared by home and /spotify
+- [x] Home keeps only the Spotify card
+- [x] /spotify shows the other eight cards in a "Pagina's" section under the masthead, outside the snapshot sections, and drops the duplicate text links
 
 ### TEST
 
+- [x] `tsc --noEmit` and eslint on the three files green
+- [x] The running dev server renders eight cards on /spotify and only Spotify on home
+- [ ] Dave's visual review of home and /spotify
+
 ### DEPLOY: feat/spotify-page-cards
 
-**Score:**
+The home page now holds only the Spotify card; the eight pages under Spotify are cards on /spotify
+itself, rendered by one shared `PageCardGrid` component, and the text links they replace are gone.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+The pages under Spotify are now reached from the Spotify page rather than from home, one click deeper.
+
+**Score:** 3
 
 #### Pull Request
 
