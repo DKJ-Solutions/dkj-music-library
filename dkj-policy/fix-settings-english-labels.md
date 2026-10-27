@@ -39,19 +39,30 @@
 
 ### PLAN
 
+`house-theme.js` defaults its settings panel to Dutch; the plugin's own pages (the hub, the patterns)
+pass English texts. This app called `DKJTheme.settings(el)` with no texts, so its panel read
+"Instellingen / Thema / Licht / Donker / Breedte".
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `src/components/ThemeSettings.tsx`: pass the same English labels the hub passes
 
 ### TEST
 
+- [ ] The owner has looked at the settings panel in the running app
+
 ### DEPLOY: fix/settings-english-labels
 
-**Score:**
+The settings button and its panel now read in English (Settings, Theme, Light, Dark, Width, Reset
+theme), the same as the plugin's own pages. The theme names stay Dutch: they come from the house style.
+
+**Score:** 1
 
 #### What makes this deploy extra special
 
-**Score:**
+The settings panel speaks the same language as the plugin pages it sits beside.
+
+**Score:** 2
 
 #### Pull Request
 
