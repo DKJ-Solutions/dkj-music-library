@@ -39,19 +39,36 @@
 
 ### PLAN
 
+The hub's release-notes page refused to build: `dkj-policy/releases/history.md` did not exist.
+`adopt-workflow-folder` deliberately leaves that file to the repo (inbound #786), because its first
+`<major>.x` heading is a version decision. No release has been cut yet and the first cut takes
+`-Version` explicitly, so the list opens on `1.x`.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Add `dkj-policy/releases/history.md` in the exact shape `adopt-workflow-folder` prescribes:
+  the fixed title, a `#### 1.x` heading, and the empty table header
 
 ### TEST
 
+- [x] Rebuild the release-notes page: it no longer reports the history as missing. It still cannot
+  build -- the note root is absent (deliberately, #1150) and, with that present, no release carries a
+  note. The page needs a first cut; the missing empty state is filed upstream as
+  DKJ-Solutions/dkj-claude-plugins#3580
+
 ### DEPLOY: fix/release-history
 
-**Score:**
+The repo now carries the ordered release list, `dkj-policy/releases/history.md`, opening on a `1.x`
+section with no rows yet, so the first release cut has a list to add its row to instead of warning
+that the row was not added. The hub's release-notes page appears with that first cut.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A -- the list is release tooling for whoever maintains this repo; nobody using the music library sees it.
+
+**Score:** N/A
 
 #### Pull Request
 
