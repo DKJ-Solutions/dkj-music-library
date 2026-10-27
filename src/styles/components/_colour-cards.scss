@@ -1,0 +1,21 @@
+// /mixen/planned -- een card per kleur van de eigen albums, met die kleur als achtergrond. De kleur
+// komt uit de domeinlaag (--emotion-<kleur>, base/_root.scss), die per modus al een eigen waarde heeft:
+// donker genoeg voor witte tekst in licht, licht genoeg voor donkere tekst in donker. De tekstkleur
+// draait daarom mee via light-dark().
+.colour-card {
+  border-color: transparent;
+  color: light-dark(#fff, #111);
+}
+
+.colour-card__title {
+  margin: 0;
+  font-size: var(--text-h3);
+  font-weight: 600;
+  color: inherit;
+}
+
+@each $color in "cyan", "yellow", "blue", "green", "orange", "magenta", "red", "purple" {
+  .colour-card[data-color="#{$color}"] {
+    background: var(--emotion-#{$color});
+  }
+}

@@ -41,17 +41,26 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Acht cards op /mixen/planned (Cyan, Yellow, Blue, Green, Orange, Magenta, Red, Purple), elk met zijn `--emotion-*`-kleur als achtergrond
+- [x] `components/_colour-cards.scss`, met tekst die per licht/donker meedraait
 
 ### TEST
 
+- [x] `tsc --noEmit` groen; de pagina rendert de acht cards en de CSS komt door in de dev-server
+- [ ] Visuele check door de eigenaar
+
 ### DEPLOY: feat/planned-colour-cards
 
-**Score:**
+De pagina Planned onder Mixen toont acht kaarten, één per albumkleur (Cyan, Yellow, Blue, Green, Orange,
+Magenta, Red, Purple), elk met die kleur als achtergrond. Daarvoor stond er alleen een lege melding.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie de app gebruikt, ziet op Planned meteen de acht kleuren waar de geplande mixen onder komen te vallen.
+
+**Score:** 2
 
 #### Pull Request
 
