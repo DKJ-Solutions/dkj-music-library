@@ -1,6 +1,8 @@
 // Geport uit apps/src/App.css (Vite-versie) — de pagina-shell en de masthead-kop.
+// Geen eigen max-width: .wrap staat altijd op <main>, en de huisstijl geeft main de kolom (1080px bij
+// "Fluid") en tilt die op bij de breedte-instelling (<html data-width="phone|full">). Een max-width hier
+// woog zwaarder dan die :where()-regel, waardoor "Full" op deze pagina's niets deed.
 .wrap {
-  max-width: 1080px;
   margin: 0 auto;
   padding: clamp(16px, 3vw, 36px) clamp(18px, 4vw, 40px) 72px;
 }

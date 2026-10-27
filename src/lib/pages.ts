@@ -13,6 +13,7 @@ export const PAGE_TITLES: Record<string, string> = {
   "/": "Home",
   "/spotify": "Spotify",
   "/spotify/playlists": "Playlist manager",
+  "/spotify/verbinding": "Verbinding",
   "/spotify/trackregister": "DKJ Trackregister",
   "/spotify/dashboard": "Data-dashboard",
   [WORLD_META.mmc.href]: "Music Mood Colours",

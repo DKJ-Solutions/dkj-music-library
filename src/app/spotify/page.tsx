@@ -1,24 +1,19 @@
-// De Spotify-hub op /spotify. Server Component: leest de tokens (OAuth-status) en de verrijkte
-// playlists (fase 4) -- stuk fs-werk dat hier moet blijven (Node's `fs`, niet beschikbaar in
-// 'use client'). Bovenaan de card per pagina onder /spotify, daaronder de verbindingsstatus +
-// login/logout + de sync-trigger (fase 2/3, SyncButton.tsx) en de werelden. De playlist manager zelf
-// (PlaylistManager, 'use client') heeft sinds de cards zijn eigen pagina: /spotify/playlists.
-import Link from "next/link";
-import { headers } from "next/headers";
+// De Spotify-hub op /spotify: één grid met een card per pagina eronder, en verder niets. Server
+// Component: leest de tokens (OAuth-status) en de verrijkte playlists (fase 4) alleen om de cards een
+// actueel onderschrift te geven -- de wereld-cards hun aantal playlists, de verbinding-card of er een
+// koppeling is. De verbinding zelf (status, login/logout, sync) staat sinds de cards op
+// /spotify/verbinding, de playlist manager op /spotify/playlists.
 import { readTokens } from "@/lib/spotify/tokenStore";
 import { getEnrichedSnapshot } from "@/lib/spotify/enrichedPlaylists";
 import { countByWorld } from "@/lib/spotify/playlistFilters";
 import { SPOTIFY_WORLDS, WORLD_META } from "@/lib/spotify/classifyWorld";
-import { getSpotifyRedirectUri } from "@/lib/spotify/config";
-import { findRedirectHostMismatch } from "@/lib/spotify/redirectHost";
 import { PageCardGrid, type PageCard } from "@/components/PageCardGrid";
 import { pageTitle } from "@/lib/pages";
-import SyncButton from "./SyncButton";
 
 export const dynamic = "force-dynamic";
 
-// De pagina's onder /spotify, als card-links (stonden eerder op de homepagina). Ze staan buiten de
-// snapshot-secties: het register leest de bibliotheek uit git, dus deze links horen ook zichtbaar te
+// De pagina's onder /spotify, als card-links (stonden eerder op de homepagina). Ze hangen niet af van
+// een snapshot: het register leest de bibliotheek uit git, dus deze links horen ook zichtbaar te
 // zijn op een machine die nog nooit gesynct heeft.
 const PAGE_CARDS: PageCard[] = [
   {
@@ -66,150 +61,37 @@ const PAGE_CARDS: PageCard[] = [
     label: pageTitle("/spotify/classic-pop"),
     sub: "Elk Classic Pop-nummer één keer, met de playlists waarin het staat",
   },
+  {
+    href: "/spotify/verbinding",
+    label: pageTitle("/spotify/verbinding"),
+    sub: "Inloggen bij Spotify en de back-up syncen",
+  },
 ];
 
-interface SpotifyStatusPageProps {
-  searchParams: Promise<{ connected?: string; error?: string }>;
-}
-
-const ERROR_MESSAGES: Record<string, string> = {
-  state_mismatch: "De login-poging kon niet worden geverifieerd (state komt niet overeen). Probeer opnieuw.",
-  token_exchange_failed: "Het inwisselen van de code voor tokens is mislukt. Zie de serverconsole (het venster waarin `npm run dev` draait) voor details.",
-};
-
-export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusPageProps) {
-  const params = await searchParams;
-  // De host-val: geopend op `localhost` terwijl de callback op `127.0.0.1` binnenkomt, waardoor de
-  // state-cookie niet meegaat en de login faalt op "state komt niet overeen" (zie redirectHost.ts).
-  // Server-side te bepalen -- de `Host`-header van dít request ís de host waarop de browser staat.
-  const hostMismatch = findRedirectHostMismatch(
-    (await headers()).get("host"),
-    getSpotifyRedirectUri(),
-    "/spotify"
-  );
-  const tokens = readTokens();
+export default function SpotifyHubPage() {
+  const connected = readTokens() !== null;
   const enriched = getEnrichedSnapshot();
-  const worldCounts = enriched ? countByWorld(enriched.playlists) : { mmc: 0, djcylow: 0, prive: 0 };
-  // Sinds de login-route zichzelf op de juiste host zet (api/auth/login/spotify) hóórt een
-  // state_mismatch hier niet meer door het adres te komen. Komt hij tóch voor terwijl de hosts
-  // uiteenlopen, dan is dat waardevolle informatie -- dan heeft de hop niet gedaan wat hij moest doen --
-  // dus blijft de melding die oorzaak noemen, nu als "onverwacht" in plaats van als instructie.
-  const errorMessage = params.error
-    ? params.error === "state_mismatch" && hostMismatch
-      ? `De login-poging kon niet worden geverifieerd (state komt niet overeen), terwijl je de app op ${hostMismatch.browserHost} hebt geopend en de callback op ${hostMismatch.redirectHost} binnenkomt. Dat zou de login-route zelf moeten hebben rechtgezet, dus dit is onverwacht. Open de app op ${hostMismatch.correctUrl} en probeer het daar.`
-      : (ERROR_MESSAGES[params.error] ?? `Onbekende fout: ${params.error}`)
-    : null;
+  const worldCounts = enriched ? countByWorld(enriched.playlists) : null;
+  // Elke pagina staat één keer op deze pagina: als card. De wereld-cards dragen hun aantal playlists
+  // zodra er een snapshot is, de verbinding-card of er een koppeling met Spotify is.
+  const cards = PAGE_CARDS.map((card) => {
+    if (card.href === "/spotify/verbinding") {
+      return { ...card, sub: `${card.sub} · ${connected ? "verbonden" : "niet verbonden"}` };
+    }
+    const world = SPOTIFY_WORLDS.find((w) => WORLD_META[w].href === card.href);
+    return world && worldCounts ? { ...card, sub: `${card.sub} · ${worldCounts[world]} playlists` } : card;
+  });
 
   return (
     <main className="wrap">
       <header className="masthead">
         <p className="kicker">dkj-music-library · Spotify</p>
         <h1>{pageTitle("/spotify")}</h1>
-        <p className="lede">
-          Read-only back-up van je Spotify-playlists, met een pagina per weergave. Er wordt niets
-          naar Spotify teruggeschreven.
-        </p>
       </header>
 
       <section className="layer">
-        <div className="band">
-          <span className="eyebrow">Pagina&apos;s</span>
-          <span className="rule"></span>
-        </div>
-        <PageCardGrid cards={PAGE_CARDS} />
+        <PageCardGrid cards={cards} />
       </section>
-
-      <section className="layer">
-        <div className="band">
-          <span className="eyebrow">Verbinding</span>
-          <span className="rule"></span>
-        </div>
-
-        {/* Geen waarschuwing meer maar een aankondiging: de login-route zet de host zelf recht, dus de
-            login werkt hier gewoon. Wat wél verandert is het adres in de balk -- en dat is precies het
-            soort verrassing dat je één keer wil hebben uitgelegd in plaats van elke keer wil ontdekken. */}
-        {hostMismatch && (
-          <p className="host-mismatch-warning" data-tone="info">
-            <strong>Je wordt bij het inloggen verplaatst naar {hostMismatch.redirectHost}.</strong> Je
-            hebt de app geopend op <code>{hostMismatch.browserHost}</code>, terwijl de OAuth-callback
-            binnenkomt op <code>{hostMismatch.redirectHost}</code> — Spotify staat{" "}
-            <code>localhost</code> niet meer toe als redirect-URI, dus die host staat vast. Voor een
-            browser zijn dat verschillende hosts, en een state-cookie op de ene gaat niet mee naar de
-            andere. De login-route zet dat zelf recht met een extra hop, dus inloggen werkt hier;
-            daarna staat de app op{" "}
-            <a href={hostMismatch.correctUrl}>{hostMismatch.correctUrl}</a>. Wil je die sprong
-            overslaan, open de app dan meteen op dat adres.
-          </p>
-        )}
-
-        {errorMessage && <p className="empty-note" style={{ color: "var(--status-critical)" }}>{errorMessage}</p>}
-        {params.connected && !params.error && (
-          <p className="empty-note" style={{ color: "var(--status-done)" }}>Zojuist verbonden met Spotify.</p>
-        )}
-
-        {tokens ? (
-          <>
-            <p className="empty-note">
-              Status: <strong style={{ color: "var(--fg-1)" }}>verbonden</strong>. Toegangstoken verloopt:{" "}
-              {new Date(tokens.expiresAt).toLocaleString("nl-NL")}. Scope: {tokens.scope}
-            </p>
-            <form action="/api/auth/logout/spotify" method="POST">
-              <button type="submit" className="pill-toggle" data-active="true">
-                Loskoppelen
-              </button>
-            </form>
-          </>
-        ) : (
-          <>
-            <p className="empty-note">
-              Status: <strong style={{ color: "var(--fg-1)" }}>niet verbonden</strong>.
-            </p>
-            <a className="pill-toggle" href="/api/auth/login/spotify">
-              Inloggen bij Spotify
-            </a>
-          </>
-        )}
-
-        <p className="empty-note" style={{ marginTop: "10px" }}>
-          {enriched
-            ? `Laatste snapshot: ${enriched.playlists.length} playlist(s), ${enriched.playlists.reduce((sum, p) => sum + p.trackCount, 0)} track(s), gesynchroniseerd op ${new Date(enriched.syncedAt).toLocaleString("nl-NL")}.`
-            : "Nog geen snapshot -- start hieronder de eerste sync."}
-        </p>
-
-        <SyncButton />
-      </section>
-
-      {enriched && (
-        <section className="layer">
-          <div className="band">
-            <span className="eyebrow">Werelden</span>
-            <span className="rule"></span>
-          </div>
-          <p className="section-lede">
-            Dave&apos;s top-niveau Spotify-folders, nagebootst uit de playlistnamen (de Web API geeft
-            zijn eigen folder-indeling niet terug) -- elke playlist valt precies in één wereld en
-            is in de playlist manager per rij corrigeerbaar.
-          </p>
-          <div className="world-grid">
-            {SPOTIFY_WORLDS.map((world) => {
-              const meta = WORLD_META[world];
-              return (
-                <Link key={world} href={meta.href} className="world-tile">
-                  <span className="emoji" aria-hidden="true">
-                    {meta.emoji}
-                  </span>
-                  <span className="label">{meta.label}</span>
-                  <span className="count">{worldCounts[world]}</span>
-                </Link>
-              );
-            })}
-          </div>
-          <p className="empty-note" style={{ marginTop: "10px" }}>
-            Samen {worldCounts.mmc + worldCounts.djcylow + worldCounts.prive} van de{" "}
-            {enriched.playlists.length} playlists -- niets valt buiten een wereld.
-          </p>
-        </section>
-      )}
     </main>
   );
 }

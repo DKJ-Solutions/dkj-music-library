@@ -85,8 +85,8 @@ export function MixBridge() {
         <section className="layer">
           <p className="empty-note">
             Er is nog geen Spotify-snapshot om tegen te koppelen -- start eerst een sync op{" "}
-            <Link href="/spotify" className="accent-text">
-              /spotify
+            <Link href="/spotify/verbinding" className="accent-text">
+              /spotify/verbinding
             </Link>
             .
           </p>
