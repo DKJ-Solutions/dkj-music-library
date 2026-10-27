@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**3 / 3 minor entries** <!-- pending-tally -->
+**4 / 4 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/mixen-published-card · 20261027-150017Z
+
+/mixen is nu een hub met twee cards, Published en Planned. Planned opent /mixen/planned, dat er alvast
+staat maar nog leeg is. Published opent /mixen/published, met een card per mix die op
+djcylow.com staat (nieuwste eerst); de detailpagina per mix staat voortaan op /mixen/published/<slug>.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Wie de mixen bekijkt klikt nu eerst door via Published; de oude /mixen/<slug>-links bestaan niet meer.
+
+**Score:** 2
+
+#### Pull Request
+
+Published-card op /mixen met alle mixen die op djcylow.com staan
+
+[PR #104](https://github.com/DKJ-Solutions/dkj-music-library/pull/104)
+
+---
 
 ### DEPLOY: feat/home-mixen-card · 20261027-140441Z
 
