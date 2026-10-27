@@ -39,19 +39,28 @@
 
 ### PLAN
 
+A `-Version 1.0.0` cut was refused: a major has not been earned (0 minors before it), and the pending
+entries earn a minor -- v0.1.0 from v0.0.0. Dave chose v0.1.0, so the history opens on `0.x`.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Rename the history's first section heading from `1.x` to `0.x`
 
 ### TEST
 
+- [x] The release history parses as before: one `#### <major>.x` heading and the empty table
+
 ### DEPLOY: fix/release-history-0x
 
-**Score:**
+The release history opens on `0.x` instead of `1.x`, the major line the first release (v0.1.0) lands on.
+
+**Score:** 1
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A -- release tooling only; nobody using the music library sees it.
+
+**Score:** N/A
 
 #### Pull Request
 
