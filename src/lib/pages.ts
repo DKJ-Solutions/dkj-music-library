@@ -8,6 +8,7 @@
 // keer getypt staat.
 import { WORLD_META } from "@/lib/spotify/classifyWorld";
 import { BPM_TIER_META, MMC_BPM_TIERS } from "@/lib/spotify/classifyBpm";
+import { PLANNED_COLOURS, plannedColourHref } from "@/lib/mixes/plannedColours";
 
 export const PAGE_TITLES: Record<string, string> = {
   "/": "Home",
@@ -15,6 +16,7 @@ export const PAGE_TITLES: Record<string, string> = {
   "/mixen": "Mixen",
   "/mixen/published": "Published",
   "/mixen/planned": "Planned",
+  ...Object.fromEntries(PLANNED_COLOURS.map((colour) => [plannedColourHref(colour), colour])),
   "/compare": "Compare",
   "/compare/playlists-mixes": "Playlists ↔ Mixes",
   "/compare/pc-spotify": "PC ↔ Spotify",

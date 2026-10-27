@@ -1,0 +1,14 @@
+// De kleurstip van PageCardGrid (`dot`), op de plek van het icoon (.menu-item__icon, 24px): een card per
+// kleur van de eigen albums, zoals op /mixen/planned. De kleur komt uit de domeinlaag (--emotion-<kleur>,
+// base/_root.scss), die per modus al een eigen waarde heeft.
+.colour-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+@each $color in "cyan", "yellow", "blue", "green", "orange", "magenta", "red", "purple" {
+  .colour-dot[data-color="#{$color}"] {
+    background: var(--emotion-#{$color});
+  }
+}
