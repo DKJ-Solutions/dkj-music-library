@@ -9,6 +9,7 @@ import { readArtistNames } from "@/lib/library/artistIds";
 import { listTracks } from "@/lib/library/trackStore";
 import { toRegisterRow, type RegisterRow } from "@/lib/library/register";
 import { TrackRegister } from "@/components/spotify/TrackRegister";
+import { pageTitle } from "@/lib/pages";
 
 // De bibliotheek kan buiten de build wijzigen (een sync, een import), dus geen static prerender.
 export const dynamic = "force-dynamic";
@@ -35,11 +36,8 @@ export default function TrackRegisterPage() {
   return (
     <main className="wrap wrap--full">
       <header className="masthead">
-        <Link href="/spotify" className="world-back-link">
-          ← Terug naar alle playlists
-        </Link>
         <p className="kicker">dkj-music-library · Bibliotheek</p>
-        <h1>DKJ Trackregister</h1>
+        <h1>{pageTitle("/spotify/trackregister")}</h1>
       </header>
 
       {"error" in register ? (

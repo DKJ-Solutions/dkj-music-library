@@ -1,29 +1,72 @@
-// Fase 5: de flexibele filter/groepeer/zoek-interface op /spotify. Server Component: leest de
-// tokens (OAuth-status) en de verrijkte playlists (fase 4) -- stuk fs-werk dat hier moet blijven
-// (Node's `fs`, niet beschikbaar in 'use client'). De verbindingsstatus + login/logout + de
-// sync-trigger (fase 2/3, SyncButton.tsx) blijven bovenaan staan: die horen nog steeds bij deze
-// pagina. Daaronder de nieuwe interactieve laag (PlaylistManager, 'use client') die client-side
-// filtert/groepeert/zoekt over de al-geladen data.
-//
-// Bewust ÉÉN lees van de (grote) snapshot: readSnapshot() hieronder, die getEnrichedSnapshot()
-// aangereikt krijgt (zelfde recept als /spotify/dashboard). De sync-samenvatting komt uit de
-// verrijkte data (playlist-/trackcount); het aantal artiesten uit de ruwe, want EnrichedPlaylist
-// draagt geen tracks (zie enrichedPlaylists.ts).
+// De Spotify-hub op /spotify. Server Component: leest de tokens (OAuth-status) en de verrijkte
+// playlists (fase 4) -- stuk fs-werk dat hier moet blijven (Node's `fs`, niet beschikbaar in
+// 'use client'). Bovenaan de card per pagina onder /spotify, daaronder de verbindingsstatus +
+// login/logout + de sync-trigger (fase 2/3, SyncButton.tsx) en de werelden. De playlist manager zelf
+// (PlaylistManager, 'use client') heeft sinds de cards zijn eigen pagina: /spotify/playlists.
 import Link from "next/link";
 import { headers } from "next/headers";
 import { readTokens } from "@/lib/spotify/tokenStore";
-import { readSnapshot } from "@/lib/spotify/snapshotStore";
 import { getEnrichedSnapshot } from "@/lib/spotify/enrichedPlaylists";
-import { countDistinctArtists } from "@/lib/spotify/dashboardStats";
 import { countByWorld } from "@/lib/spotify/playlistFilters";
 import { SPOTIFY_WORLDS, WORLD_META } from "@/lib/spotify/classifyWorld";
 import { getSpotifyRedirectUri } from "@/lib/spotify/config";
 import { findRedirectHostMismatch } from "@/lib/spotify/redirectHost";
-import { getPlaylistMixIndex } from "@/lib/mixes/playlistMixInfo";
-import { PlaylistManager } from "@/components/spotify/PlaylistManager";
+import { PageCardGrid, type PageCard } from "@/components/PageCardGrid";
+import { pageTitle } from "@/lib/pages";
 import SyncButton from "./SyncButton";
 
 export const dynamic = "force-dynamic";
+
+// De pagina's onder /spotify, als card-links (stonden eerder op de homepagina). Ze staan buiten de
+// snapshot-secties: het register leest de bibliotheek uit git, dus deze links horen ook zichtbaar te
+// zijn op een machine die nog nooit gesynct heeft.
+const PAGE_CARDS: PageCard[] = [
+  {
+    href: "/spotify/playlists",
+    label: pageTitle("/spotify/playlists"),
+    sub: "Alle playlists, met filteren, groeperen en cross-playlist zoeken",
+  },
+  {
+    href: "/spotify/trackregister",
+    label: pageTitle("/spotify/trackregister"),
+    sub: "Elke track met zijn eigen velden, te filteren op BPM en album",
+  },
+  {
+    href: "/spotify/dashboard",
+    label: pageTitle("/spotify/dashboard"),
+    sub: "Dedup, top-artiesten en verdelingen over de hele bibliotheek",
+  },
+  {
+    href: "/spotify/musicmoodcolours",
+    label: pageTitle("/spotify/musicmoodcolours"),
+    sub: "De genummerde House- en Drum & Bass-mixen, per BPM",
+  },
+  {
+    href: "/spotify/djcylow",
+    label: pageTitle("/spotify/djcylow"),
+    sub: "Het DJ-werk: Feestzaal-fases, gigs en compilaties",
+  },
+  {
+    href: "/spotify/prive",
+    label: pageTitle("/spotify/prive"),
+    sub: "Persoonlijke lijsten en playlists die je alleen volgt",
+  },
+  {
+    href: "/spotify/musicmoodcolours/mixen",
+    label: pageTitle("/spotify/musicmoodcolours/mixen"),
+    sub: "De mixen van de DJ Cylow-website naast de MMC-playlists",
+  },
+  {
+    href: "/spotify/maple-classic",
+    label: pageTitle("/spotify/maple-classic"),
+    sub: "De gedeelde playlist als tabel",
+  },
+  {
+    href: "/spotify/classic-pop",
+    label: pageTitle("/spotify/classic-pop"),
+    sub: "Elk Classic Pop-nummer één keer, met de playlists waarin het staat",
+  },
+];
 
 interface SpotifyStatusPageProps {
   searchParams: Promise<{ connected?: string; error?: string }>;
@@ -45,14 +88,8 @@ export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusP
     "/spotify"
   );
   const tokens = readTokens();
-  const snapshot = readSnapshot();
-  const enriched = getEnrichedSnapshot(snapshot);
-  const artistCount = snapshot ? countDistinctArtists(snapshot) : null;
+  const enriched = getEnrichedSnapshot();
   const worldCounts = enriched ? countByWorld(enriched.playlists) : { mmc: 0, djcylow: 0, prive: 0 };
-  // Zie WorldPage.tsx: de mix-kant van de tabel is een server-side fs-read, doorgegeven als prop.
-  const mixIndex = enriched
-    ? getPlaylistMixIndex()
-    : { byPlaylistId: {}, missingMixes: [], mixesWithId: null };
   // Sinds de login-route zichzelf op de juiste host zet (api/auth/login/spotify) hóórt een
   // state_mismatch hier niet meer door het adres te komen. Komt hij tóch voor terwijl de hosts
   // uiteenlopen, dan is dat waardevolle informatie -- dan heeft de hop niet gedaan wat hij moest doen --
@@ -67,29 +104,20 @@ export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusP
     <main className="wrap">
       <header className="masthead">
         <p className="kicker">dkj-music-library · Spotify</p>
-        <h1>Playlist manager</h1>
+        <h1>{pageTitle("/spotify")}</h1>
         <p className="lede">
-          Read-only back-up van je Spotify-playlists, met filteren, groeperen en cross-playlist
-          zoeken. Er wordt niets naar Spotify teruggeschreven.
-        </p>
-        {/* Buiten de snapshot-secties: het register leest de bibliotheek uit git, dus deze link hoort ook
-            zichtbaar te zijn op een machine die nog nooit gesynct heeft. */}
-        <p className="dashboard-link-row">
-          <Link href="/spotify/trackregister" className="accent-text">
-            🗂️ Bekijk het DKJ Trackregister (elke track met zijn eigen velden) →
-          </Link>
-        </p>
-        <p className="dashboard-link-row">
-          <Link href="/spotify/maple-classic" className="accent-text">
-            🍁 Bekijk de playlist Maple Classic 2026 LAN als tabel →
-          </Link>
-        </p>
-        <p className="dashboard-link-row">
-          <Link href="/spotify/classic-pop" className="accent-text">
-            🎙️ Bekijk alle nummers uit de Classic Pop-playlists in één tabel →
-          </Link>
+          Read-only back-up van je Spotify-playlists, met een pagina per weergave. Er wordt niets
+          naar Spotify teruggeschreven.
         </p>
       </header>
+
+      <section className="layer">
+        <div className="band">
+          <span className="eyebrow">Pagina&apos;s</span>
+          <span className="rule"></span>
+        </div>
+        <PageCardGrid cards={PAGE_CARDS} />
+      </section>
 
       <section className="layer">
         <div className="band">
@@ -160,7 +188,7 @@ export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusP
           <p className="section-lede">
             Dave&apos;s top-niveau Spotify-folders, nagebootst uit de playlistnamen (de Web API geeft
             zijn eigen folder-indeling niet terug) -- elke playlist valt precies in één wereld en
-            is per rij corrigeerbaar.
+            is in de playlist manager per rij corrigeerbaar.
           </p>
           <div className="world-grid">
             {SPOTIFY_WORLDS.map((world) => {
@@ -179,31 +207,6 @@ export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusP
           <p className="empty-note" style={{ marginTop: "10px" }}>
             Samen {worldCounts.mmc + worldCounts.djcylow + worldCounts.prive} van de{" "}
             {enriched.playlists.length} playlists -- niets valt buiten een wereld.
-          </p>
-          <p className="dashboard-link-row">
-            <Link href="/spotify/dashboard" className="accent-text">
-              📊 Bekijk het data-dashboard (dedup, top-artiesten, verdelingen) →
-            </Link>
-          </p>
-        </section>
-      )}
-
-      {enriched ? (
-        <PlaylistManager
-          playlists={enriched.playlists}
-          artistCount={artistCount}
-          mixInfoById={mixIndex.byPlaylistId}
-          mixesWithId={mixIndex.mixesWithId}
-          missingMixes={mixIndex.missingMixes}
-        />
-      ) : (
-        <section className="layer">
-          <div className="band">
-            <span className="eyebrow">Playlists</span>
-            <span className="rule"></span>
-          </div>
-          <p className="empty-note">
-            Nog geen playlists om te tonen -- start hierboven de eerste sync.
           </p>
         </section>
       )}

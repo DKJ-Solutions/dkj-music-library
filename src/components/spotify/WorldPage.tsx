@@ -18,6 +18,7 @@ import { WORLD_META, type SpotifyWorld } from "@/lib/spotify/classifyWorld";
 import { filterByWorld } from "@/lib/spotify/playlistFilters";
 import { getPlaylistMixIndex } from "@/lib/mixes/playlistMixInfo";
 import { PlaylistManager } from "./PlaylistManager";
+import { pageTitle } from "@/lib/pages";
 
 export function WorldPage({
   world,
@@ -34,7 +35,7 @@ export function WorldPage({
   // Op MMC verdwijnt TYPE erbij: elke MMC-mix is House/Drum & Bass/Techno/Nu-Disco en dus EDM. Op DJ
   // Cylow en Privé blijft TYPE staan, want daar wisselt hij wel (POP, ALT, EDM, of leeg).
   // Let op: de wereld-correctie-select zit ín die kolom, dus corrigeren gaat vanaf hier niet meer --
-  // dat kan op /spotify, waar alle playlists naast elkaar staan.
+  // dat kan op /spotify/playlists, waar alle playlists naast elkaar staan.
   const hiddenColumns = world === "mmc" ? (["world", "type"] as const) : (["world"] as const);
   // De mix-kant van de tabel (ID/genre/subgenre per rij): server-side opgehaald, want het leest de
   // mix-JSON's van schijf -- PlaylistManager is een Client Component en krijgt het als platte prop.
@@ -49,12 +50,7 @@ export function WorldPage({
   return (
     <main className="wrap">
       <header className="masthead">
-        <Link href="/spotify" className="world-back-link">
-          ← Terug naar alle playlists
-        </Link>
-        <h1>
-          <span aria-hidden="true">{meta.emoji}</span> {meta.label}
-        </h1>
+        <h1>{pageTitle(meta.href)}</h1>
         <p className="lede">{meta.description}</p>
         {/* Geen aparte teller hier: PlaylistManager's eigen stats-rij (het playlists-totaal) toont op deze
             al wereld-gefilterde subset exact hetzelfde aantal -- twee tellers voor dezelfde vraag

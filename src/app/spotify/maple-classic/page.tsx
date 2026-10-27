@@ -8,6 +8,7 @@ import { readLibraryYears, toPlaylistTableRows, userNamesFromSnapshot } from "@/
 import { playlistUrl } from "@/lib/library/playlistLink";
 import { PlaylistTable } from "@/components/spotify/PlaylistTable";
 import SyncButton from "../SyncButton";
+import { pageTitle } from "@/lib/pages";
 
 // Zelfde reden als /spotify/page.tsx: leest een fs-snapshot die buiten de build kan wijzigen.
 export const dynamic = "force-dynamic";
@@ -27,11 +28,8 @@ export default function MapleClassicPage() {
   return (
     <main className="wrap wrap--full">
       <header className="masthead">
-        <Link href="/spotify" className="world-back-link">
-          ← Terug naar alle playlists
-        </Link>
         <p className="kicker">dkj-music-library · Playlist</p>
-        <h1>{playlist?.name ?? "Maple Classic 2026 LAN"}</h1>
+        <h1>{pageTitle("/spotify/maple-classic")}</h1>
         {playlist && (
           <p className="lede">
             Van {playlist.owner.displayName ?? playlist.owner.id} ·{" "}

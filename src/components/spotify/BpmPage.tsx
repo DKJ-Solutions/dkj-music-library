@@ -10,6 +10,7 @@ import { filterByWorld, filterByMmcBpm } from "@/lib/spotify/playlistFilters";
 import { BPM_TIER_META, type MmcBpmTier } from "@/lib/spotify/classifyBpm";
 import { getPlaylistMixIndex } from "@/lib/mixes/playlistMixInfo";
 import { PlaylistManager } from "./PlaylistManager";
+import { pageTitle } from "@/lib/pages";
 
 export function BpmPage({ bpm }: { bpm: MmcBpmTier }) {
   const meta = BPM_TIER_META[bpm];
@@ -24,10 +25,7 @@ export function BpmPage({ bpm }: { bpm: MmcBpmTier }) {
   return (
     <main className="wrap">
       <header className="masthead">
-        <Link href="/spotify/musicmoodcolours" className="world-back-link">
-          ← Terug naar MMC
-        </Link>
-        <h1>{meta.label}</h1>
+        <h1>{pageTitle(meta.href)}</h1>
         <p className="lede">
           De MMC-mixen ({"House Mix / Drum & Bass (Mix), altijd met een Vol.-nummer"}) op {meta.label}.
         </p>

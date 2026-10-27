@@ -11,8 +11,9 @@
   max-width: none;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  height: 100dvh;
+  // Min de breadcrumb-balk, die bovenaan blijft plakken als de site-header wegscrolt.
+  height: calc(100vh - var(--tap));
+  height: calc(100dvh - var(--tap));
   padding-bottom: 0;
 }
 

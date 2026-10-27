@@ -17,6 +17,7 @@ import {
   topDuplicateArtists,
 } from "@/lib/spotify/dashboardStats";
 import { DashboardOverview } from "@/components/spotify/DashboardOverview";
+import { pageTitle } from "@/lib/pages";
 
 // Zelfde reden als /spotify/page.tsx en de wereld-sub-routes: leest een fs-snapshot die buiten de
 // build kan wijzigen (een nieuwe sync via SyncButton), dus geen static prerender.
@@ -36,11 +37,8 @@ export default function SpotifyDashboardPage() {
   return (
     <main className="wrap">
       <header className="masthead">
-        <Link href="/spotify" className="world-back-link">
-          ← Terug naar alle playlists
-        </Link>
         <p className="kicker">dkj-music-library · Spotify</p>
-        <h1>Data-dashboard</h1>
+        <h1>{pageTitle("/spotify/dashboard")}</h1>
         <p className="lede">
           Dedup, top-artiesten en verdelingen over je hele bibliotheek -- afgeleid uit dezelfde
           read-only snapshot als de playlist manager. Er wordt niets naar Spotify teruggeschreven.
