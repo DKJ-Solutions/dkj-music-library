@@ -43,15 +43,17 @@
 
 - [x] `src/app/page.tsx`: een Mixen-card naast de Spotify-card, in dezelfde vorm, naar `/mixen`
 - [x] `src/app/mixen/page.tsx`: de mixen-hub, een card-link per publieke mix (readMixes, nieuwste eerst) naar djcylow.com, in de vorm van `/spotify`
+- [x] `src/app/mixen/[slug]/page.tsx`: een detailpagina per mix (gegevens, link naar djcylow.com, top-artiesten, tracklist); de cards op `/mixen` linken ernaartoe
+- [x] `src/lib/mixes/mixPages.ts` + `breadcrumbTrail(pathname, extra)`: de mixtitel als laatste kruimel, gelezen door de layout
 
 ### TEST
 
 - [x] typecheck, eslint en vitest groen (924 tests)
-- [x] localhost:3000 toont Spotify en Mixen; /mixen rendert alle 78 publieke mixen
+- [x] localhost:3000 toont Spotify en Mixen; /mixen rendert alle 78 publieke mixen; /mixen/<slug> rendert met kruimel = h1, een onbekende slug geeft 404
 
 ### DEPLOY: feat/home-mixen-card
 
-De homepagina draagt naast de Spotify-card een Mixen-card die doorklikt naar /mixen, met daar een card per mix van de DJ Cylow-website, nieuwste eerst, elk met genre, BPM en datum en een link naar de mixpagina op djcylow.com.
+De homepagina draagt naast de Spotify-card een Mixen-card die doorklikt naar /mixen, met daar een card per mix van de DJ Cylow-website, nieuwste eerst, elk met genre, BPM en datum. Elke card opent een eigen detailpagina op /mixen/<slug> met de gegevens van de mix, de top-artiesten, de tracklist en een link naar de mixpagina op djcylow.com.
 
 **Score:** 3
 

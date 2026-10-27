@@ -41,13 +41,16 @@ export interface Crumb {
 }
 
 /** Het kruimelpad naar `pathname`: Home, dan elk voorvoegsel met een naam. Een route die hier (nog)
- *  niet staat, zoals een 404, krijgt het pad tot de dichtstbijzijnde bekende ouder. */
-export function breadcrumbTrail(pathname: string): Crumb[] {
+ *  niet staat, zoals een 404, krijgt het pad tot de dichtstbijzijnde bekende ouder.
+ *
+ *  `extra` draagt de namen van pagina's die uit data komen in plaats van uit deze tabel -- de
+ *  detailpagina per mix (/mixen/<slug>), waarvan de layout de namen op de server leest. */
+export function breadcrumbTrail(pathname: string, extra: Record<string, string> = {}): Crumb[] {
   const trail: Crumb[] = [{ href: "/", label: PAGE_TITLES["/"] }];
   const segments = pathname.split("/").filter(Boolean);
   for (let i = 1; i <= segments.length; i++) {
     const href = "/" + segments.slice(0, i).join("/");
-    const label = PAGE_TITLES[href];
+    const label = PAGE_TITLES[href] ?? extra[href];
     if (label) trail.push({ href, label });
   }
   return trail;
