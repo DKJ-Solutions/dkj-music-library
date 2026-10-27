@@ -1,6 +1,6 @@
-// /mixen/planned -- een card per kleur van de eigen albums, in de gewone card-vorm; de kleur staat als
-// stip van 24px op de plek van het icoon (.menu-item__icon). De kleur komt uit de domeinlaag
-// (--emotion-<kleur>, base/_root.scss), die per modus al een eigen waarde heeft.
+// De kleurstip van PageCardGrid (`dot`), op de plek van het icoon (.menu-item__icon, 24px): een card per
+// kleur van de eigen albums, zoals op /mixen/planned. De kleur komt uit de domeinlaag (--emotion-<kleur>,
+// base/_root.scss), die per modus al een eigen waarde heeft.
 .colour-dot {
   width: 24px;
   height: 24px;

@@ -41,19 +41,21 @@
 
 ### CREATE
 
-- [x] Acht cards op /mixen/planned (Cyan, Yellow, Blue, Green, Orange, Magenta, Red, Purple), in de gewone card-vorm
-- [x] `components/_colour-cards.scss`: een stip in de `--emotion-*`-kleur op de plek van het icoon (eerst een volle achtergrond, op verzoek teruggebracht naar de stijl van de andere cards)
+- [x] Acht card-links op /mixen/planned (Cyan, Yellow, Blue, Green, Orange, Magenta, Red, Purple) via `PageCardGrid`, zoals op de homepagina
+- [x] `PageCardGrid` krijgt een optionele `dot`: een stip in de `--emotion-*`-kleur op de plek van het icoon (`components/_colour-cards.scss`; eerst een volle achtergrond, op verzoek teruggebracht naar de stijl van de andere cards)
+- [x] Een landingspagina per kleur op /mixen/planned/<kleur>, met een lege melding; de kleuren staan op één plek (`lib/mixes/plannedColours.ts`)
 
 ### TEST
 
-- [x] `tsc --noEmit` groen; de pagina rendert de acht cards en de CSS komt door in de dev-server
+- [x] `tsc --noEmit`, eslint en vitest (926) groen; de acht links en hun pagina's geven 200, een onbekende kleur 404
 - [ ] Visuele check door de eigenaar
 
 ### DEPLOY: feat/planned-colour-cards
 
 De pagina Planned onder Mixen toont acht kaarten, één per albumkleur (Cyan, Yellow, Blue, Green, Orange,
-Magenta, Red, Purple), in dezelfde stijl als de andere kaarten, met een stip in de kleur zelf. Daarvoor stond
-er alleen een lege melding.
+Magenta, Red, Purple), in dezelfde stijl als de andere kaarten, met een stip in de kleur zelf. Elke kaart
+opent een eigen landingspagina voor de geplande mixen in die kleur, voorlopig nog leeg. Daarvoor stond er op
+Planned alleen een lege melding.
 
 **Score:** 2
 

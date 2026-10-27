@@ -78,6 +78,9 @@ export interface PageCard {
   label: string;
   sub: string;
   icon: PageIcon;
+  /** Een kleur van de eigen albums ("cyan"): dan staat er een stip in die kleur op de plek van het icoon
+   *  (components/_colour-cards.scss), zoals op /mixen/planned. */
+  dot?: string;
 }
 
 export function PageCardGrid({ cards }: { cards: PageCard[] }) {
@@ -87,21 +90,25 @@ export function PageCardGrid({ cards }: { cards: PageCard[] }) {
         <section key={card.href} className="card card--link">
           <nav className="menu-list" aria-label={card.label}>
             <Link className="menu-item" href={card.href}>
-              <svg
-                className="menu-item__icon"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-                aria-hidden="true"
-                focusable="false"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                {ICONS[card.icon]}
-              </svg>
+              {card.dot ? (
+                <span className="menu-item__icon colour-dot" data-color={card.dot} aria-hidden="true" />
+              ) : (
+                <svg
+                  className="menu-item__icon"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  aria-hidden="true"
+                  focusable="false"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  {ICONS[card.icon]}
+                </svg>
+              )}
               <span className="menu-item__label">
                 {card.label}
                 <span className="menu-item__sub">{card.sub}</span>
