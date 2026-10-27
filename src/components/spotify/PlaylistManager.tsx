@@ -732,8 +732,8 @@ export function PlaylistManager({
               server de juiste al bevatte. Een vaste tekst kan niet weten wat er misging. */}
           {tagError && <> {tagError}</>}{" "}
           Blijft het misgaan, kijk dan op{" "}
-          <a href="/spotify" className="accent-text">
-            /spotify
+          <a href="/spotify/verbinding" className="accent-text">
+            /spotify/verbinding
           </a>{" "}
           of de verbinding nog staat.
         </p>

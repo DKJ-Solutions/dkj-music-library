@@ -50,6 +50,11 @@ column, so the fix is to drop the duplicate.
 - [x] De-duplicate `/spotify` (owner, during the width review): the three world pages were linked twice,
   as a card and as a world tile. The tiles are gone; their playlist count moved into the card's subline
   when a snapshot exists. The Werelden section keeps its explanation and the coverage note.
+- [x] The connection gets its own page and card (owner: "so everything can sit in one grid"):
+  `/spotify/verbinding` holds the status, login/logout, the sync and the world coverage note;
+  `/spotify` is the card grid alone. The OAuth callback and logout return to the new page, its name is
+  in `src/lib/pages.ts`, `SyncButton.tsx` moved with it, and every "start a sync on /spotify" link
+  points at it.
 
 ### TEST
 
@@ -57,13 +62,18 @@ column, so the fix is to drop the duplicate.
 - [x] Checked every page's `<main>`: all are `.wrap` (now governed by the house rule), `.page-column` on `/` (already was), or `.wrap--full` (track register and classic-pop, always full on purpose)
 - [x] `/spotify` in the running app: every link appears once; the world cards read e.g. "· 79 playlists"
 - [x] `npx vitest run`: 67 files, 924 tests green; `tsc --noEmit` and eslint clean
-- [ ] Owner's look at the pages in Full width and at `/spotify`
+- [x] `/spotify` renders one grid of ten cards (the connection card reads "· verbonden");
+  `/spotify/verbinding` renders with crumbs Home › Spotify › Verbinding, the status, the sync button
+  and the coverage note; tsc, eslint and 924 tests green
+- [ ] Owner's look at the pages in Full width, at `/spotify` and at `/spotify/verbinding`
 
 ### DEPLOY: fix/page-width-setting
 
 Every page now follows the width chosen in the settings panel; before, only the home page and the
 always-full tables did, and the other pages stayed at 1080px whatever was picked. `/spotify` links
-each world page once, as a card that also shows its playlist count.
+each world page once, as a card that also shows its playlist count, and is now one grid of cards: the
+connection (status, login, sync) has its own page, `/spotify/verbinding`, where logging in and out now
+lands.
 
 **Score:** 3
 

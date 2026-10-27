@@ -61,8 +61,8 @@ export function WorldPage({
         <section className="layer">
           <p className="empty-note">
             Nog geen snapshot -- start eerst een sync op{" "}
-            <Link href="/spotify" className="accent-text">
-              /spotify
+            <Link href="/spotify/verbinding" className="accent-text">
+              /spotify/verbinding
             </Link>
             .
           </p>

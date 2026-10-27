@@ -13,5 +13,5 @@ export async function POST(request: Request) {
   if (guard) return guard;
 
   clearTokens();
-  return NextResponse.redirect(new URL("/spotify", request.url));
+  return NextResponse.redirect(new URL("/spotify/verbinding", request.url));
 }
