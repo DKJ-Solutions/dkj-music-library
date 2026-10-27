@@ -2,7 +2,34 @@
 
 ## [Unreleased]
 
-**62 / 82 minor entries** <!-- pending-tally -->
+**63 / 83 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/playlists-hub · 20261027-111143Z
+
+`/spotify` has a new **Playlists** card. Behind it, at `/spotify/playlists`, sit the Playlist manager,
+Music Mood Colours, DJ Cylow, Privé, Maple Classic 2026 LAN and Classic Pop, and those pages moved one level down
+with it: `/spotify/playlists/manager`, `/spotify/playlists/musicmoodcolours` (with its BPM pages and
+`mixen`), `/spotify/playlists/djcylow`, `/spotify/playlists/prive`, `/spotify/playlists/maple-classic` and
+`/spotify/playlists/classic-pop`.
+The breadcrumb now reads Home › Spotify › Playlists › … on each of them. The old addresses redirect
+to the new ones, so bookmarks keep working.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+The Spotify page is shorter: the six playlist pages share one card, and a bookmark to an old
+address lands on the same page at its new one.
+
+**Score:** 3
+
+#### Pull Request
+
+A Playlists layer on /spotify, with the playlist pages under it
+
+[PR #98](https://github.com/DKJ-Solutions/dkj-music-library/pull/98)
+
+---
 
 ### DEPLOY: chore/library-20261027-112628 · 20261027-102907Z
 
