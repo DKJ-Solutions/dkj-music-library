@@ -18,51 +18,61 @@ export const dynamic = "force-dynamic";
 const PAGE_CARDS: PageCard[] = [
   {
     href: "/spotify/playlists",
+    icon: "list",
     label: pageTitle("/spotify/playlists"),
     sub: "Alle playlists, met filteren, groeperen en cross-playlist zoeken",
   },
   {
     href: "/spotify/trackregister",
+    icon: "table",
     label: pageTitle("/spotify/trackregister"),
     sub: "Elke track met zijn eigen velden, te filteren op BPM en album",
   },
   {
     href: "/spotify/dashboard",
+    icon: "chart",
     label: pageTitle("/spotify/dashboard"),
     sub: "Dedup, top-artiesten en verdelingen over de hele bibliotheek",
   },
   {
     href: "/spotify/musicmoodcolours",
+    icon: "palette",
     label: pageTitle("/spotify/musicmoodcolours"),
     sub: "De genummerde House- en Drum & Bass-mixen, per BPM",
   },
   {
     href: "/spotify/djcylow",
+    icon: "disc",
     label: pageTitle("/spotify/djcylow"),
     sub: "Het DJ-werk: Feestzaal-fases, gigs en compilaties",
   },
   {
     href: "/spotify/prive",
+    icon: "lock",
     label: pageTitle("/spotify/prive"),
     sub: "Persoonlijke lijsten en playlists die je alleen volgt",
   },
   {
     href: "/spotify/musicmoodcolours/mixen",
+    icon: "link",
     label: pageTitle("/spotify/musicmoodcolours/mixen"),
     sub: "De mixen van de DJ Cylow-website naast de MMC-playlists",
   },
   {
     href: "/spotify/maple-classic",
+    icon: "users",
     label: pageTitle("/spotify/maple-classic"),
     sub: "De gedeelde playlist als tabel",
   },
   {
     href: "/spotify/classic-pop",
+    icon: "star",
     label: pageTitle("/spotify/classic-pop"),
     sub: "Elk Classic Pop-nummer één keer, met de playlists waarin het staat",
   },
   {
     href: "/spotify/verbinding",
+    icon: "plug",
     label: pageTitle("/spotify/verbinding"),
     sub: "Inloggen bij Spotify en de back-up syncen",
   },

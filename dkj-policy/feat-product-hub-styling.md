@@ -39,13 +39,33 @@
 
 ### PLAN
 
+The owner asked (October 27, 2026) for the product (localhost:3000) to follow the styling of the hub
+(localhost:4893) more closely. The product already loads the house style; the gap is in its own domain
+layer, which kept the pre-hub look: a serif page title up to 52px, its own page padding, soft drop
+shadows, a 14px radius, and card links without an icon. Only the domain layer and the product's own
+components change; the house files stay untouched.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `--font-display` follows the house sans, so page titles, tile labels and figures read like the hub
+- [x] `.masthead h1` takes the house `h1` (sans, 32px, `--primary`) instead of its own serif size
+- [x] `.lede` at `--text-base`, like the house `.lead`, instead of growing with the window
+- [x] `.wrap` takes the padding of the hub's `.page-column`
+- [x] `--shadow: none` and `--radius: var(--radius-lg)`: flat surfaces with a line, like the hub's cards
+- [x] every card link carries a line icon (`.menu-item__icon`), as the hub's cards do
+- [x] the site header reads `dkj-music-library product`, as the hub's reads `... hub`
 
 ### TEST
 
+- [x] `tsc --noEmit`, eslint and the vitest suite (924 tests) pass
+- [x] /spotify checked at 1400 wide: one grid of icon cards under a 32px sans title, fits without scrolling
+- [ ] the owner's look at the product next to the hub
+
 ### DEPLOY: feat/product-hub-styling
+
+The product now looks like the hub it sits under: page titles in the house sans at 32px instead of a
+large serif, the hub's page margins, flat surfaces without drop shadows, an icon on every card link, and
+`product` after the name in the site header.
 
 **Score:**
 

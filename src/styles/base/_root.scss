@@ -42,7 +42,9 @@
   --rating-blue: #35b7ef;
   --rating-magenta: #c828ec;
   --rating-orange: #f99c2d;
-  --font-display: var(--font-serif);
+  // Zoals de hub: koppen en cijfers in de sans van de huisstijl (die zette h1 en h2 op 24 oktober 2026
+  // van de serif naar de sans); dezelfde stapel als de body van house-style.css.
+  --font-display: system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   // Smal, voor tabellen met veel kolommen (Dave): Bahnschrift zit in Windows 10/11 en heeft een traploze
   // breedte (wdth 75-100). SemiCondensed (87.5) was te smal; 94 zit ertussen. Daarbuiten Arial Narrow, en
@@ -50,7 +52,7 @@
   --font-narrow: Bahnschrift, "Arial Narrow", ui-sans-serif, system-ui, sans-serif;
   --font-narrow-width: 94;
   // --font-mono komt sinds v5.33.0 uit de huisstijl zelf (#89).
-  --shadow: 0 1px 2px light-dark(rgba(19, 26, 34, 0.04), rgba(0, 0, 0, 0.3)),
-    0 6px 20px light-dark(rgba(19, 26, 34, 0.06), rgba(0, 0, 0, 0.4));
-  --radius: 14px;
+  // Vlak met een lijn, zoals de cards van de hub: geen schaduw, en de house-radius van een card (12px).
+  --shadow: none;
+  --radius: var(--radius-lg);
 }
