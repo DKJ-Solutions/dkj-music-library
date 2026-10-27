@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**63 / 83 minor entries** <!-- pending-tally -->
+**63 / 84 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/release-history · 20261027-132101Z
+
+The repo now carries the ordered release list, `dkj-policy/releases/history.md`, opening on a `1.x`
+section with no rows yet, so the first release cut has a list to add its row to instead of warning
+that the row was not added. The hub's release-notes page appears with that first cut.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+N/A -- the list is release tooling for whoever maintains this repo; nobody using the music library sees it.
+
+**Score:** N/A
+
+#### Pull Request
+
+Add the release history the release-notes page is built from
+
+[PR #99](https://github.com/DKJ-Solutions/dkj-music-library/pull/99)
+
+---
 
 ### DEPLOY: feat/playlists-hub · 20261027-111143Z
 
