@@ -56,6 +56,12 @@ const ICONS = {
   ),
   star: <path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z" />,
   plug: <path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-12 0zM12 17v5" />,
+  calendar: (
+    <>
+      <rect x="3" y="4" width="18" height="17" rx="2" />
+      <path d="M3 10h18M8 2v4M16 2v4" />
+    </>
+  ),
 } satisfies Record<string, ReactNode>;
 
 export type PageIcon = keyof typeof ICONS;

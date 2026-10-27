@@ -21,10 +21,11 @@ describe("breadcrumbTrail", () => {
   });
 
   it("neemt de naam van een pagina uit data mee, zoals een mix-detailpagina", () => {
-    const extra = { "/mixen/red-light-m-edm-128bpm-20260615": "Tech House Mix · Red Light (m) · Vol. 1" };
-    expect(breadcrumbTrail("/mixen/red-light-m-edm-128bpm-20260615", extra).map((c) => c.label)).toEqual([
+    const extra = { "/mixen/published/red-light-m-edm-128bpm-20260615": "Tech House Mix · Red Light (m) · Vol. 1" };
+    expect(breadcrumbTrail("/mixen/published/red-light-m-edm-128bpm-20260615", extra).map((c) => c.label)).toEqual([
       "Home",
       "Mixen",
+      "Published",
       "Tech House Mix · Red Light (m) · Vol. 1",
     ]);
   });

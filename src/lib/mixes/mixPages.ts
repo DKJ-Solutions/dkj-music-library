@@ -1,4 +1,4 @@
-// De detailpagina's per mix op /mixen/<slug>: de route, de mix achter een slug, en de paginanamen voor
+// De detailpagina's per mix op /mixen/published/<slug>: de route, de mix achter een slug, en de paginanamen voor
 // de breadcrumb-balk. De slug is dezelfde als op djcylow.com (mixSlugOf in mixStore.ts), zodat een
 // link van de website hier één-op-één te volgen is.
 //
@@ -8,7 +8,7 @@ import type { Mix } from "./types";
 
 /** De route van de detailpagina van een mix. */
 export function mixHref(slug: string): string {
-  return `/mixen/${slug}`;
+  return `/mixen/published/${slug}`;
 }
 
 /** De publieke mix met deze slug, of null. */
