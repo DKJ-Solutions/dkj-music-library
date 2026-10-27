@@ -28,7 +28,7 @@ export default function MapleClassicPage() {
     <main className="wrap wrap--full">
       <header className="masthead">
         <Link href="/spotify" className="world-back-link">
-          ← Terug naar alle playlists
+          ← Terug naar Spotify
         </Link>
         <p className="kicker">dkj-music-library · Playlist</p>
         <h1>{playlist?.name ?? "Maple Classic 2026 LAN"}</h1>

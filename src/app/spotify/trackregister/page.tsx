@@ -36,7 +36,7 @@ export default function TrackRegisterPage() {
     <main className="wrap wrap--full">
       <header className="masthead">
         <Link href="/spotify" className="world-back-link">
-          ← Terug naar alle playlists
+          ← Terug naar Spotify
         </Link>
         <p className="kicker">dkj-music-library · Bibliotheek</p>
         <h1>DKJ Trackregister</h1>

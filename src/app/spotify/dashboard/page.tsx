@@ -37,7 +37,7 @@ export default function SpotifyDashboardPage() {
     <main className="wrap">
       <header className="masthead">
         <Link href="/spotify" className="world-back-link">
-          ← Terug naar alle playlists
+          ← Terug naar Spotify
         </Link>
         <p className="kicker">dkj-music-library · Spotify</p>
         <h1>Data-dashboard</h1>

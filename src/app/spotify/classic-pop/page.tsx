@@ -26,7 +26,7 @@ export default function ClassicPopPage() {
     <main className="wrap wrap--full">
       <header className="masthead">
         <Link href="/spotify" className="world-back-link">
-          ← Terug naar alle playlists
+          ← Terug naar Spotify
         </Link>
         <p className="kicker">dkj-music-library · Overzicht</p>
         <h1>Classic Pop</h1>

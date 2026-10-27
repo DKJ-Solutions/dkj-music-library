@@ -48,23 +48,29 @@ Classic Pop, data dashboard) go.
 - [x] `src/components/PageCardGrid.tsx`: the hub card grid, shared by home and /spotify
 - [x] Home keeps only the Spotify card
 - [x] /spotify shows the other eight cards in a "Pagina's" section under the masthead, outside the snapshot sections, and drops the duplicate text links
+- [x] Dave's follow-up: the playlist manager gets its own card -- it moves off /spotify to its own page, `/spotify/playlists`, first in the grid; /spotify is retitled "Spotify" and becomes the hub (cards, connection, sync, worlds)
+- [x] The "← Terug naar alle playlists" back links on the sub-pages read "← Terug naar Spotify", since /spotify no longer lists the playlists
 
 ### TEST
 
 - [x] `tsc --noEmit` and eslint on the three files green
-- [x] The running dev server renders eight cards on /spotify and only Spotify on home
+- [x] The running dev server renders nine cards on /spotify, only Spotify on home, and the playlist table on /spotify/playlists
+- [x] vitest over `src/components/spotify` green (113 tests)
 - [ ] Dave's visual review of home and /spotify
 
 ### DEPLOY: feat/spotify-page-cards
 
-The home page now holds only the Spotify card; the eight pages under Spotify are cards on /spotify
-itself, rendered by one shared `PageCardGrid` component, and the text links they replace are gone.
+The home page now holds only the Spotify card; the pages under Spotify are cards on /spotify itself,
+rendered by one shared `PageCardGrid` component, and the text links they replace are gone. The playlist
+manager moved off /spotify to its own page, `/spotify/playlists`, with its own card; /spotify is now the
+hub for the cards, the connection, the sync and the worlds.
 
 **Score:** 2
 
 #### What makes this deploy extra special
 
-The pages under Spotify are now reached from the Spotify page rather than from home, one click deeper.
+The pages under Spotify are now reached from the Spotify page rather than from home, and the playlist
+manager lives at `/spotify/playlists` instead of on /spotify itself.
 
 **Score:** 3
 
