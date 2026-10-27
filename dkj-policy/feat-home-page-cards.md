@@ -50,7 +50,7 @@ The owner asked for a home page on `/` with cards, like the hub, instead of the 
 ### TEST
 
 - [x] `tsc --noEmit` and `eslint` clean; `/` renders the Spotify card on the running dev server.
-- [ ] The owner's look at `/` (visible result).
+- [x] The owner's look at `/` (visible result) -- approved with "ship it".
 
 ### DEPLOY: feat/home-page-cards
 
