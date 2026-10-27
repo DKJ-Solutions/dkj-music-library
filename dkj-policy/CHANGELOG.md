@@ -2,7 +2,30 @@
 
 ## [Unreleased]
 
-**4 / 4 minor entries** <!-- pending-tally -->
+**5 / 5 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/compare-card · 20261027-150857Z
+
+Op de homepagina staat een nieuwe card, Compare, met eronder twee vergelijkingen. Playlists ↔ Mixes is de
+bestaande brug tussen de mixen van djcylow.com en de MMC-playlists, verhuisd vanaf zijn plek onder Music Mood
+Colours (het oude adres stuurt door). PC ↔ Spotify staat er alvast als lege pagina, tot de pc-map gekoppeld is.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+De brug tussen mixen en playlists is nu direct vanaf de homepagina te bereiken, in plaats van drie lagen diep
+onder Spotify, en er is een vaste plek voor de pc-vergelijking.
+
+**Score:** 3
+
+#### Pull Request
+
+Compare-card op de homepagina, met Playlists ↔ Mixes en PC ↔ Spotify
+
+[PR #105](https://github.com/DKJ-Solutions/dkj-music-library/pull/105)
+
+---
 
 ### DEPLOY: feat/mixen-published-card · 20261027-150017Z
 
