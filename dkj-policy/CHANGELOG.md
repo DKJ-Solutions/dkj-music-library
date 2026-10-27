@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**63 / 84 minor entries** <!-- pending-tally -->
+**63 / 85 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/release-history-0x · 20261027-132908Z
+
+The release history opens on `0.x` instead of `1.x`, the major line the first release (v0.1.0) lands on.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+N/A -- release tooling only; nobody using the music library sees it.
+
+**Score:** N/A
+
+#### Pull Request
+
+Open the release history on 0.x, the line the first cut lands on
+
+[PR #100](https://github.com/DKJ-Solutions/dkj-music-library/pull/100)
+
+---
 
 ### DEPLOY: fix/release-history · 20261027-132101Z
 
