@@ -39,19 +39,33 @@
 
 ### PLAN
 
+The width setting (Fluid / Phone / Full in the settings panel) did nothing on the `.wrap` pages:
+`.wrap` set its own `max-width: 1080px`, which outweighs the house style's `:where(:root[data-width])
+main` rule. `.wrap` always sits on `<main>`, and the house `main` rule already gives the same 1080px
+column, so the fix is to drop the duplicate.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Remove `max-width` from `.wrap` in `src/styles/layout/_masthead.scss`, with a comment saying why
 
 ### TEST
 
+- [x] Measured in the running app (`/spotify/dashboard`, viewport 1718px): Fluid 1080px, Full 1703px, Phone 360px
+- [x] Checked every page's `<main>`: all are `.wrap` (now governed by the house rule), `.page-column` on `/` (already was), or `.wrap--full` (track register and classic-pop, always full on purpose)
+- [ ] Owner's look at the pages in Full width
+
 ### DEPLOY: fix/page-width-setting
 
-**Score:**
+Every page now follows the width chosen in the settings panel; before, only the home page and the
+always-full tables did, and the other pages stayed at 1080px whatever was picked.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Picking "Full" now actually widens the Spotify pages for the person using the app.
+
+**Score:** 3
 
 #### Pull Request
 
