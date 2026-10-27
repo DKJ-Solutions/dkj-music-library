@@ -1,6 +1,7 @@
 // De site-header van de huisstijl ("Page patterns", "The site header, above the bar"), op elke pagina
 // zoals op de hub: links het merkteken en de naam van de app als link naar de homepagina, rechts de
-// instellingenknop -- daar gemount in plaats van zwevend.
+// instellingenknop -- daar gemount in plaats van zwevend. Achter de naam staat "product", zoals de hub
+// daar "hub" zet, zodat je ziet op welke poort je zit.
 import Link from "next/link";
 import ThemeSettings from "@/components/ThemeSettings";
 
@@ -10,7 +11,9 @@ export default function SiteHeader() {
       <div className="container">
         <Link className="site-header__brand" href="/" aria-label="dkj-music-library, home">
           <span className="site-header__mark" aria-hidden="true">DKJ</span>
-          <span className="site-header__name">dkj-music-library</span>
+          <span className="site-header__name">
+            dkj-music-library <span className="site-header__tag">product</span>
+          </span>
         </Link>
         <ThemeSettings />
       </div>

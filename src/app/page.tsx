@@ -8,6 +8,7 @@ import { pageTitle } from "@/lib/pages";
 const CARDS: PageCard[] = [
   {
     href: "/spotify",
+    icon: "music",
     label: pageTitle("/spotify"),
     sub: "Read-only back-up van je Spotify-playlists, met filteren, groeperen en zoeken",
   },

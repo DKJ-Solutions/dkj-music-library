@@ -4,7 +4,8 @@
 // woog zwaarder dan die :where()-regel, waardoor "Full" op deze pagina's niets deed.
 .wrap {
   margin: 0 auto;
-  padding: clamp(16px, 3vw, 36px) clamp(18px, 4vw, 40px) 72px;
+  // Dezelfde marges als .page-column op de hub.
+  padding: var(--spacing-4) var(--spacing-4) var(--spacing-12);
 }
 
 // .kicker en .stats zijn verborgen (Dave, 29 september 2026): ze namen te veel ruimte in. De markup blijft
@@ -23,15 +24,10 @@
   margin: 0 0 14px;
 }
 
+// Lettertype, grootte, gewicht en kleur komen uit de huisstijl, zoals de h1 op de hub (sans, 32px,
+// --primary); hier alleen de ruimte eronder.
 .masthead h1 {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(32px, 6vw, 52px);
-  line-height: 1.04;
-  letter-spacing: -0.01em;
-  margin: 0 0 14px;
-  text-wrap: balance;
-  // Geen eigen kleur: de huisstijl geeft h1 de highlight van het thema (--primary).
+  margin: 0 0 var(--spacing-3-5);
 }
 
 // Vervangt de inline `style={{ color: "var(--accent-ink)" }}` uit de Vite-versie van App.jsx.
@@ -39,8 +35,10 @@
   color: var(--accent-ink);
 }
 
+// Zoals de .lead van de huisstijl: de basisgrootte, niet meegroeiend met het venster.
 .lede {
-  font-size: clamp(15px, 1.6vw, 18px);
+  font-size: var(--text-base);
+  line-height: 1.35;
   color: var(--ink-soft);
   max-width: 62ch;
   margin: 0;
@@ -61,8 +59,8 @@
 
 .stat b {
   font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 600;
+  font-size: var(--text-h2);
+  font-weight: 700;
   color: var(--accent-ink);
   font-variant-numeric: tabular-nums;
 }
