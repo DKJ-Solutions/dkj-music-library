@@ -50,12 +50,17 @@ Classic Pop, data dashboard) go.
 - [x] /spotify shows the other eight cards in a "Pagina's" section under the masthead, outside the snapshot sections, and drops the duplicate text links
 - [x] Dave's follow-up: the playlist manager gets its own card -- it moves off /spotify to its own page, `/spotify/playlists`, first in the grid; /spotify is retitled "Spotify" and becomes the hub (cards, connection, sync, worlds)
 - [x] The "← Terug naar alle playlists" back links on the sub-pages read "← Terug naar Spotify", since /spotify no longer lists the playlists
+- [x] Dave's follow-up: breadcrumbs across the whole site, modelled on the hub. `src/lib/pages.ts` holds every page's name once; `Breadcrumbs.tsx` (in the layout, under the site header) builds the trail from the route, and every h1 and card label reads the same name, so the h1 always equals the current crumb
+- [x] The back links ("← Terug naar Spotify", "← Terug naar MMC") and their `.world-back-link` style go: the bar is the way back, as the house style lays down
+- [x] The playlist toolbar sticks at `top: var(--tap)`, under the bar; the track register's full-height page is one `--tap` shorter so its pager stays in view
 
 ### TEST
 
 - [x] `tsc --noEmit` and eslint on the three files green
 - [x] The running dev server renders nine cards on /spotify, only Spotify on home, and the playlist table on /spotify/playlists
 - [x] vitest over `src/components/spotify` green (113 tests)
+- [x] `src/lib/pages.test.ts` for the trail; full vitest green (919 + 5), tsc and eslint over `src` green
+- [x] Every route on the dev server: the trail runs Home > ... > the page, and the h1 equals the current crumb on all eleven pages with an h1
 - [ ] Dave's visual review of home and /spotify
 
 ### DEPLOY: feat/spotify-page-cards
@@ -63,14 +68,17 @@ Classic Pop, data dashboard) go.
 The home page now holds only the Spotify card; the pages under Spotify are cards on /spotify itself,
 rendered by one shared `PageCardGrid` component, and the text links they replace are gone. The playlist
 manager moved off /spotify to its own page, `/spotify/playlists`, with its own card; /spotify is now the
-hub for the cards, the connection, the sync and the worlds.
+hub for the cards, the connection, the sync and the worlds. Every page now opens with the house-style
+breadcrumb bar (Home > Spotify > ... > the page), fed from one name registry (`src/lib/pages.ts`) that the
+h1s and card labels read too; the pages' own back links are gone.
 
 **Score:** 2
 
 #### What makes this deploy extra special
 
 The pages under Spotify are now reached from the Spotify page rather than from home, and the playlist
-manager lives at `/spotify/playlists` instead of on /spotify itself.
+manager lives at `/spotify/playlists` instead of on /spotify itself. Every page shows where it sits in a
+breadcrumb bar, which replaces the per-page back links.
 
 **Score:** 3
 

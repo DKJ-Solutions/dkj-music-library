@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import "@/styles/house/house-style.css";
 import "@/styles/main.scss";
 import SiteHeader from "@/components/SiteHeader";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "dkj-music-library",
@@ -27,6 +28,7 @@ export default function RootLayout({
       </head>
       <body>
         <SiteHeader />
+        <Breadcrumbs />
         {children}
       </body>
     </html>

@@ -1,10 +1,11 @@
-// Fase 5 — Spotify playlist manager: de sticky filter/groepeer/zoek-toolbar op /spotify.
+// Fase 5 — Spotify playlist manager: de sticky filter/groepeer/zoek-toolbar op /spotify/playlists.
 // Idioom + tokens 1-op-1 hergebruikt uit Gwen's ontwerp-illustratie (spotify-fase5-mockup.html);
 // het chip/badge-tinting-recept (kleur vol, achtergrond/rand via color-mix) is hetzelfde recept
 // als components/_dossier-card.scss's badges, nu toegepast op de 8 --emotion-*-tokens.
 .playlist-toolbar {
   position: sticky;
-  top: 0;
+  // Onder de breadcrumb-balk, die zelf op top: 0 plakt en één --tap hoog is (huisstijl).
+  top: var(--tap);
   z-index: 5;
   background: var(--bg);
   padding: 14px 0 16px;

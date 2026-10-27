@@ -12,6 +12,7 @@ import { getEnrichedSnapshot } from "@/lib/spotify/enrichedPlaylists";
 import { countDistinctArtists } from "@/lib/spotify/dashboardStats";
 import { getPlaylistMixIndex } from "@/lib/mixes/playlistMixInfo";
 import { PlaylistManager } from "@/components/spotify/PlaylistManager";
+import { pageTitle } from "@/lib/pages";
 
 export const dynamic = "force-dynamic";
 
@@ -27,10 +28,7 @@ export default function PlaylistManagerPage() {
   return (
     <main className="wrap">
       <header className="masthead">
-        <Link href="/spotify" className="world-back-link">
-          ← Terug naar Spotify
-        </Link>
-        <h1>Playlist manager</h1>
+        <h1>{pageTitle("/spotify/playlists")}</h1>
         <p className="lede">
           Alle playlists uit de back-up, met filteren, groeperen en cross-playlist zoeken. Er wordt
           niets naar Spotify teruggeschreven.

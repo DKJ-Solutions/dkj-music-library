@@ -17,6 +17,7 @@ import {
 } from "@/lib/mixes/matchMixes";
 import { MixTagFixButton } from "./MixTagFixButton";
 import { SpotifyIdSection } from "./SpotifyIdSection";
+import { pageTitle } from "@/lib/pages";
 
 const STATUS_META: Record<MixLinkStatus, { label: string; hint: string }> = {
   "own-playlist": {
@@ -54,12 +55,7 @@ export function MixBridge() {
   return (
     <main className="wrap">
       <header className="masthead">
-        <Link href="/spotify/musicmoodcolours" className="world-back-link">
-          ← Terug naar MMC
-        </Link>
-        <h1>
-          <span aria-hidden="true">🎚️</span> Mixen ↔ playlists
-        </h1>
+        <h1>{pageTitle("/spotify/musicmoodcolours/mixen")}</h1>
         <p className="lede">
           De mix-metadata van de DJ Cylow-website ({mixCount} publieke mixen uit{" "}
           <code>djcylow-react</code>) naast de MMC-playlists die er een weerspiegeling van horen te

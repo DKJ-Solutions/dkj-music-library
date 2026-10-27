@@ -70,23 +70,6 @@
   border-radius: 999px;
 }
 
-// Terug-link boven de masthead van elke wereld-sub-route (WorldPage.tsx).
-.world-back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  color: var(--muted);
-  text-decoration: none;
-  margin-bottom: 14px;
-}
-
-.world-back-link:hover {
-  color: var(--accent-ink);
-}
-
 @media (max-width: 520px) {
   .world-grid {
     grid-template-columns: 1fr;

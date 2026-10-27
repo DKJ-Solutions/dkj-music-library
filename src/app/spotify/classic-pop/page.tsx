@@ -9,6 +9,7 @@ import { readLibraryYears, toClassicPopRows } from "@/lib/spotify/playlistTableR
 import { isClassicPopPlaylist } from "@/lib/spotify/classicPopTable";
 import { ClassicPopTable } from "@/components/spotify/ClassicPopTable";
 import SyncButton from "../SyncButton";
+import { pageTitle } from "@/lib/pages";
 
 // Zelfde reden als /spotify/page.tsx: leest een fs-snapshot die buiten de build kan wijzigen.
 export const dynamic = "force-dynamic";
@@ -25,11 +26,8 @@ export default function ClassicPopPage() {
   return (
     <main className="wrap wrap--full">
       <header className="masthead">
-        <Link href="/spotify" className="world-back-link">
-          ← Terug naar Spotify
-        </Link>
         <p className="kicker">dkj-music-library · Overzicht</p>
-        <h1>Classic Pop</h1>
+        <h1>{pageTitle("/spotify/classic-pop")}</h1>
         <p className="lede">
           Elk nummer uit een playlist met &ldquo;Classic Pop&rdquo; in de naam, één keer, met de playlists waarin
           het staat. Zoek op een playlistnaam (bijv. &ldquo;cyan&rdquo;) om één kleur te zien.

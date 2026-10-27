@@ -12,6 +12,7 @@ import { SPOTIFY_WORLDS, WORLD_META } from "@/lib/spotify/classifyWorld";
 import { getSpotifyRedirectUri } from "@/lib/spotify/config";
 import { findRedirectHostMismatch } from "@/lib/spotify/redirectHost";
 import { PageCardGrid, type PageCard } from "@/components/PageCardGrid";
+import { pageTitle } from "@/lib/pages";
 import SyncButton from "./SyncButton";
 
 export const dynamic = "force-dynamic";
@@ -22,47 +23,47 @@ export const dynamic = "force-dynamic";
 const PAGE_CARDS: PageCard[] = [
   {
     href: "/spotify/playlists",
-    label: "Playlist manager",
+    label: pageTitle("/spotify/playlists"),
     sub: "Alle playlists, met filteren, groeperen en cross-playlist zoeken",
   },
   {
     href: "/spotify/trackregister",
-    label: "DKJ Trackregister",
+    label: pageTitle("/spotify/trackregister"),
     sub: "Elke track met zijn eigen velden, te filteren op BPM en album",
   },
   {
     href: "/spotify/dashboard",
-    label: "Data-dashboard",
+    label: pageTitle("/spotify/dashboard"),
     sub: "Dedup, top-artiesten en verdelingen over de hele bibliotheek",
   },
   {
     href: "/spotify/musicmoodcolours",
-    label: "Music Mood Colours",
+    label: pageTitle("/spotify/musicmoodcolours"),
     sub: "De genummerde House- en Drum & Bass-mixen, per BPM",
   },
   {
     href: "/spotify/djcylow",
-    label: "DJ Cylow",
+    label: pageTitle("/spotify/djcylow"),
     sub: "Het DJ-werk: Feestzaal-fases, gigs en compilaties",
   },
   {
     href: "/spotify/prive",
-    label: "Privé",
+    label: pageTitle("/spotify/prive"),
     sub: "Persoonlijke lijsten en playlists die je alleen volgt",
   },
   {
     href: "/spotify/musicmoodcolours/mixen",
-    label: "Mixen ↔ playlists",
+    label: pageTitle("/spotify/musicmoodcolours/mixen"),
     sub: "De mixen van de DJ Cylow-website naast de MMC-playlists",
   },
   {
     href: "/spotify/maple-classic",
-    label: "Maple Classic 2026 LAN",
+    label: pageTitle("/spotify/maple-classic"),
     sub: "De gedeelde playlist als tabel",
   },
   {
     href: "/spotify/classic-pop",
-    label: "Classic Pop",
+    label: pageTitle("/spotify/classic-pop"),
     sub: "Elk Classic Pop-nummer één keer, met de playlists waarin het staat",
   },
 ];
@@ -103,7 +104,7 @@ export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusP
     <main className="wrap">
       <header className="masthead">
         <p className="kicker">dkj-music-library · Spotify</p>
-        <h1>Spotify</h1>
+        <h1>{pageTitle("/spotify")}</h1>
         <p className="lede">
           Read-only back-up van je Spotify-playlists, met een pagina per weergave. Er wordt niets
           naar Spotify teruggeschreven.

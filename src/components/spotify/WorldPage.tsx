@@ -18,6 +18,7 @@ import { WORLD_META, type SpotifyWorld } from "@/lib/spotify/classifyWorld";
 import { filterByWorld } from "@/lib/spotify/playlistFilters";
 import { getPlaylistMixIndex } from "@/lib/mixes/playlistMixInfo";
 import { PlaylistManager } from "./PlaylistManager";
+import { pageTitle } from "@/lib/pages";
 
 export function WorldPage({
   world,
@@ -49,12 +50,7 @@ export function WorldPage({
   return (
     <main className="wrap">
       <header className="masthead">
-        <Link href="/spotify" className="world-back-link">
-          ← Terug naar Spotify
-        </Link>
-        <h1>
-          <span aria-hidden="true">{meta.emoji}</span> {meta.label}
-        </h1>
+        <h1>{pageTitle(meta.href)}</h1>
         <p className="lede">{meta.description}</p>
         {/* Geen aparte teller hier: PlaylistManager's eigen stats-rij (het playlists-totaal) toont op deze
             al wereld-gefilterde subset exact hetzelfde aantal -- twee tellers voor dezelfde vraag
