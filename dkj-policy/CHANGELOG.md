@@ -2,7 +2,34 @@
 
 ## [Unreleased]
 
-**59 / 78 minor entries** <!-- pending-tally -->
+**60 / 79 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/spotify-page-cards · 20261027-093623Z
+
+The home page now holds only the Spotify card; the pages under Spotify are cards on /spotify itself,
+rendered by one shared `PageCardGrid` component, and the text links they replace are gone. The playlist
+manager moved off /spotify to its own page, `/spotify/playlists`, with its own card; /spotify is now the
+hub for the cards, the connection, the sync and the worlds. Every page now opens with the house-style
+breadcrumb bar (Home > Spotify > ... > the page), fed from one name registry (`src/lib/pages.ts`) that the
+h1s and card labels read too; the pages' own back links are gone.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+The pages under Spotify are now reached from the Spotify page rather than from home, and the playlist
+manager lives at `/spotify/playlists` instead of on /spotify itself. Every page shows where it sits in a
+breadcrumb bar, which replaces the per-page back links.
+
+**Score:** 3
+
+#### Pull Request
+
+The page cards move from home to the Spotify page
+
+[PR #94](https://github.com/DKJ-Solutions/dkj-music-library/pull/94)
+
+---
 
 ### DEPLOY: fix/settings-english-labels · 20261027-091208Z
 
