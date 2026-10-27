@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**61 / 80 minor entries** <!-- pending-tally -->
+**62 / 81 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/product-hub-styling · 20261027-100655Z
+
+The product now looks like the hub it sits under: page titles in the house sans at 32px instead of a
+large serif, the hub's page margins, flat surfaces without drop shadows, an icon on every card link, and
+`product` after the name in the site header.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Moving from the hub to the product no longer feels like switching apps: same title, same cards, same surfaces.
+
+**Score:** 2
+
+#### Pull Request
+
+product styling follows the hub
+
+[PR #96](https://github.com/DKJ-Solutions/dkj-music-library/pull/96)
+
+---
 
 ### DEPLOY: fix/page-width-setting · 20261027-095446Z
 
