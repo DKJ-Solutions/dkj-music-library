@@ -108,6 +108,14 @@ function Get-ReleaseAudienceTier {
     return $script:ReleaseAudienceTier
 }
 
+# Bij welke bumps cut-release een audience-note opstelt onder Get-ReleaseNoteRoot: minor en major (Dave,
+# 27 oktober 2026). Zonder antwoord was het nooit, en dan krijgt de release-notes pagina van de hub geen
+# enkele note om uit te bouwen. Een patch bereikt de gebruiker niet, dus die krijgt er geen.
+function Get-ReleaseConsumerBumps {
+    <# De bumps die een audience-note krijgen: minor en major. #>
+    return @('minor', 'major')
+}
+
 # --- Adopted from the DKJ-Solutions/dkj-claude-plugins config blueprint ---------------------------------
 #
 # Each function below is the source's own text, comments included, for a value that states the
