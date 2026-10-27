@@ -49,7 +49,7 @@ pass English texts. This app called `DKJTheme.settings(el)` with no texts, so it
 
 ### TEST
 
-- [ ] The owner has looked at the settings panel in the running app
+- [x] The owner has looked at the settings panel in the running app (approved, October 27, 2026)
 
 ### DEPLOY: fix/settings-english-labels
 
