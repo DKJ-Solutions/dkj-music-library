@@ -63,10 +63,10 @@ column, so the fix is to drop the duplicate.
 - [x] `/spotify` in the running app: every link appears once; the world cards read e.g. "· 79 playlists"
 - [x] `npx vitest run`: 67 files, 924 tests green; `tsc --noEmit` and eslint clean
 - [x] `/spotify` renders one grid of ten cards (the connection card reads "· verbonden");
-  The intro line under the /spotify title is removed (owner).
   `/spotify/verbinding` renders with crumbs Home › Spotify › Verbinding, the status, the sync button
   and the coverage note; tsc, eslint and 924 tests green
-- [ ] Owner's look at the pages in Full width, at `/spotify` and at `/spotify/verbinding`
+- [x] The intro line under the `/spotify` title removed (owner)
+- [x] Owner's look at the pages in Full width, at `/spotify` and at `/spotify/verbinding` -- approved ("ship it")
 
 ### DEPLOY: fix/page-width-setting
 
@@ -86,5 +86,5 @@ Picking "Full" now actually widens the Spotify pages for the person using the ap
 
 #### Pull Request
 
-Every page follows the width setting
+Every page follows the width setting, and /spotify is one grid of cards
 
