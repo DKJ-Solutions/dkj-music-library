@@ -2,7 +2,31 @@
 
 ## [Unreleased]
 
-**60 / 79 minor entries** <!-- pending-tally -->
+**61 / 80 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/page-width-setting · 20261027-095446Z
+
+Every page now follows the width chosen in the settings panel; before, only the home page and the
+always-full tables did, and the other pages stayed at 1080px whatever was picked. `/spotify` links
+each world page once, as a card that also shows its playlist count, and is now one grid of cards: the
+connection (status, login, sync) has its own page, `/spotify/verbinding`, where logging in and out now
+lands.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Picking "Full" now actually widens the Spotify pages for the person using the app.
+
+**Score:** 3
+
+#### Pull Request
+
+Every page follows the width setting, and /spotify is one grid of cards
+
+[PR #95](https://github.com/DKJ-Solutions/dkj-music-library/pull/95)
+
+---
 
 ### DEPLOY: feat/spotify-page-cards · 20261027-093623Z
 
