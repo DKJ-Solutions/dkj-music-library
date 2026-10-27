@@ -44,6 +44,7 @@ The owner asked for a home page on `/` with cards, like the hub, instead of the 
 ### CREATE
 
 - [x] Replace the `redirect("/spotify")` in `src/app/page.tsx` with a hub-form home page: the breadcrumb bar (Home), one `.grid-3` with a `.card.card--link` per mirror, Spotify the first.
+- [x] Add the house site header (`src/components/SiteHeader.tsx`) to every page via the layout, as on the hub: the mark and the app's name linking home, the settings button mounted inside it instead of floating.
 
 ### TEST
 
@@ -52,13 +53,13 @@ The owner asked for a home page on `/` with cards, like the hub, instead of the 
 
 ### DEPLOY: feat/home-page-cards
 
-`/` no longer redirects to `/spotify`: it is a home page in the hub's form -- the breadcrumb bar and a grid of card links, with Spotify as the first card. A future desktop mirror gets its own card there.
+`/` no longer redirects to `/spotify`: it is a home page in the hub's form -- the breadcrumb bar and a grid of card links, with Spotify as the first card. Every page now opens with the house site header -- the mark and the app's name linking home, and the settings button inside it instead of floating. A future desktop mirror gets its own card there.
 
 **Score:** 2
 
 #### What makes this deploy extra special
 
-Opening the app lands on a home page with a Spotify card instead of straight in the playlist manager.
+Opening the app lands on a home page with a Spotify card instead of straight in the playlist manager, and every page carries the site header with the way home.
 
 **Score:** 2
 

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 // erna -- die gebruikt house-tokens en herdefinieert er geen (#80).
 import "@/styles/house/house-style.css";
 import "@/styles/main.scss";
-import ThemeSettings from "@/components/ThemeSettings";
+import SiteHeader from "@/components/SiteHeader";
 
 export const metadata: Metadata = {
   title: "dkj-music-library",
@@ -26,7 +26,7 @@ export default function RootLayout({
         <script src="/house-style/house-theme.js" />
       </head>
       <body>
-        <ThemeSettings />
+        <SiteHeader />
         {children}
       </body>
     </html>
