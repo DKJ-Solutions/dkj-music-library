@@ -49,7 +49,7 @@
 
 - [x] `tsc --noEmit`, `eslint`, `vitest run` (924 tests) green
 - [x] Every new route answers 200 on the dev server; old URLs redirect
-- [ ] Dave looks at `/spotify` and `/spotify/playlists` in the browser
+- [x] Dave looks at `/spotify` and `/spotify/playlists` in the browser
 
 ### DEPLOY: feat/playlists-hub
 
