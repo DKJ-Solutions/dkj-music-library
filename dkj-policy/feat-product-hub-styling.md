@@ -59,7 +59,7 @@ components change; the house files stay untouched.
 
 - [x] `tsc --noEmit`, eslint and the vitest suite (924 tests) pass
 - [x] /spotify checked at 1400 wide: one grid of icon cards under a 32px sans title, fits without scrolling
-- [ ] the owner's look at the product next to the hub
+- [x] the owner's look at the product next to the hub -- approved ("ship it")
 
 ### DEPLOY: feat/product-hub-styling
 
@@ -67,11 +67,13 @@ The product now looks like the hub it sits under: page titles in the house sans 
 large serif, the hub's page margins, flat surfaces without drop shadows, an icon on every card link, and
 `product` after the name in the site header.
 
-**Score:**
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Moving from the hub to the product no longer feels like switching apps: same title, same cards, same surfaces.
+
+**Score:** 2
 
 #### Pull Request
 
