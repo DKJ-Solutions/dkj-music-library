@@ -47,17 +47,23 @@ column, so the fix is to drop the duplicate.
 ### CREATE
 
 - [x] Remove `max-width` from `.wrap` in `src/styles/layout/_masthead.scss`, with a comment saying why
+- [x] De-duplicate `/spotify` (owner, during the width review): the three world pages were linked twice,
+  as a card and as a world tile. The tiles are gone; their playlist count moved into the card's subline
+  when a snapshot exists. The Werelden section keeps its explanation and the coverage note.
 
 ### TEST
 
 - [x] Measured in the running app (`/spotify/dashboard`, viewport 1718px): Fluid 1080px, Full 1703px, Phone 360px
 - [x] Checked every page's `<main>`: all are `.wrap` (now governed by the house rule), `.page-column` on `/` (already was), or `.wrap--full` (track register and classic-pop, always full on purpose)
-- [ ] Owner's look at the pages in Full width
+- [x] `/spotify` in the running app: every link appears once; the world cards read e.g. "· 79 playlists"
+- [x] `npx vitest run`: 67 files, 924 tests green; `tsc --noEmit` and eslint clean
+- [ ] Owner's look at the pages in Full width and at `/spotify`
 
 ### DEPLOY: fix/page-width-setting
 
 Every page now follows the width chosen in the settings panel; before, only the home page and the
-always-full tables did, and the other pages stayed at 1080px whatever was picked.
+always-full tables did, and the other pages stayed at 1080px whatever was picked. `/spotify` links
+each world page once, as a card that also shows its playlist count.
 
 **Score:** 3
 

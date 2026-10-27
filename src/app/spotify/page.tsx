@@ -1,9 +1,9 @@
 // De Spotify-hub op /spotify. Server Component: leest de tokens (OAuth-status) en de verrijkte
 // playlists (fase 4) -- stuk fs-werk dat hier moet blijven (Node's `fs`, niet beschikbaar in
 // 'use client'). Bovenaan de card per pagina onder /spotify, daaronder de verbindingsstatus +
-// login/logout + de sync-trigger (fase 2/3, SyncButton.tsx) en de werelden. De playlist manager zelf
+// login/logout + de sync-trigger (fase 2/3, SyncButton.tsx) en de uitleg over de werelden (zelf als
+// card bovenaan, met hun aantal playlists). De playlist manager zelf
 // (PlaylistManager, 'use client') heeft sinds de cards zijn eigen pagina: /spotify/playlists.
-import Link from "next/link";
 import { headers } from "next/headers";
 import { readTokens } from "@/lib/spotify/tokenStore";
 import { getEnrichedSnapshot } from "@/lib/spotify/enrichedPlaylists";
@@ -99,6 +99,14 @@ export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusP
       ? `De login-poging kon niet worden geverifieerd (state komt niet overeen), terwijl je de app op ${hostMismatch.browserHost} hebt geopend en de callback op ${hostMismatch.redirectHost} binnenkomt. Dat zou de login-route zelf moeten hebben rechtgezet, dus dit is onverwacht. Open de app op ${hostMismatch.correctUrl} en probeer het daar.`
       : (ERROR_MESSAGES[params.error] ?? `Onbekende fout: ${params.error}`)
     : null;
+  // De wereld-pagina's staan één keer op deze pagina: als card hierboven. Hun aantal playlists, dat
+  // eerder op een eigen tegel onder "Werelden" stond, komt in de card mee zodra er een snapshot is.
+  const cards = enriched
+    ? PAGE_CARDS.map((card) => {
+        const world = SPOTIFY_WORLDS.find((w) => WORLD_META[w].href === card.href);
+        return world ? { ...card, sub: `${card.sub} · ${worldCounts[world]} playlists` } : card;
+      })
+    : PAGE_CARDS;
 
   return (
     <main className="wrap">
@@ -116,7 +124,7 @@ export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusP
           <span className="eyebrow">Pagina&apos;s</span>
           <span className="rule"></span>
         </div>
-        <PageCardGrid cards={PAGE_CARDS} />
+        <PageCardGrid cards={cards} />
       </section>
 
       <section className="layer">
@@ -190,20 +198,6 @@ export default async function SpotifyStatusPage({ searchParams }: SpotifyStatusP
             zijn eigen folder-indeling niet terug) -- elke playlist valt precies in één wereld en
             is in de playlist manager per rij corrigeerbaar.
           </p>
-          <div className="world-grid">
-            {SPOTIFY_WORLDS.map((world) => {
-              const meta = WORLD_META[world];
-              return (
-                <Link key={world} href={meta.href} className="world-tile">
-                  <span className="emoji" aria-hidden="true">
-                    {meta.emoji}
-                  </span>
-                  <span className="label">{meta.label}</span>
-                  <span className="count">{worldCounts[world]}</span>
-                </Link>
-              );
-            })}
-          </div>
           <p className="empty-note" style={{ marginTop: "10px" }}>
             Samen {worldCounts.mmc + worldCounts.djcylow + worldCounts.prive} van de{" "}
             {enriched.playlists.length} playlists -- niets valt buiten een wereld.
