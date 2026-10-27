@@ -12,6 +12,7 @@ import { BPM_TIER_META, MMC_BPM_TIERS } from "@/lib/spotify/classifyBpm";
 export const PAGE_TITLES: Record<string, string> = {
   "/": "Home",
   "/spotify": "Spotify",
+  "/mixen": "Mixen",
   "/spotify/playlists": "Playlists",
   "/spotify/playlists/manager": "Playlist manager",
   "/spotify/verbinding": "Verbinding",

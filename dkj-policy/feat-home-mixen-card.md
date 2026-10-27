@@ -41,22 +41,23 @@
 
 ### CREATE
 
-- [x] `src/app/page.tsx`: een Mixen-card onder de Spotify-card, met daarin een card-link per publieke mix (readMixes, nieuwste eerst) naar djcylow.com
+- [x] `src/app/page.tsx`: een Mixen-card naast de Spotify-card, in dezelfde vorm, naar `/mixen`
+- [x] `src/app/mixen/page.tsx`: de mixen-hub, een card-link per publieke mix (readMixes, nieuwste eerst) naar djcylow.com, in de vorm van `/spotify`
 
 ### TEST
 
 - [x] typecheck, eslint en vitest groen (924 tests)
-- [x] localhost:3000 rendert alle 78 publieke mixen in de Mixen-card
+- [x] localhost:3000 toont Spotify en Mixen; /mixen rendert alle 78 publieke mixen
 
 ### DEPLOY: feat/home-mixen-card
 
-De homepagina draagt naast de Spotify-card een Mixen-card met een card per mix van de DJ Cylow-website, nieuwste eerst, elk met genre, BPM en datum en een link naar de mixpagina op djcylow.com.
+De homepagina draagt naast de Spotify-card een Mixen-card die doorklikt naar /mixen, met daar een card per mix van de DJ Cylow-website, nieuwste eerst, elk met genre, BPM en datum en een link naar de mixpagina op djcylow.com.
 
 **Score:** 3
 
 #### What makes this deploy extra special
 
-Dave ziet op de homepagina meteen elke mix die hij gemaakt heeft en opent er één met één klik.
+Dave vindt via de homepagina elke mix die hij gemaakt heeft en opent er één met één klik.
 
 **Score:** 3
 
