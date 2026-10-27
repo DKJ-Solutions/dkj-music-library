@@ -18,4 +18,4 @@
 @use "components/mix-bridge"; // Mixen <-> playlists: de brug met de DJ Cylow-mix-JSON's
 @use "components/missing-mixes"; // Tweede tabel onder de playlist-manager: mixen zonder eigen playlist
 @use "components/track-register"; // /spotify/trackregister -- het Trackregister (bibliotheek-tabel)
-@use "components/colour-cards"; // /mixen/planned -- een card per albumkleur, in die kleur
+@use "components/colour-cards"; // /mixen/planned -- een card per albumkleur, met een stip in die kleur

@@ -41,8 +41,8 @@
 
 ### CREATE
 
-- [x] Acht cards op /mixen/planned (Cyan, Yellow, Blue, Green, Orange, Magenta, Red, Purple), elk met zijn `--emotion-*`-kleur als achtergrond
-- [x] `components/_colour-cards.scss`, met tekst die per licht/donker meedraait
+- [x] Acht cards op /mixen/planned (Cyan, Yellow, Blue, Green, Orange, Magenta, Red, Purple), in de gewone card-vorm
+- [x] `components/_colour-cards.scss`: een stip in de `--emotion-*`-kleur op de plek van het icoon (eerst een volle achtergrond, op verzoek teruggebracht naar de stijl van de andere cards)
 
 ### TEST
 
@@ -52,7 +52,8 @@
 ### DEPLOY: feat/planned-colour-cards
 
 De pagina Planned onder Mixen toont acht kaarten, één per albumkleur (Cyan, Yellow, Blue, Green, Orange,
-Magenta, Red, Purple), elk met die kleur als achtergrond. Daarvoor stond er alleen een lege melding.
+Magenta, Red, Purple), in dezelfde stijl als de andere kaarten, met een stip in de kleur zelf. Daarvoor stond
+er alleen een lege melding.
 
 **Score:** 2
 

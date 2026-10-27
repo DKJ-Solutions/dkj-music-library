@@ -1,6 +1,8 @@
 // Planned op /mixen/planned: de plek voor de mixen die nog op djcylow.com moeten verschijnen. Er is nog
-// geen bron voor geplande mixen; de pagina toont alvast een card per albumkleur, met die kleur als
-// achtergrond (components/_colour-cards.scss). De card ernaartoe staat op de hub /mixen, naast Published.
+// geen bron voor geplande mixen; de pagina toont alvast een card per albumkleur, in dezelfde vorm als de
+// cards van PageCardGrid, met een stip in die kleur op de plek van het icoon (components/_colour-cards.scss).
+// Nog geen link en dus geen chevron: er is per kleur nog geen pagina. De card ernaartoe staat op de hub
+// /mixen, naast Published.
 import { pageTitle } from "@/lib/pages";
 
 // De volgorde zoals gevraagd (27 oktober 2026), niet die van DKJ_ALBUM_COLOURS.
@@ -17,8 +19,11 @@ export default function MixenPlannedPage() {
       <section className="layer">
         <div className="grid-3">
           {COLOURS.map((colour) => (
-            <section key={colour} className="card colour-card" data-color={colour.toLowerCase()}>
-              <h2 className="colour-card__title">{colour}</h2>
+            <section key={colour} className="card">
+              <div className="menu-item">
+                <span className="menu-item__icon colour-dot" data-color={colour.toLowerCase()} aria-hidden="true" />
+                <span className="menu-item__label">{colour}</span>
+              </div>
             </section>
           ))}
         </div>
