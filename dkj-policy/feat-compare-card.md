@@ -55,7 +55,7 @@ pc-map koppelen we later.
 
 - [x] typecheck, eslint en vitest groen (67 bestanden, 926 tests), met een kruimelpad-test voor /compare
 - [x] De vier routes geven een 200 in de draaiende dev-server, en het oude adres stuurt met een 307 door
-- [ ] Visuele check door Dave
+- [x] Visuele check door Dave: gezien en akkoord
 
 ### DEPLOY: feat/compare-card
 
