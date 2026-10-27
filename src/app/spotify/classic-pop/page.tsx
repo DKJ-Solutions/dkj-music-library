@@ -1,6 +1,6 @@
 // /spotify/classic-pop -- één tabel met elk nummer uit de playlists met "Classic Pop" in de naam (de
 // hoofdplaylist en de kleur-playlists van Music Mood Colours), elk nummer één keer, met de playlists waarin
-// het staat. Leest de Spotify-snapshot, zoals /spotify/maple-classic; de rijen komen uit
+// het staat. Leest de Spotify-snapshot, zoals /spotify/playlists/maple-classic; de rijen komen uit
 // playlistTableRows.ts, de weergave uit ClassicPopTable.tsx.
 import Link from "next/link";
 import { readSnapshot } from "@/lib/spotify/snapshotStore";

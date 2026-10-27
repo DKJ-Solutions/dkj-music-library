@@ -1,6 +1,6 @@
-// De BPM-sectie op /spotify/musicmoodcolours: vier tegels (96/112/128/176 BPM) + een eventuele
+// De BPM-sectie op /spotify/playlists/musicmoodcolours: vier tegels (96/112/128/176 BPM) + een eventuele
 // "overig"-tegel, elk met een teller en een klik-door naar de bijbehorende BPM-sub-route
-// (src/app/spotify/musicmoodcolours/<tier>bpm/page.tsx) -- zelfde idioom als de drie
+// (src/app/spotify/playlists/musicmoodcolours/<tier>bpm/page.tsx) -- zelfde idioom als de drie
 // werelden-tegels op /spotify (zie WORLD_META/world-grid in classifyWorld.ts/_world-nav.scss),
 // hier hergebruikt voor de BPM-tiers binnen MMC.
 import Link from "next/link";

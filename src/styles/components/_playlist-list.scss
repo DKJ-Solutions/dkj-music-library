@@ -31,7 +31,7 @@
 // in 24px. De andere kolommen hadden al genoeg lucht voor die pijl (7px, dus ~8px inclusief marge).
 //
 // 2026-07-25 -- kolommen verbergen per pagina (Dave, "de tabel zo compact mogelijk"): een kolom die op
-// een pagina per definitie één waarde heeft is ruis. Op /spotify/musicmoodcolours zijn dat WERELD
+// een pagina per definitie één waarde heeft is ruis. Op /spotify/playlists/musicmoodcolours zijn dat WERELD
 // (altijd MMC) en TYPE (altijd EDM); een laag dieper, op de BPM-sub-routes, ook BPM.
 //
 // Daarvoor staat elke kolombreedte nu in een **CSS-variabele** i.p.v. in één vaste `$playlist-columns`
@@ -602,7 +602,7 @@ $playlist-cols: (
 @media (max-width: 720px) {
   // Smal scherm gebruikt exact hetzelfde mechanisme als het verbergen per pagina: de kolombreedte op 0
   // en de cellen uit de flow. Daardoor kunnen de twee over elkaar heen liggen -- op
-  // /spotify/musicmoodcolours/176bpm op een telefoon zijn wereld/type/bpm én de detailkolommen weg,
+  // /spotify/playlists/musicmoodcolours/176bpm op een telefoon zijn wereld/type/bpm én de detailkolommen weg,
   // zonder dat daar een aparte kolomlijst voor bestaat.
   //
   // De wereld-kolom verdwijnt hier bewust mee: die correctie-select is prima op een groter scherm te

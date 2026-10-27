@@ -1,4 +1,4 @@
-// /spotify/maple-classic -- een eigen pagina voor één playlist: "Maple Classic 2026 LAN" (van Jellootje,
+// /spotify/playlists/maple-classic -- een eigen pagina voor één playlist: "Maple Classic 2026 LAN" (van Jellootje,
 // dus een gedeelde playlist, geen eigen). Leest de Spotify-snapshot, zoals de wereld-routes; de rijen
 // komen uit playlistTableRows.ts, de weergave uit PlaylistTable.tsx.
 import Link from "next/link";
@@ -7,7 +7,7 @@ import { foundReleaseYears, readReleaseYearCache } from "@/lib/musicbrainz/cache
 import { readLibraryYears, toPlaylistTableRows, userNamesFromSnapshot } from "@/lib/spotify/playlistTableRows";
 import { playlistUrl } from "@/lib/library/playlistLink";
 import { PlaylistTable } from "@/components/spotify/PlaylistTable";
-import SyncButton from "../verbinding/SyncButton";
+import SyncButton from "../../verbinding/SyncButton";
 import { pageTitle } from "@/lib/pages";
 
 // Zelfde reden als /spotify/page.tsx: leest een fs-snapshot die buiten de build kan wijzigen.
@@ -29,7 +29,7 @@ export default function MapleClassicPage() {
     <main className="wrap wrap--full">
       <header className="masthead">
         <p className="kicker">dkj-music-library · Playlist</p>
-        <h1>{pageTitle("/spotify/maple-classic")}</h1>
+        <h1>{pageTitle("/spotify/playlists/maple-classic")}</h1>
         {playlist && (
           <p className="lede">
             Van {playlist.owner.displayName ?? playlist.owner.id} ·{" "}

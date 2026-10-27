@@ -7,7 +7,7 @@
 // die voor een mix bestaan -- WERELD en TYPE ontbreken (TYPE is voor elke mix EDM, daarom verbergt de
 // hoofdtabel die op MMC ook), en de done-vink is hier de "waarom"-kolom geworden.
 //
-// Op /spotify/musicmoodcolours -- waar de hoofdtabel WERELD en TYPE verbergt -- lijnen beide tabellen
+// Op /spotify/playlists/musicmoodcolours -- waar de hoofdtabel WERELD en TYPE verbergt -- lijnen beide tabellen
 // daardoor kolom voor kolom uit. Wijzigt een breedte in $playlist-cols, dan hoort die hier mee te gaan.
 $missing-col-gap: 10px;
 $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56px 32px;

@@ -88,20 +88,20 @@ export const WORLD_META: Record<SpotifyWorld, { label: string; emoji: string; de
     emoji: "🎨",
     description:
       "Music Mood Colours -- uitsluitend Dave's genummerde mixen: House Mix en Drum & Bass (Mix), altijd met een Vol.-nummer.",
-    href: "/spotify/musicmoodcolours",
+    href: "/spotify/playlists/musicmoodcolours",
   },
   djcylow: {
     label: "DJ Cylow",
     emoji: "🎧",
     description: "Het DJ-werk: Feestzaal-fases, gigs en de losse DJ Cylow-compilaties.",
-    href: "/spotify/djcylow",
+    href: "/spotify/playlists/djcylow",
   },
   prive: {
     label: "Privé",
     emoji: "🏠",
     description:
       "De rest: losse persoonlijke lijsten, de kale EDM-emmers, Music Mood, D&D, en playlists die je alleen volgt.",
-    href: "/spotify/prive",
+    href: "/spotify/playlists/prive",
   },
 };
 

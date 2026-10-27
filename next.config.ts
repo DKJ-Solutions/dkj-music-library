@@ -15,6 +15,17 @@ const nextConfig: NextConfig = {
   // Zonder deze regel blokkeert Next.js de dev-verbinding (HMR) van dat adres; de pagina hydrateert dan
   // niet en geen knop in de tabel reageert, zonder één fout in de console (28 september 2026).
   allowedDevOrigins: ["127.0.0.1", "192.168.*.*"],
+  // De playlist-pagina's hangen sinds de Playlists-laag onder /spotify/playlists; de oude adressen
+  // (bladwijzers, links in oudere notities) sturen door. /spotify/playlists zelf is nu de hub, met de
+  // manager als eerste card.
+  async redirects() {
+    return [
+      { source: "/spotify/musicmoodcolours/:path*", destination: "/spotify/playlists/musicmoodcolours/:path*", permanent: false },
+      { source: "/spotify/djcylow", destination: "/spotify/playlists/djcylow", permanent: false },
+      { source: "/spotify/prive", destination: "/spotify/playlists/prive", permanent: false },
+      { source: "/spotify/maple-classic", destination: "/spotify/playlists/maple-classic", permanent: false },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -53,7 +53,7 @@ export function BpmPage({ bpm }: { bpm: MmcBpmTier }) {
         // Een laag dieper dan de MMC-wereld (Dave, 2026-07-25): naast WERELD en TYPE -- die op elke
         // MMC-rij hetzelfde zijn -- draagt hier ook de BPM-kolom op iedere rij dezelfde tier, want dát
         // is waarop deze route filtert. De BPM-correctie-select zit in die kolom, dus bijstellen gaat
-        // vanaf hier niet meer; dat kan een niveau hoger, op /spotify/musicmoodcolours.
+        // vanaf hier niet meer; dat kan een niveau hoger, op /spotify/playlists/musicmoodcolours.
         <PlaylistManager
           playlists={playlists}
           mixInfoById={mixInfoById}

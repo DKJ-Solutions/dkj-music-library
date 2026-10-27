@@ -41,17 +41,33 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] New hub `/spotify/playlists` ("Playlists") with five cards: Playlist manager, Music Mood Colours, DJ Cylow, Privé, Maple Classic 2026 LAN
+- [x] Move those pages one level down (`/spotify/playlists/...`); the manager to `/spotify/playlists/manager`
+- [x] Name registry, world/BPM hrefs, links and comments follow the new routes; redirects from the old URLs
 
 ### TEST
 
+- [x] `tsc --noEmit`, `eslint`, `vitest run` (924 tests) green
+- [x] Every new route answers 200 on the dev server; old URLs redirect
+- [ ] Dave looks at `/spotify` and `/spotify/playlists` in the browser
+
 ### DEPLOY: feat/playlists-hub
 
-**Score:**
+`/spotify` has a new **Playlists** card. Behind it, at `/spotify/playlists`, sit the Playlist manager,
+Music Mood Colours, DJ Cylow, Privé and Maple Classic 2026 LAN, and those pages moved one level down
+with it: `/spotify/playlists/manager`, `/spotify/playlists/musicmoodcolours` (with its BPM pages and
+`mixen`), `/spotify/playlists/djcylow`, `/spotify/playlists/prive` and `/spotify/playlists/maple-classic`.
+The breadcrumb now reads Home › Spotify › Playlists › … on each of them. The old addresses redirect
+to the new ones, so bookmarks keep working.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+The Spotify page is shorter: the five playlist pages share one card, and a bookmark to an old
+address lands on the same page at its new one.
+
+**Score:** 3
 
 #### Pull Request
 
