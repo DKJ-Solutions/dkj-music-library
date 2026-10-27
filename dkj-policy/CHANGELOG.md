@@ -2,7 +2,28 @@
 
 ## [Unreleased]
 
-**58 / 77 minor entries** <!-- pending-tally -->
+**59 / 78 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/settings-english-labels · 20261027-091208Z
+
+The settings button and its panel now read in English (Settings, Theme, Light, Dark, Width, Reset
+theme), the same as the plugin's own pages. The theme names stay Dutch: they come from the house style.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+The settings panel speaks the same language as the plugin pages it sits beside.
+
+**Score:** 2
+
+#### Pull Request
+
+the settings panel in English, like the plugin's own pages
+
+[PR #93](https://github.com/DKJ-Solutions/dkj-music-library/pull/93)
+
+---
 
 ### DEPLOY: feat/home-page-cards · 20261027-090150Z
 
