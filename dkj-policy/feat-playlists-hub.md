@@ -41,7 +41,7 @@
 
 ### CREATE
 
-- [x] New hub `/spotify/playlists` ("Playlists") with five cards: Playlist manager, Music Mood Colours, DJ Cylow, Privé, Maple Classic 2026 LAN, Classic Pop
+- [x] New hub `/spotify/playlists` ("Playlists") with six cards: Playlist manager, Music Mood Colours, DJ Cylow, Privé, Maple Classic 2026 LAN, Classic Pop
 - [x] Move those pages one level down (`/spotify/playlists/...`); the manager to `/spotify/playlists/manager`
 - [x] Name registry, world/BPM hrefs, links and comments follow the new routes; redirects from the old URLs
 
