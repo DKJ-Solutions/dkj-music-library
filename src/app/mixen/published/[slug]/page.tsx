@@ -1,10 +1,10 @@
-// De detailpagina van één mix op /mixen/<slug>: de gegevens uit de mix-JSON op één rij, de link naar de
+// De detailpagina van één mix op /mixen/published/<slug>: de gegevens uit de mix-JSON op één rij, de link naar de
 // mixpagina op djcylow.com ernaast, en daaronder de top-artiesten en de tracklist naast elkaar.
 import { notFound } from "next/navigation";
 import { mixUrl } from "@/lib/library/djcylowMix";
 import { findMixBySlug } from "@/lib/mixes/mixPages";
 
-// Leest de mix-JSON's van schijf, en die wijzigen buiten de build -- zelfde reden als /mixen.
+// Leest de mix-JSON's van schijf, en die wijzigen buiten de build -- zelfde reden als /mixen/published.
 export const dynamic = "force-dynamic";
 
 export default async function MixDetailPage({ params }: { params: Promise<{ slug: string }> }) {

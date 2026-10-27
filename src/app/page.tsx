@@ -16,7 +16,7 @@ const CARDS: PageCard[] = [
     href: "/mixen",
     icon: "disc",
     label: pageTitle("/mixen"),
-    sub: "Elke mix van de DJ Cylow-website, met een link naar zijn pagina",
+    sub: "De mixen van de DJ Cylow-website, met Published: alles wat op djcylow.com staat",
   },
 ];
 

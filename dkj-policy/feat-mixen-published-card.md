@@ -41,17 +41,28 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] /mixen wordt een hub met één card-link: Published, naar /mixen/published
+- [x] De mix-grid verhuist naar /mixen/published, de detailpagina's naar /mixen/published/<slug>
+- [x] "Published" in PAGE_TITLES, mixHref en de breadcrumb-test mee verhuisd
 
 ### TEST
 
+- [x] tsc, eslint en vitest (925 tests) groen
+- [x] /mixen, /mixen/published en een detailpagina geven 200 op de dev-server; de card telt 78 mixen
+- [ ] Dave kijkt de pagina's na op localhost (visueel resultaat -- geen merge zonder zijn blik)
+
 ### DEPLOY: feat/mixen-published-card
 
-**Score:**
+/mixen is nu een hub met een Published-card. Die opent /mixen/published, met een card per mix die op
+djcylow.com staat (nieuwste eerst); de detailpagina per mix staat voortaan op /mixen/published/<slug>.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie de mixen bekijkt klikt nu eerst door via Published; de oude /mixen/<slug>-links bestaan niet meer.
+
+**Score:** 2
 
 #### Pull Request
 
