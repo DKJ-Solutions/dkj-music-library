@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**57 / 76 minor entries** <!-- pending-tally -->
+**58 / 77 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/home-page-cards · 20261027-090150Z
+
+`/` no longer redirects to `/spotify`: it is a home page in the hub's form -- the breadcrumb bar and a grid of card links, one card per page the app has -- Spotify, the DKJ Trackregister, the data dashboard, the three worlds, the mix bridge and the two playlist tables. Every page now opens with the house site header -- the mark and the app's name linking home, and the settings button inside it instead of floating. A future desktop mirror gets its own card there.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Opening the app lands on a home page with a card for every part of the library instead of straight in the playlist manager, and every page carries the site header with the way home.
+
+**Score:** 2
+
+#### Pull Request
+
+Home page with cards instead of a redirect to /spotify
+
+[PR #92](https://github.com/DKJ-Solutions/dkj-music-library/pull/92)
+
+---
 
 ### DEPLOY: fix/89-house-style-v5-33 · 20261026-214805Z
 
