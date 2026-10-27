@@ -87,10 +87,6 @@ export default function SpotifyHubPage() {
       <header className="masthead">
         <p className="kicker">dkj-music-library · Spotify</p>
         <h1>{pageTitle("/spotify")}</h1>
-        <p className="lede">
-          Read-only back-up van je Spotify-playlists, met een pagina per weergave. Er wordt niets
-          naar Spotify teruggeschreven.
-        </p>
       </header>
 
       <section className="layer">
