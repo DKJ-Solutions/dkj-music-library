@@ -43,6 +43,7 @@
 
 - [x] /mixen wordt een hub met één card-link: Published, naar /mixen/published
 - [x] De mix-grid verhuist naar /mixen/published, de detailpagina's naar /mixen/published/<slug>
+- [x] Tweede card Planned op /mixen, naar /mixen/planned (voorlopig leeg: nog geen bron voor geplande mixen)
 - [x] "Published" in PAGE_TITLES, mixHref en de breadcrumb-test mee verhuisd
 
 ### TEST
@@ -53,7 +54,8 @@
 
 ### DEPLOY: feat/mixen-published-card
 
-/mixen is nu een hub met een Published-card. Die opent /mixen/published, met een card per mix die op
+/mixen is nu een hub met twee cards, Published en Planned. Planned opent /mixen/planned, dat er alvast
+staat maar nog leeg is. Published opent /mixen/published, met een card per mix die op
 djcylow.com staat (nieuwste eerst); de detailpagina per mix staat voortaan op /mixen/published/<slug>.
 
 **Score:** 2

@@ -1,6 +1,6 @@
 // De mixen-hub op /mixen: één grid met een card-link per pagina eronder, zelfde vorm als de Spotify-hub op
 // /spotify. De Published-card drilt door naar /mixen/published, waar een card per mix staat die op
-// djcylow.com gepubliceerd is.
+// djcylow.com gepubliceerd is; de Planned-card naar /mixen/planned, voor de mixen die nog moeten komen.
 import { PageCardGrid, type PageCard } from "@/components/PageCardGrid";
 import { readMixes } from "@/lib/mixes/mixStore";
 import { pageTitle } from "@/lib/pages";
@@ -16,6 +16,12 @@ export default function MixenHubPage() {
       icon: "disc",
       label: pageTitle("/mixen/published"),
       sub: `Alle mixen die nu op djcylow.com staan · ${published} mixen`,
+    },
+    {
+      href: "/mixen/planned",
+      icon: "calendar",
+      label: pageTitle("/mixen/planned"),
+      sub: "De mixen die nog op djcylow.com moeten verschijnen",
     },
   ];
 

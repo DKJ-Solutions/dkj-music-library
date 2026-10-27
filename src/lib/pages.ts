@@ -14,6 +14,7 @@ export const PAGE_TITLES: Record<string, string> = {
   "/spotify": "Spotify",
   "/mixen": "Mixen",
   "/mixen/published": "Published",
+  "/mixen/planned": "Planned",
   "/spotify/playlists": "Playlists",
   "/spotify/playlists/manager": "Playlist manager",
   "/spotify/verbinding": "Verbinding",
