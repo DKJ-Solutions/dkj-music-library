@@ -39,19 +39,31 @@
 
 ### PLAN
 
+`Get-ReleaseConsumerBumps` was unanswered, and its fallback `@()` means a cut never drafts an audience
+note -- so the hub's release-notes page, which is built from those notes, could never appear. Dave chose
+minor and major (October 27, 2026).
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Answer `Get-ReleaseConsumerBumps` with `@('minor', 'major')` in `scripts/repo-config.ps1`
 
 ### TEST
 
+- [x] The seam loads: `Get-ReleaseConsumerBumps` returns `minor`, `major`
+
 ### DEPLOY: feat/release-audience-notes
 
-**Score:**
+Every minor and major release cut now drafts an audience note under `dkj-policy/releases/audience/`,
+the note the hub's release-notes page is built from. A patch still gets none.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+From the next minor on, each release comes with a note in plain words about what changed for you as a
+user of the music library, readable on the release-notes page.
+
+**Score:** 2
 
 #### Pull Request
 
