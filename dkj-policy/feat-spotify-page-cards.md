@@ -61,7 +61,7 @@ Classic Pop, data dashboard) go.
 - [x] vitest over `src/components/spotify` green (113 tests)
 - [x] `src/lib/pages.test.ts` for the trail; full vitest green (919 + 5), tsc and eslint over `src` green
 - [x] Every route on the dev server: the trail runs Home > ... > the page, and the h1 equals the current crumb on all eleven pages with an h1
-- [ ] Dave's visual review of home and /spotify
+- [x] Dave's visual review of home, /spotify and the breadcrumbs -- approved with "ship it" (October 27, 2026)
 
 ### DEPLOY: feat/spotify-page-cards
 
