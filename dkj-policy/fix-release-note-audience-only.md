@@ -41,17 +41,23 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `Get-ReleaseNoteSections` answers `@('Audience')` in `scripts/repo-config.ps1`
+- [x] Removed *What it is worth* and *What was still open at this release* from the 0.1.0 note, and its *For whom* line no longer promises colleagues a section
+- [x] Filed upstream as DKJ-Solutions/dkj-claude-plugins#3584: drop both sections everywhere, not opt-in
 
 ### TEST
 
 ### DEPLOY: fix/release-note-audience-only
 
-**Score:**
+`scripts/repo-config.ps1` now answers `Get-ReleaseNoteSections` with `@('Audience')`, so `cut-release` stops drafting the two organisational sections. Without an answer it drafts all three. The shared default is DKJ-Solutions/dkj-claude-plugins#3584.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+The release notes now only say what changed for you. The v0.1.0 note no longer has *What it is worth* or *What was still open at this release*, and the next release notes will not get them either.
+
+**Score:** 2
 
 #### Pull Request
 
