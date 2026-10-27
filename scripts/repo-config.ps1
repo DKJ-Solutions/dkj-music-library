@@ -116,6 +116,15 @@ function Get-ReleaseConsumerBumps {
     return @('minor', 'major')
 }
 
+# Welke secties die audience-note krijgt: alleen wat er veranderd is (Dave, 27 oktober 2026). De lezer
+# is de gebruiker, en die wil weten wat er nieuw is, niet wat het de organisatie oplevert of wat er nog
+# openstond. Zonder antwoord schrijft cut-release alle drie, en zo kwamen "What it is worth" en "What was
+# still open at this release" in 0.1.0 terecht (DKJ-Solutions/dkj-claude-plugins#2564).
+function Get-ReleaseNoteSections {
+    <# De secties van de audience-note: alleen Audience (wat er veranderd is). #>
+    return @('Audience')
+}
+
 # --- Adopted from the DKJ-Solutions/dkj-claude-plugins config blueprint ---------------------------------
 #
 # Each function below is the source's own text, comments included, for a value that states the
