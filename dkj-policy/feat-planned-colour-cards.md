@@ -48,7 +48,7 @@
 ### TEST
 
 - [x] `tsc --noEmit`, eslint en vitest (926) groen; de acht links en hun pagina's geven 200, een onbekende kleur 404
-- [ ] Visuele check door de eigenaar
+- [x] Visuele check door de eigenaar
 
 ### DEPLOY: feat/planned-colour-cards
 
