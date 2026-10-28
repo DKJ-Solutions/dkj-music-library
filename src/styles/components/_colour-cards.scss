@@ -7,6 +7,50 @@
   border-radius: 50%;
 }
 
+// De vierkante thumbnail van een mix (`image`), op dezelfde plek: /mixen/published.
+.card-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+// Een card met zo'n thumbnail heeft geen padding (Dave): de thumbnail sluit aan op de rand van de card.
+// Zo'n card is ALTIJD even hoog (Dave): een vaste hoogte, gelijk aan een card mét padding, die de grid niet
+// oprekt als een buur in de rij hoger is; een te lange titel of subregel wordt afgekapt in plaats van de card
+// te laten groeien. De thumbnail vult die hoogte (vierkant); de chevron houdt wat lucht tot de rechterrand.
+.card--thumb {
+  height: calc(var(--tap) + 2 * var(--spacing-6) + 2px); // + de rand van 1px boven en onder
+  align-self: start;
+  padding: 0;
+  overflow: hidden;
+
+  .menu-list,
+  .menu-item {
+    height: 100%;
+  }
+
+  .menu-item__label,
+  .menu-item__sub {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .card-thumb {
+    width: auto;
+    height: 100%;
+    aspect-ratio: 1;
+    border-radius: 0;
+    // Zonder dit duwt de bron-afbeelding (1000px+) de rij open; nu volgt hij alleen de hoogte van de card.
+    contain: size;
+  }
+
+  .menu-item__chevron {
+    margin-right: var(--spacing-4);
+  }
+}
+
 @each $color in "cyan", "yellow", "blue", "green", "orange", "magenta", "red", "purple" {
   .colour-dot[data-color="#{$color}"] {
     background: var(--emotion-#{$color});

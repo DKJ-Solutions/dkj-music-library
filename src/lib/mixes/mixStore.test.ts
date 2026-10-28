@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import fs from "fs";
 import os from "os";
 import path from "path";
-import { getMixDirCandidates, mixSlugOf, normalizeMix, readMixes } from "./mixStore";
+import { getMixDirCandidates, mixSlugOf, mixSquareFile, normalizeMix, readMixes } from "./mixStore";
 import type { RawMixEntry } from "./types";
 
 let tempDir: string;
@@ -94,6 +94,12 @@ describe("normalizeMix", () => {
       "Roddy Lima - Shadows",
     ]);
     expect(mix.topArtists).toEqual(["Tiësto", "MEDUZA"]);
+  });
+
+  it("neemt image_square over, en maakt een lege waarde null", () => {
+    const square = "/images/light/red/square/image_light_red_square_20260615.webp";
+    expect(normalizeMix({ ...FULL_ENTRY, image_square: square }, "light-red.json").imageSquare).toBe(square);
+    expect(normalizeMix({ ...FULL_ENTRY, image_square: "" }, "light-red.json").imageSquare).toBeNull();
   });
 
   it("accepteert de legacy kleine letters voor color/power", () => {
@@ -212,5 +218,31 @@ describe("mixSlugOf", () => {
     expect(mixSlugOf("luister/mix/red-light-m-EDM-128BPM-20260615.html")).toBe("red-light-m-edm-128bpm-20260615");
     expect(mixSlugOf("")).toBeNull();
     expect(mixSlugOf(undefined)).toBeNull();
+  });
+});
+
+// De thumbnails wonen in `public/` van djcylow-react, drie niveaus boven de mix-map. Het pad komt uit de
+// JSON, dus een pad dat daar buiten uitkomt mag geen bestand opleveren.
+describe("mixSquareFile", () => {
+  const square = "/images/light/red/square/thumb.webp";
+
+  beforeEach(() => {
+    const mixDir = path.join(tempDir, "src", "data", "mixes");
+    fs.mkdirSync(mixDir, { recursive: true });
+    fs.mkdirSync(path.join(tempDir, "public", "images", "light", "red", "square"), { recursive: true });
+    fs.writeFileSync(path.join(tempDir, "public", square), "webp");
+    fs.writeFileSync(path.join(tempDir, "package.json"), "{}");
+    process.env.MIXES_DATA_DIR = mixDir;
+  });
+
+  it("vindt het bestand onder public/ van de zusterrepo", () => {
+    expect(mixSquareFile(square)).toBe(path.join(tempDir, "public", "images", "light", "red", "square", "thumb.webp"));
+  });
+
+  it("levert null voor een leeg pad, een ontbrekend bestand of een pad buiten public/", () => {
+    expect(mixSquareFile(null)).toBeNull();
+    expect(mixSquareFile("/images/bestaat-niet.webp")).toBeNull();
+    expect(mixSquareFile("/../package.json")).toBeNull();
+    expect(mixSquareFile("../../package.json")).toBeNull();
   });
 });

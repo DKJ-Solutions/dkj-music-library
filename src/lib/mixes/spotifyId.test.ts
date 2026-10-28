@@ -26,6 +26,7 @@ function makeMix(overrides: Partial<Mix> = {}): Mix {
     volume: 5,
     date: "2025-11-08",
     bpm: 128,
+    imageSquare: null,
     slug: null,
     topArtists: [],
     tracks: [],
