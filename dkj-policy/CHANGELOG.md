@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**12 / 12 minor entries** <!-- pending-tally -->
+**13 / 13 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/register-menu-toggle-align · 20261028-141623Z
+
+De menuknop in het trackregister ("4 playlists ▾") schoof 7px naar links, zodat alleen de tekst erin
+onder de kop stond en de knop zelf buiten de kolom uitstak. Die verschuiving is weg: de rand van de knop
+begint nu op dezelfde lijn als de kop en de rest van de kolom.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+De knop staat netjes in de kolom in plaats van er links uit te steken.
+
+**Score:** 2
+
+#### Pull Request
+
+Menuknop in het trackregister niet meer naar links verschoven
+
+[PR #115](https://github.com/DKJ-Solutions/dkj-music-library/pull/115)
+
+---
 
 ### DEPLOY: fix/register-menu-toggle-clipped · 20261028-135620Z
 
