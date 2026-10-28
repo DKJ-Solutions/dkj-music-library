@@ -45,7 +45,7 @@
 
 ### TEST
 
-- [ ] Visuele check door Dave: de magenta kleurstip leest als magenta, naast purple
+- [x] Visuele check door Dave: de magenta kleurstip leest als magenta, naast purple
 
 ### DEPLOY: fix/emotion-magenta-hue
 
