@@ -1,5 +1,5 @@
-// De detailpagina van één mix op /mixen/published/<slug>: de gegevens uit de mix-JSON op één rij, de link naar de
-// mixpagina op djcylow.com ernaast, de top-artiesten, en daaronder de tracks van de mix in de tabel van
+// De detailpagina van één mix op /mixen/published/<slug>: de gegevens uit de mix-JSON (top-artiesten inbegrepen)
+// op één rij, de link naar de mixpagina op djcylow.com ernaast, en daaronder de tracks van de mix in de tabel van
 // /spotify/trackregister (TrackRegister `compact`, zoals de werkbak-pagina's op /mixen/preparation/<id>).
 import { notFound } from "next/navigation";
 import { TrackRegister } from "@/components/spotify/TrackRegister";
@@ -29,6 +29,7 @@ export default async function MixDetailPage({ params }: { params: Promise<{ slug
     ["Frequency", mix.gender],
     ["Volume", mix.volume !== null ? `Vol. ${mix.volume}` : null],
     ["Datum", mix.date],
+    ["Top-artiesten", mix.topArtists.length > 0 ? mix.topArtists.join(", ") : null],
   ];
 
   return (
@@ -54,21 +55,6 @@ export default async function MixDetailPage({ params }: { params: Promise<{ slug
             Beluister op djcylow.com
           </a>
         </p>
-      </section>
-
-      <section className="card">
-        <div className="card__head">
-          <h2 className="card__title">Top-artiesten</h2>
-        </div>
-        {mix.topArtists.length > 0 ? (
-          <ul>
-            {mix.topArtists.map((artist) => (
-              <li key={artist}>{artist}</li>
-            ))}
-          </ul>
-        ) : (
-          <p className="empty-note">Geen top-artiesten in de mix-data.</p>
-        )}
       </section>
 
       {"error" in register ? (

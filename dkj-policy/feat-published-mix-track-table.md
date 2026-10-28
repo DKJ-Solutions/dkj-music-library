@@ -42,7 +42,7 @@
 ### CREATE
 
 - [x] /mixen/published/<slug>: de genummerde tracklist vervangen door de compacte `TrackRegister`-tabel, zoals op /mixen/preparation/<id> (Dave); de rijen zijn de tracks uit de bibliotheek waarvan `djcylow_mix` deze slug draagt
-- [x] Top-artiesten blijft als eigen card boven de tabel; de pagina is `wrap--full` omdat de tabel de breedte nodig heeft
+- [x] Top-artiesten als kolom in de facts-rij van de bovenste card in plaats van een eigen card (Dave); de pagina is `wrap--full` omdat de tabel de breedte nodig heeft
 
 ### TEST
 
