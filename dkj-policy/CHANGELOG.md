@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**8 / 8 minor entries** <!-- pending-tally -->
+**9 / 9 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/emotion-magenta-hue · 20261028-095255Z
+
+De emotiekleur magenta was Tailwind-fuchsia en leek naast purple op paars; hij staat nu op een echte magenta-tint.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+Magenta-stippen en -labels zijn weer te onderscheiden van purple.
+
+**Score:** 2
+
+#### Pull Request
+
+magenta leest als magenta, niet als paars
+
+[PR #111](https://github.com/DKJ-Solutions/dkj-music-library/pull/111)
+
+---
 
 ### DEPLOY: feat/preparation-rating-column · 20261028-094703Z
 
