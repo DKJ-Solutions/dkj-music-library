@@ -39,19 +39,34 @@
 
 ### PLAN
 
+Gemeten op /mixen/preparation/<id> in een venster van 1270px: de pagina is 1339px hoog, precies één
+site-header (68px) meer dan het venster, want `.wrap--full` trekt alleen de breadcrumb-balk af. Zolang de
+header in beeld staat, lag de speler op 1241–1338px en was er dus maar ~29px van te zien. Op
+/spotify/trackregister is het net zo.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `Player` (TrackRegister.tsx) scrolt bij elke gekozen track de onderkant van het tabelvak in beeld (smooth, of direct bij prefers-reduced-motion)
 
 ### TEST
 
+- [x] Gemeten in de browser: na een klik op afspelen scrollY 0 → 69, speler op 1116–1213px in een venster van 1214px
+- [x] `TrackRegister.test.tsx` groen (29 tests)
+- [ ] Visuele check door Dave
+
 ### DEPLOY: fix/register-player-in-view
 
-**Score:**
+Wie een track afspeelt in het Trackregister of op een werkbak-pagina, ziet de Spotify-speler nu helemaal:
+de pagina scrolt de site-header weg, zodat de speler onderin het venster staat in plaats van er grotendeels
+onder.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A -- een app voor eigen gebruik; de lezer van deze notes is dezelfde ontwikkelaar.
+
+**Score:** N/A
 
 #### Pull Request
 
