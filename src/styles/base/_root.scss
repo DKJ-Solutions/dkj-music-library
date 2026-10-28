@@ -34,7 +34,8 @@
   --emotion-yellow: light-dark(#a16207, #facc15);
   --emotion-orange: light-dark(#c2410c, #fb923c);
   --emotion-red: light-dark(#dc2626, #f87171);
-  --emotion-magenta: light-dark(#a21caf, #e879f9);
+  // Magenta op ~320° (Dave): de Tailwind-fuchsia van eerst (#a21caf, ~293°) las naast purple als paars.
+  --emotion-magenta: light-dark(#c2128a, #f472d0);
   --emotion-purple: light-dark(#6d28d9, #a78bfa);
   --emotion-blue: light-dark(#1d4ed8, #60a5fa);
   // De symbolen van dkj_rating, exact uit Daves voorbeeld (29 september 2026); gelijk in licht en donker.

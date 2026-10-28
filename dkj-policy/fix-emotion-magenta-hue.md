@@ -41,17 +41,23 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `--emotion-magenta` van Tailwind-fuchsia (`#a21caf` / `#e879f9`, ~293°) naar echt magenta (`#c2128a` / `#f472d0`, ~320°)
 
 ### TEST
 
+- [ ] Visuele check door Dave: de magenta kleurstip leest als magenta, naast purple
+
 ### DEPLOY: fix/emotion-magenta-hue
 
-**Score:**
+De emotiekleur magenta was Tailwind-fuchsia en leek naast purple op paars; hij staat nu op een echte magenta-tint.
+
+**Score:** 1
 
 #### What makes this deploy extra special
 
-**Score:**
+Magenta-stippen en -labels zijn weer te onderscheiden van purple.
+
+**Score:** 2
 
 #### Pull Request
 
