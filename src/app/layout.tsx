@@ -6,6 +6,7 @@ import "@/styles/main.scss";
 import SiteHeader from "@/components/SiteHeader";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { mixPageTitles } from "@/lib/mixes/mixPages";
+import { preparationPageTitles } from "@/lib/mixes/preparationPages";
 
 export const metadata: Metadata = {
   title: "dkj-music-library",
@@ -29,7 +30,7 @@ export default function RootLayout({
       </head>
       <body>
         <SiteHeader />
-        <Breadcrumbs titles={mixPageTitles()} />
+        <Breadcrumbs titles={{ ...mixPageTitles(), ...preparationPageTitles() }} />
         {children}
       </body>
     </html>

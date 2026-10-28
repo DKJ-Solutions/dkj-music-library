@@ -39,19 +39,39 @@
 
 ### PLAN
 
+Een nieuwe card Preparation op de hub /mixen, met daaronder een kaart per Spotify-playlist die op "Vol. X"
+eindigt (de werkbakken), elk met een eigen pagina -- zoals Published een card per mix heeft.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `lib/mixes/preparation.ts`: welke playlists een werkbak zijn (`Vol. X` aan het eind, ook `Vol X`,
+  `Vol. x` en een dubbele spatie), de volgorde en de route
+- [x] `/mixen/preparation`: een card-link per werkbak, met een stip in de kleur van de playlist
+- [x] `/mixen/preparation/<id>`: de pagina per werkbak, met de naamgegevens, een link naar Spotify en de tracks
+- [x] Preparation-card op /mixen, naast Published en Planned
+- [x] Kruimelnamen per werkbak in de layout, bewaard tot de snapshot (30 MB) op schijf wijzigt
 
 ### TEST
 
+- [x] `tsc`, eslint en vitest (`preparation.test.ts`, `pages.test.ts`) groen
+- [x] In de draaiende app: 27 kaarten op /mixen/preparation, de laatste kruimel leest wat de h1 leest, een
+  onbekend id geeft 404
+- [ ] Visuele check door Dave
+
 ### DEPLOY: feat/preparation-card
 
-**Score:**
+Onder Mixen staat een nieuwe card, Preparation, met daaronder een kaart voor elke Spotify-playlist die op
+"Vol. X" eindigt: de werkbakken waarin de tracks voor een mix al verzameld zijn maar de mix nog niet
+gemaakt is. Elke kaart draagt een stip in de kleur van de playlist en opent een eigen pagina met de tracks
+die er al in staan en een link naar de playlist op Spotify.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie de app gebruikt, ziet in één overzicht welke mixen in voorbereiding zijn en hoe vol elke werkbak al is.
+
+**Score:** 3
 
 #### Pull Request
 
