@@ -30,6 +30,21 @@
   margin: 0 0 var(--spacing-3-5);
 }
 
+// Een masthead met een knop rechts naast de h1 (/mixen/published/<slug>, Dave). Op een smal venster
+// zakt de knop onder de titel in plaats van de titel te knijpen.
+.masthead--action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: var(--spacing-4);
+  margin-bottom: var(--spacing-3-5);
+}
+
+.masthead--action h1 {
+  margin: 0;
+}
+
 // Vervangt de inline `style={{ color: "var(--accent-ink)" }}` uit de Vite-versie van App.jsx.
 .accent-text {
   color: var(--accent-ink);

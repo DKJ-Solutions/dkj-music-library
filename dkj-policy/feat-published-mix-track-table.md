@@ -1,4 +1,4 @@
-## feat/published-mix-track-table
+﻿## feat/published-mix-track-table
 
 > **How this file is read.** A step is `- [ ]` until it is resolved -- `- [x]` done, or
 > `- [~]` dropped with the reason, which exists so nobody ticks a box for work they did not do.
@@ -43,6 +43,7 @@
 
 - [x] /mixen/published/<slug>: de genummerde tracklist vervangen door de compacte `TrackRegister`-tabel, zoals op /mixen/preparation/<id> (Dave); de rijen zijn de tracks uit de bibliotheek waarvan `djcylow_mix` deze slug draagt
 - [x] Top-artiesten als kolom in de facts-rij van de bovenste card in plaats van een eigen card (Dave); de pagina is `wrap--full` omdat de tabel de breedte nodig heeft
+- [x] `Beluister op djcylow.com` rechts op de rij van de h1 (Dave), via een nieuwe `.masthead--action` in `_masthead.scss`; op een smal venster zakt de knop onder de titel
 
 ### TEST
 

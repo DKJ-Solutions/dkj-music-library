@@ -1,5 +1,5 @@
 // De detailpagina van één mix op /mixen/published/<slug>: de gegevens uit de mix-JSON (top-artiesten inbegrepen)
-// op één rij, de link naar de mixpagina op djcylow.com ernaast, en daaronder de tracks van de mix in de tabel van
+// op één rij, de link naar de mixpagina op djcylow.com rechts naast de h1, en daaronder de tracks van de mix in de tabel van
 // /spotify/trackregister (TrackRegister `compact`, zoals de werkbak-pagina's op /mixen/preparation/<id>).
 import { notFound } from "next/navigation";
 import { TrackRegister } from "@/components/spotify/TrackRegister";
@@ -34,9 +34,12 @@ export default async function MixDetailPage({ params }: { params: Promise<{ slug
 
   return (
     <main className="wrap wrap--full">
-      <header className="masthead">
+      <header className="masthead masthead--action">
         <p className="kicker">dkj-music-library · Mixen</p>
         <h1>{mix.title}</h1>
+        <a className="btn btn--primary" href={mixUrl(slug)} target="_blank" rel="noreferrer">
+          Beluister op djcylow.com
+        </a>
       </header>
 
       <section className="card">
@@ -50,11 +53,6 @@ export default async function MixDetailPage({ params }: { params: Promise<{ slug
               </div>
             ))}
         </dl>
-        <p className="page-cta">
-          <a className="btn btn--primary" href={mixUrl(slug)} target="_blank" rel="noreferrer">
-            Beluister op djcylow.com
-          </a>
-        </p>
       </section>
 
       {"error" in register ? (
