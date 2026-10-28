@@ -48,7 +48,7 @@
 ### TEST
 
 - [x] `tsc` en `eslint` groen; pagina in de browser geopend, de tabel toont de tracks van de mix
-- [ ] Visuele check door Dave: /mixen/published/red-light-m-edm-128bpm-20260615 ziet eruit zoals de werkbak-pagina
+- [x] Visuele check door Dave: /mixen/published/red-light-m-edm-128bpm-20260615 ziet eruit zoals de werkbak-pagina; Dave zette daarbij de ruimte boven het trackregister op 18px (`_track-register.scss`)
 
 ### DEPLOY: feat/published-mix-track-table
 
