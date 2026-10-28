@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**11 / 11 minor entries** <!-- pending-tally -->
+**12 / 12 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/register-menu-toggle-clipped · 20261028-135620Z
+
+De menuknoppen in het trackregister ("4 playlists ▾", "2 groups ▾" enz.) vielen 7px te smal uit, waardoor het ▾ en de rechterrand werden afgekapt. Ze hebben nu hun volle breedte, en de tekst staat nog steeds recht onder de kolomkop.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+Wie het trackregister gebruikt ziet de menuknoppen weer heel, met pijltje en rand.
+
+**Score:** 2
+
+#### Pull Request
+
+Menuknop in het trackregister niet meer afgekapt
+
+[PR #114](https://github.com/DKJ-Solutions/dkj-music-library/pull/114)
+
+---
 
 ### DEPLOY: feat/published-mix-track-table · 20261028-124327Z
 
