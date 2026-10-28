@@ -70,7 +70,7 @@ eindigt (de werkbakken), elk met een eigen pagina -- zoals Published een card pe
   heeft ze nog
 - [x] Tabel op een werkbakpagina: 3 van 3 en 67 van 68 tracks; het verschil is een gat in de bibliotheek
   (#107), niet in de pagina
-- [ ] Visuele check door Dave
+- [x] Visuele check door Dave ("ship it", 28 oktober 2026)
 
 ### DEPLOY: feat/preparation-card
 
