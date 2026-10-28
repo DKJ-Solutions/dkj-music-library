@@ -41,17 +41,25 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] /mixen/published/<slug>: de genummerde tracklist vervangen door de compacte `TrackRegister`-tabel, zoals op /mixen/preparation/<id> (Dave); de rijen zijn de tracks uit de bibliotheek waarvan `djcylow_mix` deze slug draagt
+- [x] Top-artiesten blijft als eigen card boven de tabel; de pagina is `wrap--full` omdat de tabel de breedte nodig heeft
 
 ### TEST
 
+- [x] `tsc` en `eslint` groen; pagina in de browser geopend, de tabel toont de tracks van de mix
+- [ ] Visuele check door Dave: /mixen/published/red-light-m-edm-128bpm-20260615 ziet eruit zoals de werkbak-pagina
+
 ### DEPLOY: feat/published-mix-track-table
 
-**Score:**
+De detailpagina van een gepubliceerde mix toont de tracks nu in de tabel van het trackregister (compact, zoals een werkbak op /mixen/preparation) in plaats van een genummerde lijst uit de mix-JSON. De rijen komen uit de bibliotheek via `djcylow_mix`.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Per track van een mix zie je meteen rating, playlists en de rest van het register, en kun je erop sorteren.
+
+**Score:** 3
 
 #### Pull Request
 
