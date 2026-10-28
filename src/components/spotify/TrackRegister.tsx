@@ -673,20 +673,21 @@ const HIDDEN_COLUMNS: readonly Column[] = [
 
 const COLUMN_SETS: Record<ColumnSet, readonly Column[]> = { visible: VISIBLE_COLUMNS, hidden: HIDDEN_COLUMNS };
 
-/** De kolommen van de compacte tabel (`compact`), met hun breedte daar: year, dkj_genre, dkj_bpm, plays,
- *  dkj_album en dkj_group zijn er niet relevant (Dave, 28 oktober 2026), en de rest krijgt hun ruimte. */
+/** De kolommen van de compacte tabel (`compact`), in hun volgorde en met hun breedte daar: year, dkj_genre,
+ *  dkj_bpm, plays, dkj_album en dkj_group zijn er niet relevant (Dave, 28 oktober 2026), de rest krijgt hun
+ *  ruimte, en dkj_rating staat links van spotify_playlist (Dave, 28 oktober 2026). */
 const COMPACT_WIDTHS: Partial<Record<Column["key"], string>> = {
   play: "40px",
   dkjTitle: "38%",
   albumArtist: "30%",
-  playlists: "32%",
   rating: "104px",
+  playlists: "32%",
 };
 /** De compacte tabel opent op de hoogste dkj_rating eerst (Dave, 28 oktober 2026): tier-8 bovenaan. */
 const COMPACT_SORT: RegisterSort = { key: "rating", dir: "desc" };
-const COMPACT_COLUMNS: readonly Column[] = VISIBLE_COLUMNS.flatMap((column) => {
-  const width = COMPACT_WIDTHS[column.key];
-  return width ? [{ ...column, width }] : [];
+const COMPACT_COLUMNS: readonly Column[] = Object.entries(COMPACT_WIDTHS).flatMap(([key, width]) => {
+  const column = VISIBLE_COLUMNS.find((c) => c.key === key);
+  return column && width ? [{ ...column, width }] : [];
 });
 
 export function TrackRegister({ rows: initialRows, artistCount, compact = false }: TrackRegisterProps) {
