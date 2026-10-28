@@ -466,6 +466,7 @@ function Player({
 }) {
   const id = row.spotifyTrackId;
   const host = useRef<HTMLDivElement>(null);
+  const region = useRef<HTMLDivElement>(null);
   const controller = useRef<SpotifyEmbedController | null>(null);
   // De track die nu in de speler hoort, voor de callback van createController: die komt pas later terug.
   const wanted = useRef(id);
@@ -509,6 +510,16 @@ function Player({
     controller.current.play();
   }, [id]);
 
+  // De pagina is één site-header hoger dan het venster (_track-register.scss, .wrap--full): zolang die header
+  // nog in beeld staat, valt de onderkant van het tabelvak -- en dus de speler -- eronder weg (Dave). Bij elke
+  // gekozen track scrolt de pagina daarom tot de onderkant van het tabelvak, zodat de speler helemaal in beeld
+  // komt; de breadcrumb-balk blijft bovenaan plakken.
+  useEffect(() => {
+    if (!id) return;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    region.current?.parentElement?.scrollIntoView?.({ block: "end", behavior: reduce ? "auto" : "smooth" });
+  }, [id]);
+
   // Terugval voor animationend: in een tabblad dat niet in beeld is slaat de browser de animatie over,
   // en dan komt dat event nooit -- de speler bleef dan halverwege het sluiten hangen. Iets langer dan de
   // animatie omlaag (0.18s, _track-register.scss).
@@ -522,6 +533,7 @@ function Player({
   const name = row.dkjTitle || row.title || row.id;
   return (
     <div
+      ref={region}
       className={`register-player${closing ? " is-closing" : ""}`}
       aria-label={`Spotify-speler: ${name}`}
       role="region"
