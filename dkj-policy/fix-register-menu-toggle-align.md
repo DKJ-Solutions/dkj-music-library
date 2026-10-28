@@ -41,17 +41,25 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `_track-register.scss`: de `margin-left: -7px` / `margin-right: 7px` op `.register-table td .register-menu-toggle` weg
 
 ### TEST
 
+- [ ] Visuele check door Dave: de knop "N playlists ▾" begint recht onder de tekst van de kolomkop
+
 ### DEPLOY: fix/register-menu-toggle-align
 
-**Score:**
+De menuknop in het trackregister ("4 playlists ▾") schoof 7px naar links, zodat alleen de tekst erin
+onder de kop stond en de knop zelf buiten de kolom uitstak. Die verschuiving is weg: de rand van de knop
+begint nu op dezelfde lijn als de kop en de rest van de kolom.
+
+**Score:** 1
 
 #### What makes this deploy extra special
 
-**Score:**
+De knop staat netjes in de kolom in plaats van er links uit te steken.
+
+**Score:** 2
 
 #### Pull Request
 
