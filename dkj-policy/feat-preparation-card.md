@@ -52,7 +52,8 @@ eindigt (de werkbakken), elk met een eigen pagina -- zoals Published een card pe
   tracks van die playlist (via `spotify_playlist`)
 - [x] `lib/library/readRegister.ts`: de registerrijen op één plek, gedeeld door /spotify/trackregister en de
   werkbakpagina's
-- [x] `TrackRegister`: `compact` -- alleen de cijfers en de tabel, alle rijen op één pagina, zonder zoekbalk,
+- [x] `TrackRegister`: `compact` -- alleen de cijfers en de tabel, alle rijen op één pagina, zonder de kolommen
+  year, dkj_genre, dkj_bpm, plays, dkj_album en dkj_group, zonder zoekbalk,
   kolomschakelaar, filters en pager, en zonder opgeslagen filterstand (die zou hier onzichtbaar tracks
   verbergen)
 - [x] Preparation-card op /mixen, naast Published en Planned
@@ -64,7 +65,8 @@ eindigt (de werkbakken), elk met een eigen pagina -- zoals Published een card pe
 - [x] In de draaiende app: 27 kaarten op /mixen/preparation, de laatste kruimel leest wat de h1 leest, een
   onbekend id geeft 404
 - [x] Volledige vitest-suite groen (68 bestanden, 931 tests)
-- [x] Werkbakpagina zonder de naamgegevens, Spotify-knop, zoekbalk, filters en pager; /spotify/trackregister
+- [x] Werkbakpagina met alleen afspelen, dkj_title, dkj_albumartiest, spotify_playlist en dkj_rating als
+  kolommen; zonder de naamgegevens, Spotify-knop, zoekbalk, filters en pager; /spotify/trackregister
   heeft ze nog
 - [x] Tabel op een werkbakpagina: 3 van 3 en 67 van 68 tracks; het verschil is een gat in de bibliotheek
   (#107), niet in de pagina
@@ -75,7 +77,8 @@ eindigt (de werkbakken), elk met een eigen pagina -- zoals Published een card pe
 Onder Mixen staat een nieuwe card, Preparation, met daaronder een kaart voor elke Spotify-playlist die op
 "Vol. X" eindigt: de werkbakken waarin de tracks voor een mix al verzameld zijn maar de mix nog niet
 gemaakt is. De volste werkbak staat vooraan. Elke kaart draagt een stip in de kleur van de playlist en opent een eigen pagina met de tabel van
-het Trackregister, met alleen de tracks die al in die playlist staan en zonder zoekbalk, filters of pager.
+het Trackregister, met alleen de tracks die al in die playlist staan: titel, albumartiest, playlists en
+waardering, zonder zoekbalk, filters of pager.
 
 **Score:** 3
 

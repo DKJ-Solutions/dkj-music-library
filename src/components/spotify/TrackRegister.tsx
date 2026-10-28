@@ -80,8 +80,8 @@ function nextSort(current: RegisterSort | null, key: SortKey): RegisterSort | nu
 interface TrackRegisterProps {
   rows: RegisterRow[];
   artistCount: number;
-  /** Alleen de cijfers en de tabel, met alle rijen op één pagina: geen zoekbalk, kolomschakelaar, filters
-   *  of pager (Dave, 28 oktober 2026), voor een pagina met een deel van het register, zoals een werkbak op
+  /** Alleen de cijfers en de tabel, met alle rijen op één pagina en de kolommen van COMPACT_COLUMNS: geen
+   *  zoekbalk, kolomschakelaar, filters of pager (Dave, 28 oktober 2026), voor een pagina met een deel van het register, zoals een werkbak op
    *  /mixen/preparation/<id>. Dan wordt ook geen filterstand onthouden: een opgeslagen filter van
    *  /spotify/trackregister zou hier anders onzichtbaar tracks verbergen. Sorteren via de koppen blijft. */
   compact?: boolean;
@@ -673,6 +673,20 @@ const HIDDEN_COLUMNS: readonly Column[] = [
 
 const COLUMN_SETS: Record<ColumnSet, readonly Column[]> = { visible: VISIBLE_COLUMNS, hidden: HIDDEN_COLUMNS };
 
+/** De kolommen van de compacte tabel (`compact`), met hun breedte daar: year, dkj_genre, dkj_bpm, plays,
+ *  dkj_album en dkj_group zijn er niet relevant (Dave, 28 oktober 2026), en de rest krijgt hun ruimte. */
+const COMPACT_WIDTHS: Partial<Record<Column["key"], string>> = {
+  play: "40px",
+  dkjTitle: "38%",
+  albumArtist: "30%",
+  playlists: "32%",
+  rating: "104px",
+};
+const COMPACT_COLUMNS: readonly Column[] = VISIBLE_COLUMNS.flatMap((column) => {
+  const width = COMPACT_WIDTHS[column.key];
+  return width ? [{ ...column, width }] : [];
+});
+
 export function TrackRegister({ rows: initialRows, artistCount, compact = false }: TrackRegisterProps) {
   // De waarderingen die je op deze pagina hebt gekozen (Rating), over de rijen van de server
   // heen gelegd: zo sorteren, zoeken en tellen ze meteen mee, zonder de pagina opnieuw te laden.
@@ -777,7 +791,7 @@ export function TrackRegister({ rows: initialRows, artistCount, compact = false 
     set(value);
     goTo(0);
   };
-  const columns = COLUMN_SETS[columnSet];
+  const columns = compact ? COMPACT_COLUMNS : COLUMN_SETS[columnSet];
   // Eén switch: elke klik wisselt van set. De sortering hoort bij een kop die dan weg is, dus die vervalt.
   const toggleColumns = () => {
     setColumnSet(columnSet === "visible" ? "hidden" : "visible");
