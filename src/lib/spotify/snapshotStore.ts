@@ -45,6 +45,14 @@ export function readSnapshot(): Snapshot | null {
   }
 }
 
+/** De wijzigingstijd van de snapshot (ms), of null als er geen is -- zodat wie iets kleins uit de snapshot
+ *  bewaart (zoals de kruimelnamen in mixes/preparationPages.ts) die 30 MB niet bij elk verzoek opnieuw
+ *  hoeft te parsen. */
+export function snapshotVersion(): number | null {
+  const storePath = getSnapshotStorePath();
+  return fs.existsSync(storePath) ? fs.statSync(storePath).mtimeMs : null;
+}
+
 export function writeSnapshot(snapshot: Snapshot): void {
   const storePath = getSnapshotStorePath();
   fs.mkdirSync(path.dirname(storePath), { recursive: true });

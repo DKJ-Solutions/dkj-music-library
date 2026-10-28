@@ -80,6 +80,11 @@ function nextSort(current: RegisterSort | null, key: SortKey): RegisterSort | nu
 interface TrackRegisterProps {
   rows: RegisterRow[];
   artistCount: number;
+  /** Alleen de cijfers en de tabel, met alle rijen op één pagina en de kolommen van COMPACT_COLUMNS: geen
+   *  zoekbalk, kolomschakelaar, filters of pager (Dave, 28 oktober 2026), voor een pagina met een deel van het register, zoals een werkbak op
+   *  /mixen/preparation/<id>. Dan wordt ook geen filterstand onthouden: een opgeslagen filter van
+   *  /spotify/trackregister zou hier anders onzichtbaar tracks verbergen. Sorteren via de koppen blijft. */
+  compact?: boolean;
 }
 
 /** Tekst met de zoekterm gemarkeerd (accent-ongevoelig, eerste treffer). */
@@ -668,7 +673,23 @@ const HIDDEN_COLUMNS: readonly Column[] = [
 
 const COLUMN_SETS: Record<ColumnSet, readonly Column[]> = { visible: VISIBLE_COLUMNS, hidden: HIDDEN_COLUMNS };
 
-export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterProps) {
+/** De kolommen van de compacte tabel (`compact`), met hun breedte daar: year, dkj_genre, dkj_bpm, plays,
+ *  dkj_album en dkj_group zijn er niet relevant (Dave, 28 oktober 2026), en de rest krijgt hun ruimte. */
+const COMPACT_WIDTHS: Partial<Record<Column["key"], string>> = {
+  play: "40px",
+  dkjTitle: "38%",
+  albumArtist: "30%",
+  playlists: "32%",
+  rating: "104px",
+};
+/** De compacte tabel opent op de hoogste dkj_rating eerst (Dave, 28 oktober 2026): tier-8 bovenaan. */
+const COMPACT_SORT: RegisterSort = { key: "rating", dir: "desc" };
+const COMPACT_COLUMNS: readonly Column[] = VISIBLE_COLUMNS.flatMap((column) => {
+  const width = COMPACT_WIDTHS[column.key];
+  return width ? [{ ...column, width }] : [];
+});
+
+export function TrackRegister({ rows: initialRows, artistCount, compact = false }: TrackRegisterProps) {
   // De waarderingen die je op deze pagina hebt gekozen (Rating), over de rijen van de server
   // heen gelegd: zo sorteren, zoeken en tellen ze meteen mee, zonder de pagina opnieuw te laden.
   const [ratings, setRatings] = useState<Record<string, string | null>>({});
@@ -705,7 +726,7 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
   const [genre, setGenre] = useState(DEFAULT_PREFS.genre);
   const [album, setAlbum] = useState(DEFAULT_PREFS.album);
   const [group, setGroup] = useState(DEFAULT_PREFS.group);
-  const [sort, setSort] = useState<RegisterSort | null>(DEFAULT_PREFS.sort);
+  const [sort, setSort] = useState<RegisterSort | null>(compact ? COMPACT_SORT : DEFAULT_PREFS.sort);
   const [columnSet, setColumnSet] = useState<ColumnSet>(DEFAULT_PREFS.columnSet);
   const [page, setPage] = useState(0);
   // Pas waar na mount (het effect hieronder): de server rendert zonder localStorage, dus vóór mount
@@ -738,10 +759,11 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
   // Dit is bewust een synchronisatie met een externe bron (localStorage bestaat niet server-side), geen
   // render-afgeleide state: lezen vóór mount zou de server-HTML en de client-HTML laten verschillen.
   useEffect(() => {
+    if (compact) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- eenmalig herstel ná mount, zie hierboven.
     applyPrefs(loadRegisterPrefs(PREFS_OPTIONS));
     setRestored(true);
-  }, []);
+  }, [compact]);
 
   // Bewaart elke wijziging, zodra het herstel hierboven gedaan is. `page` telt bewust niet mee: een
   // nieuw bezoek begint altijd op pagina 1.
@@ -762,16 +784,16 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
   const list = useMemo(() => sortRegister(filtered, sort), [filtered, sort]);
 
   const term = fold(deferredQuery.trim());
-  const pages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+  const pages = compact ? 1 : Math.max(1, Math.ceil(list.length / PAGE_SIZE));
   const current = Math.min(page, pages - 1);
-  const slice = list.slice(current * PAGE_SIZE, current * PAGE_SIZE + PAGE_SIZE);
+  const slice = compact ? list : list.slice(current * PAGE_SIZE, current * PAGE_SIZE + PAGE_SIZE);
   const multi = rows.filter((row) => row.artistIds.length > 1).length;
   const label = (value: string, n: number | undefined) => `${value} (${nf.format(n ?? 0)})`;
   const reset = <T,>(set: (value: T) => void) => (value: T) => {
     set(value);
     goTo(0);
   };
-  const columns = COLUMN_SETS[columnSet];
+  const columns = compact ? COMPACT_COLUMNS : COLUMN_SETS[columnSet];
   // Eén switch: elke klik wisselt van set. De sortering hoort bij een kop die dan weg is, dus die vervalt.
   const toggleColumns = () => {
     setColumnSet(columnSet === "visible" ? "hidden" : "visible");
@@ -796,116 +818,120 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
         <div className="stat"><b>{nf.format(rows.length - (albumCounts.get(EMPTY_FILTER) ?? 0) - (albumCounts.get(CANDIDATES_FILTER) ?? 0))}</b><span>met een dkj_album</span></div>
       </div>
 
-      <div className="register-controls">
-        <label className="playlist-search" htmlFor="register-q">
-          <input
-            id="register-q"
-            type="search"
-            placeholder="Zoek op ID, titel of artiest, bv. PRO02 of Firestarter"
-            autoComplete="off"
-            value={query}
-            onChange={(e) => reset(setQuery)(e.target.value)}
-          />
-        </label>
-        <button
-          type="button"
-          role="switch"
-          className="register-column-switch"
-          aria-checked={columnSet === "hidden"}
-          title="Wissel tussen de zichtbare en de verborgen kolommen"
-          onClick={toggleColumns}
-        >
-          <span className="register-column-switch-track" aria-hidden="true" />
-          <span>verborgen kolommen</span>
-        </button>
-        <span className="register-count" aria-live="polite">
-          {list.length === rows.length
-            ? `${nf.format(rows.length)} nummers`
-            : `${nf.format(list.length)} van ${nf.format(rows.length)} nummers`}
-        </span>
-      </div>
+      {!compact && (
+        <>
+          <div className="register-controls">
+            <label className="playlist-search" htmlFor="register-q">
+              <input
+                id="register-q"
+                type="search"
+                placeholder="Zoek op ID, titel of artiest, bv. PRO02 of Firestarter"
+                autoComplete="off"
+                value={query}
+                onChange={(e) => reset(setQuery)(e.target.value)}
+              />
+            </label>
+            <button
+              type="button"
+              role="switch"
+              className="register-column-switch"
+              aria-checked={columnSet === "hidden"}
+              title="Wissel tussen de zichtbare en de verborgen kolommen"
+              onClick={toggleColumns}
+            >
+              <span className="register-column-switch-track" aria-hidden="true" />
+              <span>verborgen kolommen</span>
+            </button>
+            <span className="register-count" aria-live="polite">
+              {list.length === rows.length
+                ? `${nf.format(rows.length)} nummers`
+                : `${nf.format(list.length)} van ${nf.format(rows.length)} nummers`}
+            </span>
+          </div>
 
-      {/* De filters staan in een eigen omkaderd vak (Dave), los van zoeken en de kolomschakelaar. */}
-      <fieldset className="register-filters">
-        <legend>Filters</legend>
-        <div className="register-filter" role="group" aria-labelledby="register-year-label">
-          <span id="register-year-label">year</span>
-          <input
-            className="register-year-input"
-            type="number"
-            inputMode="numeric"
-            placeholder="van"
-            aria-label="year van"
-            value={yearFrom}
-            onChange={(e) => reset(setYearFrom)(e.target.value)}
-          />
-          <span aria-hidden="true">–</span>
-          <input
-            className="register-year-input"
-            type="number"
-            inputMode="numeric"
-            placeholder="tot"
-            aria-label="year tot"
-            value={yearTo}
-            onChange={(e) => reset(setYearTo)(e.target.value)}
-          />
-        </div>
-        <label className="register-filter" htmlFor="register-bpm">
-          <span>dkj_bpm</span>
-          <select id="register-bpm" value={bpm} onChange={(e) => reset(setBpm)(e.target.value)}>
-            <option className="register-option-meta" value="">{label("Alle", rows.length)}</option>
-            {DKJ_BPM_OPTIONS.map((option) => (
-              <option key={option} value={option}>{label(option, bpmCounts.get(option))}</option>
-            ))}
-            <option className="register-option-meta" value={EMPTY_FILTER}>{label("Leeg", bpmCounts.get(EMPTY_FILTER))}</option>
-          </select>
-        </label>
-        <label className="register-filter" htmlFor="register-genre">
-          <span>dkj_genre</span>
-          <select id="register-genre" value={genre} onChange={(e) => reset(setGenre)(e.target.value)}>
-            <option className="register-option-meta" value="">{label("Alle", rows.length)}</option>
-            {DKJ_GENRE_OPTIONS.map((option) => (
-              <option key={option} value={option}>{label(option, genreCounts.get(option))}</option>
-            ))}
-            <option className="register-option-meta" value={EMPTY_FILTER}>{label("Leeg", genreCounts.get(EMPTY_FILTER))}</option>
-          </select>
-        </label>
-        <label className="register-filter" htmlFor="register-album">
-          <span>dkj_album</span>
-          <select id="register-album" value={album} onChange={(e) => reset(setAlbum)(e.target.value)}>
-            <option className="register-option-meta" value="">{label("Alle", rows.length)}</option>
-            {DKJ_ALBUM_COLOURS.map((colour) => (
-              <optgroup key={colour} label={colour}>
-                {/* De hele kleur, Light en Full samen (Dave): het totaal van de vier varianten. */}
-                <option value={colour}>
-                  {label(colour, ALBUM_VARIANTS.reduce((n, variant) => n + (albumCounts.get(`${colour} ${variant}`) ?? 0), 0))}
-                </option>
-                {ALBUM_VARIANTS.map((variant) => {
-                  const option = `${colour} ${variant}`;
-                  return <option key={option} value={option}>{label(option, albumCounts.get(option))}</option>;
-                })}
-              </optgroup>
-            ))}
-            <option className="register-option-meta" value={EMPTY_FILTER}>{label("Leeg", albumCounts.get(EMPTY_FILTER))}</option>
-            <option className="register-option-meta" value={CANDIDATES_FILTER}>{label("Meerdere kandidaten", albumCounts.get(CANDIDATES_FILTER))}</option>
-          </select>
-        </label>
-        <label className="register-filter" htmlFor="register-group">
-          <span>dkj_group</span>
-          <select id="register-group" value={group} onChange={(e) => reset(setGroup)(e.target.value)}>
-            <option className="register-option-meta" value="">{label("Alle", rows.length)}</option>
-            {GROUP_OPTIONS.map((option) => (
-              <option key={option} value={option}>{label(option, groupCounts.get(option))}</option>
-            ))}
-            <option className="register-option-meta" value={EMPTY_FILTER}>{label("Leeg", groupCounts.get(EMPTY_FILTER))}</option>
-          </select>
-        </label>
-        {showClearFilters && (
-          <button type="button" className="pill-toggle playlist-clear-filters" onClick={clearFilters}>
-            Filters wissen
-          </button>
-        )}
-      </fieldset>
+          {/* De filters staan in een eigen omkaderd vak (Dave), los van zoeken en de kolomschakelaar. */}
+          <fieldset className="register-filters">
+            <legend>Filters</legend>
+            <div className="register-filter" role="group" aria-labelledby="register-year-label">
+              <span id="register-year-label">year</span>
+              <input
+                className="register-year-input"
+                type="number"
+                inputMode="numeric"
+                placeholder="van"
+                aria-label="year van"
+                value={yearFrom}
+                onChange={(e) => reset(setYearFrom)(e.target.value)}
+              />
+              <span aria-hidden="true">–</span>
+              <input
+                className="register-year-input"
+                type="number"
+                inputMode="numeric"
+                placeholder="tot"
+                aria-label="year tot"
+                value={yearTo}
+                onChange={(e) => reset(setYearTo)(e.target.value)}
+              />
+            </div>
+            <label className="register-filter" htmlFor="register-bpm">
+              <span>dkj_bpm</span>
+              <select id="register-bpm" value={bpm} onChange={(e) => reset(setBpm)(e.target.value)}>
+                <option className="register-option-meta" value="">{label("Alle", rows.length)}</option>
+                {DKJ_BPM_OPTIONS.map((option) => (
+                  <option key={option} value={option}>{label(option, bpmCounts.get(option))}</option>
+                ))}
+                <option className="register-option-meta" value={EMPTY_FILTER}>{label("Leeg", bpmCounts.get(EMPTY_FILTER))}</option>
+              </select>
+            </label>
+            <label className="register-filter" htmlFor="register-genre">
+              <span>dkj_genre</span>
+              <select id="register-genre" value={genre} onChange={(e) => reset(setGenre)(e.target.value)}>
+                <option className="register-option-meta" value="">{label("Alle", rows.length)}</option>
+                {DKJ_GENRE_OPTIONS.map((option) => (
+                  <option key={option} value={option}>{label(option, genreCounts.get(option))}</option>
+                ))}
+                <option className="register-option-meta" value={EMPTY_FILTER}>{label("Leeg", genreCounts.get(EMPTY_FILTER))}</option>
+              </select>
+            </label>
+            <label className="register-filter" htmlFor="register-album">
+              <span>dkj_album</span>
+              <select id="register-album" value={album} onChange={(e) => reset(setAlbum)(e.target.value)}>
+                <option className="register-option-meta" value="">{label("Alle", rows.length)}</option>
+                {DKJ_ALBUM_COLOURS.map((colour) => (
+                  <optgroup key={colour} label={colour}>
+                    {/* De hele kleur, Light en Full samen (Dave): het totaal van de vier varianten. */}
+                    <option value={colour}>
+                      {label(colour, ALBUM_VARIANTS.reduce((n, variant) => n + (albumCounts.get(`${colour} ${variant}`) ?? 0), 0))}
+                    </option>
+                    {ALBUM_VARIANTS.map((variant) => {
+                      const option = `${colour} ${variant}`;
+                      return <option key={option} value={option}>{label(option, albumCounts.get(option))}</option>;
+                    })}
+                  </optgroup>
+                ))}
+                <option className="register-option-meta" value={EMPTY_FILTER}>{label("Leeg", albumCounts.get(EMPTY_FILTER))}</option>
+                <option className="register-option-meta" value={CANDIDATES_FILTER}>{label("Meerdere kandidaten", albumCounts.get(CANDIDATES_FILTER))}</option>
+              </select>
+            </label>
+            <label className="register-filter" htmlFor="register-group">
+              <span>dkj_group</span>
+              <select id="register-group" value={group} onChange={(e) => reset(setGroup)(e.target.value)}>
+                <option className="register-option-meta" value="">{label("Alle", rows.length)}</option>
+                {GROUP_OPTIONS.map((option) => (
+                  <option key={option} value={option}>{label(option, groupCounts.get(option))}</option>
+                ))}
+                <option className="register-option-meta" value={EMPTY_FILTER}>{label("Leeg", groupCounts.get(EMPTY_FILTER))}</option>
+              </select>
+            </label>
+            {showClearFilters && (
+              <button type="button" className="pill-toggle playlist-clear-filters" onClick={clearFilters}>
+                Filters wissen
+              </button>
+            )}
+          </fieldset>
+        </>
+      )}
 
       <div className="register-table-area">
         <div className="register-table-box" ref={box}>
@@ -972,16 +998,18 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
         )}
       </div>
 
-      <div className="register-pager">
-        <span className="register-count">
-          {list.length > 0 &&
-            `Nummer ${nf.format(current * PAGE_SIZE + 1)}–${nf.format(current * PAGE_SIZE + slice.length)} · pagina ${current + 1} van ${pages}`}
-        </span>
-        <div className="register-pager-buttons">
-          <button type="button" disabled={current === 0} onClick={() => goTo(current - 1)}>Vorige</button>
-          <button type="button" disabled={current >= pages - 1} onClick={() => goTo(current + 1)}>Volgende</button>
+      {!compact && (
+        <div className="register-pager">
+          <span className="register-count">
+            {list.length > 0 &&
+              `Nummer ${nf.format(current * PAGE_SIZE + 1)}–${nf.format(current * PAGE_SIZE + slice.length)} · pagina ${current + 1} van ${pages}`}
+          </span>
+          <div className="register-pager-buttons">
+            <button type="button" disabled={current === 0} onClick={() => goTo(current - 1)}>Vorige</button>
+            <button type="button" disabled={current >= pages - 1} onClick={() => goTo(current + 1)}>Volgende</button>
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

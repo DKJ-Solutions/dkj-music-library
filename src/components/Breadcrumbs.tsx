@@ -2,7 +2,7 @@
 // pagina direct onder de site-header: het pad begint bij Home, elke volgende kruimel is een niveau
 // dieper, en de laatste is de huidige pagina, zonder link. Client Component, want het pad komt uit
 // usePathname() -- de layout zelf krijgt het niet mee. De namen komen uit src/lib/pages.ts, plus de
-// namen uit data (`titles`, de mix-detailpagina's) die de layout op de server leest.
+// namen uit data (`titles`, de mix-detailpagina's en de werkbakken onder Preparation) die de layout op de server leest.
 "use client";
 
 import Link from "next/link";

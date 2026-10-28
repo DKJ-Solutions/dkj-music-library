@@ -16,6 +16,7 @@ export const PAGE_TITLES: Record<string, string> = {
   "/mixen": "Mixen",
   "/mixen/published": "Published",
   "/mixen/planned": "Planned",
+  "/mixen/preparation": "Preparation",
   ...Object.fromEntries(PLANNED_COLOURS.map((colour) => [plannedColourHref(colour), colour])),
   "/compare": "Compare",
   "/compare/playlists-mixes": "Playlists ↔ Mixes",
@@ -50,7 +51,7 @@ export interface Crumb {
  *  niet staat, zoals een 404, krijgt het pad tot de dichtstbijzijnde bekende ouder.
  *
  *  `extra` draagt de namen van pagina's die uit data komen in plaats van uit deze tabel -- de
- *  detailpagina per mix (/mixen/published/<slug>), waarvan de layout de namen op de server leest. */
+ *  detailpagina per mix (/mixen/published/<slug>) en per werkbak (/mixen/preparation/<id>), waarvan de layout de namen op de server leest. */
 export function breadcrumbTrail(pathname: string, extra: Record<string, string> = {}): Crumb[] {
   const trail: Crumb[] = [{ href: "/", label: PAGE_TITLES["/"] }];
   const segments = pathname.split("/").filter(Boolean);
