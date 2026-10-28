@@ -39,19 +39,28 @@
 
 ### PLAN
 
+De menuknop ("4 playlists ▾") schuift met `margin-left: -7px` naar links om zijn tekst onder de kolomkop te zetten. Daardoor wordt de wrapper `.register-menu` (inline-block) 7px smaller dan de knop, en kapt `max-width: 100%` het ▾ en de rechterrand af (gemeten: scrollWidth 72 tegen clientWidth 65).
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `margin-right: 7px` op de knop in een cel, zodat de wrapper zijn volle breedte krijgt
+- [ ] Visuele check door Dave (trackregister en tracklist van een gepubliceerde mix)
 
 ### TEST
 
+- [x] Gemeten in de browser: elke menuknop scrollWidth = clientWidth (72/72), tekst nog steeds op 0px van de kolomkop
+
 ### DEPLOY: fix/register-menu-toggle-clipped
 
-**Score:**
+De menuknoppen in het trackregister ("4 playlists ▾", "2 groups ▾" enz.) vielen 7px te smal uit, waardoor het ▾ en de rechterrand werden afgekapt. Ze hebben nu hun volle breedte, en de tekst staat nog steeds recht onder de kolomkop.
+
+**Score:** 1
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie het trackregister gebruikt ziet de menuknoppen weer heel, met pijltje en rand.
+
+**Score:** 2
 
 #### Pull Request
 
