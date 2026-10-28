@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**9 / 9 minor entries** <!-- pending-tally -->
+**10 / 10 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/mix-square-thumbnail · 20261028-120658Z
+
+De cards op /mixen/published tonen nu de vierkante thumbnail van de mix in plaats van het disc-icoon. De afbeelding komt uit `public/` van djcylow-react via een nieuwe route `/api/mixes/square/<slug>`; een mix zonder `image_square` (26 van de 86) houdt het disc-icoon.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+De mixenlijst is in één oogopslag te herkennen aan de covers, zoals op djcylow.com zelf.
+
+**Score:** 3
+
+#### Pull Request
+
+Square thumbnail van de mix op de cards van /mixen/published
+
+[PR #112](https://github.com/DKJ-Solutions/dkj-music-library/pull/112)
+
+---
 
 ### DEPLOY: fix/emotion-magenta-hue · 20261028-095255Z
 
