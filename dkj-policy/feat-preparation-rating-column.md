@@ -39,19 +39,33 @@
 
 ### PLAN
 
+In de werkbaktabellen op /mixen/preparation/<id> staat dkj_rating links van spotify_playlist. Het
+Trackregister op /spotify/trackregister houdt zijn eigen volgorde.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `COMPACT_WIDTHS` in `TrackRegister.tsx` bepaalt nu ook de volgorde van de compacte kolommen, met
+  dkj_rating vóór spotify_playlist
 
 ### TEST
 
+- [x] `tsc`, eslint en de tabeltests groen
+- [x] In de draaiende app: werkbaktabel dkj_title, dkj_albumartiest, dkj_rating, spotify_playlist; het
+  Trackregister ongewijzigd
+- [ ] Visuele check door Dave
+
 ### DEPLOY: feat/preparation-rating-column
 
-**Score:**
+In de tabellen van de werkbakken onder Mixen › Preparation staat de waardering nu links van de playlists,
+direct naast de albumartiest.
+
+**Score:** 1
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie een werkbak doorloopt, leest de waardering van een track meteen naast titel en artiest.
+
+**Score:** 1
 
 #### Pull Request
 
