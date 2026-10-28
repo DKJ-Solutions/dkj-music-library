@@ -44,7 +44,7 @@ De menuknop ("4 playlists ▾") schuift met `margin-left: -7px` naar links om zi
 ### CREATE
 
 - [x] `margin-right: 7px` op de knop in een cel, zodat de wrapper zijn volle breedte krijgt
-- [ ] Visuele check door Dave (trackregister en tracklist van een gepubliceerde mix)
+- [x] Visuele check door Dave (trackregister en tracklist van een gepubliceerde mix)
 
 ### TEST
 
