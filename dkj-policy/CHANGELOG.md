@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**10 / 10 minor entries** <!-- pending-tally -->
+**11 / 11 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/published-mix-track-table · 20261028-124327Z
+
+De detailpagina van een gepubliceerde mix toont de tracks nu in de tabel van het trackregister (compact, zoals een werkbak op /mixen/preparation) in plaats van een genummerde lijst uit de mix-JSON. De rijen komen uit de bibliotheek via `djcylow_mix`.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Per track van een mix zie je meteen rating, playlists en de rest van het register, en kun je erop sorteren.
+
+**Score:** 3
+
+#### Pull Request
+
+Tracklist van een gepubliceerde mix als trackregister-tabel
+
+[PR #113](https://github.com/DKJ-Solutions/dkj-music-library/pull/113)
+
+---
 
 ### DEPLOY: feat/mix-square-thumbnail · 20261028-120658Z
 
