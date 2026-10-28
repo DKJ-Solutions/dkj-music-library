@@ -45,7 +45,7 @@
 
 ### TEST
 
-- [ ] Visuele check door Dave: de knop "N playlists ▾" begint recht onder de tekst van de kolomkop
+- [x] Visuele check door Dave: de knop "N playlists ▾" begint recht onder de tekst van de kolomkop
 
 ### DEPLOY: fix/register-menu-toggle-align
 
