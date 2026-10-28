@@ -52,7 +52,7 @@ header in beeld staat, lag de speler op 1241–1338px en was er dus maar ~29px v
 
 - [x] Gemeten in de browser: na een klik op afspelen scrollY 0 → 69, speler op 1116–1213px in een venster van 1214px
 - [x] `TrackRegister.test.tsx` groen (29 tests)
-- [ ] Visuele check door Dave
+- [x] Visuele check door Dave (akkoord)
 
 ### DEPLOY: fix/register-player-in-view
 
