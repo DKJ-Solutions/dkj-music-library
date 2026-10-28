@@ -52,7 +52,7 @@ Trackregister op /spotify/trackregister houdt zijn eigen volgorde.
 - [x] `tsc`, eslint en de tabeltests groen
 - [x] In de draaiende app: werkbaktabel dkj_title, dkj_albumartiest, dkj_rating, spotify_playlist; het
   Trackregister ongewijzigd
-- [ ] Visuele check door Dave
+- [x] Visuele check door Dave ("ship it", 28 oktober 2026)
 
 ### DEPLOY: feat/preparation-rating-column
 
