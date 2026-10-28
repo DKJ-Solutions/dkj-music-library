@@ -80,6 +80,10 @@ function nextSort(current: RegisterSort | null, key: SortKey): RegisterSort | nu
 interface TrackRegisterProps {
   rows: RegisterRow[];
   artistCount: number;
+  /** Onthoud de filterstand in localStorage (registerPrefs.ts). Uit op een pagina met een deel van het
+   *  register, zoals een werkbak op /mixen/preparation/<id>: een filter van /spotify/trackregister zou daar
+   *  anders tracks verbergen, en een filter van daar het register. */
+  rememberPrefs?: boolean;
 }
 
 /** Tekst met de zoekterm gemarkeerd (accent-ongevoelig, eerste treffer). */
@@ -668,7 +672,7 @@ const HIDDEN_COLUMNS: readonly Column[] = [
 
 const COLUMN_SETS: Record<ColumnSet, readonly Column[]> = { visible: VISIBLE_COLUMNS, hidden: HIDDEN_COLUMNS };
 
-export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterProps) {
+export function TrackRegister({ rows: initialRows, artistCount, rememberPrefs = true }: TrackRegisterProps) {
   // De waarderingen die je op deze pagina hebt gekozen (Rating), over de rijen van de server
   // heen gelegd: zo sorteren, zoeken en tellen ze meteen mee, zonder de pagina opnieuw te laden.
   const [ratings, setRatings] = useState<Record<string, string | null>>({});
@@ -738,10 +742,11 @@ export function TrackRegister({ rows: initialRows, artistCount }: TrackRegisterP
   // Dit is bewust een synchronisatie met een externe bron (localStorage bestaat niet server-side), geen
   // render-afgeleide state: lezen vóór mount zou de server-HTML en de client-HTML laten verschillen.
   useEffect(() => {
+    if (!rememberPrefs) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- eenmalig herstel ná mount, zie hierboven.
     applyPrefs(loadRegisterPrefs(PREFS_OPTIONS));
     setRestored(true);
-  }, []);
+  }, [rememberPrefs]);
 
   // Bewaart elke wijziging, zodra het herstel hierboven gedaan is. `page` telt bewust niet mee: een
   // nieuw bezoek begint altijd op pagina 1.

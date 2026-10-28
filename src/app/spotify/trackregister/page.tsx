@@ -2,33 +2,14 @@
 // doorzoeken en te filteren op dkj_bpm en dkj_album. Leest de bibliotheek, niet de Spotify-snapshot:
 // die bouwt zich op een verse kloon zelf op uit de export in git (libraryFile.ts), dus deze pagina
 // werkt op elke machine met de repo, ook zonder Spotify-login of sync. Dun schilletje, zelfde recept
-// als de andere spotify-routes: de rijen komen uit register.ts, de weergave uit TrackRegister.tsx.
+// als de andere spotify-routes: de rijen komen uit readRegister.ts, de weergave uit TrackRegister.tsx.
 import Link from "next/link";
-import { openLibrary } from "@/lib/library/libraryFile";
-import { readArtistNames } from "@/lib/library/artistIds";
-import { listTracks } from "@/lib/library/trackStore";
-import { toRegisterRow, type RegisterRow } from "@/lib/library/register";
+import { readRegister } from "@/lib/library/readRegister";
 import { TrackRegister } from "@/components/spotify/TrackRegister";
 import { pageTitle } from "@/lib/pages";
 
 // De bibliotheek kan buiten de build wijzigen (een sync, een import), dus geen static prerender.
 export const dynamic = "force-dynamic";
-
-function readRegister(): { rows: RegisterRow[]; artistCount: number } | { error: string } {
-  try {
-    const { db } = openLibrary();
-    try {
-      const artistNames = readArtistNames(db);
-      const rows = listTracks(db).map((track) => toRegisterRow(track, artistNames));
-      return { rows, artistCount: Object.keys(artistNames).length };
-    } finally {
-      db.close();
-    }
-  } catch (err) {
-    console.error("[spotify/trackregister] bibliotheek lezen mislukt:", err);
-    return { error: err instanceof Error ? err.message : String(err) };
-  }
-}
 
 export default function TrackRegisterPage() {
   const register = readRegister();

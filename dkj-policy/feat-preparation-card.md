@@ -48,7 +48,12 @@ eindigt (de werkbakken), elk met een eigen pagina -- zoals Published een card pe
   `Vol. x` en een dubbele spatie), de volgorde en de route
 - [x] `/mixen/preparation`: een card-link per werkbak, met een stip in de kleur van de playlist, de meeste
   tracks eerst
-- [x] `/mixen/preparation/<id>`: de pagina per werkbak, met de naamgegevens, een link naar Spotify en de tracks
+- [x] `/mixen/preparation/<id>`: de pagina per werkbak, met de naamgegevens, een link naar Spotify en de
+  tabel van /spotify/trackregister met alleen de tracks van die playlist (via `spotify_playlist`)
+- [x] `lib/library/readRegister.ts`: de registerrijen op één plek, gedeeld door /spotify/trackregister en de
+  werkbakpagina's
+- [x] `TrackRegister`: `rememberPrefs={false}`, zodat de opgeslagen filters van /spotify/trackregister op een
+  werkbakpagina geen tracks verbergen
 - [x] Preparation-card op /mixen, naast Published en Planned
 - [x] Kruimelnamen per werkbak in de layout, bewaard tot de snapshot (30 MB) op schijf wijzigt
 
@@ -57,14 +62,17 @@ eindigt (de werkbakken), elk met een eigen pagina -- zoals Published een card pe
 - [x] `tsc`, eslint en vitest (`preparation.test.ts`, `pages.test.ts`) groen
 - [x] In de draaiende app: 27 kaarten op /mixen/preparation, de laatste kruimel leest wat de h1 leest, een
   onbekend id geeft 404
+- [x] Volledige vitest-suite groen (68 bestanden, 931 tests)
+- [x] Tabel op een werkbakpagina: 3 van 3 en 67 van 68 tracks; het verschil is een gat in de bibliotheek
+  (#107), niet in de pagina
 - [ ] Visuele check door Dave
 
 ### DEPLOY: feat/preparation-card
 
 Onder Mixen staat een nieuwe card, Preparation, met daaronder een kaart voor elke Spotify-playlist die op
 "Vol. X" eindigt: de werkbakken waarin de tracks voor een mix al verzameld zijn maar de mix nog niet
-gemaakt is. De volste werkbak staat vooraan. Elke kaart draagt een stip in de kleur van de playlist en opent een eigen pagina met de tracks
-die er al in staan en een link naar de playlist op Spotify.
+gemaakt is. De volste werkbak staat vooraan. Elke kaart draagt een stip in de kleur van de playlist en opent een eigen pagina met de tabel van
+het Trackregister, met alleen de tracks die al in die playlist staan, en een link naar de playlist op Spotify.
 
 **Score:** 3
 

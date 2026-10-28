@@ -1,13 +1,15 @@
 // De pagina van één werkbak op /mixen/preparation/<playlist-id>: wat de naam van de playlist zegt op één rij,
-// de link naar de playlist op Spotify ernaast, en daaronder de tracks die er al in staan. De card ernaartoe
-// staat op /mixen/preparation.
+// de link naar de playlist op Spotify ernaast, en daaronder de tabel van /spotify/trackregister met alleen de
+// tracks die in de playlist staan. De card ernaartoe staat op /mixen/preparation.
 import { notFound } from "next/navigation";
+import { TrackRegister } from "@/components/spotify/TrackRegister";
 import { playlistUrl } from "@/lib/library/playlistLink";
+import { readRegister } from "@/lib/library/readRegister";
 import { isPreparationPlaylist } from "@/lib/mixes/preparation";
 import { parsePlaylistName } from "@/lib/spotify/parsePlaylistName";
 import { readSnapshot } from "@/lib/spotify/snapshotStore";
 
-// Leest de Spotify-snapshot van schijf -- zelfde reden als /mixen/preparation.
+// Leest de Spotify-snapshot en de bibliotheek van schijf -- zelfde reden als /mixen/preparation.
 export const dynamic = "force-dynamic";
 
 export default async function PreparationPlaylistPage({ params }: { params: Promise<{ id: string }> }) {
@@ -16,7 +18,9 @@ export default async function PreparationPlaylistPage({ params }: { params: Prom
   if (!playlist) notFound();
 
   const parsed = parsePlaylistName(playlist.name);
-  const tracks = playlist.tracks.flatMap((item) => (item.track ? [item.track] : []));
+  // Het register kent per track de playlists waarin hij staat (spotify_playlist), dus dit zijn precies de
+  // tracks van deze werkbak zoals de bibliotheek ze kent.
+  const register = readRegister((row) => row.playlists.some((p) => p.id === playlist.id));
   const facts: [string, string | null][] = [
     ["Type", parsed.typeLabel],
     ["Kleur", parsed.color],
@@ -26,7 +30,7 @@ export default async function PreparationPlaylistPage({ params }: { params: Prom
   ];
 
   return (
-    <main className="wrap">
+    <main className="wrap wrap--full">
       <header className="masthead">
         <p className="kicker">dkj-music-library · Mixen · Preparation</p>
         <h1>{playlist.name}</h1>
@@ -50,23 +54,20 @@ export default async function PreparationPlaylistPage({ params }: { params: Prom
         </p>
       </section>
 
-      <section className="card">
-        <div className="card__head">
-          <h2 className="card__title">Tracks</h2>
-          <p className="card__sub">{tracks.length} tracks</p>
-        </div>
-        {tracks.length > 0 ? (
-          <ol>
-            {tracks.map((track, i) => (
-              <li key={i}>
-                {track.artists.map((artist) => artist.name).join(", ")} -- {track.name}
-              </li>
-            ))}
-          </ol>
-        ) : (
+      {"error" in register ? (
+        <section className="layer">
+          <p className="empty-note">
+            De bibliotheek kon niet worden gelezen: {register.error}. Draai <code>npm run library:sync</code> en
+            kijk in de serverconsole.
+          </p>
+        </section>
+      ) : register.rows.length === 0 ? (
+        <section className="layer">
           <p className="empty-note">Deze werkbak is nog leeg.</p>
-        )}
-      </section>
+        </section>
+      ) : (
+        <TrackRegister rows={register.rows} artistCount={register.artistCount} rememberPrefs={false} />
+      )}
     </main>
   );
 }
