@@ -15,6 +15,38 @@
   object-fit: cover;
 }
 
+// Een card met zo'n thumbnail heeft geen padding (Dave): de thumbnail sluit aan op de rand van de card.
+// De thumbnail vult dan de volle hoogte van de card (vierkant), ook als de buren in de rij hoger zijn; de
+// chevron houdt wat lucht tot de rechterrand.
+.card--thumb {
+  padding: 0;
+  overflow: hidden;
+
+  .menu-list,
+  .menu-item {
+    height: 100%;
+  }
+
+  // Even hoog als een card mét padding, ook in een rij waar elke card een thumbnail heeft.
+  .menu-item {
+    min-height: calc(var(--tap) + 2 * var(--spacing-6));
+  }
+
+  .card-thumb {
+    width: auto;
+    height: 100%;
+    min-height: 40px;
+    aspect-ratio: 1;
+    border-radius: 0;
+    // Zonder dit duwt de bron-afbeelding (1000px+) de rij open; nu volgt hij alleen de hoogte van de card.
+    contain: size;
+  }
+
+  .menu-item__chevron {
+    margin-right: var(--spacing-4);
+  }
+}
+
 @each $color in "cyan", "yellow", "blue", "green", "orange", "magenta", "red", "purple" {
   .colour-dot[data-color="#{$color}"] {
     background: var(--emotion-#{$color});

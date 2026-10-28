@@ -43,13 +43,14 @@
 
 - [x] `image_square` uit de mix-JSON genormaliseerd naar `Mix.imageSquare`, plus `mixSquareFile` die het pad onder `public/` van djcylow-react oplost (en niets buiten `public/` toelaat)
 - [x] Route `/api/mixes/square/[slug]` die de thumbnail van die mix serveert -- de slug wordt opgezocht, er komt geen pad uit de URL op schijf
-- [x] `PageCardGrid` kreeg `image`: een 40px thumbnail op de plek van het icoon; /mixen/published zet hem waar het bestand bestaat, anders blijft het disc-icoon
+- [x] `PageCardGrid` kreeg `image`: een thumbnail op de plek van het icoon; /mixen/published zet hem waar het bestand bestaat, anders blijft het disc-icoon
+- [x] Cards met een thumbnail (`.card--thumb`) zonder padding (Dave): de thumbnail vult de card van boven tot onder, vierkant, even hoog als een gewone card
 
 ### TEST
 
 - [x] `tsc`, `eslint` en de mix-suites groen; nieuwe tests voor `imageSquare` en `mixSquareFile` (incl. paden buiten `public/`)
 - [x] Route geprobeerd: 200 `image/webp` voor een echte slug, 404 voor een traversal-poging
-- [ ] Visuele check door Dave: de thumbnails op /mixen/published zien er goed uit (formaat 40px, afgeronde hoeken)
+- [ ] Visuele check door Dave: de thumbnails op /mixen/published zien er goed uit (rand tot rand, zonder padding)
 
 ### DEPLOY: feat/mix-square-thumbnail
 
