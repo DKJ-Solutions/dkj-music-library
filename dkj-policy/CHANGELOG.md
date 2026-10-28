@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**13 / 13 minor entries** <!-- pending-tally -->
+**13 / 14 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/register-player-in-view · 20261028-154446Z
+
+Wie een track afspeelt in het Trackregister of op een werkbak-pagina, ziet de Spotify-speler nu helemaal:
+de pagina scrolt de site-header weg, zodat de speler onderin het venster staat in plaats van er grotendeels
+onder.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+N/A -- een app voor eigen gebruik; de lezer van deze notes is dezelfde ontwikkelaar.
+
+**Score:** N/A
+
+#### Pull Request
+
+Spotify-speler scrolt zichzelf helemaal in beeld
+
+[PR #116](https://github.com/DKJ-Solutions/dkj-music-library/pull/116)
+
+---
 
 ### DEPLOY: fix/register-menu-toggle-align · 20261028-141623Z
 
