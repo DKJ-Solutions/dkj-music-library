@@ -51,7 +51,7 @@
 
 - [x] `tsc`, `eslint` en de mix-suites groen; nieuwe tests voor `imageSquare` en `mixSquareFile` (incl. paden buiten `public/`)
 - [x] Route geprobeerd: 200 `image/webp` voor een echte slug, 404 voor een traversal-poging
-- [ ] Visuele check door Dave: de thumbnails op /mixen/published zien er goed uit (rand tot rand, zonder padding)
+- [x] Visuele check door Dave: de thumbnails op /mixen/published zien er goed uit (rand tot rand, zonder padding)
 
 ### DEPLOY: feat/mix-square-thumbnail
 
