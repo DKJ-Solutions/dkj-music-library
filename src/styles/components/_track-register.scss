@@ -478,9 +478,12 @@ $register-player-height: 97px; // 80px iframe + 2 x 8px padding + 1px rand
 }
 
 // In een cel schuift de knop zijn rand + padding (1px + 6px) naar links (Dave): dan staat de TEKST erin
-// recht onder de kop, net als een enkele playlist of groep zonder knop in dezelfde kolom.
+// recht onder de kop, net als een enkele playlist of groep zonder knop in dezelfde kolom. De 7px rechts
+// geeft die ruimte terug: zonder die marge wordt de wrapper (.register-menu, inline-block) 7px smaller
+// dan de knop, en kapt max-width: 100% het ▾ en de rechterrand af.
 .register-table td .register-menu-toggle {
   margin-left: -7px;
+  margin-right: 7px;
 }
 
 .register-menu-toggle:hover,
