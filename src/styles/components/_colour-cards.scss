@@ -7,6 +7,14 @@
   border-radius: 50%;
 }
 
+// De vierkante thumbnail van een mix (`image`), op dezelfde plek: /mixen/published.
+.card-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
 @each $color in "cyan", "yellow", "blue", "green", "orange", "magenta", "red", "purple" {
   .colour-dot[data-color="#{$color}"] {
     background: var(--emotion-#{$color});

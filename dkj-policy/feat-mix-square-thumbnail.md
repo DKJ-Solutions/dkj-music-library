@@ -41,17 +41,27 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `image_square` uit de mix-JSON genormaliseerd naar `Mix.imageSquare`, plus `mixSquareFile` die het pad onder `public/` van djcylow-react oplost (en niets buiten `public/` toelaat)
+- [x] Route `/api/mixes/square/[slug]` die de thumbnail van die mix serveert -- de slug wordt opgezocht, er komt geen pad uit de URL op schijf
+- [x] `PageCardGrid` kreeg `image`: een 40px thumbnail op de plek van het icoon; /mixen/published zet hem waar het bestand bestaat, anders blijft het disc-icoon
 
 ### TEST
 
+- [x] `tsc`, `eslint` en de mix-suites groen; nieuwe tests voor `imageSquare` en `mixSquareFile` (incl. paden buiten `public/`)
+- [x] Route geprobeerd: 200 `image/webp` voor een echte slug, 404 voor een traversal-poging
+- [ ] Visuele check door Dave: de thumbnails op /mixen/published zien er goed uit (formaat 40px, afgeronde hoeken)
+
 ### DEPLOY: feat/mix-square-thumbnail
 
-**Score:**
+De cards op /mixen/published tonen nu de vierkante thumbnail van de mix in plaats van het disc-icoon. De afbeelding komt uit `public/` van djcylow-react via een nieuwe route `/api/mixes/square/<slug>`; een mix zonder `image_square` (26 van de 86) houdt het disc-icoon.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+De mixenlijst is in één oogopslag te herkennen aan de covers, zoals op djcylow.com zelf.
+
+**Score:** 3
 
 #### Pull Request
 

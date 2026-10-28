@@ -117,9 +117,22 @@ export function normalizeMix(entry: RawMixEntry, file: string): Mix {
     volume: toVolume(entry.volume),
     date: entry.date?.trim() || null,
     bpm: toBpm(entry),
+    imageSquare: entry.image_square?.trim() || null,
     topArtists: Array.isArray(entry.top_artists) ? entry.top_artists.filter(Boolean) : [],
     tracks: Array.isArray(entry.tracklist) ? entry.tracklist.map((t) => t?.track ?? "").filter(Boolean) : [],
   };
+}
+
+/** Het bestand achter `imageSquare` (een pad onder `public/` van djcylow-react), of null. De mix-map is
+ *  `<djcylow-react>/src/data/mixes`, dus `public/` ligt drie niveaus hoger -- ook bij een MIXES_DATA_DIR,
+ *  die dezelfde repo-indeling hoort te hebben. Een pad dat buiten `public/` uitkomt telt als geen bestand. */
+export function mixSquareFile(imageSquare: string | null): string | null {
+  const dir = getMixDir();
+  if (dir === null || !imageSquare) return null;
+  const publicDir = path.resolve(dir, "..", "..", "..", "public");
+  const file = path.resolve(publicDir, `.${path.posix.normalize(`/${imageSquare}`)}`);
+  if (!file.startsWith(publicDir + path.sep) || !fs.existsSync(file)) return null;
+  return file;
 }
 
 /** Alle PUBLIEKE mixen uit alle `[power]-[color].json`-bestanden van de eerste vindbare bron (zie

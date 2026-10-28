@@ -81,6 +81,9 @@ export interface PageCard {
   /** Een kleur van de eigen albums ("cyan"): dan staat er een stip in die kleur op de plek van het icoon
    *  (components/_colour-cards.scss), zoals op /mixen/planned. */
   dot?: string;
+  /** Een afbeelding-URL (de vierkante thumbnail van een mix): dan staat die op de plek van het icoon
+   *  (components/_colour-cards.scss), zoals op /mixen/published. */
+  image?: string;
 }
 
 export function PageCardGrid({ cards }: { cards: PageCard[] }) {
@@ -90,7 +93,10 @@ export function PageCardGrid({ cards }: { cards: PageCard[] }) {
         <section key={card.href} className="card card--link">
           <nav className="menu-list" aria-label={card.label}>
             <Link className="menu-item" href={card.href}>
-              {card.dot ? (
+              {card.image ? (
+                // eslint-disable-next-line @next/next/no-img-element -- een lokale route, geen next/image-bron
+                <img className="menu-item__icon card-thumb" src={card.image} width={40} height={40} alt="" />
+              ) : card.dot ? (
                 <span className="menu-item__icon colour-dot" data-color={card.dot} aria-hidden="true" />
               ) : (
                 <svg

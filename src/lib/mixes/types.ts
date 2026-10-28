@@ -42,6 +42,9 @@ export interface RawMixEntry {
   audioSrc?: string;
   permalink?: string;
   featured?: boolean;
+  /** De vierkante thumbnail, als pad onder `public/` van djcylow-react
+   *  (`/images/full/orange/square/image_full_orange_square_20250521.webp`). Leeg bij een deel van de mixen. */
+  image_square?: string;
   /** `true` = preview-stub of concept: hoort niet op de site en dus ook niet in de koppeling. */
   ignore?: boolean;
   top_artists?: string[];
@@ -93,6 +96,9 @@ export interface Mix {
   /** De ECHTE BPM, uit de `audioSrc`/`permalink`-bestandsnaam (bv. "...128BPM..."). Waar dit
    *  gevuld is, is het een feit -- tegenover de gok van spotify/classifyBpm.ts. */
   bpm: number | null;
+  /** `image_square` uit de JSON: het pad van de vierkante thumbnail onder `public/` van djcylow-react, of
+   *  null als de bron er geen levert. De hub serveert hem via /api/mixes/square/<slug> (mixSquareFile). */
+  imageSquare: string | null;
   topArtists: string[];
   /** De tracklist als kale "Artist - Title"-regels, in mix-volgorde. */
   tracks: string[];
