@@ -2,7 +2,28 @@
 
 ## [Unreleased]
 
-**7 / 7 minor entries** <!-- pending-tally -->
+**8 / 8 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/preparation-rating-column · 20261028-094703Z
+
+In de tabellen van de werkbakken onder Mixen › Preparation staat de waardering nu links van de playlists,
+direct naast de albumartiest.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+Wie een werkbak doorloopt, leest de waardering van een track meteen naast titel en artiest.
+
+**Score:** 1
+
+#### Pull Request
+
+dkj_rating links van spotify_playlist in de werkbaktabellen
+
+[PR #110](https://github.com/DKJ-Solutions/dkj-music-library/pull/110)
+
+---
 
 ### DEPLOY: feat/preparation-card · 20261028-093807Z
 
