@@ -1,16 +1,24 @@
-// De detailpagina van één mix op /mixen/published/<slug>: de gegevens uit de mix-JSON op één rij, de link naar de
-// mixpagina op djcylow.com ernaast, en daaronder de top-artiesten en de tracklist naast elkaar.
+// De detailpagina van één mix op /mixen/published/<slug>: de gegevens uit de mix-JSON (top-artiesten inbegrepen)
+// op één rij, de link naar de mixpagina op djcylow.com rechts naast de h1, en daaronder de tracks van de mix in de tabel van
+// /spotify/trackregister (TrackRegister `compact`, zoals de werkbak-pagina's op /mixen/preparation/<id>).
 import { notFound } from "next/navigation";
+import { TrackRegister } from "@/components/spotify/TrackRegister";
 import { mixUrl } from "@/lib/library/djcylowMix";
+import { readRegister } from "@/lib/library/readRegister";
 import { findMixBySlug } from "@/lib/mixes/mixPages";
 
-// Leest de mix-JSON's van schijf, en die wijzigen buiten de build -- zelfde reden als /mixen/published.
+// Leest de mix-JSON's en de bibliotheek van schijf, en die wijzigen buiten de build -- zelfde reden als
+// /mixen/published.
 export const dynamic = "force-dynamic";
 
 export default async function MixDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const mix = findMixBySlug(slug);
   if (!mix) notFound();
+
+  // Het register kent per track de mixen waarin hij zit (djcylow_mix), dus dit zijn precies de tracks van
+  // deze mix zoals de bibliotheek ze kent.
+  const register = readRegister((row) => row.mixes.some((m) => m.slug === slug));
 
   const facts: [string, string | null][] = [
     ["Genre", mix.genre],
@@ -21,13 +29,17 @@ export default async function MixDetailPage({ params }: { params: Promise<{ slug
     ["Frequency", mix.gender],
     ["Volume", mix.volume !== null ? `Vol. ${mix.volume}` : null],
     ["Datum", mix.date],
+    ["Top-artiesten", mix.topArtists.length > 0 ? mix.topArtists.join(", ") : null],
   ];
 
   return (
-    <main className="wrap">
-      <header className="masthead">
+    <main className="wrap wrap--full">
+      <header className="masthead masthead--action">
         <p className="kicker">dkj-music-library · Mixen</p>
         <h1>{mix.title}</h1>
+        <a className="btn btn--primary" href={mixUrl(slug)} target="_blank" rel="noreferrer">
+          Beluister op djcylow.com
+        </a>
       </header>
 
       <section className="card">
@@ -41,45 +53,22 @@ export default async function MixDetailPage({ params }: { params: Promise<{ slug
               </div>
             ))}
         </dl>
-        <p className="page-cta">
-          <a className="btn btn--primary" href={mixUrl(slug)} target="_blank" rel="noreferrer">
-            Beluister op djcylow.com
-          </a>
-        </p>
       </section>
 
-      <div className="grid-2">
-        <section className="card">
-          <div className="card__head">
-            <h2 className="card__title">Top-artiesten</h2>
-          </div>
-          {mix.topArtists.length > 0 ? (
-            <ul>
-              {mix.topArtists.map((artist) => (
-                <li key={artist}>{artist}</li>
-              ))}
-            </ul>
-          ) : (
-            <p className="empty-note">Geen top-artiesten in de mix-data.</p>
-          )}
+      {"error" in register ? (
+        <section className="layer">
+          <p className="empty-note">
+            De bibliotheek kon niet worden gelezen: {register.error}. Draai <code>npm run library:sync</code> en
+            kijk in de serverconsole.
+          </p>
         </section>
-
-        <section className="card">
-          <div className="card__head">
-            <h2 className="card__title">Tracklist</h2>
-            <p className="card__sub">{mix.tracks.length} tracks</p>
-          </div>
-          {mix.tracks.length > 0 ? (
-            <ol>
-              {mix.tracks.map((track, i) => (
-                <li key={i}>{track}</li>
-              ))}
-            </ol>
-          ) : (
-            <p className="empty-note">Geen tracklist in de mix-data.</p>
-          )}
+      ) : register.rows.length === 0 ? (
+        <section className="layer">
+          <p className="empty-note">Geen tracks van deze mix in de bibliotheek.</p>
         </section>
-      </div>
+      ) : (
+        <TrackRegister rows={register.rows} artistCount={register.artistCount} compact />
+      )}
     </main>
   );
 }
