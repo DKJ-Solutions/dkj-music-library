@@ -53,7 +53,7 @@ eindigt (de werkbakken), elk met een eigen pagina -- zoals Published een card pe
 - [x] `lib/library/readRegister.ts`: de registerrijen op één plek, gedeeld door /spotify/trackregister en de
   werkbakpagina's
 - [x] `TrackRegister`: `compact` -- alleen de cijfers en de tabel, alle rijen op één pagina, zonder de kolommen
-  year, dkj_genre, dkj_bpm, plays, dkj_album en dkj_group, zonder zoekbalk,
+  year, dkj_genre, dkj_bpm, plays, dkj_album en dkj_group, gesorteerd op de hoogste dkj_rating eerst, zonder zoekbalk,
   kolomschakelaar, filters en pager, en zonder opgeslagen filterstand (die zou hier onzichtbaar tracks
   verbergen)
 - [x] Preparation-card op /mixen, naast Published en Planned
@@ -78,7 +78,7 @@ Onder Mixen staat een nieuwe card, Preparation, met daaronder een kaart voor elk
 "Vol. X" eindigt: de werkbakken waarin de tracks voor een mix al verzameld zijn maar de mix nog niet
 gemaakt is. De volste werkbak staat vooraan. Elke kaart draagt een stip in de kleur van de playlist en opent een eigen pagina met de tabel van
 het Trackregister, met alleen de tracks die al in die playlist staan: titel, albumartiest, playlists en
-waardering, zonder zoekbalk, filters of pager.
+waardering, de hoogst gewaardeerde track bovenaan, zonder zoekbalk, filters of pager.
 
 **Score:** 3
 

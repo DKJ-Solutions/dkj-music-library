@@ -682,6 +682,8 @@ const COMPACT_WIDTHS: Partial<Record<Column["key"], string>> = {
   playlists: "32%",
   rating: "104px",
 };
+/** De compacte tabel opent op de hoogste dkj_rating eerst (Dave, 28 oktober 2026): tier-8 bovenaan. */
+const COMPACT_SORT: RegisterSort = { key: "rating", dir: "desc" };
 const COMPACT_COLUMNS: readonly Column[] = VISIBLE_COLUMNS.flatMap((column) => {
   const width = COMPACT_WIDTHS[column.key];
   return width ? [{ ...column, width }] : [];
@@ -724,7 +726,7 @@ export function TrackRegister({ rows: initialRows, artistCount, compact = false 
   const [genre, setGenre] = useState(DEFAULT_PREFS.genre);
   const [album, setAlbum] = useState(DEFAULT_PREFS.album);
   const [group, setGroup] = useState(DEFAULT_PREFS.group);
-  const [sort, setSort] = useState<RegisterSort | null>(DEFAULT_PREFS.sort);
+  const [sort, setSort] = useState<RegisterSort | null>(compact ? COMPACT_SORT : DEFAULT_PREFS.sort);
   const [columnSet, setColumnSet] = useState<ColumnSet>(DEFAULT_PREFS.columnSet);
   const [page, setPage] = useState(0);
   // Pas waar na mount (het effect hieronder): de server rendert zonder localStorage, dus vóór mount
