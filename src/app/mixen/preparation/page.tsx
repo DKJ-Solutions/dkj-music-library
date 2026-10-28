@@ -18,7 +18,7 @@ export default function MixenPreparationPage() {
     icon: "music",
     dot: parsed.color?.toLowerCase(),
     label: playlist.name,
-    sub: `${playlist.trackCount} tracks`,
+    sub: `${playlist.trackCount} ${playlist.trackCount === 1 ? "track" : "tracks"}`,
   }));
 
   return (

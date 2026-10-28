@@ -26,7 +26,8 @@ export interface PreparationPlaylist {
   parsed: ParsedPlaylistName;
 }
 
-// House Mix vóór Drum & Bass, dan de kleuren in de volgorde van Planned, dan Light vóór Full en (f) vóór (m).
+// De volste werkbak eerst (Dave, 28 oktober 2026); bij een gelijk aantal House Mix vóór Drum & Bass, dan de
+// kleuren in de volgorde van Planned, dan Light vóór Full en (f) vóór (m).
 function rank(values: readonly (string | null)[], value: string | null): number {
   const i = value === null ? -1 : values.indexOf(value);
   return i === -1 ? values.length : i;
@@ -39,6 +40,7 @@ export function preparationPlaylists(playlists: Playlist[]): PreparationPlaylist
     .map((playlist) => ({ playlist, parsed: parsePlaylistName(playlist.name) }))
     .sort(
       (a, b) =>
+        b.playlist.trackCount - a.playlist.trackCount ||
         rank(["House Mix", "Drum & Bass (Mix)"], a.parsed.typeLabel) -
           rank(["House Mix", "Drum & Bass (Mix)"], b.parsed.typeLabel) ||
         rank(PLANNED_COLOURS, a.parsed.color) - rank(PLANNED_COLOURS, b.parsed.color) ||

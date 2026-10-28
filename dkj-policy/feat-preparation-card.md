@@ -46,7 +46,8 @@ eindigt (de werkbakken), elk met een eigen pagina -- zoals Published een card pe
 
 - [x] `lib/mixes/preparation.ts`: welke playlists een werkbak zijn (`Vol. X` aan het eind, ook `Vol X`,
   `Vol. x` en een dubbele spatie), de volgorde en de route
-- [x] `/mixen/preparation`: een card-link per werkbak, met een stip in de kleur van de playlist
+- [x] `/mixen/preparation`: een card-link per werkbak, met een stip in de kleur van de playlist, de meeste
+  tracks eerst
 - [x] `/mixen/preparation/<id>`: de pagina per werkbak, met de naamgegevens, een link naar Spotify en de tracks
 - [x] Preparation-card op /mixen, naast Published en Planned
 - [x] Kruimelnamen per werkbak in de layout, bewaard tot de snapshot (30 MB) op schijf wijzigt
@@ -62,7 +63,7 @@ eindigt (de werkbakken), elk met een eigen pagina -- zoals Published een card pe
 
 Onder Mixen staat een nieuwe card, Preparation, met daaronder een kaart voor elke Spotify-playlist die op
 "Vol. X" eindigt: de werkbakken waarin de tracks voor een mix al verzameld zijn maar de mix nog niet
-gemaakt is. Elke kaart draagt een stip in de kleur van de playlist en opent een eigen pagina met de tracks
+gemaakt is. De volste werkbak staat vooraan. Elke kaart draagt een stip in de kleur van de playlist en opent een eigen pagina met de tracks
 die er al in staan en een link naar de playlist op Spotify.
 
 **Score:** 3

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { Playlist } from "@/lib/spotify/types";
 import { isPreparationPlaylist, preparationHref, preparationTitlesOf, preparationPlaylists } from "./preparation";
 
-function playlist(id: string, name: string): Playlist {
+function playlist(id: string, name: string, trackCount = 0): Playlist {
   return {
     id,
     name,
@@ -13,7 +13,7 @@ function playlist(id: string, name: string): Playlist {
     owner: { id: "dave", displayName: null },
     images: [],
     description: null,
-    trackCount: 0,
+    trackCount,
     tracks: [],
   };
 }
@@ -33,7 +33,16 @@ describe("isPreparationPlaylist", () => {
 });
 
 describe("preparationPlaylists", () => {
-  it("zet House Mix vóór Drum & Bass, en daarbinnen de kleuren in de volgorde van Planned", () => {
+  it("zet de werkbak met de meeste tracks vooraan", () => {
+    const ids = preparationPlaylists([
+      playlist("1", "House Mix 🧊 Cyan Light (f) 🧊 Vol. X", 3),
+      playlist("2", "Drum & Bass ♦️ Magenta Full (m) ♦️ Vol. X", 68),
+      playlist("3", "House Mix 🟡 Yellow Light (m) 🟡 Vol. X", 67),
+    ]).map((p) => p.playlist.id);
+    expect(ids).toEqual(["2", "3", "1"]);
+  });
+
+  it("zet bij een gelijk aantal House Mix vóór Drum & Bass, en daarbinnen de kleuren in de volgorde van Planned", () => {
     const names = preparationPlaylists([
       playlist("1", "Drum & Bass Mix 🧊 Cyan Light (f) 🧊 Vol. X"),
       playlist("2", "House Mix 🟢 Green Light (f) 🟢 Vol. X"),
