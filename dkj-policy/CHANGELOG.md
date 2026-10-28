@@ -2,7 +2,31 @@
 
 ## [Unreleased]
 
-**6 / 6 minor entries** <!-- pending-tally -->
+**7 / 7 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/preparation-card · 20261028-093807Z
+
+Onder Mixen staat een nieuwe card, Preparation, met daaronder een kaart voor elke Spotify-playlist die op
+"Vol. X" eindigt: de werkbakken waarin de tracks voor een mix al verzameld zijn maar de mix nog niet
+gemaakt is. De volste werkbak staat vooraan. Elke kaart draagt een stip in de kleur van de playlist en opent een eigen pagina met de tabel van
+het Trackregister, met alleen de tracks die al in die playlist staan: titel, albumartiest, playlists en
+waardering, de hoogst gewaardeerde track bovenaan, zonder zoekbalk, filters of pager.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Wie de app gebruikt, ziet in één overzicht welke mixen in voorbereiding zijn en hoe vol elke werkbak al is.
+
+**Score:** 3
+
+#### Pull Request
+
+Preparation-card op /mixen, met een kaart per Vol. X-playlist
+
+[PR #108](https://github.com/DKJ-Solutions/dkj-music-library/pull/108)
+
+---
 
 ### DEPLOY: feat/planned-colour-cards · 20261027-155756Z
 
