@@ -52,7 +52,7 @@
 
 - [x] Twee tests in TrackRegister.test.tsx: nummering 1..n ook na sorteren, en geen plek-kolom in de gewone tabel (31/31 groen)
 - [x] `tsc --noEmit` en eslint schoon; werkbak-pagina op localhost geeft 67 rijen genummerd 1..67
-- [ ] Visuele check door Dave
+- [x] Visuele check door Dave ("ja ship it", 29 oktober 2026)
 
 ### DEPLOY: feat/preparation-position-column
 
