@@ -50,7 +50,7 @@ Dave: de rij van de track die speelt mag visueel duidelijker, bijvoorbeeld met e
 ### TEST
 
 - [x] `tsc --noEmit` schoon
-- [ ] Visuele check door Dave (browserautomatisering was niet verbonden)
+- [x] Visuele check door Dave: "ja beter ship it"
 
 ### DEPLOY: feat/playing-row-highlight
 
