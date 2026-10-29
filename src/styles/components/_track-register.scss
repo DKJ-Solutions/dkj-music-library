@@ -168,7 +168,9 @@
   text-align: left;
   padding: 9px 14px;
   border-bottom: 1px solid var(--line);
-  vertical-align: top;
+  // Midden, niet boven: elke rij is één regel, maar een keuzelabel of de afspeelknop is iets hoger dan de
+  // tekst, en bovenaan uitgelijnd hing de tekst dan net boven het midden van de rij (Dave).
+  vertical-align: middle;
 }
 
 .register-table th {
@@ -313,7 +315,6 @@
 // het knopje op de linkermarge van de tabel, en de rest van de ruimte als afstand tot de titel.
 .register-table .register-play-cell {
   padding-right: 0;
-  vertical-align: middle;
 }
 
 // Een kopje dat alleen een schermlezer leest (de afspeelkolom heeft geen zichtbare kop).

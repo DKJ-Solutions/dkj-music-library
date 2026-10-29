@@ -45,6 +45,7 @@ Dave: de rij van de track die speelt mag visueel duidelijker, bijvoorbeeld met e
 
 - [x] `TrackRegister.tsx`: de rij met `edit.playingId === row.id` krijgt de klasse `register-playing`, naast `register-mix-cut`
 - [x] `_track-register.scss`: een outline van 2px in `--accent` binnen de rij plus een zweem van die kleur als vlak
+- [x] Cellen verticaal in het midden in plaats van bovenaan: de tekst hing net boven het midden van de rij, wat de rand zichtbaar maakte (Dave)
 
 ### TEST
 
