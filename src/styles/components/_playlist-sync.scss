@@ -1,0 +1,16 @@
+// De sync-knop rechts in de masthead van een pagina met de tracks van één Spotify-playlist
+// (PlaylistSyncButton.tsx), met de uitkomst van de laatste klik ervoor.
+.playlist-sync {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2-5);
+}
+
+.playlist-sync__note {
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+.playlist-sync__note--error {
+  color: var(--negative-5);
+}

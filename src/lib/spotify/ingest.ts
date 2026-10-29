@@ -32,7 +32,7 @@
 // SERVER-ONLY (via httpClient.ts -> auth.ts -> tokenStore.ts, gebruikt fs).
 
 import { SpotifyApiError } from "./errors";
-import { fetchAllPages, type SpotifyFetchOptions } from "./httpClient";
+import { fetchAllPages, spotifyGet, type SpotifyFetchOptions } from "./httpClient";
 import type { Album, Artist, Playlist, PlaylistItem, Snapshot, SpotifyImage, Track } from "./types";
 
 // Beperkt tot wat het datamodel nodig heeft -- houdt de payload (en dus de rate-limit-druk)
@@ -165,6 +165,43 @@ export async function fetchAllPlaylistItems(
     options
   );
   return rawItems.map(mapPlaylistItem);
+}
+
+// GET /playlists/{id}, alleen de metadata. Het trackaantal (`items.total`) wordt bewust niet gevraagd: na
+// de feb-2026-hernoeming is niet gemeten hoe dat veld op het VOLLEDIGE playlist-object heet, en een
+// fields-filter dat niets matcht levert stil leeg op (zie bovenaan). syncOnePlaylist telt de opgehaalde
+// tracks zelf.
+const PLAYLIST_META_FIELDS = "id,name,uri,collaborative,public,snapshot_id,owner(id,display_name),images,description";
+
+/** Haalt één playlist opnieuw op -- metadata én alle tracks, zonder snapshot_id-diffing: wie op de knop
+ *  drukt wil de stand van nu, ook als Spotify het snapshot_id niet ophoogde -- en zet hem op zijn plek in
+ *  `snapshot`. Een playlist die nog niet in de snapshot stond komt achteraan. Mapmap en tags (fase 4)
+ *  blijven staan, net als bij buildSnapshot. `syncedAt` blijft het tijdstip van de laatste VOLLEDIGE
+ *  sync: dit is er geen. */
+export async function syncOnePlaylist(
+  snapshot: Snapshot,
+  playlistId: string,
+  options: SpotifyFetchOptions = {}
+): Promise<{ snapshot: Snapshot; playlist: Playlist }> {
+  const raw = await spotifyGet<RawSimplifiedPlaylist>(
+    `/playlists/${encodeURIComponent(playlistId)}`,
+    { fields: PLAYLIST_META_FIELDS },
+    options
+  );
+  const tracks = await fetchAllPlaylistItems(raw.id, options);
+  const previous = snapshot.playlists.find((p) => p.id === raw.id);
+  const playlist: Playlist = {
+    ...mapPlaylistMeta(raw),
+    trackCount: tracks.length,
+    tracks,
+    ...(previous?.folderPath ? { folderPath: previous.folderPath } : {}),
+    ...(previous?.tags ? { tags: previous.tags } : {}),
+  };
+  const playlists = previous
+    ? snapshot.playlists.map((p) => (p.id === raw.id ? playlist : p))
+    : [...snapshot.playlists, playlist];
+  console.log(`[spotify/ingest] "${playlist.name}" los gesynchroniseerd -- ${tracks.length} tracks`);
+  return { snapshot: { ...snapshot, playlists }, playlist };
 }
 
 // --- Voortgang ---------------------------------------------------------------------------------

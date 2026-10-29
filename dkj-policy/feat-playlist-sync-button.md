@@ -39,19 +39,36 @@
 
 ### PLAN
 
+Een sync-knop op elke pagina met een tracktabel die bij één Spotify-playlist hoort: de werkbakken op
+`/mixen/preparation/<id>` en de mixen op `/mixen/published/<slug>` (als de mix een eigen playlist heeft).
+Eén playlist opnieuw ophalen, niet de volledige sync.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `syncOnePlaylist` in `src/lib/spotify/ingest.ts`: metadata + alle tracks van één playlist, op zijn plek in de snapshot
+- [x] `src/lib/library/librarySync.ts`: de library-stap uit de volledige sync gehaald en gedeeld
+- [x] Route `POST /api/spotify/sync/playlist`
+- [x] `PlaylistSyncButton` + stijl, op de preparation- en de published-pagina
 
 ### TEST
 
+- [x] Unit-tests voor `syncOnePlaylist`; volledige suite (936), typecheck en lint groen
+- [x] Route live aangeroepen op `5p4okOZaBczCnGduUhfFQd`: 68 tracks, bibliotheek bijgewerkt; knop rendert op beide pagina's
+- [ ] Visuele check door Dave
+
 ### DEPLOY: feat/playlist-sync-button
 
-**Score:**
+Een eigen route en een gedeelde library-stap voor de sync van één playlist; de volledige sync gebruikt
+dezelfde library-stap.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Boven de tracktabel van een werkbak of mix staat een knop "Sync met Spotify": één klik haalt die playlist
+opnieuw op en de tabel loopt weer gelijk, zonder de volledige sync van alle playlists af te wachten.
+
+**Score:** 3
 
 #### Pull Request
 

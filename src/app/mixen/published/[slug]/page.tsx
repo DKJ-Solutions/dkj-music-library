@@ -1,10 +1,13 @@
 // De detailpagina van één mix op /mixen/published/<slug>: de gegevens uit de mix-JSON (top-artiesten inbegrepen)
 // op één rij, de link naar de mixpagina op djcylow.com rechts naast de h1, en daaronder de tracks van de mix in de tabel van
-// /spotify/trackregister (TrackRegister `compact`, zoals de werkbak-pagina's op /mixen/preparation/<id>).
+// /spotify/trackregister (TrackRegister `compact`, zoals de werkbak-pagina's op /mixen/preparation/<id>). Heeft de
+// mix een eigen playlist op Spotify, dan staat de sync-knop daarvoor naast de link (PlaylistSyncButton).
 import { notFound } from "next/navigation";
+import { PlaylistSyncButton } from "@/components/spotify/PlaylistSyncButton";
 import { TrackRegister } from "@/components/spotify/TrackRegister";
 import { mixUrl } from "@/lib/library/djcylowMix";
 import { readRegister } from "@/lib/library/readRegister";
+import { getMixLinks } from "@/lib/mixes/mixLinks";
 import { findMixBySlug } from "@/lib/mixes/mixPages";
 
 // Leest de mix-JSON's en de bibliotheek van schijf, en die wijzigen buiten de build -- zelfde reden als
@@ -19,6 +22,11 @@ export default async function MixDetailPage({ params }: { params: Promise<{ slug
   // Het register kent per track de mixen waarin hij zit (djcylow_mix), dus dit zijn precies de tracks van
   // deze mix zoals de bibliotheek ze kent.
   const register = readRegister((row) => row.mixes.some((m) => m.slug === slug));
+
+  // De eigen playlist van deze mix (een genummerde MMC-lijst of nog een werkbak), voor de sync-knop. Een
+  // emmer zoals een kleur-verzamellijst is niet de playlist van deze mix, dus die krijgt geen knop.
+  const link = getMixLinks().links.find((l) => l.mix.slug === slug);
+  const playlist = link?.playlist && link.status !== "bucket-only" ? link.playlist : null;
 
   const facts: [string, string | null][] = [
     ["Genre", mix.genre],
@@ -37,9 +45,12 @@ export default async function MixDetailPage({ params }: { params: Promise<{ slug
       <header className="masthead masthead--action">
         <p className="kicker">dkj-music-library · Mixen</p>
         <h1>{mix.title}</h1>
-        <a className="btn btn--primary" href={mixUrl(slug)} target="_blank" rel="noreferrer">
-          Beluister op djcylow.com
-        </a>
+        <div className="playlist-sync">
+          {playlist && <PlaylistSyncButton playlistId={playlist.id} playlistName={playlist.name} />}
+          <a className="btn btn--primary" href={mixUrl(slug)} target="_blank" rel="noreferrer">
+            Beluister op djcylow.com
+          </a>
+        </div>
       </header>
 
       <section className="card">
