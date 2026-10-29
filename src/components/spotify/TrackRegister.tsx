@@ -710,7 +710,10 @@ const POSITION_COLUMN: Column = {
   className: "register-position-cell",
   cell: (_row, _term, _edit, position) => <span className="register-position">{nf.format(position)}</span>,
 };
-const COMPACT_COLUMNS: readonly Column[] = Object.entries(COMPACT_WIDTHS).flatMap(([key, width]) => {
+/** Zoveel nummers heeft een mix meestal (Dave, 29 oktober 2026): onder die rij trekt de compacte tabel een
+ *  lijn, zodat je ziet dat de werkbak genoeg nummers heeft voor de volgende stap. */
+const MIX_SIZE = 36;
+const COMPACT_COLUMNS: readonly Column[] =Object.entries(COMPACT_WIDTHS).flatMap(([key, width]) => {
   const column = key === "position" ? POSITION_COLUMN : VISIBLE_COLUMNS.find((c) => c.key === key);
   return column && width ? [{ ...column, width }] : [];
 });
@@ -1012,7 +1015,11 @@ export function TrackRegister({ rows: initialRows, artistCount, compact = false 
                 </tr>
               ) : (
                 slice.map((row, i) => (
-                  <tr key={row.id}>
+                  <tr
+                    key={row.id}
+                    className={compact && i + 1 === MIX_SIZE ? "register-mix-cut" : undefined}
+                    title={compact && i + 1 === MIX_SIZE ? `${MIX_SIZE} nummers: genoeg voor een mix` : undefined}
+                  >
                     {columns.map(({ key, cell, className }) => (
                       <td key={key} className={className}>{cell(row, term, edit, i + 1)}</td>
                     ))}

@@ -73,6 +73,16 @@ describe("TrackRegister", () => {
     expect(document.querySelector(".register-position")).toBeNull();
   });
 
+  it("trekt in de compacte tabel een lijn onder rij 36, en alleen daar", () => {
+    render(<TrackRegister rows={rows.slice(0, 40)} artistCount={1} compact />);
+    const cut = document.querySelectorAll(".register-mix-cut");
+    expect(cut).toHaveLength(1);
+    expect(cut[0].querySelector(".register-position")?.textContent).toBe("36");
+    cleanup();
+    render(<TrackRegister rows={rows} artistCount={1} />);
+    expect(document.querySelector(".register-mix-cut")).toBeNull();
+  });
+
   it("toont 100 rijen per pagina", () => {
     render(<TrackRegister rows={rows} artistCount={1} />);
     expect(bodyRows()).toHaveLength(100);

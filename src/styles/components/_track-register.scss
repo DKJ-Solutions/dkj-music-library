@@ -275,6 +275,12 @@
   font-variant-numeric: tabular-nums;
 }
 
+// De lijn onder rij 36 van de compacte tabel (TrackRegister.tsx, MIX_SIZE): zoveel nummers heeft een mix
+// meestal, dus daaronder heeft de werkbak genoeg voor de volgende stap. Ook als rij 36 de laatste is.
+.register-table tbody tr.register-mix-cut td {
+  border-bottom: 2px solid var(--accent);
+}
+
 // ELKE RIJ IS PRECIES ÉÉN REGEL (Dave). Tekst wordt afgekapt met … en staat volledig in de tooltip
 // (title); wat niet op één regel past aan chips of labels, gaat in een menu (Dropdown in TrackRegister.tsx).
 .register-oneline {

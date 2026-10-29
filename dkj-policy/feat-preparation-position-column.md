@@ -45,6 +45,7 @@
 
 - [x] `POSITION_COLUMN` in TrackRegister.tsx, alleen in de compacte tabel; volgt de getoonde volgorde, sorteert zelf niet
 - [x] Stijl in `_track-register.scss`: rechts uitgelijnd, even brede cijfers
+- [x] Een lijn in de accentkleur onder rij 36 (`MIX_SIZE`), het gebruikelijke aantal nummers van een mix (Dave, 29 oktober 2026)
 
 ### TEST
 
@@ -54,13 +55,13 @@
 
 ### DEPLOY: feat/preparation-position-column
 
-De tabel op elke werkbak-pagina onder /mixen/preparation heeft een eerste kolom `#` met de plek van elke track: 1 tot en met het aantal tracks, in de volgorde waarin de tabel ze toont. Na het sorteren op een kop staat 1 weer bovenaan.
+De tabel op elke werkbak-pagina onder /mixen/preparation heeft een eerste kolom `#` met de plek van elke track: 1 tot en met het aantal tracks, in de volgorde waarin de tabel ze toont. Na het sorteren op een kop staat 1 weer bovenaan. Onder rij 36 staat een lijn in de accentkleur: zoveel nummers heeft een mix meestal, dus daar heeft de werkbak genoeg voor de volgende stap.
 
 **Score:** 2
 
 #### What makes this deploy extra special
 
-Dave ziet in één oogopslag op welke plek een track in de werkbak staat.
+Dave ziet in één oogopslag op welke plek een track in de werkbak staat, en of er al genoeg nummers voor een mix zijn.
 
 **Score:** 2
 
