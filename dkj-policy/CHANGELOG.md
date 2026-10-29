@@ -2,7 +2,30 @@
 
 ## [Unreleased]
 
-**13 / 14 minor entries** <!-- pending-tally -->
+**14 / 15 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/playlist-sync-button · 20261029-134619Z
+
+Een eigen route en een gedeelde library-stap voor de sync van één playlist; de volledige sync gebruikt
+dezelfde library-stap. `.wrap--full` zet de ruimte tussen zijn blokken nu met een gap in plaats van marges.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Boven de tracktabel van een werkbak of mix staat een knop "Sync met Spotify": één klik haalt die playlist
+opnieuw op en de tabel loopt weer gelijk, zonder de volledige sync van alle playlists af te wachten. Op alle
+pagina's met een volle-breedte-tabel staat er nu wat meer ruimte tussen de kop en de tabel.
+
+**Score:** 3
+
+#### Pull Request
+
+Sync-knop op tracktabellen van een Spotify-playlist
+
+[PR #117](https://github.com/DKJ-Solutions/dkj-music-library/pull/117)
+
+---
 
 ### DEPLOY: fix/register-player-in-view · 20261028-154446Z
 
