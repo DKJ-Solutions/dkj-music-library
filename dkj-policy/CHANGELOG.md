@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**15 / 16 minor entries** <!-- pending-tally -->
+**16 / 17 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/playing-row-highlight · 20261029-141025Z
+
+De rij van de track die in de speler staat heeft nu een rand in de themakleur en een licht getint vlak, zodat je in de lange tabel direct ziet welke track speelt.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Wie een werkbak doorloopt en een track afspeelt, ziet meteen welke rij dat is in plaats van naar het kleine stopicoon te zoeken.
+
+**Score:** 2
+
+#### Pull Request
+
+Spelende rij duidelijker gemarkeerd in de tabel
+
+[PR #119](https://github.com/DKJ-Solutions/dkj-music-library/pull/119)
+
+---
 
 ### DEPLOY: feat/preparation-position-column · 20261029-140042Z
 
