@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**14 / 15 minor entries** <!-- pending-tally -->
+**15 / 16 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/preparation-position-column · 20261029-140042Z
+
+De tabel op elke werkbak-pagina onder /mixen/preparation heeft een eerste kolom `#` met de plek van elke track: 1 tot en met het aantal tracks, in de volgorde waarin de tabel ze toont. Na het sorteren op een kop staat 1 weer bovenaan. Onder rij 36 staat een lijn in de accentkleur: zoveel nummers heeft een mix meestal, dus daar heeft de werkbak genoeg voor de volgende stap. De afspeelknop in de tabel (ook op /spotify/trackregister) is omgekeerd: een gevulde cirkel in de themakleur met een neutraal icoon, zodat hij beter opvalt.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Dave ziet in één oogopslag op welke plek een track in de werkbak staat, en of er al genoeg nummers voor een mix zijn.
+
+**Score:** 2
+
+#### Pull Request
+
+Plek-kolom in de tabel van elke werkbak
+
+[PR #118](https://github.com/DKJ-Solutions/dkj-music-library/pull/118)
+
+---
 
 ### DEPLOY: feat/playlist-sync-button · 20261029-134619Z
 
