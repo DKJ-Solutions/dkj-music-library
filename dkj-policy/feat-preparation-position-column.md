@@ -39,19 +39,30 @@
 
 ### PLAN
 
+- [x] Een kolom `#` in de tabel van elke werkbak op /mixen/preparation/<id>: de plek van de rij, 1 tot en met n (Dave, 29 oktober 2026)
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `POSITION_COLUMN` in TrackRegister.tsx, alleen in de compacte tabel; volgt de getoonde volgorde, sorteert zelf niet
+- [x] Stijl in `_track-register.scss`: rechts uitgelijnd, even brede cijfers
 
 ### TEST
 
+- [x] Twee tests in TrackRegister.test.tsx: nummering 1..n ook na sorteren, en geen plek-kolom in de gewone tabel (31/31 groen)
+- [x] `tsc --noEmit` en eslint schoon; werkbak-pagina op localhost geeft 67 rijen genummerd 1..67
+- [ ] Visuele check door Dave
+
 ### DEPLOY: feat/preparation-position-column
 
-**Score:**
+De tabel op elke werkbak-pagina onder /mixen/preparation heeft een eerste kolom `#` met de plek van elke track: 1 tot en met het aantal tracks, in de volgorde waarin de tabel ze toont. Na het sorteren op een kop staat 1 weer bovenaan.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Dave ziet in één oogopslag op welke plek een track in de werkbak staat.
+
+**Score:** 2
 
 #### Pull Request
 
