@@ -1017,7 +1017,14 @@ export function TrackRegister({ rows: initialRows, artistCount, compact = false 
                 slice.map((row, i) => (
                   <tr
                     key={row.id}
-                    className={compact && i + 1 === MIX_SIZE ? "register-mix-cut" : undefined}
+                    className={
+                      [
+                        compact && i + 1 === MIX_SIZE && "register-mix-cut",
+                        edit.playingId === row.id && "register-playing",
+                      ]
+                        .filter(Boolean)
+                        .join(" ") || undefined
+                    }
                     title={compact && i + 1 === MIX_SIZE ? `${MIX_SIZE} nummers: genoeg voor een mix` : undefined}
                   >
                     {columns.map(({ key, cell, className }) => (

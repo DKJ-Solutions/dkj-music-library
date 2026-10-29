@@ -39,19 +39,29 @@
 
 ### PLAN
 
+Dave: de rij van de track die speelt mag visueel duidelijker, bijvoorbeeld met een rand eromheen.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `TrackRegister.tsx`: de rij met `edit.playingId === row.id` krijgt de klasse `register-playing`, naast `register-mix-cut`
+- [x] `_track-register.scss`: een outline van 2px in `--accent` binnen de rij plus een zweem van die kleur als vlak
 
 ### TEST
 
+- [x] `tsc --noEmit` schoon
+- [ ] Visuele check door Dave (browserautomatisering was niet verbonden)
+
 ### DEPLOY: feat/playing-row-highlight
 
-**Score:**
+De rij van de track die in de speler staat heeft nu een rand in de themakleur en een licht getint vlak, zodat je in de lange tabel direct ziet welke track speelt.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie een werkbak doorloopt en een track afspeelt, ziet meteen welke rij dat is in plaats van naar het kleine stopicoon te zoeken.
+
+**Score:** 2
 
 #### Pull Request
 

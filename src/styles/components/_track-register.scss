@@ -281,6 +281,19 @@
   border-bottom: 2px solid var(--accent);
 }
 
+// De rij die nu in de speler staat (TrackRegister.tsx, playingId): een rand in de themakleur rondom en een
+// zweem van die kleur als vlak, zodat je in de lange tabel ziet welke track speelt (Dave). Een outline met
+// negatieve offset, omdat een rand op de cellen de hoogte van de rij zou veranderen en botst met de
+// lijn onder rij 36. Staat na de om-en-om-regel, zodat het vlak ook op een even rij wint.
+.register-table tbody tr.register-playing {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.register-table tbody tr.register-playing td {
+  background: color-mix(in srgb, var(--accent) 10%, var(--paper-2));
+}
+
 // ELKE RIJ IS PRECIES ÉÉN REGEL (Dave). Tekst wordt afgekapt met … en staat volledig in de tooltip
 // (title); wat niet op één regel past aan chips of labels, gaat in een menu (Dropdown in TrackRegister.tsx).
 .register-oneline {
