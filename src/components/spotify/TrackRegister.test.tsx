@@ -56,6 +56,33 @@ describe("TrackRegister", () => {
     row(150, { bpm: "176BPM", album: "Blue Full (m)" }),
   ];
 
+  it("nummert de rijen van de compacte tabel 1 tot en met n, ook na sorteren", () => {
+    const three = [row(1, { rating: "tier-2" }), row(2, { rating: "tier-8" }), row(3, { rating: "tier-5" })];
+    render(<TrackRegister rows={three} artistCount={1} compact />);
+    const positions = () => Array.from(document.querySelectorAll(".register-position"), (cell) => cell.textContent);
+    const titles = () => Array.from(document.querySelectorAll(".register-title"), (cell) => cell.textContent);
+    expect(positions()).toEqual(["1", "2", "3"]);
+    expect(titles()).toEqual(["Nummer 2", "Nummer 3", "Nummer 1"]);
+    fireEvent.click(screen.getByRole("button", { name: /dkj_title/ }));
+    expect(positions()).toEqual(["1", "2", "3"]);
+    expect(titles()).toEqual(["Nummer 1", "Nummer 2", "Nummer 3"]);
+  });
+
+  it("heeft geen plek-kolom in de gewone tabel", () => {
+    render(<TrackRegister rows={rows} artistCount={1} />);
+    expect(document.querySelector(".register-position")).toBeNull();
+  });
+
+  it("trekt in de compacte tabel een lijn onder rij 36, en alleen daar", () => {
+    render(<TrackRegister rows={rows.slice(0, 40)} artistCount={1} compact />);
+    const cut = document.querySelectorAll(".register-mix-cut");
+    expect(cut).toHaveLength(1);
+    expect(cut[0].querySelector(".register-position")?.textContent).toBe("36");
+    cleanup();
+    render(<TrackRegister rows={rows} artistCount={1} />);
+    expect(document.querySelector(".register-mix-cut")).toBeNull();
+  });
+
   it("toont 100 rijen per pagina", () => {
     render(<TrackRegister rows={rows} artistCount={1} />);
     expect(bodyRows()).toHaveLength(100);

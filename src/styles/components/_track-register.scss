@@ -264,6 +264,23 @@
   font-variant-numeric: tabular-nums;
 }
 
+// De plek-kolom van de compacte tabel (TrackRegister.tsx, POSITION_COLUMN): even brede cijfers, rechts
+// uitgelijnd, zodat 9 en 10 onder elkaar recht staan.
+.register-table .register-position-cell {
+  text-align: right;
+}
+
+.register-position {
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+// De lijn onder rij 36 van de compacte tabel (TrackRegister.tsx, MIX_SIZE): zoveel nummers heeft een mix
+// meestal, dus daaronder heeft de werkbak genoeg voor de volgende stap. Ook als rij 36 de laatste is.
+.register-table tbody tr.register-mix-cut td {
+  border-bottom: 2px solid var(--accent);
+}
+
 // ELKE RIJ IS PRECIES ÉÉN REGEL (Dave). Tekst wordt afgekapt met … en staat volledig in de tooltip
 // (title); wat niet op één regel past aan chips of labels, gaat in een menu (Dropdown in TrackRegister.tsx).
 .register-oneline {
@@ -303,12 +320,14 @@
   width: 20px;
   height: 20px;
   padding: 0;
-  border: 1px solid var(--line);
+  // Omgekeerd (Dave, 29 oktober 2026): een vlak in de themakleur met een neutraal icoon, zoals de
+  // primaire knop van de huisstijl (.btn--primary), zodat hij in de lange tabel opvalt.
+  border: 1px solid var(--accent-ink);
   border-radius: 50%;
-  background: none;
-  color: var(--muted);
+  background: var(--accent-ink);
+  color: var(--paper-1);
   cursor: pointer;
-  transition: color 0.12s ease, border-color 0.12s ease, background-color 0.12s ease;
+  transition: opacity 0.12s ease;
 }
 
 // Het icoon (PlayButton): een SVG, zodat hij precies in het midden van de cirkel staat.
@@ -325,11 +344,9 @@
   }
 }
 
-button.register-play:hover,
-.register-play[aria-pressed="true"] {
-  color: var(--accent-ink);
-  border-color: var(--accent);
-  background: var(--accent-soft);
+// Het vlak is al de themakleur, dus hover maakt hem iets lichter; de spelende track toont het stopvierkant.
+button.register-play:hover {
+  opacity: 0.8;
 }
 
 .register-play:focus-visible,

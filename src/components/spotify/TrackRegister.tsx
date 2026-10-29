@@ -52,14 +52,16 @@ const DEFAULT_PREFS: RegisterPrefs = defaultRegisterPrefs();
 
 /** Eén kolom van de tabel: het veld, waarop hij sorteert, zijn deel van de breedte (table-layout: fixed,
  *  zodat alle kolommen altijd passen) en wat er in de cel staat. De afspeelkolom ("play") is geen veld en
- *  sorteert niet; zijn kop heeft alleen een naam voor een schermlezer. */
+ *  sorteert niet; zijn kop heeft alleen een naam voor een schermlezer. De plek-kolom ("position") is ook
+ *  geen veld: hij nummert de rijen 1 tot en met n in de volgorde waarin ze nu staan. */
 interface Column {
-  key: SortKey | "play";
+  key: SortKey | "play" | "position";
   field: string;
   /** Kortere kop in de tabel dan de veldnaam, zodat de kolom smal kan blijven; de tooltip noemt het veld. */
   label?: string;
   width: string;
-  cell: (row: RegisterRow, term: string, edit: CellEdit) => ReactNode;
+  /** `position` is de plek van de rij in de tabel, vanaf 1. */
+  cell: (row: RegisterRow, term: string, edit: CellEdit, position: number) => ReactNode;
   className?: string;
 }
 
@@ -689,6 +691,7 @@ const COLUMN_SETS: Record<ColumnSet, readonly Column[]> = { visible: VISIBLE_COL
  *  dkj_bpm, plays, dkj_album en dkj_group zijn er niet relevant (Dave, 28 oktober 2026), de rest krijgt hun
  *  ruimte, en dkj_rating staat links van spotify_playlist (Dave, 28 oktober 2026). */
 const COMPACT_WIDTHS: Partial<Record<Column["key"], string>> = {
+  position: "48px",
   play: "40px",
   dkjTitle: "38%",
   albumArtist: "30%",
@@ -697,8 +700,21 @@ const COMPACT_WIDTHS: Partial<Record<Column["key"], string>> = {
 };
 /** De compacte tabel opent op de hoogste dkj_rating eerst (Dave, 28 oktober 2026): tier-8 bovenaan. */
 const COMPACT_SORT: RegisterSort = { key: "rating", dir: "desc" };
-const COMPACT_COLUMNS: readonly Column[] = Object.entries(COMPACT_WIDTHS).flatMap(([key, width]) => {
-  const column = VISIBLE_COLUMNS.find((c) => c.key === key);
+/** De plek van de rij in de compacte tabel, 1 tot en met n (Dave, 29 oktober 2026): volgt de getoonde
+ *  volgorde, dus na het sorteren op een kop staat 1 weer bovenaan. */
+const POSITION_COLUMN: Column = {
+  key: "position",
+  field: "plek",
+  label: "#",
+  width: "48px",
+  className: "register-position-cell",
+  cell: (_row, _term, _edit, position) => <span className="register-position">{nf.format(position)}</span>,
+};
+/** Zoveel nummers heeft een mix meestal (Dave, 29 oktober 2026): onder die rij trekt de compacte tabel een
+ *  lijn, zodat je ziet dat de werkbak genoeg nummers heeft voor de volgende stap. */
+const MIX_SIZE = 36;
+const COMPACT_COLUMNS: readonly Column[] =Object.entries(COMPACT_WIDTHS).flatMap(([key, width]) => {
+  const column = key === "position" ? POSITION_COLUMN : VISIBLE_COLUMNS.find((c) => c.key === key);
   return column && width ? [{ ...column, width }] : [];
 });
 
@@ -957,11 +973,19 @@ export function TrackRegister({ rows: initialRows, artistCount, compact = false 
             </colgroup>
             <thead>
               <tr>
-                {columns.map(({ key, field, label }) => {
+                {columns.map(({ key, field, label, className }) => {
                   if (key === "play") {
                     return (
                       <th key={key} className="register-play-cell">
                         <span className="register-hidden-label">{field}</span>
+                      </th>
+                    );
+                  }
+                  // De plek is geen veld en sorteert niet: hij volgt de volgorde van de andere koppen.
+                  if (key === "position") {
+                    return (
+                      <th key={key} className={className} title="Plek in de tabel">
+                        <code>{label}</code>
                       </th>
                     );
                   }
@@ -990,10 +1014,14 @@ export function TrackRegister({ rows: initialRows, artistCount, compact = false 
                   <td colSpan={columns.length} className="register-empty">Geen nummer gevonden met deze zoekterm en filters.</td>
                 </tr>
               ) : (
-                slice.map((row) => (
-                  <tr key={row.id}>
+                slice.map((row, i) => (
+                  <tr
+                    key={row.id}
+                    className={compact && i + 1 === MIX_SIZE ? "register-mix-cut" : undefined}
+                    title={compact && i + 1 === MIX_SIZE ? `${MIX_SIZE} nummers: genoeg voor een mix` : undefined}
+                  >
                     {columns.map(({ key, cell, className }) => (
-                      <td key={key} className={className}>{cell(row, term, edit)}</td>
+                      <td key={key} className={className}>{cell(row, term, edit, i + 1)}</td>
                     ))}
                   </tr>
                 ))
