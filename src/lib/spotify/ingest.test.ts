@@ -6,20 +6,23 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("./httpClient", () => ({
   fetchAllPages: vi.fn(),
+  spotifyGet: vi.fn(),
 }));
 
-import { fetchAllPages } from "./httpClient";
+import { fetchAllPages, spotifyGet } from "./httpClient";
 import { SpotifyApiError } from "./errors";
-import { buildSnapshot, fetchAllPlaylistItems, fetchAllPlaylists } from "./ingest";
+import { buildSnapshot, fetchAllPlaylistItems, fetchAllPlaylists, syncOnePlaylist } from "./ingest";
 import type { Snapshot } from "./types";
 
 const mockedFetchAllPages = vi.mocked(fetchAllPages);
+const mockedSpotifyGet = vi.mocked(spotifyGet);
 
 // Elke test zet zijn eigen mockResolvedValue(Once)-reeks op -- zonder reset lekt een
 // mockResolvedValue (zonder "Once") uit een eerdere test door naar de volgende en verstoort de
 // call-tellingen daar.
 afterEach(() => {
   mockedFetchAllPages.mockReset();
+  mockedSpotifyGet.mockReset();
 });
 
 function rawPlaylist(overrides: Record<string, unknown> = {}) {
@@ -451,5 +454,51 @@ describe("buildSnapshot", () => {
 
     expect(snapshot.playlists).toEqual([]);
     expect(mockedFetchAllPages).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("syncOnePlaylist", () => {
+  function snapshotWith(...playlists: Snapshot["playlists"]): Snapshot {
+    return { syncedAt: "2026-10-01T00:00:00Z", playlists };
+  }
+
+  async function seed(): Promise<Snapshot> {
+    mockedFetchAllPages
+      .mockResolvedValueOnce([rawPlaylist(), rawPlaylist({ id: "playlist-2", name: "Andere" })])
+      .mockResolvedValueOnce([rawTrackItem()])
+      .mockResolvedValueOnce([rawTrackItem()]);
+    const snapshot = await buildSnapshot({ concurrency: 1 });
+    mockedFetchAllPages.mockReset();
+    return snapshot;
+  }
+
+  it("vervangt alleen die ene playlist, haalt hem op ook bij een gelijk snapshot_id, en houdt syncedAt", async () => {
+    const before = await seed();
+    before.playlists[0].tags = ["eigen-tag"];
+    mockedSpotifyGet.mockResolvedValueOnce(rawPlaylist({ name: "Roadtrip (nieuw)", items: undefined }));
+    mockedFetchAllPages.mockResolvedValueOnce([
+      rawTrackItem(),
+      rawTrackItem({ item: { ...rawTrackItem().item, id: "track-2", uri: "spotify:track:track-2" } }),
+    ]);
+
+    const { snapshot, playlist } = await syncOnePlaylist(before, "playlist-1");
+
+    expect(mockedSpotifyGet).toHaveBeenCalledWith("/playlists/playlist-1", expect.any(Object), {});
+    expect(playlist.name).toBe("Roadtrip (nieuw)");
+    expect(playlist.trackCount).toBe(2);
+    expect(playlist.tags).toEqual(["eigen-tag"]);
+    expect(snapshot.playlists.map((p) => p.id)).toEqual(["playlist-1", "playlist-2"]);
+    expect(snapshot.playlists[1]).toBe(before.playlists[1]);
+    expect(snapshot.syncedAt).toBe(before.syncedAt);
+  });
+
+  it("zet een playlist die nog niet in de snapshot stond achteraan", async () => {
+    mockedSpotifyGet.mockResolvedValueOnce(rawPlaylist({ id: "nieuw" }));
+    mockedFetchAllPages.mockResolvedValueOnce([]);
+
+    const { snapshot } = await syncOnePlaylist(snapshotWith(), "nieuw");
+
+    expect(snapshot.playlists.map((p) => p.id)).toEqual(["nieuw"]);
+    expect(snapshot.playlists[0].trackCount).toBe(0);
   });
 });

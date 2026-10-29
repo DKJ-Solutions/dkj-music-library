@@ -1,0 +1,46 @@
+// De sync-knop rechts in de masthead van een pagina met de tracks van één Spotify-playlist
+// (PlaylistSyncButton.tsx), met de uitkomst van de laatste klik ervoor.
+.playlist-sync {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2-5);
+}
+
+.playlist-sync__note {
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+.playlist-sync__note--error {
+  color: var(--negative-5);
+}
+
+// Het sync-icoon voor de tekst van de knop: lijnen in de tekstkleur, zo hoog als de tekst. Draait rond
+// zolang de sync loopt.
+.playlist-sync__icon {
+  width: 1em;
+  height: 1em;
+  margin-right: var(--spacing-1-5);
+  vertical-align: -0.125em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.playlist-sync__icon.is-spinning {
+  animation: playlist-sync-spin 0.9s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playlist-sync__icon.is-spinning {
+    animation: none;
+  }
+}
+
+@keyframes playlist-sync-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

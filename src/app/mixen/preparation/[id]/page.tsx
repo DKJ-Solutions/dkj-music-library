@@ -1,7 +1,9 @@
 // De pagina van één werkbak op /mixen/preparation/<playlist-id>: de tabel van /spotify/trackregister met alleen
 // de tracks die in de playlist staan, zonder zoekbalk, filters en pager (TrackRegister `compact`). De card
-// ernaartoe staat op /mixen/preparation.
+// ernaartoe staat op /mixen/preparation. De sync-knop rechts in de kop haalt deze ene playlist opnieuw op bij
+// Spotify (PlaylistSyncButton).
 import { notFound } from "next/navigation";
+import { PlaylistSyncButton } from "@/components/spotify/PlaylistSyncButton";
 import { TrackRegister } from "@/components/spotify/TrackRegister";
 import { readRegister } from "@/lib/library/readRegister";
 import { isPreparationPlaylist } from "@/lib/mixes/preparation";
@@ -21,9 +23,10 @@ export default async function PreparationPlaylistPage({ params }: { params: Prom
 
   return (
     <main className="wrap wrap--full">
-      <header className="masthead">
+      <header className="masthead masthead--action">
         <p className="kicker">dkj-music-library · Mixen · Preparation</p>
         <h1>{playlist.name}</h1>
+        <PlaylistSyncButton playlistId={playlist.id} playlistName={playlist.name} />
       </header>
 
       {"error" in register ? (

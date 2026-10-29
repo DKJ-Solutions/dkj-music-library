@@ -15,6 +15,16 @@
   height: calc(100vh - var(--tap));
   height: calc(100dvh - var(--tap));
   padding-bottom: 0;
+  // De ruimte tussen kop, kaart en tabel komt uit de gap, niet uit marges op de blokken zelf (Dave, 29 oktober
+  // 2026).
+  gap: var(--spacing-6);
+}
+
+// Dus geen eigen boven- of ondermarge op de directe kinderen (de masthead, een .card, .track-register), en
+// geen marge onder het laatste element in de kop (de h1, of de knop ernaast).
+.wrap--full > *,
+.wrap--full > .masthead > :last-child {
+  margin-block: 0;
 }
 
 .track-register {
@@ -22,8 +32,7 @@
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
-  gap: 18px;
-  margin-top: 18px;
+  gap: var(--spacing-4-5);
 }
 
 .track-register code,
