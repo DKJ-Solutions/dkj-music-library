@@ -49,24 +49,27 @@ Eén playlist opnieuw ophalen, niet de volledige sync.
 - [x] `src/lib/library/librarySync.ts`: de library-stap uit de volledige sync gehaald en gedeeld
 - [x] Route `POST /api/spotify/sync/playlist`
 - [x] `PlaylistSyncButton` + stijl, op de preparation- en de published-pagina
+- [x] Primary-knop met sync-icoon (draait tijdens de sync)
+- [x] `.wrap--full`: ruimte via `gap: var(--spacing-6)` in plaats van marges op kop, kaart en tabel
 
 ### TEST
 
 - [x] Unit-tests voor `syncOnePlaylist`; volledige suite (936), typecheck en lint groen
 - [x] Route live aangeroepen op `5p4okOZaBczCnGduUhfFQd`: 68 tracks, bibliotheek bijgewerkt; knop rendert op beide pagina's
-- [ ] Visuele check door Dave
+- [x] Visuele check door Dave ("ship it", 29 oktober 2026)
 
 ### DEPLOY: feat/playlist-sync-button
 
 Een eigen route en een gedeelde library-stap voor de sync van één playlist; de volledige sync gebruikt
-dezelfde library-stap.
+dezelfde library-stap. `.wrap--full` zet de ruimte tussen zijn blokken nu met een gap in plaats van marges.
 
 **Score:** 2
 
 #### What makes this deploy extra special
 
 Boven de tracktabel van een werkbak of mix staat een knop "Sync met Spotify": één klik haalt die playlist
-opnieuw op en de tabel loopt weer gelijk, zonder de volledige sync van alle playlists af te wachten.
+opnieuw op en de tabel loopt weer gelijk, zonder de volledige sync van alle playlists af te wachten. Op alle
+pagina's met een volle-breedte-tabel staat er nu wat meer ruimte tussen de kop en de tabel.
 
 **Score:** 3
 
