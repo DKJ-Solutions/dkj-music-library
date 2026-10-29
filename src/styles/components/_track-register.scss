@@ -16,8 +16,8 @@
   height: calc(100dvh - var(--tap));
   padding-bottom: 0;
   // De ruimte tussen kop, kaart en tabel komt uit de gap, niet uit marges op de blokken zelf (Dave, 29 oktober
-  // 2026) -- dezelfde maat als de gap binnen .track-register.
-  gap: var(--spacing-4-5);
+  // 2026).
+  gap: var(--spacing-6);
 }
 
 // Dus geen eigen boven- of ondermarge op de directe kinderen (de masthead, een .card, .track-register), en
