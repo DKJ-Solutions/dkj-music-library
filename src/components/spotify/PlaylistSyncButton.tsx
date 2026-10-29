@@ -50,7 +50,7 @@ export function PlaylistSyncButton({ playlistId, playlistName }: { playlistId: s
       )}
       <button
         type="button"
-        className="btn"
+        className="btn btn--primary"
         disabled={status === "busy"}
         title={`Haal "${playlistName}" opnieuw op bij Spotify`}
         onClick={sync}
