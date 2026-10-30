@@ -8,7 +8,7 @@ import { foundReleaseYears, readReleaseYearCache } from "@/lib/musicbrainz/cache
 import { readLibraryYears, toClassicPopRows } from "@/lib/spotify/playlistTableRows";
 import { isClassicPopPlaylist } from "@/lib/spotify/classicPopTable";
 import { ClassicPopTable } from "@/components/spotify/ClassicPopTable";
-import SyncButton from "../../verbinding/SyncButton";
+import SyncButton from "@/components/spotify/SyncButton";
 import { pageTitle } from "@/lib/pages";
 
 // Zelfde reden als /spotify/page.tsx: leest een fs-snapshot die buiten de build kan wijzigen.
@@ -46,8 +46,8 @@ export default function ClassicPopPage() {
         <section className="layer">
           <p className="empty-note">
             {snapshot ? "Er staat geen Classic Pop-playlist in de snapshot" : "Nog geen snapshot"} -- start een sync op{" "}
-            <Link href="/spotify/verbinding" className="accent-text">
-              /spotify/verbinding
+            <Link href="/spotify" className="accent-text">
+              /spotify
             </Link>
             .
           </p>

@@ -47,8 +47,8 @@ export default function PlaylistManagerPage() {
         <section className="layer">
           <p className="empty-note">
             Nog geen playlists om te tonen -- start eerst een sync op{" "}
-            <Link href="/spotify/verbinding" className="accent-text">
-              /spotify/verbinding
+            <Link href="/spotify" className="accent-text">
+              /spotify
             </Link>
             .
           </p>

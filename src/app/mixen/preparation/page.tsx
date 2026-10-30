@@ -34,8 +34,8 @@ export default function MixenPreparationPage() {
         ) : (
           <p className="empty-note">
             {snapshot ? "Er staat geen playlist op Vol. X in de snapshot" : "Nog geen snapshot"} -- start een sync op{" "}
-            <Link href="/spotify/verbinding" className="accent-text">
-              /spotify/verbinding
+            <Link href="/spotify" className="accent-text">
+              /spotify
             </Link>
             .
           </p>

@@ -86,9 +86,16 @@ export interface PageCard {
   image?: string;
 }
 
-export function PageCardGrid({ cards }: { cards: PageCard[] }) {
+/** `title`: een h2 boven de cards, als .grid__head in de grid zelf (de huisstijl, "A group's heading above
+ *  its cards"), voor een pagina met meer dan één groep, zoals /spotify. */
+export function PageCardGrid({ cards, title }: { cards: PageCard[]; title?: string }) {
   return (
     <div className="grid-3">
+      {title && (
+        <div className="grid__head">
+          <h2>{title}</h2>
+        </div>
+      )}
       {cards.map((card) => (
         <section key={card.href} className={card.image ? "card card--link thumb-card" : "card card--link"}>
           <nav className="menu-list" aria-label={card.label}>

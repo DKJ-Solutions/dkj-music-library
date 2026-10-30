@@ -1,5 +1,5 @@
 "use client";
-// De sync-card op /spotify/verbinding: de laatste snapshot en de knop voor POST /api/spotify/sync.
+// De Sync-card op /spotify (ConnectionCards.tsx): de laatste snapshot en de knop voor POST /api/spotify/sync.
 // Een volledige sync van honderden playlists kan een tijd duren, dus de knop toont een "bezig"-status
 // i.p.v. te lijken te hangen. Is de login verlopen (reauth_required), dan staat de inlogknop in de
 // melding zelf (#122): de status-card ernaast is server-gerenderd en wist nog niet dat de tokens weg zijn.

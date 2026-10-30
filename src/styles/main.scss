@@ -20,4 +20,4 @@
 @use "components/track-register"; // /spotify/trackregister -- het Trackregister (bibliotheek-tabel)
 @use "components/colour-cards"; // /mixen/planned -- een card per albumkleur, met een stip in die kleur
 @use "components/playlist-sync"; // De sync-knop boven de tracks van één Spotify-playlist
-@use "components/spotify-verbinding"; // /spotify/verbinding -- de verbinding en de back-up naast elkaar
+@use "components/spotify-verbinding"; // /spotify -- de secties Connection (Login, Sync), Playlists en Dashboard

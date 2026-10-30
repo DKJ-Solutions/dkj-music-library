@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 const STATE_COOKIE = "spotify_oauth_state";
 
 function redirectToStatusPage(request: NextRequest, query: string): NextResponse {
-  const response = NextResponse.redirect(new URL(`/spotify/verbinding?${query}`, request.url));
+  const response = NextResponse.redirect(new URL(`/spotify?${query}`, request.url));
   response.cookies.delete(STATE_COOKIE);
   return response;
 }

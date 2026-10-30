@@ -1,8 +1,6 @@
-// /spotify/verbinding (#122): de verbinding en de back-up als twee house-cards naast elkaar. Alleen wat de
-// huisstijl niet zelf heeft: de knop naast de kop van de back-up-card, en de ruimte boven een uitslag.
-.verbinding-grid {
-  margin-top: var(--spacing-4);
-}
+// /spotify (#122): de secties Connection (Login en Sync), Playlists en Dashboard. Alleen wat de huisstijl niet
+// zelf heeft: de knop naast de kop van een kaart, en de ruimte boven een uitslag. De
+// ruimte tussen de secties komt uit .page-column.
 
 .verbinding-head {
   display: flex;
@@ -19,3 +17,4 @@
   display: inline-block;
   margin-top: var(--spacing-2-5);
 }
+

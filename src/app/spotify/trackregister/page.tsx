@@ -32,8 +32,8 @@ export default function TrackRegisterPage() {
         <section className="layer">
           <p className="empty-note">
             Nog geen tracks in de bibliotheek -- start een sync op{" "}
-            <Link href="/spotify/verbinding" className="accent-text">
-              /spotify/verbinding
+            <Link href="/spotify" className="accent-text">
+              /spotify
             </Link>
             .
           </p>
