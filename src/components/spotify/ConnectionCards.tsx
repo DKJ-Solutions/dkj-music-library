@@ -85,9 +85,6 @@ export default async function ConnectionCards({ params }: { params: { connected?
         </div>
 
         {errorMessage && <p className="msg msg--warn verbinding-result">{errorMessage}</p>}
-        {params.connected && !params.error && (
-          <p className="msg pos verbinding-result">Zojuist verbonden met Spotify.</p>
-        )}
       </section>
 
       <SyncButton
