@@ -36,10 +36,31 @@ export default async function ConnectionCards({ params }: { params: { connected?
   const totalTracks = enriched ? enriched.playlists.reduce((sum, p) => sum + p.trackCount, 0) : 0;
 
   return (
-    <div className="grid-2">
+    <div className="grid-3">
       <div className="grid__head">
         <h2>Connection</h2>
       </div>
+      {/* Instructions helemaal links (Dave, #122): de uitleg en tips staan hier, zodat Login en Sync alleen hun
+          status en hun knop dragen. De adres-tip verschijnt alleen als de app op een andere host openstaat dan
+          waar de OAuth-callback binnenkomt; de login-route zet dat zelf recht. */}
+      <section className="card">
+        <div className="card__head">
+          <h3 className="card__title">Instructions</h3>
+        </div>
+        <ul className="verbinding-tips">
+          <li>Log in bij Spotify en start daarna de sync. De sync haalt al je playlists en tracks op.</li>
+          {hostMismatch && (
+            <li>
+              Na het inloggen staat er {hostMismatch.redirectHost} in je adresbalk in plaats van{" "}
+              {hostMismatch.browserHost}. Dat hoort zo.
+            </li>
+          )}
+          <li>Een sync van honderden playlists kan een paar minuten duren.</li>
+          <li>Verlopen login? Log opnieuw in; je back-up blijft staan.</li>
+          <li>Je Spotify-sleutels staan in OneDrive en komen bij een nieuwe clone vanzelf mee.</li>
+        </ul>
+      </section>
+
       <section className="card">
         <div className="card__head verbinding-head">
           <div>
@@ -66,14 +87,6 @@ export default async function ConnectionCards({ params }: { params: { connected?
         {errorMessage && <p className="msg msg--warn verbinding-result">{errorMessage}</p>}
         {params.connected && !params.error && (
           <p className="msg pos verbinding-result">Zojuist verbonden met Spotify.</p>
-        )}
-        {/* De login-route zet de host zelf recht, dus inloggen werkt hier gewoon; alleen het adres in de balk
-            verandert onderweg, en dat wil je één keer uitgelegd krijgen. */}
-        {hostMismatch && !tokens && (
-          <p className="msg muted verbinding-result">
-            Na het inloggen verandert het adres in je adresbalk van {hostMismatch.browserHost} naar{" "}
-            {hostMismatch.redirectHost}. Dat hoort zo: Spotify accepteert alleen dat adres.
-          </p>
         )}
       </section>
 
