@@ -39,19 +39,38 @@
 
 ### PLAN
 
+De plugin-source heet sinds v6.0.0 `dkj-marketplace` (DKJ-Solutions/dkj-marketplace#3660). Deze branch
+verhuist de repo zoals dkj-lifehub#599 dat deed. Proza die alleen geschiedenis vertelt en issue-verwijzingen
+houden de oude naam; `always-on-baseline.json` schrijft de budget-gate zelf bij.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `.claude/settings.json`: de `enabledPlugins`-keys op `@dkj-marketplace` (`dkj-policy-bwj` heet nu
+      `bwj-development`), plus `extraKnownMarketplaces` volgens `plugins/ADOPTION.md`
+- [x] Absolute `@`-imports in `CLAUDE.md` en `SPECIALISTS.md`, en de persona-paden in vier lenzen
+- [x] De zeven workflows in `.github/workflows/`: `uses:` en `repository:` op `DKJ-Solutions/dkj-marketplace`
+- [x] `publish-library.ps1`: zoekt dkj-policy in het register onder beide namen, zodat een machine die nog
+      niet opnieuw heeft geïnstalleerd blijft werken
 
 ### TEST
 
+- [x] `settings.json` is geldige JSON, `publish-library.ps1` parseert, en de reusable workflows bestaan in
+      `dkj-marketplace`. De overige gates laat ik aan `ship-pr`.
+
 ### DEPLOY: config/120-dkj-marketplace
 
-**Score:**
+Deze repo installeert zijn plugins nu uit `dkj-marketplace`, de nieuwe naam van de plugin-source sinds
+v6.0.0 ([#120](https://github.com/DKJ-Solutions/dkj-music-library/issues/120)): de settings-keys, de
+absolute imports en de CI-runners noemen die naam. Per machine worden de plugins één keer opnieuw
+geïnstalleerd.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A -- alleen de maintainer van deze repo ziet uit welke marketplace hij installeert.
+
+**Score:** N/A
 
 #### Pull Request
 

@@ -37,7 +37,10 @@ function Stop-Publish([string]$Message) {
 function Get-PolicyScriptsRoot {
     $registry = Join-Path $env:USERPROFILE '.claude/plugins/installed_plugins.json'
     if (-not (Test-Path $registry)) { Stop-Publish "geen $registry -- is dkj-policy geinstalleerd?" }
-    $installs = (Get-Content $registry -Raw | ConvertFrom-Json).plugins.'dkj-policy@dkj-claude-plugins'
+    # De marketplace heet sinds v6.0.0 `dkj-marketplace` (#120). Een machine die nog niet opnieuw heeft
+    # geinstalleerd, staat nog onder de oude naam in het register: dus beide namen.
+    $plugins = (Get-Content $registry -Raw | ConvertFrom-Json).plugins
+    $installs = @($plugins.'dkj-policy@dkj-marketplace') + @($plugins.'dkj-policy@dkj-claude-plugins') | Where-Object { $_ }
     # Voor deze checkout gelden twee soorten records: een projectinstallatie op dit pad, en een installatie
     # voor de hele machine (scope user, zonder projectPath). Ze kunnen verschillen (gemeten 29 september
     # 2026: project 5.8.0, user 5.9.0, en de sessie laadde 5.9.0), dus de nieuwste van de twee wint.
