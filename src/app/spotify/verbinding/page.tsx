@@ -78,9 +78,8 @@ export default async function ConnectionPage({ searchParams }: ConnectionPagePro
           hier gewoon. Wat wél verandert is het adres in de balk, en dat wil je één keer uitgelegd krijgen. */}
       {hostMismatch && (
         <p className="notice">
-          Bij het inloggen ga je naar <code>{hostMismatch.redirectHost}</code>: Spotify staat{" "}
-          <code>localhost</code> niet toe als redirect-URI. Open de app meteen op{" "}
-          <a href={hostMismatch.correctUrl}>{hostMismatch.correctUrl}</a> om die sprong over te slaan.
+          Spotify werkt niet via {hostMismatch.browserHost}. Bij het inloggen ga je daarom vanzelf naar{" "}
+          {hostMismatch.redirectHost}. <a href={hostMismatch.correctUrl}>Nu al overstappen</a>
         </p>
       )}
       {errorMessage && <p className="msg msg--warn">{errorMessage}</p>}
