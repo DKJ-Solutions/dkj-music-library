@@ -34,3 +34,10 @@
 .verbinding-instructions {
   grid-row: span 2;
 }
+
+// Een gewone .btn (Loskoppelen) in de kop van een kaart binnen een grid: de rand van de huisstijl valt daar
+// bijna weg tegen de kaart, dus hier een zichtbare rand in --muted. Weg zodra de huisstijl dit zelf
+// oplost: DKJ-Solutions/dkj-marketplace#3697.
+.verbinding-head .btn:not(.btn--primary) {
+  border-color: var(--muted);
+}
