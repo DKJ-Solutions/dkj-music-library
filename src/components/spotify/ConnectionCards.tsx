@@ -41,20 +41,15 @@ export default async function ConnectionCards({ params }: { params: { connected?
         <h2>Connection</h2>
       </div>
       {/* Instructions helemaal links, over twee rijen, met Login en Sync rechts onder elkaar (Dave, #122): de
-          uitleg en tips staan hier, zodat Login en Sync alleen hun status en hun knop dragen. De adres-tip verschijnt alleen als de app op een andere host openstaat dan
-          waar de OAuth-callback binnenkomt; de login-route zet dat zelf recht. */}
+          uitleg en tips staan hier, zodat Login en Sync alleen hun status en hun knop dragen. Geen tip over het
+          adres: de login-route hopt even naar 127.0.0.1, maar de callback bouwt zijn redirect uit request.url, en
+          dat draagt in `next dev` de eigen hostnaam van de server (localhost), dus je eindigt daar weer. */}
       <section className="card verbinding-instructions">
         <div className="card__head">
           <h3 className="card__title">Instructions</h3>
         </div>
         <ul className="verbinding-tips">
           <li>Log in bij Spotify en start daarna de sync. De sync haalt al je playlists en tracks op.</li>
-          {hostMismatch && (
-            <li>
-              Na het inloggen staat er {hostMismatch.redirectHost} in je adresbalk in plaats van{" "}
-              {hostMismatch.browserHost}. Dat hoort zo.
-            </li>
-          )}
           <li>Een sync van honderden playlists kan een paar minuten duren.</li>
           <li>Verlopen login? Log opnieuw in; je back-up blijft staan.</li>
           <li>Je Spotify-sleutels staan in OneDrive en komen bij een nieuwe clone vanzelf mee.</li>
