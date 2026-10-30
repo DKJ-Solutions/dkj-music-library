@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**18 / 20 minor entries** <!-- pending-tally -->
+**19 / 21 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/126-page-column · 20261030-173110Z
+
+Every page now uses the house page column, so its blocks sit one even gap apart, as on the hub and /spotify, instead of each block bringing its own margin. The full-height pages (the Trackregister and the playlist and mix tables) keep their own window-filling layout.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+The whole app spaces its pages the same way, so a page no longer looks cramped or loose next to the hub.
+
+**Score:** 2
+
+#### Pull Request
+
+Pages use the house .page-column shell instead of .wrap
+
+[PR #127](https://github.com/DKJ-Solutions/dkj-music-library/pull/127)
+
+---
 
 ### DEPLOY: feat/122-verbinding-house-style · 20261030-170135Z
 
