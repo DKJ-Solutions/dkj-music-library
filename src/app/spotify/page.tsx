@@ -1,30 +1,16 @@
-// De Spotify-hub op /spotify: één grid met een card per pagina eronder, en verder niets. Server
-// Component: leest de tokens (OAuth-status) alleen om de verbinding-card een actueel onderschrift te
-// geven. De verbinding zelf (status, login/logout, sync) staat sinds de cards op /spotify/verbinding;
-// de playlist-pagina's (manager, de drie werelden, Maple Classic, Classic Pop) een laag dieper, op
-// /spotify/playlists.
-import { readTokens } from "@/lib/spotify/tokenStore";
+// De Spotify-hub op /spotify, in drie secties met elk een h2 (Dave, #122): Connection (de Login- en de
+// Sync-kaart, ConnectionCards.tsx), Playlists (dezelfde cards als /spotify/playlists) en Dashboard (het
+// data-dashboard en het trackregister). /spotify/verbinding stuurt hierheen door. De kolom is de
+// .page-column van de huisstijl, zoals op de homepagina: de gap en de ruimte boven elke sectie komen daaruit.
+import ConnectionCards from "@/components/spotify/ConnectionCards";
+import { getEnrichedSnapshot } from "@/lib/spotify/enrichedPlaylists";
 import { PageCardGrid, type PageCard } from "@/components/PageCardGrid";
+import { playlistCards } from "@/components/spotify/playlistCards";
 import { pageTitle } from "@/lib/pages";
 
 export const dynamic = "force-dynamic";
 
-// De pagina's onder /spotify, als card-links (stonden eerder op de homepagina). Ze hangen niet af van
-// een snapshot: het register leest de bibliotheek uit git, dus deze links horen ook zichtbaar te
-// zijn op een machine die nog nooit gesynct heeft.
-const PAGE_CARDS: PageCard[] = [
-  {
-    href: "/spotify/playlists",
-    icon: "music",
-    label: pageTitle("/spotify/playlists"),
-    sub: "De playlist manager, de drie werelden, Maple Classic en Classic Pop",
-  },
-  {
-    href: "/spotify/trackregister",
-    icon: "table",
-    label: pageTitle("/spotify/trackregister"),
-    sub: "Elke track met zijn eigen velden, te filteren op BPM en album",
-  },
+const DASHBOARD_CARDS: PageCard[] = [
   {
     href: "/spotify/dashboard",
     icon: "chart",
@@ -32,33 +18,32 @@ const PAGE_CARDS: PageCard[] = [
     sub: "Dedup, top-artiesten en verdelingen over de hele bibliotheek",
   },
   {
-    href: "/spotify/verbinding",
-    icon: "plug",
-    label: pageTitle("/spotify/verbinding"),
-    sub: "Inloggen bij Spotify en de back-up syncen",
+    href: "/spotify/trackregister",
+    icon: "table",
+    label: pageTitle("/spotify/trackregister"),
+    sub: "Elke track met zijn eigen velden, te filteren op BPM en album",
   },
 ];
 
-export default function SpotifyHubPage() {
-  const connected = readTokens() !== null;
-  // Elke pagina staat één keer op deze pagina: als card. De verbinding-card draagt of er een
-  // koppeling met Spotify is.
-  const cards = PAGE_CARDS.map((card) =>
-    card.href === "/spotify/verbinding"
-      ? { ...card, sub: `${card.sub} · ${connected ? "verbonden" : "niet verbonden"}` }
-      : card,
-  );
+interface SpotifyHubPageProps {
+  searchParams: Promise<{ connected?: string; error?: string }>;
+}
+
+export default async function SpotifyHubPage({ searchParams }: SpotifyHubPageProps) {
+  // Wat de laatste sync opleverde, als subregel onder de kop Playlists (Dave, #122). Zonder snapshot geen regel.
+  const enriched = getEnrichedSnapshot();
+  const playlistsSub = enriched
+    ? `${enriched.playlists.length} playlists, ${enriched.playlists
+        .reduce((sum, p) => sum + p.trackCount, 0)
+        .toLocaleString("nl-NL")} tracks · laatste sync ${new Date(enriched.syncedAt).toLocaleString("nl-NL")}`
+    : undefined;
 
   return (
-    <main className="wrap">
-      <header className="masthead">
-        <p className="kicker">dkj-music-library · Spotify</p>
-        <h1>{pageTitle("/spotify")}</h1>
-      </header>
-
-      <section className="layer">
-        <PageCardGrid cards={cards} />
-      </section>
+    <main className="page-column">
+      <h1>{pageTitle("/spotify")}</h1>
+      <ConnectionCards params={await searchParams} />
+      <PageCardGrid title="Playlists" sub={playlistsSub} cards={playlistCards()} />
+      <PageCardGrid title="Dashboard" cards={DASHBOARD_CARDS} />
     </main>
   );
 }

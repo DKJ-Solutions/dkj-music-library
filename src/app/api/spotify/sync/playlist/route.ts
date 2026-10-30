@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   const previous = readSnapshot();
   if (!previous) {
     return NextResponse.json(
-      { error: "no_snapshot", message: "Er is nog geen snapshot -- start eerst een volledige sync op /spotify/verbinding." },
+      { error: "no_snapshot", message: "Er is nog geen snapshot -- start eerst een volledige sync op /spotify." },
       { status: 409 }
     );
   }

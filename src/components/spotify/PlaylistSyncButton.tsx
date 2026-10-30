@@ -3,7 +3,7 @@
 // De sync-knop boven een tracktabel die bij één Spotify-playlist hoort (de werkbak op
 // /mixen/preparation/<id>, de mix op /mixen/published/<slug>): haalt die ene playlist opnieuw op via
 // POST /api/spotify/sync/playlist en ververst daarna de pagina, zodat de tabel weer gelijkloopt met Spotify
-// (Dave, 29 oktober 2026). De volledige sync van alle playlists blijft op /spotify/verbinding.
+// (Dave, 29 oktober 2026). De volledige sync van alle playlists blijft op /spotify.
 //
 // router.refresh() en geen page-reload: de pagina is een Server Component die snapshot en bibliotheek bij
 // het renderen leest -- zelfde reden als in verbinding/SyncButton.tsx.

@@ -49,8 +49,8 @@ export default function SpotifyDashboardPage() {
         <section className="layer">
           <p className="empty-note">
             Nog geen snapshot -- start eerst een sync op{" "}
-            <Link href="/spotify/verbinding" className="accent-text">
-              /spotify/verbinding
+            <Link href="/spotify" className="accent-text">
+              /spotify
             </Link>
             .
           </p>

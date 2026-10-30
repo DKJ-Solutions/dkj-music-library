@@ -1,0 +1,27 @@
+// /spotify (#122): de secties Connection (Login en Sync), Playlists en Dashboard. Alleen wat de huisstijl niet
+// zelf heeft: de knop naast de kop van een kaart, en de ruimte boven een uitslag. De
+// ruimte tussen de secties komt uit .page-column.
+
+// De knop staat verticaal in het midden van de kop (titel plus subregel), niet bovenaan (Dave, #122).
+.verbinding-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+}
+
+.verbinding-result {
+  margin-top: var(--spacing-4);
+}
+
+.verbinding-result__action {
+  display: inline-block;
+  margin-top: var(--spacing-2-5);
+}
+
+// Een gewone .btn (Loskoppelen) in de kop van een kaart binnen een grid: de rand van de huisstijl valt daar
+// bijna weg tegen de kaart, dus hier een zichtbare rand in --muted. Weg zodra de huisstijl dit zelf
+// oplost: DKJ-Solutions/dkj-marketplace#3697.
+.verbinding-head .btn:not(.btn--primary) {
+  border-color: var(--muted);
+}
