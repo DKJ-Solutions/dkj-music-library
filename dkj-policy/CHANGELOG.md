@@ -2,7 +2,30 @@
 
 ## [Unreleased]
 
-**16 / 17 minor entries** <!-- pending-tally -->
+**16 / 18 minor entries** <!-- pending-tally -->
+
+### DEPLOY: config/120-dkj-marketplace · 20261030-150523Z
+
+Deze repo installeert zijn plugins nu uit `dkj-marketplace`, de nieuwe naam van de plugin-source sinds
+v6.0.0 ([#120](https://github.com/DKJ-Solutions/dkj-music-library/issues/120)): de settings-keys, de
+absolute imports en de CI-runners noemen die naam. Per machine worden de plugins één keer opnieuw
+geïnstalleerd.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+N/A -- alleen de maintainer van deze repo ziet uit welke marketplace hij installeert.
+
+**Score:** N/A
+
+#### Pull Request
+
+Naar de dkj-marketplace-marketplace verhuizen
+
+[PR #121](https://github.com/DKJ-Solutions/dkj-music-library/pull/121)
+
+---
 
 ### DEPLOY: feat/playing-row-highlight · 20261029-141025Z
 
