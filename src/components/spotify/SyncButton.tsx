@@ -1,5 +1,6 @@
 "use client";
-// De Sync-card op /spotify (ConnectionCards.tsx): de laatste snapshot en de knop voor POST /api/spotify/sync.
+// De Sync-card op /spotify (ConnectionCards.tsx): de knop voor POST /api/spotify/sync en de uitslag. Wat de
+// laatste sync opleverde staat in een eigen Result-kaart ernaast, die pas verschijnt als er een snapshot is.
 // Een volledige sync van honderden playlists kan een tijd duren, dus de knop toont een "bezig"-status
 // i.p.v. te lijken te hangen. Is de login verlopen (reauth_required), dan staat de inlogknop in de
 // melding zelf (#122): de status-card ernaast is server-gerenderd en wist nog niet dat de tokens weg zijn.
@@ -22,7 +23,7 @@ interface SyncError {
 
 interface SyncButtonProps {
   /** Zonder: alleen de knop en de uitslag, voor de kop van een playlistpagina (classic-pop, maple-classic). */
-  card?: { connected: boolean; snapshot: { playlistCount: number; trackCount: number; syncedAt: string } | null };
+  card?: { connected: boolean; hasSnapshot: boolean };
 }
 
 export default function SyncButton({ card }: SyncButtonProps) {
@@ -85,9 +86,11 @@ export default function SyncButton({ card }: SyncButtonProps) {
 
   const outcome = (
     <>
-      {status === "done" && result && (
-        <p className="msg pos verbinding-result">
-          Klaar: {result.playlistCount} playlists, {result.trackCount} tracks.
+      {/* In de kaart staan de cijfers in de Result-kaart (router.refresh hierboven ververst die); daar volgt
+          alleen nog de waarschuwing als een deel van de playlists niet kon worden opgehaald. */}
+      {status === "done" && result && (!card || !!result.failedPlaylistCount) && (
+        <p className={result.failedPlaylistCount ? "msg msg--warn verbinding-result" : "msg pos verbinding-result"}>
+          {!card && `Klaar: ${result.playlistCount} playlists, ${result.trackCount} tracks.`}
           {!!result.failedPlaylistCount &&
             ` ${result.failedPlaylistCount} playlist(s) konden hun tracks niet ophalen en houden hun vorige stand -- zie de serverconsole.`}
         </p>
@@ -125,30 +128,13 @@ export default function SyncButton({ card }: SyncButtonProps) {
         <div>
           <h3 className="card__title">Sync</h3>
           <p className="card__sub">
-            {card.snapshot
-              ? "Back-up van al je playlists en tracks."
+            {card.hasSnapshot
+              ? "Haal je playlists en tracks opnieuw op."
               : `Nog geen back-up. ${card.connected ? "Start de eerste sync." : "Log eerst in bij Spotify."}`}
           </p>
         </div>
         {button}
       </div>
-
-      {card.snapshot && (
-        <dl className="facts">
-          <div>
-            <dt>Playlists</dt>
-            <dd>{card.snapshot.playlistCount}</dd>
-          </div>
-          <div>
-            <dt>Tracks</dt>
-            <dd>{card.snapshot.trackCount}</dd>
-          </div>
-          <div>
-            <dt>Laatste sync</dt>
-            <dd>{new Date(card.snapshot.syncedAt).toLocaleString("nl-NL")}</dd>
-          </div>
-        </dl>
-      )}
 
       {outcome}
     </section>
