@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**17 / 19 minor entries** <!-- pending-tally -->
+**18 / 20 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/122-verbinding-house-style · 20261030-170135Z
+
+/spotify is now one page in three sections: Connection (a Login card with the login action as the filled primary button, and a Sync card with a spinning icon while it runs), with the last sync's playlist and track counts under the Playlists heading, Playlists and Dashboard. /spotify/verbinding forwards there, so old links keep working. The vendored house stylesheet is now the v6.1.0 copy, so every grid in the app gets the house padding and panel background, and the house-style check is green again. A sync that fails because the Spotify login expired now says so in plain words with its own login button, and the status card updates to "Niet verbonden" instead of still claiming a connection.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+The owner can see at a glance whether Spotify is connected and how to log in again, without hunting for a hidden button.
+
+**Score:** 3
+
+#### Pull Request
+
+De Spotify-verbindingspagina in de huisstijl
+
+[PR #125](https://github.com/DKJ-Solutions/dkj-music-library/pull/125)
+
+---
 
 ### DEPLOY: feat/env-from-onedrive · 20261030-151737Z
 
