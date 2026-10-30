@@ -1,12 +1,7 @@
-// Geport uit apps/src/App.css (Vite-versie) — de pagina-shell en de masthead-kop.
-// Geen eigen max-width: .wrap staat altijd op <main>, en de huisstijl geeft main de kolom (1080px bij
-// "Fluid") en tilt die op bij de breedte-instelling (<html data-width="phone|full">). Een max-width hier
-// woog zwaarder dan die :where()-regel, waardoor "Full" op deze pagina's niets deed.
-.wrap {
-  margin: 0 auto;
-  // Dezelfde marges als .page-column op de hub.
-  padding: var(--spacing-4) var(--spacing-4) var(--spacing-12);
-}
+// Geport uit apps/src/App.css (Vite-versie) -- de masthead-kop. De pagina-shell zelf is sinds #126 de
+// .page-column van de huisstijl op <main>: een grid met --spacing-3 tussen de blokken, zoals de hub. De
+// .wrap die hier stond (alleen marges, geen gap) is weg; daarom dragen de blokken hieronder geen marge
+// meer die alleen dat ontbrekende gat opvulde.
 
 // .kicker en .stats zijn verborgen (Dave, 29 september 2026): ze namen te veel ruimte in. De markup blijft
 // staan, zodat ze met het weghalen van één regel terugkomen -- en de tests die .stats lezen blijven werken.
@@ -25,9 +20,11 @@
 }
 
 // Lettertype, grootte, gewicht en kleur komen uit de huisstijl, zoals de h1 op de hub (sans, 32px,
-// --primary); hier alleen de ruimte eronder.
-.masthead h1 {
-  margin: 0 0 var(--spacing-3-5);
+// --primary); hier alleen de ruimte naar een .lede eronder in dezelfde kop. Onder de kop zelf geen marge:
+// de ruimte naar het volgende blok is de gap van .page-column (#126). Op de h1 als ondermarge bleef die
+// staan wanneer alleen de verborgen .stats nog volgde.
+.masthead h1 + .lede {
+  margin-top: var(--spacing-3-5);
 }
 
 // Een masthead met een knop rechts naast de h1 (/mixen/published/<slug>, Dave). Op een smal venster
@@ -38,7 +35,6 @@
   align-items: center;
   justify-content: space-between;
   column-gap: var(--spacing-4);
-  margin-bottom: var(--spacing-3-5);
 }
 
 .masthead--action h1 {

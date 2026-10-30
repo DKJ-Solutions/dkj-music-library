@@ -39,19 +39,32 @@
 
 ### PLAN
 
+#### Status
+
+Visible result: parked for the owner's look by a sweep (#126), no PR until then.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Every `<main className="wrap">` (18 pages under `src/app` and `src/components/spotify`) now uses the house `.page-column`; the full-height pages carry `page-column wrap--full`
+- [x] `.wrap` removed from `_masthead.scss`; the masthead's own bottom margins (`.masthead h1`, `.masthead--action`) dropped, the h1-to-lede spacing kept as `.masthead h1 + .lede`
+- [x] `.wrap--full` keeps its own flex column and gap, now beside `.page-column`
 
 ### TEST
 
+- [x] `tsc --noEmit` clean, the stylesheet compiles, and /mixen, /spotify/dashboard, /spotify/trackregister and /compare answer 200 with `<main class="page-column">`
+- [ ] The owner has looked at the pages
+
 ### DEPLOY: fix/126-page-column
 
-**Score:**
+Every page now uses the house page column, so its blocks sit one even gap apart, as on the hub and /spotify, instead of each block bringing its own margin. The full-height pages (the Trackregister and the playlist and mix tables) keep their own window-filling layout.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+The whole app spaces its pages the same way, so a page no longer looks cramped or loose next to the hub.
+
+**Score:** 2
 
 #### Pull Request
 

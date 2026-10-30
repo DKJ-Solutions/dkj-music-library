@@ -23,7 +23,7 @@ export function BpmPage({ bpm }: { bpm: MmcBpmTier }) {
   const mixInfoById = enriched ? getPlaylistMixIndex().byPlaylistId : {};
 
   return (
-    <main className="wrap">
+    <main className="page-column">
       <header className="masthead">
         <h1>{pageTitle(meta.href)}</h1>
         <p className="lede">
