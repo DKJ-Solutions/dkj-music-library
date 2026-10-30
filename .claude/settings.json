@@ -1,10 +1,15 @@
 {
+  "extraKnownMarketplaces": {
+    "dkj-marketplace": {
+      "source": { "source": "github", "repo": "DKJ-Solutions/dkj-marketplace" }
+    }
+  },
   "enabledPlugins": {
-    "dkj-solutions@dkj-claude-plugins": true,
-    "dkj-policy@dkj-claude-plugins": true,
-    "dkj-subagents-alpha@dkj-claude-plugins": true,
-    "dkj-policy-bwj@dkj-claude-plugins": false,
-    "dkj-subagents-shopify@dkj-claude-plugins": false
+    "dkj-solutions@dkj-marketplace": true,
+    "dkj-policy@dkj-marketplace": true,
+    "dkj-subagents-alpha@dkj-marketplace": true,
+    "bwj-development@dkj-marketplace": false,
+    "dkj-subagents-shopify@dkj-marketplace": false
   },
   "permissions": {
     "allow": [
