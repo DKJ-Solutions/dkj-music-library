@@ -37,7 +37,7 @@ export default function MixenHubPage() {
   ];
 
   return (
-    <main className="wrap">
+    <main className="page-column">
       <header className="masthead">
         <p className="kicker">dkj-music-library · Mixen</p>
         <h1>{pageTitle("/mixen")}</h1>

@@ -22,7 +22,7 @@ export default async function PreparationPlaylistPage({ params }: { params: Prom
   const register = readRegister((row) => row.playlists.some((p) => p.id === playlist.id));
 
   return (
-    <main className="wrap wrap--full">
+    <main className="page-column wrap--full">
       <header className="masthead masthead--action">
         <p className="kicker">dkj-music-library · Mixen · Preparation</p>
         <h1>{playlist.name}</h1>

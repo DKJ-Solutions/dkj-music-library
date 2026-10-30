@@ -3,7 +3,8 @@
 // alleen de tabel zelf, want die heeft ruim twaalfduizend rijen en negen kolommen, meer dan de rijenlijsten
 // elders in de app dragen.
 // Het register gebruikt de hele breedte van het venster, niet de 1080px van de andere pagina's: acht
-// kolommen passen daar niet in. De zijmarges van .wrap blijven.
+// kolommen passen daar niet in. De zijmarges van .page-column blijven; .wrap--full staat ernaast op <main>
+// en zet de grid om in een flex-kolom met zijn eigen, ruimere gap.
 // HOOGSTENS ÉÉN VERTICALE SCROLLBALK (Dave): de pagina is precies zo hoog als het venster en scrolt zelf
 // niet; masthead, filters en pager nemen wat ze nodig hebben, en het scrollvak van de tabel vult de rest.
 // Alleen in een venster dat daar te laag voor is (zie min-height van .register-table-area) scrolt de pagina.

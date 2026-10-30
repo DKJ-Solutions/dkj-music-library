@@ -14,7 +14,7 @@ export default async function PlannedColourPage({ params }: { params: Promise<{ 
   if (!colour) notFound();
 
   return (
-    <main className="wrap">
+    <main className="page-column">
       <header className="masthead">
         <p className="kicker">dkj-music-library · Mixen · Planned</p>
         <h1>{pageTitle(plannedColourHref(colour))}</h1>

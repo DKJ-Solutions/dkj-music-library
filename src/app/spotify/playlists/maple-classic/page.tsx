@@ -26,7 +26,7 @@ export default function MapleClassicPage() {
       : null;
 
   return (
-    <main className="wrap wrap--full">
+    <main className="page-column wrap--full">
       <header className="masthead">
         <p className="kicker">dkj-music-library · Playlist</p>
         <h1>{pageTitle("/spotify/playlists/maple-classic")}</h1>

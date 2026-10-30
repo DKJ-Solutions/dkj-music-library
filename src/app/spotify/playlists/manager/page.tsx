@@ -26,7 +26,7 @@ export default function PlaylistManagerPage() {
     : { byPlaylistId: {}, missingMixes: [], mixesWithId: null };
 
   return (
-    <main className="wrap">
+    <main className="page-column">
       <header className="masthead">
         <h1>{pageTitle("/spotify/playlists/manager")}</h1>
         <p className="lede">

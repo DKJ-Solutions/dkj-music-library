@@ -26,7 +26,7 @@ export default function MixenPublishedPage() {
     .filter((card): card is PageCard => card !== null);
 
   return (
-    <main className="wrap">
+    <main className="page-column">
       <header className="masthead">
         <p className="kicker">dkj-music-library · Mixen</p>
         <h1>{pageTitle("/mixen/published")}</h1>

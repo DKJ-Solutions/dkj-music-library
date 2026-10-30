@@ -24,7 +24,7 @@ export default function ClassicPopPage() {
       : null;
 
   return (
-    <main className="wrap wrap--full">
+    <main className="page-column wrap--full">
       <header className="masthead">
         <p className="kicker">dkj-music-library · Overzicht</p>
         <h1>{pageTitle("/spotify/playlists/classic-pop")}</h1>
