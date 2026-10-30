@@ -39,19 +39,31 @@
 
 ### PLAN
 
+Owner asked for /spotify/verbinding in the house style; #122 (unclear re-auth error, barely visible login button) is fixed in the same pass.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Page on house classes: `masthead--action` with the login button as `btn--primary` (Loskoppelen as a quiet `.btn`), status and back-up as two `.card`s in a `.grid-2`, worlds as `facts--row`
+- [x] No lede/kicker, host-mismatch note shortened to one `.notice` line
+- [x] SyncButton: back-up card with facts, sync disabled until connected; reauth error carries its own login button and refreshes the server status
+- [x] Compact variant (button + outcome) kept for the classic-pop and maple-classic page heads
 
 ### TEST
 
+- [x] `tsc --noEmit`, eslint and `npm test` green
+- [x] DOM check at full width: cards side by side, no page scroll, login button filled in the theme colour
+
 ### DEPLOY: feat/122-verbinding-house-style
 
-**Score:**
+/spotify/verbinding now follows the house style: the login action is the filled primary button beside the heading, connection status and back-up sit side by side as house cards, and the worlds count is one facts row. A sync that fails because the Spotify login expired now says so in plain words with its own login button, and the status card updates to "Niet verbonden" instead of still claiming a connection.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+The owner can see at a glance whether Spotify is connected and how to log in again, without hunting for a hidden button.
+
+**Score:** 3
 
 #### Pull Request
 

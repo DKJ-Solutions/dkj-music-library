@@ -1,8 +1,8 @@
 "use client";
-// Kale trigger-knop voor POST /api/spotify/sync (fase 3). Bewust ONGESTYLED, zie page.tsx --
-// ontwerp is fase 5. Toont alleen de kale cijfers (aantal playlists/tracks, tijdstip) of de
-// foutmelding; een volledige sync van honderden playlists kan een tijd duren, dus de knop toont
-// een "bezig"-status i.p.v. te lijken te hangen.
+// De back-up-card op /spotify/verbinding: de laatste snapshot en de knop voor POST /api/spotify/sync.
+// Een volledige sync van honderden playlists kan een tijd duren, dus de knop toont een "bezig"-status
+// i.p.v. te lijken te hangen. Is de login verlopen (reauth_required), dan staat de inlogknop in de
+// melding zelf (#122): de status-card ernaast is server-gerenderd en wist nog niet dat de tokens weg zijn.
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -20,7 +20,12 @@ interface SyncError {
   message: string;
 }
 
-export default function SyncButton() {
+interface SyncButtonProps {
+  /** Zonder: alleen de knop en de uitslag, voor de kop van een playlistpagina (classic-pop, maple-classic). */
+  card?: { connected: boolean; snapshot: { playlistCount: number; trackCount: number; syncedAt: string } | null };
+}
+
+export default function SyncButton({ card }: SyncButtonProps) {
   const router = useRouter();
   const [status, setStatus] = useState<"idle" | "syncing" | "done" | "error">("idle");
   const [result, setResult] = useState<SyncResult | null>(null);
@@ -36,6 +41,9 @@ export default function SyncButton() {
       if (!res.ok) {
         setError(data as SyncError);
         setStatus("error");
+        // Bij reauth_required heeft de server de tokens net gewist; ververs de Server Components zodat de
+        // status-card en de inlogknop in de kop dat ook laten zien.
+        if ((data as SyncError).error === "reauth_required") router.refresh();
         return;
       }
 
@@ -53,39 +61,83 @@ export default function SyncButton() {
     }
   }
 
-  return (
-    <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid #ccc" }}>
-      <h2>Sync (fase 3)</h2>
-      <p>
-        Haalt alle playlists + tracks op via de Spotify Web API en schrijft ze weg naar
-        data/spotify/snapshot.json. Kan bij honderden playlists een tijd duren.
-      </p>
-      <button type="button" onClick={handleSync} disabled={status === "syncing"}>
-        {status === "syncing" ? "Bezig met synchroniseren..." : "Start sync"}
-      </button>
+  const button = (
+    <button
+      type="button"
+      className="btn btn--primary"
+      onClick={handleSync}
+      disabled={(card && !card.connected) || status === "syncing"}
+    >
+      {status === "syncing" ? "Bezig met synchroniseren..." : "Start sync"}
+    </button>
+  );
 
+  const outcome = (
+    <>
       {status === "done" && result && (
-        <>
-          <p style={{ color: "seagreen" }}>
-            Klaar: {result.playlistCount} playlist(s), {result.trackCount} track(s). Tijdstip:{" "}
-            {new Date(result.syncedAt).toLocaleString("nl-NL")}.
-          </p>
-          {!!result.failedPlaylistCount && (
-            <p style={{ color: "darkorange" }}>
-              Let op: {result.failedPlaylistCount} playlist(s) konden hun tracks niet ophalen
-              (tijdelijke fout) en zijn teruggevallen op de vorige/lege stand -- zie de
-              serverconsole voor details. De rest van de sync is gewoon gelukt.
-            </p>
-          )}
-        </>
+        <p className="msg pos verbinding-result">
+          Klaar: {result.playlistCount} playlists, {result.trackCount} tracks.
+          {!!result.failedPlaylistCount &&
+            ` ${result.failedPlaylistCount} playlist(s) konden hun tracks niet ophalen en houden hun vorige stand -- zie de serverconsole.`}
+        </p>
       )}
 
       {status === "error" && error && (
-        <p style={{ color: "crimson" }}>
-          Fout ({error.error}): {error.message}
-          {error.error === "reauth_required" && " -- log opnieuw in via de link hierboven."}
-        </p>
+        <div className="notice verbinding-result">
+          {error.error === "reauth_required" ? (
+            <>
+              <p className="msg">Je Spotify-login is verlopen. Log opnieuw in en start daarna de sync opnieuw.</p>
+              <a className="btn btn--primary verbinding-result__action" href="/api/auth/login/spotify">
+                Opnieuw inloggen bij Spotify
+              </a>
+            </>
+          ) : (
+            <p className="msg">De sync is mislukt: {error.message}</p>
+          )}
+        </div>
       )}
-    </div>
+    </>
+  );
+
+  if (!card) {
+    return (
+      <div className="verbinding-result">
+        {button}
+        {outcome}
+      </div>
+    );
+  }
+
+  return (
+    <section className="card">
+      <div className="card__head verbinding-head">
+        <div>
+          <h2 className="card__title">Back-up</h2>
+          <p className="card__sub">Alle playlists en tracks, naar data/spotify/snapshot.json.</p>
+        </div>
+        {button}
+      </div>
+
+      {card.snapshot ? (
+        <dl className="facts">
+          <div>
+            <dt>Playlists</dt>
+            <dd>{card.snapshot.playlistCount}</dd>
+          </div>
+          <div>
+            <dt>Tracks</dt>
+            <dd>{card.snapshot.trackCount}</dd>
+          </div>
+          <div>
+            <dt>Laatste sync</dt>
+            <dd>{new Date(card.snapshot.syncedAt).toLocaleString("nl-NL")}</dd>
+          </div>
+        </dl>
+      ) : (
+        <p className="msg">Nog geen back-up. {card.connected ? "Start de eerste sync." : "Log eerst in bij Spotify."}</p>
+      )}
+
+      {outcome}
+    </section>
   );
 }

@@ -47,88 +47,99 @@ export default async function ConnectionPage({ searchParams }: ConnectionPagePro
       : (ERROR_MESSAGES[params.error] ?? `Onbekende fout: ${params.error}`)
     : null;
 
+  const totalTracks = enriched ? enriched.playlists.reduce((sum, p) => sum + p.trackCount, 0) : 0;
+  const worlds: [string, number][] = [
+    ["MMC", worldCounts.mmc],
+    ["DJ Cylow", worldCounts.djcylow],
+    ["Privé", worldCounts.prive],
+  ];
+
+  // In de huisstijl (#122): de h1 met de ene actie die er nu toe doet ernaast -- inloggen zolang er geen
+  // verbinding is, anders loskoppelen als stille secundaire knop -- en daaronder de verbinding en de
+  // back-up naast elkaar, zodat de pagina in één scherm past.
   return (
     <main className="wrap">
-      <header className="masthead">
+      <header className="masthead masthead--action">
         <h1>{pageTitle("/spotify/verbinding")}</h1>
-        <p className="lede">
-          De koppeling met je Spotify-account en de sync van de back-up. Er wordt niets naar Spotify
-          teruggeschreven.
-        </p>
+        {tokens ? (
+          <form action="/api/auth/logout/spotify" method="POST">
+            <button type="submit" className="btn">
+              Loskoppelen
+            </button>
+          </form>
+        ) : (
+          <a className="btn btn--primary" href="/api/auth/login/spotify">
+            Inloggen bij Spotify
+          </a>
+        )}
       </header>
 
-      <section className="layer">
-        {/* Geen waarschuwing meer maar een aankondiging: de login-route zet de host zelf recht, dus de
-            login werkt hier gewoon. Wat wél verandert is het adres in de balk -- en dat is precies het
-            soort verrassing dat je één keer wil hebben uitgelegd in plaats van elke keer wil ontdekken. */}
-        {hostMismatch && (
-          <p className="host-mismatch-warning" data-tone="info">
-            <strong>Je wordt bij het inloggen verplaatst naar {hostMismatch.redirectHost}.</strong> Je
-            hebt de app geopend op <code>{hostMismatch.browserHost}</code>, terwijl de OAuth-callback
-            binnenkomt op <code>{hostMismatch.redirectHost}</code> — Spotify staat{" "}
-            <code>localhost</code> niet meer toe als redirect-URI, dus die host staat vast. Voor een
-            browser zijn dat verschillende hosts, en een state-cookie op de ene gaat niet mee naar de
-            andere. De login-route zet dat zelf recht met een extra hop, dus inloggen werkt hier;
-            daarna staat de app op{" "}
-            <a href={hostMismatch.correctUrl}>{hostMismatch.correctUrl}</a>. Wil je die sprong
-            overslaan, open de app dan meteen op dat adres.
-          </p>
-        )}
-
-        {errorMessage && <p className="empty-note" style={{ color: "var(--status-critical)" }}>{errorMessage}</p>}
-        {params.connected && !params.error && (
-          <p className="empty-note" style={{ color: "var(--status-done)" }}>Zojuist verbonden met Spotify.</p>
-        )}
-
-        {tokens ? (
-          <>
-            <p className="empty-note">
-              Status: <strong style={{ color: "var(--fg-1)" }}>verbonden</strong>. Toegangstoken verloopt:{" "}
-              {new Date(tokens.expiresAt).toLocaleString("nl-NL")}. Scope: {tokens.scope}
-            </p>
-            <form action="/api/auth/logout/spotify" method="POST">
-              <button type="submit" className="pill-toggle" data-active="true">
-                Loskoppelen
-              </button>
-            </form>
-          </>
-        ) : (
-          <>
-            <p className="empty-note">
-              Status: <strong style={{ color: "var(--fg-1)" }}>niet verbonden</strong>.
-            </p>
-            <a className="pill-toggle" href="/api/auth/login/spotify">
-              Inloggen bij Spotify
-            </a>
-          </>
-        )}
-
-        <p className="empty-note" style={{ marginTop: "10px" }}>
-          {enriched
-            ? `Laatste snapshot: ${enriched.playlists.length} playlist(s), ${enriched.playlists.reduce((sum, p) => sum + p.trackCount, 0)} track(s), gesynchroniseerd op ${new Date(enriched.syncedAt).toLocaleString("nl-NL")}.`
-            : "Nog geen snapshot -- start hieronder de eerste sync."}
+      {/* Geen waarschuwing maar een aankondiging: de login-route zet de host zelf recht, dus inloggen werkt
+          hier gewoon. Wat wél verandert is het adres in de balk, en dat wil je één keer uitgelegd krijgen. */}
+      {hostMismatch && (
+        <p className="notice">
+          Bij het inloggen ga je naar <code>{hostMismatch.redirectHost}</code>: Spotify staat{" "}
+          <code>localhost</code> niet toe als redirect-URI. Open de app meteen op{" "}
+          <a href={hostMismatch.correctUrl}>{hostMismatch.correctUrl}</a> om die sprong over te slaan.
         </p>
-
-        <SyncButton />
-      </section>
-
-      {enriched && (
-        <section className="layer">
-          <div className="band">
-            <span className="eyebrow">Werelden</span>
-            <span className="rule"></span>
-          </div>
-          <p className="section-lede">
-            Dave&apos;s top-niveau Spotify-folders, nagebootst uit de playlistnamen (de Web API geeft
-            zijn eigen folder-indeling niet terug) -- elke playlist valt precies in één wereld en
-            is in de playlist manager per rij corrigeerbaar.
-          </p>
-          <p className="empty-note" style={{ marginTop: "10px" }}>
-            Samen {worldCounts.mmc + worldCounts.djcylow + worldCounts.prive} van de{" "}
-            {enriched.playlists.length} playlists -- niets valt buiten een wereld.
-          </p>
-        </section>
       )}
+      {errorMessage && <p className="msg msg--warn">{errorMessage}</p>}
+      {params.connected && !params.error && <p className="msg pos">Zojuist verbonden met Spotify.</p>}
+
+      <div className="grid-2 verbinding-grid">
+        <section className="card">
+          <div className="card__head">
+            <h2 className="card__title">
+              <span className={`badge ${tokens ? "badge--good" : "badge--bad"}`} aria-hidden="true">
+                {tokens ? "✓" : "!"}
+              </span>
+              {tokens ? "Verbonden" : "Niet verbonden"}
+            </h2>
+            <p className="card__sub">
+              {tokens
+                ? "Leest je playlists; schrijft alleen de naam en beschrijving van een playlist terug."
+                : "Log in om de playlists op te halen."}
+            </p>
+          </div>
+          {tokens && (
+            <dl className="facts">
+              <div>
+                <dt>Toegangstoken verloopt</dt>
+                <dd>{new Date(tokens.expiresAt).toLocaleString("nl-NL")}</dd>
+              </div>
+            </dl>
+          )}
+        </section>
+
+        <SyncButton
+          card={{
+            connected: !!tokens,
+            snapshot: enriched
+              ? { playlistCount: enriched.playlists.length, trackCount: totalTracks, syncedAt: enriched.syncedAt }
+              : null,
+          }}
+        />
+
+        {enriched && (
+          <section className="card grid__full">
+            <div className="card__head">
+              <h2 className="card__title">Werelden</h2>
+              <p className="card__sub">
+                Je top-niveau Spotify-folders, afgeleid uit de playlistnamen. Per playlist te corrigeren in de
+                playlist manager.
+              </p>
+            </div>
+            <dl className="facts facts--row">
+              {worlds.map(([label, count]) => (
+                <div key={label}>
+                  <dt>{label}</dt>
+                  <dd>{count} playlists</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
+      </div>
     </main>
   );
 }
