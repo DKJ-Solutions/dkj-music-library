@@ -47,7 +47,7 @@ Owner asked for /spotify/verbinding in the house style; #122 (unclear re-auth er
 - [x] No lede/kicker/worlds block; host-mismatch note in plain words
 - [x] SyncButton: back-up card with facts, sync disabled until connected; reauth error carries its own login button and refreshes the server status
 - [x] Vendored `house-style.css` replaced with the pinned copy (#109), now v6.1.0 (headed grids no longer take a margin-top), so the house grid padding and panel apply; `.card--thumb` renamed to the domain class `.thumb-card` and its house-class compositions written flat, so `check-house-style` holds (nested-SCSS false positive filed upstream as dkj-marketplace#3694)
-- [x] /spotify rebuilt as a house `.page-column` with three h2 sections (owner): Connection (Instructions on the left over two rows, Login and Sync stacked on the right, `ConnectionCards.tsx`), Playlists (the cards shared with /spotify/playlists via `playlistCards.ts`), Dashboard (dashboard + trackregister); /spotify/verbinding redirects to /spotify with its query, OAuth callback/logout and all in-app links point at /spotify
+- [x] /spotify rebuilt as a house `.page-column` with three h2 sections (owner): Connection (Login and Sync cards side by side, `ConnectionCards.tsx`), Playlists (the cards shared with /spotify/playlists via `playlistCards.ts`), Dashboard (dashboard + trackregister); /spotify/verbinding redirects to /spotify with its query, OAuth callback/logout and all in-app links point at /spotify
 - [x] Compact variant (button + outcome) kept for the classic-pop and maple-classic page heads
 
 ### TEST
@@ -57,7 +57,7 @@ Owner asked for /spotify/verbinding in the house style; #122 (unclear re-auth er
 
 ### DEPLOY: feat/122-verbinding-house-style
 
-/spotify is now one page in three sections: Connection (an Instructions card with tips, a Login card with the login action as the filled primary button, and a Sync card), Playlists and Dashboard. /spotify/verbinding forwards there, so old links keep working. The vendored house stylesheet is now the v6.1.0 copy, so every grid in the app gets the house padding and panel background, and the house-style check is green again. A sync that fails because the Spotify login expired now says so in plain words with its own login button, and the status card updates to "Niet verbonden" instead of still claiming a connection.
+/spotify is now one page in three sections: Connection (a Login card with the login action as the filled primary button, and a Sync card with a spinning icon while it runs), Playlists and Dashboard. /spotify/verbinding forwards there, so old links keep working. The vendored house stylesheet is now the v6.1.0 copy, so every grid in the app gets the house padding and panel background, and the house-style check is green again. A sync that fails because the Spotify login expired now says so in plain words with its own login button, and the status card updates to "Niet verbonden" instead of still claiming a connection.
 
 **Score:** 3
 

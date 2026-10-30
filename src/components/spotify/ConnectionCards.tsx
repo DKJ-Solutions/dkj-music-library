@@ -40,22 +40,6 @@ export default async function ConnectionCards({ params }: { params: { connected?
       <div className="grid__head">
         <h2>Connection</h2>
       </div>
-      {/* Instructions helemaal links, over twee rijen, met Login en Sync rechts onder elkaar (Dave, #122): de
-          uitleg en tips staan hier, zodat Login en Sync alleen hun status en hun knop dragen. Geen tip over het
-          adres: de login-route hopt even naar 127.0.0.1, maar de callback bouwt zijn redirect uit request.url, en
-          dat draagt in `next dev` de eigen hostnaam van de server (localhost), dus je eindigt daar weer. */}
-      <section className="card verbinding-instructions">
-        <div className="card__head">
-          <h3 className="card__title">Instructions</h3>
-        </div>
-        <ul className="verbinding-tips">
-          <li>Log in bij Spotify en start daarna de sync. De sync haalt al je playlists en tracks op.</li>
-          <li>Een sync van honderden playlists kan een paar minuten duren.</li>
-          <li>Verlopen login? Log opnieuw in; je back-up blijft staan.</li>
-          <li>Je Spotify-sleutels staan in OneDrive en komen bij een nieuwe clone vanzelf mee.</li>
-        </ul>
-      </section>
-
       <section className="card">
         <div className="card__head verbinding-head">
           <div>
