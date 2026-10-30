@@ -74,8 +74,8 @@ export default async function ConnectionCards({ params }: { params: { connected?
             verandert onderweg, en dat wil je één keer uitgelegd krijgen. */}
         {hostMismatch && !tokens && (
           <p className="msg muted verbinding-result">
-            Spotify werkt niet via {hostMismatch.browserHost}. Bij het inloggen ga je daarom vanzelf naar{" "}
-            {hostMismatch.redirectHost}. <a href={hostMismatch.correctUrl}>Nu al overstappen</a>
+            Na het inloggen verandert het adres in je adresbalk van {hostMismatch.browserHost} naar{" "}
+            {hostMismatch.redirectHost}. Dat hoort zo: Spotify accepteert alleen dat adres.
           </p>
         )}
       </section>
