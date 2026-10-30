@@ -2,7 +2,7 @@
 // lazily bij elke aanroep (geen module-state), dus deze tests zetten/herstellen de relevante
 // keys rond elke test in plaats van modules te resetten.
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { DEFAULT_SPOTIFY_REDIRECT_URI, getSpotifyConfig } from "./config";
+import { DEFAULT_SPOTIFY_REDIRECT_URI, findSpotifyConfigProblem, getSpotifyConfig } from "./config";
 import { SpotifyConfigError } from "./errors";
 
 const ENV_KEYS = ["SPOTIFY_CLIENT_ID", "SPOTIFY_CLIENT_SECRET", "SPOTIFY_REDIRECT_URI"] as const;
@@ -68,5 +68,19 @@ describe("getSpotifyConfig", () => {
     const config = getSpotifyConfig();
     expect(config.redirectUri).toBe(DEFAULT_SPOTIFY_REDIRECT_URI);
     expect(config.redirectUri).not.toContain("localhost");
+  });
+});
+
+describe("findSpotifyConfigProblem", () => {
+  it("geeft de melding terug als de sleutels ontbreken, met de weg naar een .env.local", () => {
+    const problem = findSpotifyConfigProblem();
+    expect(problem).toMatch(/SPOTIFY_CLIENT_ID/);
+    expect(problem).toMatch(/\.env\.local\.example/);
+  });
+
+  it("geeft null als de configuratie klopt", () => {
+    process.env.SPOTIFY_CLIENT_ID = "abc123";
+    process.env.SPOTIFY_CLIENT_SECRET = "s3cr3t";
+    expect(findSpotifyConfigProblem()).toBeNull();
   });
 });

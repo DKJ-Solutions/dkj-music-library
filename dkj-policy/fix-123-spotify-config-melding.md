@@ -39,19 +39,32 @@
 
 ### PLAN
 
+#### Status
+
+Visible result: parked for the owner's look by a sweep (#123), no PR until then.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `findSpotifyConfigProblem()` in `src/lib/spotify/config.ts`; the missing-credentials message names both routes to a `.env.local` (copy `.env.local.example`, or the OneDrive copy)
+- [x] The login route redirects to `/spotify?error=config_missing` instead of answering JSON
+- [x] The Login card shows the setup notice in place of the login button when the configuration is incomplete
 
 ### TEST
 
+- [x] `config.test.ts`: `findSpotifyConfigProblem` returns the message without credentials and null with them; `tsc --noEmit` clean
+- [ ] The owner has looked at the Login card without `.env.local`
+
 ### DEPLOY: fix/123-spotify-config-melding
 
-**Score:**
+Without Spotify credentials the Login card on /spotify now says so itself, with the setup steps (copy `.env.local.example` to `.env.local` and fill in the client ID and secret from the Spotify Developer Dashboard, or keep a filled-in copy in OneDrive), in place of the login button. The login route no longer answers a browser with raw JSON: it sends it back to /spotify, where the card explains what is missing.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+A fresh checkout without keys no longer strands the owner on a bare JSON page; the fix is named on the page they were already on.
+
+**Score:** 2
 
 #### Pull Request
 
