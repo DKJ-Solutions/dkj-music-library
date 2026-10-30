@@ -57,16 +57,14 @@ export default async function ConnectionPage({ searchParams }: ConnectionPagePro
         <section className="card">
           <div className="card__head verbinding-head">
             <div>
-              <h2 className="card__title">
-                <span className={`badge ${tokens ? "badge--good" : "badge--bad"}`} aria-hidden="true">
+              <h3 className="card__title">Login</h3>
+              <p className="badge-row">
+                <span className={`badge badge--sm ${tokens ? "badge--good" : "badge--bad"}`} aria-hidden="true">
                   {tokens ? "✓" : "!"}
                 </span>
-                {tokens ? "Verbonden" : "Niet verbonden"}
-              </h2>
-              <p className="card__sub">
                 {tokens
-                  ? `Toegangstoken verloopt ${new Date(tokens.expiresAt).toLocaleString("nl-NL")}.`
-                  : "Log in om je playlists op te halen."}
+                  ? `Verbonden. Toegangstoken verloopt ${new Date(tokens.expiresAt).toLocaleString("nl-NL")}.`
+                  : "Niet verbonden. Log in om je playlists op te halen."}
               </p>
             </div>
             {tokens ? (

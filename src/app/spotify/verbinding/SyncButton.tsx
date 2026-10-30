@@ -112,7 +112,7 @@ export default function SyncButton({ card }: SyncButtonProps) {
     <section className="card">
       <div className="card__head verbinding-head">
         <div>
-          <h2 className="card__title">Sync</h2>
+          <h3 className="card__title">Sync</h3>
           <p className="card__sub">Alle playlists en tracks, naar data/spotify/snapshot.json.</p>
         </div>
         {button}
