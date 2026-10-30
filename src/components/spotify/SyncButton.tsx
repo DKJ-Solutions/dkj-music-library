@@ -113,12 +113,16 @@ export default function SyncButton({ card }: SyncButtonProps) {
       <div className="card__head verbinding-head">
         <div>
           <h3 className="card__title">Sync</h3>
-          <p className="card__sub">Alle playlists en tracks, naar data/spotify/snapshot.json.</p>
+          <p className="card__sub">
+            {card.snapshot
+              ? "Back-up van al je playlists en tracks."
+              : `Nog geen back-up. ${card.connected ? "Start de eerste sync." : "Log eerst in bij Spotify."}`}
+          </p>
         </div>
         {button}
       </div>
 
-      {card.snapshot ? (
+      {card.snapshot && (
         <dl className="facts">
           <div>
             <dt>Playlists</dt>
@@ -133,8 +137,6 @@ export default function SyncButton({ card }: SyncButtonProps) {
             <dd>{new Date(card.snapshot.syncedAt).toLocaleString("nl-NL")}</dd>
           </div>
         </dl>
-      ) : (
-        <p className="msg">Nog geen back-up. {card.connected ? "Start de eerste sync." : "Log eerst in bij Spotify."}</p>
       )}
 
       {outcome}
