@@ -2,9 +2,10 @@
 // zelf heeft: de knop naast de kop van een kaart, en de ruimte boven een uitslag. De
 // ruimte tussen de secties komt uit .page-column.
 
+// De knop staat verticaal in het midden van de kop (titel plus subregel), niet bovenaan (Dave, #122).
 .verbinding-head {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: var(--spacing-4);
 }
