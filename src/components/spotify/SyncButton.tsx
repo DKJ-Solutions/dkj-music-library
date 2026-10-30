@@ -68,7 +68,18 @@ export default function SyncButton({ card }: SyncButtonProps) {
       onClick={handleSync}
       disabled={(card && !card.connected) || status === "syncing"}
     >
-      {status === "syncing" ? "Bezig met synchroniseren..." : "Start sync"}
+      {/* Hetzelfde sync-icoon als PlaylistSyncButton; het draait zolang de sync loopt, zodat een sync van een
+          paar minuten er niet uitziet als een vastgelopen knop (Dave, #122). */}
+      <svg
+        className={status === "syncing" ? "playlist-sync__icon is-spinning" : "playlist-sync__icon"}
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d="M20 12a8 8 0 0 1-14 5.3M4 12a8 8 0 0 1 14-5.3" />
+        <path d="M18 3v3.7h-3.7M6 21v-3.7h3.7" />
+      </svg>
+      {status === "syncing" ? "Bezig met synchroniseren…" : "Start sync"}
     </button>
   );
 
