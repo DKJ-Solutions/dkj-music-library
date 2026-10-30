@@ -22,14 +22,12 @@
 
 // De tips in de Instructions-kaart: een gewone lijst in de kleine maat, zonder eigen kleur.
 .verbinding-tips {
+  display: grid;
+  gap: var(--spacing-1-5);
   margin: 0;
   padding-left: var(--spacing-4);
   font-size: var(--text-sm);
   color: var(--fg-1);
-}
-
-.verbinding-tips > li + li {
-  margin-top: var(--spacing-1-5);
 }
 
 // Instructions beslaat de linkerkolom over twee rijen; Login en Sync staan rechts onder elkaar.
