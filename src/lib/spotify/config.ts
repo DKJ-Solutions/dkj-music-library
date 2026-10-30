@@ -56,8 +56,9 @@ export function getSpotifyConfig(): SpotifyConfig {
 
   if (!clientId || !clientSecret) {
     throw new SpotifyConfigError(
-      "SPOTIFY_CLIENT_ID en/of SPOTIFY_CLIENT_SECRET ontbreken. Kopieer .env.local.example naar " +
-        ".env.local en vul de waarden uit het Spotify Developer Dashboard in."
+      "SPOTIFY_CLIENT_ID en/of SPOTIFY_CLIENT_SECRET ontbreken. Zet je ingevulde .env.local in " +
+        "%OneDrive%\\dkj-solutions\\dkj-music-library en start `npm run dev` opnieuw -- die neemt hem " +
+        "dan vanzelf over (zie de README, 'Starten')."
     );
   }
 

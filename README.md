@@ -16,9 +16,16 @@ De app kwam op 2026-09-27 uit de private repo `life-hub`, en is daar in zijn geh
 
 ```sh
 npm install
-cp .env.local.example .env.local   # vul SPOTIFY_CLIENT_ID en SPOTIFY_CLIENT_SECRET in
 npm run dev
 ```
+
+De Spotify-sleutels (`SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`) staan in `.env.local`, en die gaat
+niet mee met git. Bewaar je ingevulde `.env.local` daarom één keer in
+`%OneDrive%\dkj-solutions\dkj-music-library\.env.local`. Heeft de repo nog geen ingevulde
+`.env.local`, dan neemt `npm run dev` die kopie vooraf vanzelf over (`predev`, zie
+`src/lib/env/onedriveEnv.ts`). Los draaien kan ook: `npm run env:onedrive`. Een `.env.local` die je in
+de repo al hebt ingevuld, blijft staan. Zonder OneDrive kopieer je `.env.local.example` naar
+`.env.local` en vul je de waarden daar in.
 
 Open de app op **http://127.0.0.1:3000**, niet op `localhost`. Sinds 2025 accepteert Spotify `localhost`
 niet meer als redirect-URI. De redirect-URI in `.env.local` moet **exact** gelijk zijn aan die in het

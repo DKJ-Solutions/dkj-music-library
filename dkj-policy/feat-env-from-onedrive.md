@@ -39,19 +39,30 @@
 
 ### PLAN
 
+Dave asked for the Spotify secrets to live in OneDrive so a fresh clone does not need them looked up again.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `src/lib/env/onedriveEnv.ts`: copy `%OneDrive%\dkj-solutions\dkj-music-library\.env.local` into the repo when the repo has no filled-in `.env.local`
+- [x] `scripts/env/copy-env-from-onedrive.ts` wired as `predev` (so the dev-preview hook runs it too) and as `env:onedrive`
+- [x] Missing-credentials message, `.env.local.example` and README point at the OneDrive copy
 
 ### TEST
 
+- [x] Unit tests for copy, keep, overwrite-placeholder, unfilled source and missing source
+- [x] `npm test` (946 passed) and `tsc --noEmit` green
+
 ### DEPLOY: feat/env-from-onedrive
 
-**Score:**
+A fresh clone no longer needs the Spotify client ID and secret looked up again: `npm run dev` first copies `.env.local` from `%OneDrive%\dkj-solutions\dkj-music-library\` when the repo has no filled-in one of its own. A filled-in `.env.local` already in the repo is never overwritten, and the path comes from Windows' own `OneDrive` variable, so no user name lands in this public repo.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+The owner sets up a new checkout without hunting for the Spotify secret: store it once in OneDrive and every clone picks it up.
+
+**Score:** 3
 
 #### Pull Request
 
