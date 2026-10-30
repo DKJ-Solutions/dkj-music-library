@@ -47,7 +47,7 @@ export default async function ConnectionCards({ params }: { params: { connected?
             <p className="card__sub">
               {tokens
                 ? `Verbonden. Toegangstoken verloopt ${new Date(tokens.expiresAt).toLocaleString("nl-NL")}.`
-                : "Niet verbonden. Log in om je playlists op te halen."}
+                : "Nog niet ingelogd. Log eerst in bij Spotify."}
             </p>
           </div>
           {tokens ? (
