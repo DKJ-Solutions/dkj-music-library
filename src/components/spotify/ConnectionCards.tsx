@@ -36,14 +36,14 @@ export default async function ConnectionCards({ params }: { params: { connected?
   const totalTracks = enriched ? enriched.playlists.reduce((sum, p) => sum + p.trackCount, 0) : 0;
 
   return (
-    <div className="grid-3">
+    <div className="grid-2">
       <div className="grid__head">
         <h2>Connection</h2>
       </div>
-      {/* Instructions helemaal links (Dave, #122): de uitleg en tips staan hier, zodat Login en Sync alleen hun
-          status en hun knop dragen. De adres-tip verschijnt alleen als de app op een andere host openstaat dan
+      {/* Instructions helemaal links, over twee rijen, met Login en Sync rechts onder elkaar (Dave, #122): de
+          uitleg en tips staan hier, zodat Login en Sync alleen hun status en hun knop dragen. De adres-tip verschijnt alleen als de app op een andere host openstaat dan
           waar de OAuth-callback binnenkomt; de login-route zet dat zelf recht. */}
-      <section className="card">
+      <section className="card verbinding-instructions">
         <div className="card__head">
           <h3 className="card__title">Instructions</h3>
         </div>

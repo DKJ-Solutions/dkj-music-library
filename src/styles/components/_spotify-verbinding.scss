@@ -30,3 +30,8 @@
 .verbinding-tips > li + li {
   margin-top: var(--spacing-1-5);
 }
+
+// Instructions beslaat de linkerkolom over twee rijen; Login en Sync staan rechts onder elkaar.
+.verbinding-instructions {
+  grid-row: span 2;
+}
