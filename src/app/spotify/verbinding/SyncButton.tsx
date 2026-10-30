@@ -1,5 +1,5 @@
 "use client";
-// De back-up-card op /spotify/verbinding: de laatste snapshot en de knop voor POST /api/spotify/sync.
+// De sync-card op /spotify/verbinding: de laatste snapshot en de knop voor POST /api/spotify/sync.
 // Een volledige sync van honderden playlists kan een tijd duren, dus de knop toont een "bezig"-status
 // i.p.v. te lijken te hangen. Is de login verlopen (reauth_required), dan staat de inlogknop in de
 // melding zelf (#122): de status-card ernaast is server-gerenderd en wist nog niet dat de tokens weg zijn.
@@ -112,7 +112,7 @@ export default function SyncButton({ card }: SyncButtonProps) {
     <section className="card">
       <div className="card__head verbinding-head">
         <div>
-          <h2 className="card__title">Back-up</h2>
+          <h2 className="card__title">Sync</h2>
           <p className="card__sub">Alle playlists en tracks, naar data/spotify/snapshot.json.</p>
         </div>
         {button}

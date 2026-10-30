@@ -43,8 +43,8 @@ Owner asked for /spotify/verbinding in the house style; #122 (unclear re-auth er
 
 ### CREATE
 
-- [x] Page on house classes: `masthead--action` with the login button as `btn--primary` (Loskoppelen as a quiet `.btn`), status and back-up as two `.card`s in a `.grid-2`, worlds as `facts--row`
-- [x] No lede/kicker, host-mismatch note shortened to one `.notice` line
+- [x] Page reduced to two house `.card`s in a `.grid-2` (owner): card 1 holds login status, the login button (`btn--primary`) or Loskoppelen, login errors and the host note; card 2 holds the sync
+- [x] No lede/kicker/worlds block; host-mismatch note in plain words
 - [x] SyncButton: back-up card with facts, sync disabled until connected; reauth error carries its own login button and refreshes the server status
 - [x] Compact variant (button + outcome) kept for the classic-pop and maple-classic page heads
 
@@ -55,7 +55,7 @@ Owner asked for /spotify/verbinding in the house style; #122 (unclear re-auth er
 
 ### DEPLOY: feat/122-verbinding-house-style
 
-/spotify/verbinding now follows the house style: the login action is the filled primary button beside the heading, connection status and back-up sit side by side as house cards, and the worlds count is one facts row. A sync that fails because the Spotify login expired now says so in plain words with its own login button, and the status card updates to "Niet verbonden" instead of still claiming a connection.
+/spotify/verbinding now follows the house style as two cards side by side: one for logging in to Spotify, with the login action as the filled primary button, and one for the sync. A sync that fails because the Spotify login expired now says so in plain words with its own login button, and the status card updates to "Niet verbonden" instead of still claiming a connection.
 
 **Score:** 3
 
