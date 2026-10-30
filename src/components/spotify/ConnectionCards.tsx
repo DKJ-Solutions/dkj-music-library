@@ -44,10 +44,7 @@ export default async function ConnectionCards({ params }: { params: { connected?
         <div className="card__head verbinding-head">
           <div>
             <h3 className="card__title">Login</h3>
-            <p className="badge-row">
-              <span className={`badge badge--sm ${tokens ? "badge--good" : "badge--bad"}`} aria-hidden="true">
-                {tokens ? "✓" : "!"}
-              </span>
+            <p className="card__sub">
               {tokens
                 ? `Verbonden. Toegangstoken verloopt ${new Date(tokens.expiresAt).toLocaleString("nl-NL")}.`
                 : "Niet verbonden. Log in om je playlists op te halen."}
