@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**16 / 18 minor entries** <!-- pending-tally -->
+**17 / 19 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/env-from-onedrive · 20261030-151737Z
+
+A fresh clone no longer needs the Spotify client ID and secret looked up again: `npm run dev` first copies `.env.local` from `%OneDrive%\dkj-solutions\dkj-music-library\` when the repo has no filled-in one of its own. A filled-in `.env.local` already in the repo is never overwritten, and the path comes from Windows' own `OneDrive` variable, so no user name lands in this public repo.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+The owner sets up a new checkout without hunting for the Spotify secret: store it once in OneDrive and every clone picks it up.
+
+**Score:** 3
+
+#### Pull Request
+
+Spotify-sleutels uit OneDrive overnemen bij een verse clone
+
+[PR #124](https://github.com/DKJ-Solutions/dkj-music-library/pull/124)
+
+---
 
 ### DEPLOY: config/120-dkj-marketplace · 20261030-150523Z
 
