@@ -41,7 +41,7 @@
 
 #### Status
 
-Visible result: parked for the owner's look by a sweep (#126), no PR until then.
+Visible result: parked for the owner's look by a sweep (#126); approved by the owner on October 30, 2026.
 
 ### CREATE
 
@@ -52,7 +52,7 @@ Visible result: parked for the owner's look by a sweep (#126), no PR until then.
 ### TEST
 
 - [x] `tsc --noEmit` clean, the stylesheet compiles, and /mixen, /spotify/dashboard, /spotify/trackregister and /compare answer 200 with `<main class="page-column">`
-- [ ] The owner has looked at the pages
+- [x] The owner has looked at the pages ("gezien en akkoord", October 30, 2026)
 
 ### DEPLOY: fix/126-page-column
 
