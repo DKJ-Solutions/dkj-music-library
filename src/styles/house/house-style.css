@@ -203,25 +203,41 @@ body > header, main > header { display: flex; justify-content: space-between; al
 .controls { display: flex; align-items: center; gap: var(--spacing-2); flex-wrap: wrap; }
 .controls .seg, .controls .btn { height: 30px; box-sizing: border-box; }
 .controls .btn { display: inline-flex; align-items: center; padding: 0 var(--spacing-2-5); }
-/* Page column (#141): put it on <main> and its blocks stack with one --spacing-5 gap between them, the hub's
+/* Page column (#141): put it on <main> and its blocks stack with one --spacing-3 gap between them (owner, October 28, 2026; it was --spacing-5), the hub's
    rhythm. .card, .tiles, .notice and .footer-note carry a margin-top of their own, which would add to the gap, so a
    direct child of the column gives it up. .page-cta is the spacing of a primary button under the lead (a <p> that holds
    the button). */
-.page-column { display: grid; gap: var(--spacing-5); align-content: start; padding: var(--spacing-4) var(--spacing-4) var(--spacing-12); }
+.page-column { display: grid; gap: var(--spacing-3); align-content: start; padding: var(--spacing-4) var(--spacing-4) var(--spacing-12); }
 .page-column > .card, .page-column > .tiles, .page-column > .notice, .page-column > .footer-note { margin-top: 0; }
 /* An in-page anchor in the column lands with room above it, clear of the settings button (#156). */
 .page-column [id] { scroll-margin-top: 5rem; }
 .page-cta { margin: var(--spacing-4) 0 0; }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-4); }
+/* minmax(0, 1fr), never a bare 1fr: a 1fr track never shrinks below the min-content of its card, so one nowrap line
+   wider than half the row widened the page past the viewport (#3614). .grid-3 and both steps down use the same form. */
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-4); }
 /* .grid-3: the same group three to a row (owner, October 22, 2026), for short cards such as one link each; it takes
    .grid__head and .grid__full as .grid-2 does, and steps down to two columns, then one. */
 .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--spacing-4); }
+/* The container the cards sit in always keeps at least --spacing-3 (12px) of padding (owner, October 28, 2026), so a
+   card never touches the edge of its group. .card-grid carries the same padding for a repo's own card grid (its own
+   columns in its own class beside it: <div class="card-grid my-cards">), which never sets a padding of its own. */
+:is(.grid-2, .grid-3, .card-grid) { padding: var(--spacing-3); }
+/* The group is a surface one step off the page (--paper-2), and each card in it one step further (--paper-3), so
+   on a dark theme the group is a little lighter than the page and the cards a little lighter again (owner, October
+   28, 2026). The steps run away from the page in both modes, so on a light theme each is a little darker. A card on
+   --paper-3 would lose every line drawn in --paper-3 (its border, a table's rows, its hover), so the line moves one
+   step on to --paper-4: on the card itself by name, and for everything inside it by --paper-3 reading --paper-4 there. */
+:is(.grid-2, .grid-3, .card-grid) { background: var(--paper-2); border-radius: 16px; }
+:is(.grid-2, .grid-3, .card-grid) > .card { background: var(--paper-3); border-color: var(--paper-4); }
+:is(.grid-2, .grid-3, .card-grid) > .card > * { --paper-3: var(--paper-4); }
+:is(.grid-2, .grid-3, .card-grid) > .card--link:hover { background: var(--paper-4); }
 /* The grid's gap is the spacing between its rows, so a direct .card, .tiles or .notice gives up its own top
    margin here too, as in .page-column (#207). */
 :is(.grid-2, .grid-3) > :is(.card, .tiles, .notice) { margin-top: 0; }
-/* A block's heading above its card(s), NEVER inside them (#206, a hard rule since #3175): <div class="grid-2"><div
-   class="grid__head"><h2>Title</h2><p class="card__sub">Sub line</p></div> then the card(s)</div>. An h2 heads a group of
-   cards, so it stands above the group and every card under it is titled with an h3 or not at all. The head spans every
+/* A group's heading above its cards (#206), where a page groups cards: <div class="grid-2"><div
+   class="grid__head"><h2>Title</h2><p class="card__sub">Sub line</p></div> then the card(s)</div>. Each card under such a
+   heading is titled with an h3 or not at all; a card standing on its own may be titled by an h2 (#3175's no-h2-in-a-card
+   rule was retired October 24, 2026). The head spans every
    column, as does a .grid__full child (a card that takes the whole row). The h2 gives up its bottom margin and the
    .card__sub supplies the --spacing-1 under it, as in .card__head; the grid's own gap is the space between head and cards.
    Left-aligned, like .card__head. */
@@ -229,13 +245,13 @@ body > header, main > header { display: flex; justify-content: space-between; al
 .grid__head { text-align: left; }
 .grid__head > h2 { margin: 0; }
 /* In the page column a headed group takes extra room above its h2 (#3175), so the h2 sits clearly closer to its own cards
-   (the grid's --spacing-4) than to the group before it (the column's --spacing-5 plus this): the h2s group the page. */
+   (the grid's --spacing-4) than to the group before it (the column's --spacing-3 plus this): the h2s group the page. */
 .page-column > :is(.grid-2, .grid-3):has(> .grid__head):not(:first-child) { margin-top: var(--spacing-5); }
 .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--spacing-3); margin-top: var(--spacing-4); }
 .item-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); column-gap: var(--spacing-4); }
 .mini-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: var(--spacing-2-5); margin-top: var(--spacing-3); }
 @media (max-width: 1000px) { .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 760px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } .hero .value { font-size: var(--text-h1); } }
+@media (max-width: 760px) { .grid-2, .grid-3 { grid-template-columns: minmax(0, 1fr); } .hero .value { font-size: var(--text-h1); } }
 
 /* ---- Typography ----------------------------------------------------------- */
 /* Every heading is in the body sans: h1 since October 24, 2026 (the owner; it was set in --font-serif, and in
@@ -254,6 +270,9 @@ h2 { font-weight: 700; }   /* 700 since October 24, 2026 (owner); it was 600 */
 :where(h3) { color: var(--fg-3); }
 /* h1 is in its own case (owner, October 24, 2026; it was set in capitals from #3247). */
 h1 { font-size: var(--text-h1); margin: 0; }
+/* The h1 is never framed (owner, October 28, 2026): no border, outline, shadow or background of its own, and the
+   page's h1 stands on the page itself, never inside a card, panel or bordered box. */
+h1 { border: 0; outline: 0; box-shadow: none; background: none; }
 h2 { font-size: var(--text-h2); margin: 0 0 var(--spacing-1); }
 /* Flex so an .info-button sits on the heading's vertical centre, not on its baseline; the capitals
    sit almost exactly mid-line, so 1px corrects the rest. */
@@ -414,6 +433,10 @@ p, p.meta { color: var(--fg-1); }
 /* ---- Buttons -------------------------------------------------------------- */
 .btn { background: none; border: 1px solid var(--paper-3); color: var(--fg-1); border-radius: 8px;
   padding: var(--spacing-1) var(--spacing-2-5); font: inherit; font-size: var(--text-sm); cursor: pointer; text-decoration: none; }   /* none: a .btn on an <a> (a link that looks like a button) draws no underline */
+/* Hover and focus: one rule for every .btn variant (#3648). The hover is the house hover tint, --paper-3, with the
+   border one step on so the edge stays drawn; .btn--primary darkens its own fill below. */
+.btn:hover:not(:disabled) { background: var(--paper-3); border-color: var(--paper-4); }
+.btn:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
 /* Segmented switch: <span class="seg" role="group"><button aria-pressed="true">A</button><button aria-pressed="false">B</button></span>. */
 .seg { display: inline-flex; border: 1px solid var(--paper-3); border-radius: 8px; overflow: hidden; vertical-align: middle; }
 .seg button { background: none; border: 0; color: var(--fg-1); padding: 0 var(--spacing-2-5); height: 100%; font: inherit; font-size: var(--text-sm); cursor: pointer; }
@@ -456,8 +479,10 @@ p, p.meta { color: var(--fg-1); }
 .moretoggle:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
 
 /* ---- Primary button -------------------------------------------------------- */
-.btn--primary { background: var(--primary); border-color: var(--primary); color: var(--paper-1); font-weight: 600; }
-.btn--primary:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+.btn--primary { background: var(--primary); border-color: var(--primary); color: var(--paper-1); font-weight: 700; }   /* bold: the filled main action (owner, #3649) */
+/* Hover: the fill moves 15% toward --fg-1, so it darkens on a light theme and lightens on a dark one, and the
+   --paper-1 label gains contrast either way. It outweighs the plain .btn hover above and .btn--touch.btn--primary below. */
+.btn--primary:hover:not(:disabled) { background: color-mix(in srgb, var(--primary) 85%, var(--fg-1)); border-color: color-mix(in srgb, var(--primary) 85%, var(--fg-1)); }
 /* Disabled: one rule for every .btn variant, so an app never adds its own on this reserved class. */
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
@@ -559,8 +584,7 @@ p, p.meta { color: var(--fg-1); }
 .btn--touch { display: inline-flex; align-items: center; justify-content: center; min-height: var(--tap);
   padding: var(--spacing-2-5) var(--spacing-4); font-size: var(--text-base); font-weight: 600; color: var(--fg-1);
   background: var(--paper-2); -webkit-tap-highlight-color: transparent; }
-.btn--touch.btn--primary { background: var(--primary); border-color: var(--primary); color: var(--paper-1); }
-.btn--touch:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+.btn--touch.btn--primary { background: var(--primary); border-color: var(--primary); color: var(--paper-1); font-weight: 700; }
 .btn--block { width: 100%; }
 
 /* ---- Icon button and action row --------------------------------------------- */
@@ -715,11 +739,29 @@ html:has(.breadcrumbs-bar) .theme-settings--floating { top: calc(var(--tap) + va
 a.menu-item:hover { background: var(--paper-3); }
 /* A card that is one link (#3298): <section class="card card--link"> around a single <a>. The link's area stretches
    over the whole card, so a click anywhere on it follows the link, and the whole card tints on hover rather than the
-   row alone. The <a> must not be positioned itself; one link per card, or the last one covers the rest. */
-.card--link { position: relative; }
+   row alone. The <a> must not be positioned itself; one link per card, or the last one covers the rest. Its content
+   sits in the middle of the card's height, so a card a taller neighbour in its grid row stretches does not leave its
+   row at the top (owner, October 29, 2026). */
+.card--link { position: relative; display: flex; flex-direction: column; justify-content: center; }
 .card--link a::after { content: ""; position: absolute; inset: 0; }
 .card--link:hover { background: var(--paper-3); }
 .card--link a.menu-item:hover { background: none; }
+/* The card's slots (#3566), so an overview never needs a card of its own: a headline figure on a line under the
+   description (<span class="menu-item__value">), a status .badge in the icon's place, and the label as a heading
+   (<div class="menu-item__label"><h2 class="menu-item__title">) where the cards are a page's sections. */
+.menu-item__value { display: block; margin-top: var(--spacing-1); font-size: var(--text-base); font-weight: 300; color: var(--fg-1); }
+.menu-item__title { margin: 0; }
+.menu-item > .badge { flex: none; }
+/* A card's title is ONE line, cut off with an ellipsis where it does not fit the card's width (owner, October 28,
+   2026): the plain label's first line, or the h2. A mark after the h2's label (Format-HubCardLinkHtml -TitleBadgeHtml:
+   <h2><span>label</span><span class="badge">) keeps its place, and the label in front of it is cut off instead. The
+   description and the value under it still wrap. */
+.card--link .menu-item__label { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.card--link .menu-item__label > :is(.menu-item__sub, .menu-item__value) { white-space: normal; }
+.card--link .menu-item__title { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.card--link .menu-item__title:has(> .badge) { display: flex; align-items: center; gap: var(--spacing-2); }
+.card--link .menu-item__title > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.card--link .menu-item__title > .badge { flex: none; }
 
 /* ---- Screen readers only --------------------------------------------------------- */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }

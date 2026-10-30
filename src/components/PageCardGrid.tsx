@@ -90,7 +90,7 @@ export function PageCardGrid({ cards }: { cards: PageCard[] }) {
   return (
     <div className="grid-3">
       {cards.map((card) => (
-        <section key={card.href} className={card.image ? "card card--link card--thumb" : "card card--link"}>
+        <section key={card.href} className={card.image ? "card card--link thumb-card" : "card card--link"}>
           <nav className="menu-list" aria-label={card.label}>
             <Link className="menu-item" href={card.href}>
               {card.image ? (

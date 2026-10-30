@@ -46,6 +46,7 @@ Owner asked for /spotify/verbinding in the house style; #122 (unclear re-auth er
 - [x] Page reduced to two house `.card`s in a `.grid-2` (owner): card 1 holds login status, the login button (`btn--primary`) or Loskoppelen, login errors and the host note; card 2 holds the sync
 - [x] No lede/kicker/worlds block; host-mismatch note in plain words
 - [x] SyncButton: back-up card with facts, sync disabled until connected; reauth error carries its own login button and refreshes the server status
+- [x] Vendored `house-style.css` replaced with the v6.0.0 pinned copy (#109), so the house grid padding and panel apply; `.card--thumb` renamed to the domain class `.thumb-card` and its house-class compositions written flat, so `check-house-style` holds (nested-SCSS false positive filed upstream as dkj-marketplace#3694)
 - [x] Compact variant (button + outcome) kept for the classic-pop and maple-classic page heads
 
 ### TEST
@@ -55,7 +56,7 @@ Owner asked for /spotify/verbinding in the house style; #122 (unclear re-auth er
 
 ### DEPLOY: feat/122-verbinding-house-style
 
-/spotify/verbinding now follows the house style as two cards side by side: one for logging in to Spotify, with the login action as the filled primary button, and one for the sync. A sync that fails because the Spotify login expired now says so in plain words with its own login button, and the status card updates to "Niet verbonden" instead of still claiming a connection.
+/spotify/verbinding now follows the house style as two cards side by side: one for logging in to Spotify, with the login action as the filled primary button, and one for the sync. The vendored house stylesheet is now the v6.0.0 copy, so every grid in the app gets the house padding and panel background, and the house-style check is green again. A sync that fails because the Spotify login expired now says so in plain words with its own login button, and the status card updates to "Niet verbonden" instead of still claiming a connection.
 
 **Score:** 3
 
