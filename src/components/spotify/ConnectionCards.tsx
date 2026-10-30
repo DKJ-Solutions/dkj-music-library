@@ -33,12 +33,10 @@ export default async function ConnectionCards({ params }: { params: { connected?
       : (ERROR_MESSAGES[params.error] ?? `Onbekende fout: ${params.error}`)
     : null;
 
-  const totalTracks = enriched ? enriched.playlists.reduce((sum, p) => sum + p.trackCount, 0) : 0;
-
   return (
-    // Drie kaarten op een rij zodra er een snapshot is (Dave, #122): Login, Sync, en het resultaat van de
-    // laatste sync. Zonder snapshot is er nog geen resultaat, en dan blijven het er twee.
-    <div className={enriched ? "grid-3" : "grid-2"}>
+    // Twee kaarten, Login en Sync (Dave, #122). Wat de laatste sync opleverde staat als subregel onder de
+    // kop Playlists op /spotify.
+    <div className="grid-2">
       <div className="grid__head">
         <h2>Connection</h2>
       </div>
@@ -69,29 +67,6 @@ export default async function ConnectionCards({ params }: { params: { connected?
       </section>
 
       <SyncButton card={{ connected: !!tokens, hasSnapshot: !!enriched }} />
-
-      {enriched && (
-        <section className="card">
-          <div className="card__head">
-            <h3 className="card__title">Result</h3>
-            <p className="card__sub">Wat de laatste sync heeft opgehaald.</p>
-          </div>
-          <dl className="facts">
-            <div>
-              <dt>Playlists</dt>
-              <dd>{enriched.playlists.length}</dd>
-            </div>
-            <div>
-              <dt>Tracks</dt>
-              <dd>{totalTracks}</dd>
-            </div>
-            <div>
-              <dt>Laatste sync</dt>
-              <dd>{new Date(enriched.syncedAt).toLocaleString("nl-NL")}</dd>
-            </div>
-          </dl>
-        </section>
-      )}
     </div>
   );
 }

@@ -87,13 +87,14 @@ export interface PageCard {
 }
 
 /** `title`: een h2 boven de cards, als .grid__head in de grid zelf (de huisstijl, "A group's heading above
- *  its cards"), voor een pagina met meer dan één groep, zoals /spotify. */
-export function PageCardGrid({ cards, title }: { cards: PageCard[]; title?: string }) {
+ *  its cards"), voor een pagina met meer dan één groep, zoals /spotify; `sub` een .card__sub eronder. */
+export function PageCardGrid({ cards, title, sub }: { cards: PageCard[]; title?: string; sub?: string }) {
   return (
     <div className="grid-3">
       {title && (
         <div className="grid__head">
           <h2>{title}</h2>
+          {sub && <p className="card__sub">{sub}</p>}
         </div>
       )}
       {cards.map((card) => (

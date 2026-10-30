@@ -1,6 +1,6 @@
 "use client";
 // De Sync-card op /spotify (ConnectionCards.tsx): de knop voor POST /api/spotify/sync en de uitslag. Wat de
-// laatste sync opleverde staat in een eigen Result-kaart ernaast, die pas verschijnt als er een snapshot is.
+// laatste sync opleverde staat als subregel onder de kop Playlists op /spotify.
 // Een volledige sync van honderden playlists kan een tijd duren, dus de knop toont een "bezig"-status
 // i.p.v. te lijken te hangen. Is de login verlopen (reauth_required), dan staat de inlogknop in de
 // melding zelf (#122): de status-card ernaast is server-gerenderd en wist nog niet dat de tokens weg zijn.
@@ -86,7 +86,7 @@ export default function SyncButton({ card }: SyncButtonProps) {
 
   const outcome = (
     <>
-      {/* In de kaart staan de cijfers in de Result-kaart (router.refresh hierboven ververst die); daar volgt
+      {/* In de kaart staan de cijfers onder de kop Playlists (router.refresh hierboven ververst die); hier volgt
           alleen nog de waarschuwing als een deel van de playlists niet kon worden opgehaald. */}
       {status === "done" && result && (!card || !!result.failedPlaylistCount) && (
         <p className={result.failedPlaylistCount ? "msg msg--warn verbinding-result" : "msg pos verbinding-result"}>
