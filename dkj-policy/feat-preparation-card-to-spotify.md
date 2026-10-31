@@ -41,17 +41,27 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Preparation-card uit de hub /mixen (src/app/mixen/page.tsx)
+- [x] Preparation-card in de gedeelde Playlists-cards (src/components/spotify/playlistCards.ts), met het aantal werkbakken uit de snapshot
 
 ### TEST
 
+- [x] tsc, eslint en vitest groen (946 tests)
+- [ ] Owner bekijkt /spotify en /mixen
+
 ### DEPLOY: feat/preparation-card-to-spotify
 
-**Score:**
+De Preparation-kaart (naar /mixen/preparation, de Spotify-werkbakken op "Vol. X") staat niet meer op de hub
+/mixen maar onder Playlists op /spotify, en daarmee ook op /spotify/playlists, die dezelfde kaarten toont. De
+pagina zelf blijft op /mixen/preparation.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+De werkbakken zijn Spotify-playlists, dus de ingang staat nu bij de andere playlist-pagina's.
+
+**Score:** 2
 
 #### Pull Request
 
