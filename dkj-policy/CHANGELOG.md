@@ -2,7 +2,30 @@
 
 ## [Unreleased]
 
-**26 / 28 minor entries** <!-- pending-tally -->
+**27 / 29 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/sync-button-direction · 20261031-142237Z
+
+De twee knoppen in de kop van een werkbak heten nu **Push** en **Fetch**, zoals in git. Push (pijl omhoog)
+stuurt de lokale volgorde naar Spotify, Fetch (pijl omlaag) haalt de playlist opnieuw op uit Spotify. Fetch was
+"Sync met Spotify" en heet ook op de pagina van een gepubliceerde mix zo.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Wie tijdens een rate limit verplaatst, ziet meteen welke knop de lokale volgorde naar Spotify stuurt en welke
+hem juist overschrijft met wat in Spotify staat.
+
+**Score:** 2
+
+#### Pull Request
+
+Werkbak-knoppen tonen in welke richting ze syncen
+
+[PR #138](https://github.com/DKJ-Solutions/dkj-music-library/pull/138)
+
+---
 
 ### DEPLOY: feat/werkbak-pending-order · 20261031-140350Z
 
