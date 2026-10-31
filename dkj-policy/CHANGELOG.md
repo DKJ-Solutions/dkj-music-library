@@ -2,7 +2,32 @@
 
 ## [Unreleased]
 
-**25 / 27 minor entries** <!-- pending-tally -->
+**26 / 28 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/werkbak-pending-order · 20261031-140350Z
+
+Verplaatsen in een werkbak werkt nu ook als Spotify de hub met een lange rate limit blokkeert: de hub bewaart de
+volgorde zelf en toont die meteen. Een knop in de kop laat zien hoeveel verplaatsingen nog niet in Spotify staan
+en vanaf hoe laat syncen weer kan; op dat moment wordt hij vanzelf klikbaar en stuurt hij de volgorde naar Spotify.
+Is de playlist in Spotify intussen echt veranderd (tracks erbij of eraf), dan schrijft hij niets en kun je de
+lokale volgorde weggooien.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Wie de hub gebruikt, kan tijdens een Spotify-blokkade gewoon doorwerken aan de volgorde van een werkbak in plaats
+van uren te wachten.
+
+**Score:** 3
+
+#### Pull Request
+
+Werkbak-volgorde lokaal bewaren tijdens een Spotify rate limit, met een knop om later te syncen
+
+[PR #137](https://github.com/DKJ-Solutions/dkj-music-library/pull/137)
+
+---
 
 ### DEPLOY: fix/spotify-retry-after-cap · 20261031-133305Z
 
