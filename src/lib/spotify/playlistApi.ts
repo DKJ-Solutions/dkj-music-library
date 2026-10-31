@@ -1,4 +1,5 @@
-// De enige plek waar deze hub iets naar Spotify TERUGSCHRIJFT. Al het andere in src/lib/spotify/ leest
+// De enige plek waar deze hub iets naar Spotify TERUGSCHRIJFT (naam, beschrijving en, onderaan, de volgorde
+// van de tracks). Al het andere in src/lib/spotify/ leest
 // alleen: de snapshot, de classificaties en de correctie-overrides blijven allemaal lokaal.
 //
 // Aanleiding (Dave, 2026-07-25): het mix-ID als `mix:YYYYMMDD` in de beschrijving van een eigen
@@ -6,7 +7,7 @@
 // (zie mixes/mixIdTag.ts). Daarvoor is de scope-set uitgebreid met playlist-modify-private/-public --
 // zie de toelichting in config.ts.
 //
-// TWEE FUNCTIES, ELK MET ÉÉN VELD -- en dat is een bewuste grens, niet een toevalligheid van de
+// DE EERSTE TWEE FUNCTIES HEBBEN ELK ÉÉN VELD -- en dat is een bewuste grens, niet een toevalligheid van de
 // implementatie. `PUT /playlists/{id}` kan naam, beschrijving én openbaarheid in één keer wijzigen; hier
 // stuurt elke functie precies één van die velden mee, zodat een schrijfactie nooit meer verandert dan
 // waar hij over gaat. `public` wordt door geen van beide meegestuurd: of een playlist openbaar is, is
@@ -74,4 +75,35 @@ export async function updatePlaylistName(
   }
 
   await spotifyPut(`/playlists/${encodeURIComponent(playlistId)}`, { name }, options);
+}
+
+/** Verplaatst ÉÉN track in een playlist (Dave, 31 oktober 2026: de volgorde van een werkbak is de volgorde
+ *  op Spotify, dus slepen in de app is slepen in Spotify). `PUT /playlists/{id}/items` -- niet het
+ *  verouderde `/tracks`, zie types.ts -- met `range_length: 1`.
+ *
+ *  `insertBefore` telt in de lijst zoals hij was vóór de verplaatsing (planPlaylistMove in
+ *  library/playlistOrder.ts rekent dat uit). `snapshotId` is de versie waartegen Spotify de plekken
+ *  uitvoert; Spotify WEIGERT een verouderde niet maar past hem toe op die oude versie, dus de aanroeper
+ *  moet zelf zorgen dat hij de actuele meegeeft (zie api/spotify/playlist-order).
+ *
+ *  Levert het NIEUWE snapshot_id dat Spotify teruggeeft, of null als dat in het antwoord ontbrak: de PUT is dan
+ *  geslaagd en de verplaatsing gedaan, dus dat is geen fout. */
+export async function reorderPlaylistItem(
+  playlistId: string,
+  move: { rangeStart: number; insertBefore: number; snapshotId: string },
+  options: SpotifyFetchOptions = {}
+): Promise<string | null> {
+  const body = await spotifyPut(
+    `/playlists/${encodeURIComponent(playlistId)}/items`,
+    {
+      range_start: move.rangeStart,
+      insert_before: move.insertBefore,
+      range_length: 1,
+      snapshot_id: move.snapshotId,
+    },
+    options
+  );
+  const snapshotId = (body as { snapshot_id?: unknown } | null)?.snapshot_id;
+  // Staat het snapshot_id er niet in, dan IS de verplaatsing wel gedaan (de PUT slaagde): null, geen fout.
+  return typeof snapshotId === "string" && snapshotId !== "" ? snapshotId : null;
 }

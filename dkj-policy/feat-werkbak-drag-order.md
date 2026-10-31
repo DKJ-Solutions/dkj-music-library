@@ -47,11 +47,11 @@ Slepen op /mixen/preparation/<id> zet de track via de Spotify reorder-API op zij
 - [x] Slepen (en pijl op/neer op de greep) verplaatst de track via PUT /playlists/{id}/items met snapshot_id
 - [x] Route /api/spotify/playlist-order: same-origin, alleen werkbakken, 409 bij een verouderde volgorde
 - [x] Eén-playlist-verversing gedeeld met de sync-route (refreshPlaylistInSnapshot)
-- [ ] Code review (Victor) verwerkt
+- [x] Code review (Victor) verwerkt: live controle op de verwachte track vóór de PUT, lock per playlist, mix-pagina houdt zijn sortering
 
 ### TEST
 
-- [x] typecheck, lint en vitest groen (974/974)
+- [x] typecheck, lint en vitest groen (991/991)
 - [ ] Dave sleept in een echte werkbak en ziet dezelfde volgorde in Spotify, en andersom
 
 ### DEPLOY: feat/werkbak-drag-order

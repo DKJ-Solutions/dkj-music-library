@@ -2,11 +2,14 @@
 // De tabel van /spotify/trackregister: zoeken, filteren op een bereik van year, op dkj_bpm, dkj_genre, dkj_album en dkj_group, sorteren via de kopregel, en bladeren per
 // 100 rijen (12.000+ rijen in één keer renderen maakt de pagina traag). Alle logica die geen React is
 // zit in register.ts; hier alleen de weergave en de filterstand.
-import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, useTransition, type DragEvent, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import { DKJ_ALBUM_COLOURS, DKJ_ALBUM_OPTIONS, DKJ_BPM_OPTIONS, DKJ_GENRE_OPTIONS, DKJ_RATING_OPTIONS, MIX_RATING_KEY, RATING_KEY, TRACK_FIELDS, type RatingKey } from "@/lib/library/fields";
 import { mixUrl } from "@/lib/library/djcylowMix";
 import { playlistUrl } from "@/lib/library/playlistLink";
+import { moveItem, planPlaylistMove } from "@/lib/library/playlistOrder";
+import { PlaylistOrderError, savePlaylistOrder } from "@/lib/library/savePlaylistOrder";
 import { saveRating } from "@/lib/library/saveRating";
 import { loadSpotifyIframeApi, trackEmbedUrl, trackUri, type SpotifyEmbedController } from "@/lib/library/trackEmbed";
 import {
@@ -55,7 +58,7 @@ const DEFAULT_PREFS: RegisterPrefs = defaultRegisterPrefs();
  *  sorteert niet; zijn kop heeft alleen een naam voor een schermlezer. De plek-kolom ("position") is ook
  *  geen veld: hij nummert de rijen 1 tot en met n in de volgorde waarin ze nu staan. */
 interface Column {
-  key: SortKey | "play" | "position";
+  key: SortKey | "play" | "position" | "grip";
   field: string;
   /** Kortere kop in de tabel dan de veldnaam, zodat de kolom smal kan blijven; de tooltip noemt het veld. */
   label?: string;
@@ -71,6 +74,30 @@ interface CellEdit {
   setRating: (trackId: string, field: RatingKey, rating: string | null) => void;
   playingId: string | null;
   togglePlay: (row: RegisterRow) => void;
+  /** Het verslepen van rijen (DragHandle); null als de tabel geen playlist-volgorde heeft. */
+  drag: DragEdit | null;
+}
+
+/** Wat de sleepgreep van een rij nodig heeft. `enabled` is false zolang er op een kop gesorteerd is (dan is
+ *  de tabel niet meer in de volgorde van de playlist) of er al een verplaatsing loopt. */
+interface DragEdit {
+  enabled: boolean;
+  disabledReason: string;
+  start: (index: number, event: DragEvent<HTMLElement>) => void;
+  end: () => void;
+  move: (from: number, to: number) => void;
+}
+
+/** De volgorde van een playlist zoals de pagina hem kent (page.tsx): de plekken waarop een sleepactie bij
+ *  Spotify landt, en het snapshot_id waartegen dat gebeurt. */
+export interface PlaylistOrderProps {
+  playlistId: string;
+  snapshotId: string;
+  /** Per rij-id de plek in de playlist (index in `playlist.tracks`); zie orderRowsByPlaylist. */
+  positions: Record<string, number>;
+  /** De Spotify-track-ID per plek van de playlist (null bij een item zonder track): de sleepactie stuurt de
+   *  verwachte ID's op beide plekken mee, zodat de server tegen de live playlist kan controleren. */
+  itemIds: (string | null)[];
 }
 
 /** Klik op een kop: oplopend, nog eens: aflopend, een derde keer: weer de oorspronkelijke volgorde. */
@@ -85,8 +112,15 @@ interface TrackRegisterProps {
   /** Alleen de cijfers en de tabel, met alle rijen op één pagina en de kolommen van COMPACT_COLUMNS: geen
    *  zoekbalk, kolomschakelaar, filters of pager (Dave, 28 oktober 2026), voor een pagina met een deel van het register, zoals een werkbak op
    *  /mixen/preparation/<id>. Dan wordt ook geen filterstand onthouden: een opgeslagen filter van
-   *  /spotify/trackregister zou hier anders onzichtbaar tracks verbergen. Sorteren via de koppen blijft. */
+   *  /spotify/trackregister zou hier anders onzichtbaar tracks verbergen. Sorteren via de koppen blijft.
+   *
+   *  Met `playlistOrder` staan de rijen in de volgorde waarin ze binnenkomen (die van Spotify) tot je op een
+   *  kop klikt; een derde klik geeft die volgorde terug. Zonder (een mixpagina) opent de tabel op de hoogste
+   *  dkj_mix_rating. */
   compact?: boolean;
+  /** Alleen met `compact`, voor de pagina van één playlist: de rijen zijn te verslepen en een sleepactie
+   *  verplaatst de track ook in de playlist op Spotify (Dave, 31 oktober 2026). */
+  playlistOrder?: PlaylistOrderProps;
 }
 
 /** Tekst met de zoekterm gemarkeerd (accent-ongevoelig, eerste treffer). */
@@ -605,6 +639,36 @@ function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term:
   );
 }
 
+/** De greep waarmee een rij versleept wordt, met pijl omhoog/omlaag als toetsenbordalternatief. Een span
+ *  met role="button" in plaats van een <button>: Firefox laat een knop niet slepen. */
+function DragHandle({ row, index, drag }: { row: RegisterRow; index: number; drag: DragEdit | null }) {
+  if (!drag) return null;
+  const name = row.dkjTitle || row.title || row.id;
+  const onKeyDown = (event: ReactKeyboardEvent<HTMLElement>) => {
+    if (!drag.enabled || (event.key !== "ArrowUp" && event.key !== "ArrowDown")) return;
+    event.preventDefault();
+    drag.move(index, index + (event.key === "ArrowUp" ? -1 : 1));
+  };
+  return (
+    <span
+      role="button"
+      tabIndex={drag.enabled ? 0 : -1}
+      className={`register-grip${drag.enabled ? "" : " is-disabled"}`}
+      draggable={drag.enabled}
+      aria-disabled={!drag.enabled}
+      aria-label={`${name} verplaatsen (pijl omhoog of omlaag)`}
+      title={drag.enabled ? "Sleep om de volgorde in de playlist te wijzigen" : drag.disabledReason}
+      onDragStart={(event) => drag.start(index, event)}
+      onDragEnd={drag.end}
+      onKeyDown={onKeyDown}
+    >
+      <svg viewBox="0 0 10 16" aria-hidden="true" focusable="false">
+        <path d="M2 2h2v2H2zM6 2h2v2H6zM2 7h2v2H2zM6 7h2v2H6zM2 12h2v2H2zM6 12h2v2H6z" />
+      </svg>
+    </span>
+  );
+}
+
 /** De afspeelknop in een EIGEN KOLOM (Dave): vaste breedte, net genoeg voor het knopje. Hij staat in
  *  elke tabel helemaal links -- de gewone, de verborgen kolommen en de compacte (Dave, 31 oktober 2026). */
 const PLAY_COLUMN: Column = {
@@ -724,8 +788,11 @@ const COMPACT_WIDTHS: Partial<Record<Column["key"], string>> = {
   mixRating: "104px",
   playlists: "32%",
 };
-/** De compacte tabel opent op de hoogste waardering eerst (Dave, 28 oktober 2026): tier-8 bovenaan. Sinds
- *  31 oktober 2026 is dat dkj_mix_rating, de enige waardering die er nog in staat. */
+/** De compacte tabel zonder playlist-volgorde (een mixpagina) opent op de hoogste waardering eerst (Dave, 28
+ *  oktober 2026): tier-8 bovenaan. Sinds 31 oktober 2026 is dat dkj_mix_rating, de enige waardering die er nog
+ *  in staat. Met `playlistOrder` (een werkbak) opent hij juist in de volgorde van de playlist op Spotify:
+ *  bovenaan het nummer dat het meest kans maakt in de volgende mix, onderaan het minst -- die volgorde bepaal je
+ *  zelf door te slepen. */
 const COMPACT_SORT: RegisterSort = { key: "mixRating", dir: "desc" };
 /** De plek van de rij in de compacte tabel, 1 tot en met n (Dave, 29 oktober 2026): volgt de getoonde
  *  volgorde, dus na het sorteren op een kop staat 1 weer bovenaan. */
@@ -737,6 +804,14 @@ const POSITION_COLUMN: Column = {
   className: "register-position-cell",
   cell: (_row, _term, _edit, position) => <span className="register-position">{nf.format(position)}</span>,
 };
+/** De sleepgreep vóór de afspeelknop, alleen in de tabel van een playlist (TrackRegister `playlistOrder`). */
+const GRIP_COLUMN: Column = {
+  key: "grip",
+  field: "verslepen",
+  width: "28px",
+  className: "register-grip-cell",
+  cell: (row, _term, edit, position) => <DragHandle row={row} index={position - 1} drag={edit.drag} />,
+};
 /** Zoveel nummers heeft een mix meestal (Dave, 29 oktober 2026): onder die rij trekt de compacte tabel een
  *  lijn, zodat je ziet dat de werkbak genoeg nummers heeft voor de volgende stap. */
 const MIX_SIZE = 36;
@@ -745,7 +820,24 @@ const COMPACT_COLUMNS: readonly Column[] =Object.entries(COMPACT_WIDTHS).flatMap
   return column && width ? [{ ...column, width }] : [];
 });
 
-export function TrackRegister({ rows: initialRows, artistCount, compact = false }: TrackRegisterProps) {
+export function TrackRegister({ rows: serverRows, artistCount, compact = false, playlistOrder }: TrackRegisterProps) {
+  const router = useRouter();
+  const [refreshing, startRefresh] = useTransition();
+  // De volgorde die je net versleept hebt, over de rijen van de server heen gelegd tot de pagina na het
+  // verplaatsen opnieuw gelezen is. Hij hoort bij precies die `serverRows`: komt er na router.refresh() een
+  // nieuwe array binnen, dan vervalt hij vanzelf en geldt de volgorde van Spotify.
+  const [moved, setMoved] = useState<{ base: RegisterRow[]; ids: string[] } | null>(null);
+  const [moving, setMoving] = useState(false);
+  // `base`: de serverRows waarbij de melding hoort; komt er een nieuwe stand binnen, dan is hij achterhaald.
+  const [note, setNote] = useState<{ error: boolean; text: string; base?: RegisterRow[] } | null>(null);
+  // Spotify heeft de verplaatsing, maar de snapshot niet: de plekken van deze pagina kloppen niet meer.
+  // Slepen blijft uit tot er een nieuwe stand binnen is (Sync met Spotify).
+  const [desyncedBase, setDesyncedBase] = useState<RegisterRow[] | null>(null);
+  const initialRows = useMemo(() => {
+    if (!moved || moved.base !== serverRows) return serverRows;
+    const byId = new Map(serverRows.map((row) => [row.id, row]));
+    return moved.ids.flatMap((id) => byId.get(id) ?? []);
+  }, [serverRows, moved]);
   // De waarderingen die je op deze pagina hebt gekozen (Rating), per rij en per veld over de rijen van
   // de server heen gelegd: zo sorteren, zoeken en tellen ze meteen mee, zonder de pagina opnieuw te laden.
   const [ratings, setRatings] = useState<Record<string, Partial<Pick<RegisterRow, "rating" | "mixRating">>>>({});
@@ -766,6 +858,8 @@ export function TrackRegister({ rows: initialRows, artistCount, compact = false 
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) setPlaying(null);
     else setClosing(true);
   };
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null);
   const edit: CellEdit = {
     setRating: (trackId, field, rating) =>
       setRatings((prev) => ({ ...prev, [trackId]: { ...prev[trackId], [RATING_ROW_KEY[field]]: rating } })),
@@ -775,6 +869,7 @@ export function TrackRegister({ rows: initialRows, artistCount, compact = false 
       setClosing(false);
       setPlaying(row);
     },
+    drag: null,
   };
   const [query, setQuery] = useState(DEFAULT_PREFS.query);
   const [yearFrom, setYearFrom] = useState(DEFAULT_PREFS.yearFrom);
@@ -783,7 +878,7 @@ export function TrackRegister({ rows: initialRows, artistCount, compact = false 
   const [genre, setGenre] = useState(DEFAULT_PREFS.genre);
   const [album, setAlbum] = useState(DEFAULT_PREFS.album);
   const [group, setGroup] = useState(DEFAULT_PREFS.group);
-  const [sort, setSort] = useState<RegisterSort | null>(compact ? COMPACT_SORT : DEFAULT_PREFS.sort);
+  const [sort, setSort] = useState<RegisterSort | null>(compact && !playlistOrder ? COMPACT_SORT : DEFAULT_PREFS.sort);
   const [columnSet, setColumnSet] = useState<ColumnSet>(DEFAULT_PREFS.columnSet);
   const [page, setPage] = useState(0);
   // Pas waar na mount (het effect hieronder): de server rendert zonder localStorage, dus vóór mount
@@ -850,7 +945,77 @@ export function TrackRegister({ rows: initialRows, artistCount, compact = false 
     set(value);
     goTo(0);
   };
-  const columns = compact ? COMPACT_COLUMNS : COLUMN_SETS[columnSet];
+  const orderable = compact && playlistOrder !== undefined;
+  const columns = compact ? (orderable ? [GRIP_COLUMN, ...COMPACT_COLUMNS] : COMPACT_COLUMNS) : COLUMN_SETS[columnSet];
+  const dragEnabled = orderable && sort === null && !moving && !refreshing && desyncedBase !== serverRows;
+
+  /** Verplaatst de rij op tabelindex `from` naar `to`: eerst in de tabel (optimistisch), dan bij Spotify. Mislukt
+   *  het, of blijkt de playlist intussen anders, dan komt de oude volgorde terug met de reden erbij -- er wordt
+   *  nooit op verouderde plekken verplaatst (zie api/spotify/playlist-order). */
+  async function moveRow(from: number, to: number) {
+    if (!playlistOrder || !dragEnabled || to < 0 || to >= list.length) return;
+    const positions = list.map((row) => playlistOrder.positions[row.id]);
+    const plan = planPlaylistMove(positions, from, to);
+    if (!plan) {
+      if (positions[from] === undefined || positions[to] === undefined) {
+        setNote({ error: true, text: "Deze rij staat volgens de snapshot niet in de playlist: klik eerst op Sync met Spotify." });
+      }
+      return;
+    }
+    const expectedStartId = playlistOrder.itemIds[plan.rangeStart];
+    const targetPosition = positions[to];
+    const expectedTargetId = targetPosition === undefined ? null : playlistOrder.itemIds[targetPosition];
+    if (!expectedStartId || targetPosition === undefined || !expectedTargetId) {
+      setNote({ error: true, text: "Deze plek heeft geen Spotify-track: klik eerst op Sync met Spotify." });
+      return;
+    }
+    const previous = moved;
+    setMoved({ base: serverRows, ids: moveItem(list, from, to).map((row) => row.id) });
+    setMoving(true);
+    setNote(null);
+    try {
+      const { refreshed } = await savePlaylistOrder(playlistOrder.playlistId, playlistOrder.snapshotId, {
+        ...plan,
+        targetPosition,
+        expectedStartId,
+        expectedTargetId,
+      });
+      if (refreshed) {
+        startRefresh(() => router.refresh());
+      } else {
+        // Geen router.refresh(): dat zou de oude volgorde terugzetten terwijl Spotify de nieuwe heeft. De
+        // getoonde volgorde blijft staan; slepen wacht tot Sync met Spotify een nieuwe stand brengt.
+        setDesyncedBase(serverRows);
+        setNote({ error: true, text: "Verplaatst in Spotify, maar de lijst bijwerken mislukte: klik op Sync met Spotify.", base: serverRows });
+      }
+    } catch (err) {
+      setMoved(previous);
+      if (err instanceof PlaylistOrderError && err.changed) startRefresh(() => router.refresh());
+      setNote({ error: true, text: err instanceof PlaylistOrderError && err.changed ? (err.message) : `Verplaatsen mislukt: ${err instanceof Error ? err.message : "onbekende fout"}` });
+    } finally {
+      setMoving(false);
+    }
+  }
+  const endDrag = () => {
+    setDragIndex(null);
+    setOverIndex(null);
+  };
+  edit.drag = orderable
+    ? {
+        enabled: dragEnabled,
+        disabledReason: sort !== null ? "Zet het sorteren uit (klik de kop tot de pijl weg is) om te slepen" : "Even geduld: de vorige verplaatsing loopt nog",
+        start: (index, event) => {
+          setDragIndex(index);
+          event.dataTransfer.effectAllowed = "move";
+          // Firefox start een sleepactie alleen als er data is.
+          event.dataTransfer.setData("text/plain", String(index));
+          const rowEl = event.currentTarget.closest("tr");
+          if (rowEl) event.dataTransfer.setDragImage(rowEl, 16, 16);
+        },
+        end: endDrag,
+        move: (from, to) => void moveRow(from, to),
+      }
+    : null;
   // Eén switch: elke klik wisselt van set. De sortering hoort bij een kop die dan weg is, dus die vervalt.
   const toggleColumns = () => {
     setColumnSet(columnSet === "visible" ? "hidden" : "visible");
@@ -990,6 +1155,12 @@ export function TrackRegister({ rows: initialRows, artistCount, compact = false 
         </>
       )}
 
+      {note && (!note.base || note.base === serverRows) && (
+        <p className={`register-order-note${note.error ? " is-error" : ""}`} role="status">
+          {note.text}
+        </p>
+      )}
+
       <div className="register-table-area">
         <div className="register-table-box" ref={box}>
           <table className="register-table">
@@ -1002,9 +1173,9 @@ export function TrackRegister({ rows: initialRows, artistCount, compact = false 
             <thead>
               <tr>
                 {columns.map(({ key, field, label, className }) => {
-                  if (key === "play") {
+                  if (key === "play" || key === "grip") {
                     return (
-                      <th key={key} className="register-play-cell">
+                      <th key={key} className={key === "grip" ? className : "register-play-cell"}>
                         <span className="register-hidden-label">{field}</span>
                       </th>
                     );
@@ -1049,11 +1220,32 @@ export function TrackRegister({ rows: initialRows, artistCount, compact = false 
                       [
                         compact && i + 1 === MIX_SIZE && "register-mix-cut",
                         edit.playingId === row.id && "register-playing",
+                        dragIndex === i && "register-dragging",
+                        dragIndex !== null && overIndex === i && dragIndex !== i && (i > dragIndex ? "register-drop-after" : "register-drop-before"),
                       ]
                         .filter(Boolean)
                         .join(" ") || undefined
                     }
                     title={compact && i + 1 === MIX_SIZE ? `${MIX_SIZE} nummers: genoeg voor een mix` : undefined}
+                    onDragOver={
+                      dragIndex === null
+                        ? undefined
+                        : (event) => {
+                            event.preventDefault();
+                            event.dataTransfer.dropEffect = "move";
+                            if (overIndex !== i) setOverIndex(i);
+                          }
+                    }
+                    onDrop={
+                      dragIndex === null
+                        ? undefined
+                        : (event) => {
+                            event.preventDefault();
+                            const from = dragIndex;
+                            endDrag();
+                            void moveRow(from, i);
+                          }
+                    }
                   >
                     {columns.map(({ key, cell, className }) => (
                       <td key={key} className={className}>{cell(row, term, edit, i + 1)}</td>

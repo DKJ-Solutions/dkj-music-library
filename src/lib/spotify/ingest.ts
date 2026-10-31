@@ -283,6 +283,8 @@ export async function buildSnapshot(options: BuildSnapshotOptions = {}): Promise
         previous !== undefined && previous.snapshotId === meta.snapshotId && !lacksReleaseDates(previous.tracks);
 
       let tracks: PlaylistItem[];
+      // Het snapshot_id dat bij `tracks` hoort. Normaal dat van nu; zie de fout-tak hieronder.
+      let snapshotId = meta.snapshotId;
       let eventType: SyncProgressEvent["type"];
       let message: string;
 
@@ -308,6 +310,11 @@ export async function buildSnapshot(options: BuildSnapshotOptions = {}): Promise
             // een eerste sync) en ga door met de rest. Geteld in failedCount, zodat de aanroeper
             // (sync/route.ts) dit zichtbaar kan maken i.p.v. stil te slikken.
             failedCount++;
+            // De OUDE tracks krijgen hun OUDE snapshot_id. Met het nieuwe zou de snapshot beweren dat
+            // hij de actuele versie van Spotify heeft, terwijl de volgorde van een eerdere versie is:
+            // het verslepen in een werkbak (api/spotify/playlist-order) vertrouwt op plekken die bij
+            // dat snapshot_id horen. Zo komt de volgende sync hem ook vanzelf opnieuw ophalen.
+            if (previous) snapshotId = previous.snapshotId;
             const reason = err instanceof Error ? err.message : String(err);
             eventType = "playlist_failed";
             message = `[${completed + 1}/${rawPlaylists.length}] "${meta.name}" -- fout bij ophalen tracks (${reason}), ${previous ? "vorige tracks hergebruikt" : "leeg opgeslagen (geen vorige snapshot)"}, sync gaat door`;
@@ -327,6 +334,7 @@ export async function buildSnapshot(options: BuildSnapshotOptions = {}): Promise
 
       results[i] = {
         ...meta,
+        snapshotId,
         trackCount,
         tracks,
         // Fase-4-velden overleven een hersync ongewijzigd -- de Spotify-brondata bevat ze niet
