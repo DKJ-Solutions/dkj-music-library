@@ -43,17 +43,28 @@ Slepen op /mixen/preparation/<id> zet de track via de Spotify reorder-API op zij
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] De werkbak toont de rijen in de volgorde van de Spotify-playlist (readPlaylistRegister, orderRowsByPlaylist)
+- [x] Slepen (en pijl op/neer op de greep) verplaatst de track via PUT /playlists/{id}/items met snapshot_id
+- [x] Route /api/spotify/playlist-order: same-origin, alleen werkbakken, 409 bij een verouderde volgorde
+- [x] Eén-playlist-verversing gedeeld met de sync-route (refreshPlaylistInSnapshot)
+- [ ] Code review (Victor) verwerkt
 
 ### TEST
 
+- [x] typecheck, lint en vitest groen (974/974)
+- [ ] Dave sleept in een echte werkbak en ziet dezelfde volgorde in Spotify, en andersom
+
 ### DEPLOY: feat/werkbak-drag-order
 
-**Score:**
+Op een werkbakpagina (/mixen/preparation/<id>) staat de tabel nu in de volgorde van de Spotify-playlist zelf, en je kunt een track met de greep links naar een andere plek slepen; die verplaatsing gaat direct naar de playlist in Spotify. Sleep je in Spotify, dan zet de sync-knop de pagina gelijk. Is de playlist in Spotify veranderd sinds de pagina laadde, dan verplaatst de app niets maar haalt eerst de nieuwe volgorde op. Dit is de eerste keer dat de app de inhoud van een playlist in Spotify wijzigt.
+
+**Score:** 4
 
 #### What makes this deploy extra special
 
-**Score:**
+Je bepaalt de kansrijkste tracks voor de volgende mix nu door ze bovenaan te slepen, en die volgorde staat ook in Spotify.
+
+**Score:** 4
 
 #### Pull Request
 
