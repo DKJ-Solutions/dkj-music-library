@@ -43,17 +43,31 @@ Tijdens een lange Spotify rate limit verplaatsen in de werkbak lokaal bewaren; k
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Rate-limit-eindtijd bewaren (`rateLimitStore`) en wachtende volgorde per werkbak (`pendingOrderStore`, pure logica in `pendingOrder.ts`)
+- [x] Verplaats-route zet een verplaatsing in de wachtrij tijdens een ban of zolang er een wachtende volgorde is; sync-route stuurt hem naar Spotify
+- [x] `PendingOrderButton` in de kop van de werkbak: drift, "Sync kan vanaf HH:MM", wordt vanzelf klikbaar, conflictstaat met weggooien
 
 ### TEST
 
+- [x] `npx tsc --noEmit` schoon; Vitest groen (spotify-, bibliotheek- en api-suites, 800 tests)
+- [x] Dave heeft de pagina bekeken en akkoord gegeven
+
 ### DEPLOY: feat/werkbak-pending-order
 
-**Score:**
+Verplaatsen in een werkbak werkt nu ook als Spotify de hub met een lange rate limit blokkeert: de hub bewaart de
+volgorde zelf en toont die meteen. Een knop in de kop laat zien hoeveel verplaatsingen nog niet in Spotify staan
+en vanaf hoe laat syncen weer kan; op dat moment wordt hij vanzelf klikbaar en stuurt hij de volgorde naar Spotify.
+Is de playlist in Spotify intussen echt veranderd (tracks erbij of eraf), dan schrijft hij niets en kun je de
+lokale volgorde weggooien.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie de hub gebruikt, kan tijdens een Spotify-blokkade gewoon doorwerken aan de volgorde van een werkbak in plaats
+van uren te wachten.
+
+**Score:** 3
 
 #### Pull Request
 
