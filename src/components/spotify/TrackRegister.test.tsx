@@ -58,7 +58,7 @@ describe("TrackRegister", () => {
   ];
 
   it("nummert de rijen van de compacte tabel 1 tot en met n, ook na sorteren", () => {
-    const three = [row(1, { rating: "tier-2" }), row(2, { rating: "tier-8" }), row(3, { rating: "tier-5" })];
+    const three = [row(1, { mixRating: "tier-2" }), row(2, { mixRating: "tier-8" }), row(3, { mixRating: "tier-5" })];
     render(<TrackRegister rows={three} artistCount={1} compact />);
     const positions = () => Array.from(document.querySelectorAll(".register-position"), (cell) => cell.textContent);
     const titles = () => Array.from(document.querySelectorAll(".register-title"), (cell) => cell.textContent);
@@ -67,6 +67,15 @@ describe("TrackRegister", () => {
     fireEvent.click(screen.getByRole("button", { name: /dkj_title/ }));
     expect(positions()).toEqual(["1", "2", "3"]);
     expect(titles()).toEqual(["Nummer 1", "Nummer 2", "Nummer 3"]);
+  });
+
+  it("toont in de compacte tabel alleen dkj_mix_rating, en sorteert daarop", () => {
+    const three = [row(1, { rating: "tier-8", mixRating: "tier-1" }), row(2, { rating: "tier-1", mixRating: "tier-7" })];
+    render(<TrackRegister rows={three} artistCount={1} compact />);
+    expect(screen.getByRole("columnheader", { name: /mix rating/ })).toBeTruthy();
+    expect(screen.queryByRole("columnheader", { name: /dkj_rating/ })).toBeNull();
+    expect(screen.queryByText("tier-8", { selector: ".register-tag" })).toBeNull();
+    expect(Array.from(document.querySelectorAll(".register-title"), (cell) => cell.textContent)).toEqual(["Nummer 2", "Nummer 1"]);
   });
 
   it("heeft geen plek-kolom in de gewone tabel", () => {

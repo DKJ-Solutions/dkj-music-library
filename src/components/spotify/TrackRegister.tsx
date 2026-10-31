@@ -703,19 +703,20 @@ const COLUMN_SETS: Record<ColumnSet, readonly Column[]> = { visible: VISIBLE_COL
 
 /** De kolommen van de compacte tabel (`compact`), in hun volgorde en met hun breedte daar: year, dkj_genre,
  *  dkj_bpm, plays, dkj_album en dkj_group zijn er niet relevant (Dave, 28 oktober 2026), de rest krijgt hun
- *  ruimte, en dkj_rating staat links van spotify_playlist (Dave, 28 oktober 2026), met dkj_mix_rating
- *  ernaast (31 oktober 2026). */
+ *  ruimte. Van de twee waarderingen staat alleen dkj_mix_rating erin, links van spotify_playlist: op een
+ *  mixpagina telt hoe graag je een nummer in de mix wilt, niet hoe graag je het zelf luistert (Dave, 31
+ *  oktober 2026). */
 const COMPACT_WIDTHS: Partial<Record<Column["key"], string>> = {
   position: "48px",
   play: "40px",
   dkjTitle: "38%",
   albumArtist: "30%",
-  rating: "104px",
   mixRating: "104px",
   playlists: "32%",
 };
-/** De compacte tabel opent op de hoogste dkj_rating eerst (Dave, 28 oktober 2026): tier-8 bovenaan. */
-const COMPACT_SORT: RegisterSort = { key: "rating", dir: "desc" };
+/** De compacte tabel opent op de hoogste waardering eerst (Dave, 28 oktober 2026): tier-8 bovenaan. Sinds
+ *  31 oktober 2026 is dat dkj_mix_rating, de enige waardering die er nog in staat. */
+const COMPACT_SORT: RegisterSort = { key: "mixRating", dir: "desc" };
 /** De plek van de rij in de compacte tabel, 1 tot en met n (Dave, 29 oktober 2026): volgt de getoonde
  *  volgorde, dus na het sorteren op een kop staat 1 weer bovenaan. */
 const POSITION_COLUMN: Column = {
