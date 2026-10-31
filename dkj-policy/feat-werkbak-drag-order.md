@@ -52,7 +52,7 @@ Slepen op /mixen/preparation/<id> zet de track via de Spotify reorder-API op zij
 ### TEST
 
 - [x] typecheck, lint en vitest groen (991/991)
-- [ ] Dave sleept in een echte werkbak en ziet dezelfde volgorde in Spotify, en andersom
+- [x] Dave sleept in een echte werkbak en ziet dezelfde volgorde in Spotify, en andersom
 
 ### DEPLOY: feat/werkbak-drag-order
 
