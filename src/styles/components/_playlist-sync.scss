@@ -45,21 +45,17 @@
   }
 }
 
-// Het routelabel in een sync-knop (SyncDirection.tsx): "Hub → Spotify" of "Spotify → Hub", als een klein
-// omlijnd label achter de tekst, in de tekstkleur van de knop. Zo zie je in één oogopslag welke kant elke
-// knop op werkt.
+// Het routelabel in een sync-knop (SyncDirection.tsx): "Hub → Spotify" of "Spotify → Hub", als gewone
+// tekst achter een dun streepje, in de tekstkleur van de knop. Zo zie je in één oogopslag welke kant elke
+// knop op werkt. Geen omlijning eromheen (Dave, 31 oktober 2026: een cirkel in de knop is raar).
 .sync-route {
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-1);
   margin-left: var(--spacing-2);
-  padding: 0 var(--spacing-1-5);
-  border: 1px solid currentColor;
-  border-radius: var(--radius-pill);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  line-height: 1.6;
-  opacity: 0.85;
+  padding-left: var(--spacing-2);
+  border-left: 1px solid currentColor;
+  opacity: 0.8;
   white-space: nowrap;
 }
 
