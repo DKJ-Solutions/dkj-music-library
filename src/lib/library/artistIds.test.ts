@@ -10,6 +10,7 @@ import {
   artistPrefix,
   fillAlbumArtists,
   fillDefaultRatings,
+  fillMixRatings,
   fillPrimaryArtists,
   formatArtistId,
   planArtistIds,
@@ -263,19 +264,25 @@ describe("fillDefaultRatings", () => {
     expect(fillDefaultRatings(db)).toBe(0);
   });
 
-  it("vult dkj_mix_rating apart, zonder dkj_rating aan te raken", () => {
-    const db = memoryDb();
-    upsertTracks(db, [{ dkj_track_id: "a", dkj_rating: "tier-8" }, { dkj_track_id: "b", dkj_mix_rating: "tier-1" }]);
-    expect(fillDefaultRatings(db, "dkj_mix_rating")).toBe(1);
-    expect(getTrack(db, "a")).toMatchObject({ dkj_rating: "tier-8", dkj_mix_rating: "tier-4" });
-    expect(getTrack(db, "b")?.dkj_mix_rating).toBe("tier-1");
-  });
-
   it("zet een waardering onder de oude naam (star-N) om naar tier-N met hetzelfde getal", () => {
     const db = memoryDb();
     upsertTracks(db, [{ dkj_track_id: "a", dkj_rating: "tier-4" }, { dkj_track_id: "b", dkj_rating: "tier-4" }]);
     db.prepare(`UPDATE tracks SET dkj_rating = 'star-3' WHERE dkj_track_id = 'a'`).run();
     fillDefaultRatings(db);
     expect([getTrack(db, "a")?.dkj_rating, getTrack(db, "b")?.dkj_rating]).toEqual(["tier-3", "tier-4"]);
+  });
+});
+
+describe("fillMixRatings", () => {
+  it("zet een lege dkj_mix_rating gelijk aan dkj_rating en laat een zelf gekozen mixwaardering staan", () => {
+    const db = memoryDb();
+    upsertTracks(db, [
+      { dkj_track_id: "a", dkj_rating: "tier-8" },
+      { dkj_track_id: "b", dkj_rating: "tier-2", dkj_mix_rating: "tier-6" },
+      { dkj_track_id: "c" },
+    ]);
+    expect(fillMixRatings(db)).toBe(2);
+    expect([getTrack(db, "a"), getTrack(db, "b"), getTrack(db, "c")].map((t) => t?.dkj_mix_rating)).toEqual(["tier-8", "tier-6", "tier-4"]);
+    expect(fillMixRatings(db)).toBe(0);
   });
 });

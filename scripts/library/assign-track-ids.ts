@@ -66,7 +66,7 @@ try {
   if (bpmsFilled > 0) console.log(`dkj_bpm uit de playlists gevuld bij ${bpmsFilled} tracks`);
   if (genresFilled > 0) console.log(`dkj_genre uit de playlists gevuld bij ${genresFilled} tracks`);
   if (ratingsFilled > 0) console.log(`dkj_rating op de standaard (tier-4) gezet bij ${ratingsFilled} tracks`);
-  if (mixRatingsFilled > 0) console.log(`dkj_mix_rating op de standaard (tier-4) gezet bij ${mixRatingsFilled} tracks`);
+  if (mixRatingsFilled > 0) console.log(`dkj_mix_rating gelijk aan dkj_rating gezet bij ${mixRatingsFilled} tracks`);
   if (groupsFilled > 0) console.log(`dkj_group uit de werelden gevuld bij ${groupsFilled} tracks`);
   if (yearsFilled > 0) console.log(`year uit Spotify gevuld bij ${yearsFilled} tracks`);
   console.log("Export bijgewerkt in data/library/export/ -- commit die map om hem op je andere machines te hebben.");

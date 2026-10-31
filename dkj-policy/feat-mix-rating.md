@@ -41,16 +41,16 @@
 
 Dave wil naast `dkj_rating` (hoe graag hij een nummer zelf luistert) een tweede, vergelijkbare kolom: hoe
 graag hij het nummer in de volgende mix wil gebruiken. Gekozen opzet: veld `dkj_mix_rating`, dezelfde
-tiers `tier-1` t/m `tier-8`, standaard `tier-4`, in het register direct rechts van `dkj_rating` met
+tiers `tier-1` t/m `tier-8`, beginwaarde gelijk aan `dkj_rating` (Dave, tweede vraag), in het register direct rechts van `dkj_rating` met
 hetzelfde potloodje, ook in de compacte tabel. Hernoemen kan later via `renamedFrom`.
 
 ### CREATE
 
 - [x] Schema: `dkj_mix_rating` in `TRACK_FIELDS`, met `MIX_RATING_KEY` en `RATING_KEYS` in `fields.ts`
-- [x] Standaard: `fillDefaultRatings(db, key)` vult ook `dkj_mix_rating` bij elke sync en `library:assign-ids`
+- [x] Beginwaarde: `fillMixRatings` zet een lege `dkj_mix_rating` gelijk aan `dkj_rating`, bij elke sync en `library:assign-ids`
 - [x] Opslaan: `setTrackRating` en `POST /api/spotify/rating` nemen een optioneel `field`; zonder blijft het `dkj_rating`
 - [x] Register: `mixRating` in de rij, zoeken en sorteren; kolom `mix rating` naast `dkj_rating`, ook compact
-- [x] Export: alle 12.479 tracks kregen `dkj_mix_rating: "tier-4"`
+- [x] Export: alle 12.479 tracks kregen een `dkj_mix_rating` gelijk aan hun `dkj_rating`
 - [x] README: eigen paragraaf en de lijst met vaste keuzes
 
 ### TEST
@@ -71,7 +71,7 @@ export kreeg het veld bij alle tracks.
 Een tweede waardering per nummer, `dkj_mix_rating`: niet hoe graag je het zelf luistert, maar hoe graag
 je het in de volgende mix wilt gebruiken. Het trackregister toont hem als kolom `mix rating` direct naast
 `dkj_rating`, ook in de compacte tabel, en je wijzigt hem met hetzelfde potloodje. Elke track begint op
-`tier-4`.
+de waarde van zijn `dkj_rating`; daarna staan de twee los van elkaar.
 
 **Score:** 4
 
