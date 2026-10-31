@@ -2,7 +2,32 @@
 
 ## [Unreleased]
 
-**20 / 22 minor entries** <!-- pending-tally -->
+**21 / 23 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/mix-rating · 20261031-105842Z
+
+Het veld zit door het hele bibliotheekpad heen (schema, standaard bij de sync, de opslaanroute) en de
+export kreeg het veld bij alle tracks.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Een tweede waardering per nummer, `dkj_mix_rating`: niet hoe graag je het zelf luistert, maar hoe graag
+je het in de volgende mix wilt gebruiken. Het trackregister toont hem als kolom `mix rating` direct naast
+`dkj_rating`; op de mixpagina's (`/mixen/preparation`, `/mixen/published`) staat alleen de mix rating, en
+de tabel opent daar met de hoogste mix rating bovenaan. Je wijzigt hem met hetzelfde potloodje. Elke track begint op
+de waarde van zijn `dkj_rating`; daarna staan de twee los van elkaar.
+
+**Score:** 4
+
+#### Pull Request
+
+Tweede waardering dkj_mix_rating: hoe graag je een nummer in de volgende mix wilt gebruiken
+
+[PR #130](https://github.com/DKJ-Solutions/dkj-music-library/pull/130)
+
+---
 
 ### DEPLOY: feat/preparation-card-to-spotify · 20261031-102841Z
 
