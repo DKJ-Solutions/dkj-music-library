@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**22 / 24 minor entries** <!-- pending-tally -->
+**23 / 25 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/connection-grid-3 · 20261031-110819Z
+
+The Login and Sync cards on /spotify now sit in a `.grid-3`, three to a row, so they match the width of the cards below them instead of each taking half the row.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+The Connection cards on /spotify are narrower and line up with the other sections.
+
+**Score:** 2
+
+#### Pull Request
+
+Connection-sectie op /spotify in een grid-3
+
+[PR #132](https://github.com/DKJ-Solutions/dkj-music-library/pull/132)
+
+---
 
 ### DEPLOY: feat/play-button-left · 20261031-110621Z
 
