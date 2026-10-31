@@ -47,7 +47,7 @@
 ### TEST
 
 - [x] tsc, eslint en vitest groen (946 tests)
-- [ ] Owner bekijkt /spotify en /mixen
+- [x] Owner bekijkt /spotify en /mixen (goedgekeurd)
 
 ### DEPLOY: feat/preparation-card-to-spotify
 
