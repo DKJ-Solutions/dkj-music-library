@@ -1,11 +1,14 @@
 // De playlist-pagina's als card-links, gedeeld door /spotify (de sectie Playlists) en /spotify/playlists.
-// Leest de verrijkte playlists (fase 4) alleen om de wereld-cards hun aantal playlists als onderschrift te
-// geven -- server-side, want getEnrichedSnapshot leest van schijf.
+// Leest de verrijkte playlists (fase 4) en de snapshot alleen om de wereld-cards en de Preparation-card hun aantal playlists
+// als onderschrift te geven -- server-side, want getEnrichedSnapshot leest van schijf. De Preparation-card
+// linkt naar /mixen/preparation (de werkbakken op "Vol. X") en stond tot 31 oktober 2026 op de hub /mixen.
 import { getEnrichedSnapshot } from "@/lib/spotify/enrichedPlaylists";
 import { countByWorld } from "@/lib/spotify/playlistFilters";
 import { SPOTIFY_WORLDS, WORLD_META } from "@/lib/spotify/classifyWorld";
 import type { PageCard } from "@/components/PageCardGrid";
 import { pageTitle } from "@/lib/pages";
+import { preparationPlaylists } from "@/lib/mixes/preparation";
+import { readSnapshot } from "@/lib/spotify/snapshotStore";
 
 const PAGE_CARDS: PageCard[] = [
   {
@@ -44,13 +47,24 @@ const PAGE_CARDS: PageCard[] = [
     label: pageTitle("/spotify/playlists/classic-pop"),
     sub: "Elk Classic Pop-nummer één keer, met de playlists waarin het staat",
   },
+  {
+    href: "/mixen/preparation",
+    icon: "list",
+    label: pageTitle("/mixen/preparation"),
+    sub: "De Spotify-werkbakken op Vol. X",
+  },
 ];
 
 export function playlistCards(): PageCard[] {
   const enriched = getEnrichedSnapshot();
   const worldCounts = enriched ? countByWorld(enriched.playlists) : null;
+  // De Preparation-card telt de werkbakken in de ruwe snapshot, zoals /mixen/preparation zelf.
+  const snapshot = readSnapshot();
   // De wereld-cards dragen hun aantal playlists zodra er een snapshot is.
   return PAGE_CARDS.map((card) => {
+    if (card.href === "/mixen/preparation" && snapshot) {
+      return { ...card, sub: `${card.sub} · ${preparationPlaylists(snapshot.playlists).length} playlists` };
+    }
     const world = SPOTIFY_WORLDS.find((w) => WORLD_META[w].href === card.href);
     return world && worldCounts ? { ...card, sub: `${card.sub} · ${worldCounts[world]} playlists` } : card;
   });
