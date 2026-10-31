@@ -39,19 +39,32 @@
 
 ### PLAN
 
+De afspeelknop moet in elke tabel helemaal links staan (Dave, 31 oktober 2026). In de compacte tabel
+stond de `#`-kolom ervoor, en in de verborgen kolommen ontbrak hij helemaal.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `PLAY_COLUMN` als eigen constante, vooraan in `VISIBLE_COLUMNS` en `HIDDEN_COLUMNS`
+- [x] `COMPACT_WIDTHS`: `play` vóór `position`
+- [x] Test: de eerste cel is in alle drie de tabellen de afspeelcel
 
 ### TEST
 
+- [x] `TrackRegister.test.tsx` (36 groen), `tsc --noEmit` en eslint schoon
+- [ ] Dave kijkt naar de tabellen (gewone, verborgen kolommen, mixpagina)
+
 ### DEPLOY: feat/play-button-left
 
-**Score:**
+De afspeelknop staat in elke tabel helemaal links: in de gewone tabel, in de verborgen kolommen (waar hij
+eerst ontbrak) en op de mixpagina's, waar hij nu vóór de `#`-kolom staat.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie het register gebruikt, vindt de afspeelknop nu in elke tabel op dezelfde plek, ook in de verborgen kolommen.
+
+**Score:** 2
 
 #### Pull Request
 

@@ -605,11 +605,20 @@ function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term:
   );
 }
 
+/** De afspeelknop in een EIGEN KOLOM (Dave): vaste breedte, net genoeg voor het knopje. Hij staat in
+ *  elke tabel helemaal links -- de gewone, de verborgen kolommen en de compacte (Dave, 31 oktober 2026). */
+const PLAY_COLUMN: Column = {
+  key: "play",
+  field: "afspelen",
+  width: "40px",
+  className: "register-play-cell",
+  cell: (row, _term, edit) => <PlayButton row={row} edit={edit} />,
+};
+
 /** De gewone kolommen, in volgorde. dkj_track_id, dkj_file, dkj_artist, dkj_artist_id en djcylow_mix staan
  *  er niet in (Dave); die staan in HIDDEN_COLUMNS, achter de switch, en op alle vijf zoeken kan altijd. */
 const VISIBLE_COLUMNS: readonly Column[] = [
-  // De afspeelknop in een EIGEN KOLOM (Dave): vaste breedte, net genoeg voor het knopje.
-  { key: "play", field: "afspelen", width: "40px", className: "register-play-cell", cell: (row, _term, edit) => <PlayButton row={row} edit={edit} /> },
+  PLAY_COLUMN,
   { key: "dkjTitle", field: "dkj_title", width: "22%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
   { key: "albumArtist", field: "dkj_albumartiest", width: "17%", cell: (row, term) => <OneLine text={row.albumArtist} term={term} className="register-album-artist" /> },
   {
@@ -679,6 +688,7 @@ const VISIBLE_COLUMNS: readonly Column[] = [
 
 /** De kolommen die uit de gewone tabel zijn gelaten, te zien via de switch. */
 const HIDDEN_COLUMNS: readonly Column[] = [
+  PLAY_COLUMN,
   { key: "id", field: "dkj_track_id", width: "10%", cell: (row, term) => <OneLine text={row.id} term={term} className="register-id" /> },
   { key: "file", field: "dkj_file", width: "35%", cell: (row, term) => <OneLine text={row.file} term={term} className="register-file" /> },
   { key: "artist", field: "dkj_artist", width: "20%", cell: (row, term) => <OneLine text={row.artist} term={term} className="register-artist" /> },
@@ -707,8 +717,8 @@ const COLUMN_SETS: Record<ColumnSet, readonly Column[]> = { visible: VISIBLE_COL
  *  mixpagina telt hoe graag je een nummer in de mix wilt, niet hoe graag je het zelf luistert (Dave, 31
  *  oktober 2026). */
 const COMPACT_WIDTHS: Partial<Record<Column["key"], string>> = {
-  position: "48px",
   play: "40px",
+  position: "48px",
   dkjTitle: "38%",
   albumArtist: "30%",
   mixRating: "104px",
