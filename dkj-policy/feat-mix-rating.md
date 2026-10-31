@@ -58,7 +58,7 @@ hetzelfde potloodje. Hernoemen kan later via `renamedFrom`.
 
 - [x] Vitest: nieuwe tests voor het veld, de standaard, de route-helper, de rij en de kolom; 255 groen in `src/lib/library` en `TrackRegister`
 - [x] `tsc --noEmit` schoon
-- [ ] De eigenaar heeft de nieuwe kolom in het trackregister bekeken
+- [x] De eigenaar heeft de kolom in het trackregister en op de mixpagina's bekeken en goedgekeurd
 
 ### DEPLOY: feat/mix-rating
 
