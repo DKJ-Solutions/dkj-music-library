@@ -2,7 +2,32 @@
 
 ## [Unreleased]
 
-**24 / 26 minor entries** <!-- pending-tally -->
+**25 / 27 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/spotify-retry-after-cap · 20261031-133305Z
+
+Spotify-aanroepen wachten een rate limit nog maar tot 60 seconden af. Bij een langere `Retry-After`
+(Spotify gaf er een van ruim vijf uur) stopt de aanvraag meteen met een `SpotifyRateLimitError`. Tot nu toe
+sliep de aanvraag uren door. Bij het verplaatsen in een werkbak hield ze daarbij het slot van de playlist
+vast, zodat elke volgende sleep "Er loopt al een verplaatsing in deze playlist." gaf. Nu meldt de werkbak
+dat Spotify even niet laat schrijven, en vanaf hoe laat het weer kan.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Slepen in een werkbak raakt niet meer urenlang op slot na een rate limit van Spotify. De melding zegt
+voortaan wat er aan de hand is en vanaf wanneer het weer kan.
+
+**Score:** 3
+
+#### Pull Request
+
+Een lange Spotify Retry-After meteen melden in plaats van uren te wachten
+
+[PR #136](https://github.com/DKJ-Solutions/dkj-music-library/pull/136)
+
+---
 
 ### DEPLOY: feat/werkbak-drag-order · 20261031-131625Z
 
