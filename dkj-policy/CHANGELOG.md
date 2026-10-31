@@ -2,7 +2,29 @@
 
 ## [Unreleased]
 
-**19 / 21 minor entries** <!-- pending-tally -->
+**20 / 22 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/preparation-card-to-spotify · 20261031-102841Z
+
+De Preparation-kaart (naar /mixen/preparation, de Spotify-werkbakken op "Vol. X") staat niet meer op de hub
+/mixen maar onder Playlists op /spotify, en daarmee ook op /spotify/playlists, die dezelfde kaarten toont. De
+pagina zelf blijft op /mixen/preparation.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+De werkbakken zijn Spotify-playlists, dus de ingang staat nu bij de andere playlist-pagina's.
+
+**Score:** 2
+
+#### Pull Request
+
+Preparation-kaart van /mixen naar de sectie Playlists op /spotify
+
+[PR #129](https://github.com/DKJ-Solutions/dkj-music-library/pull/129)
+
+---
 
 ### DEPLOY: fix/126-page-column · 20261030-173110Z
 
