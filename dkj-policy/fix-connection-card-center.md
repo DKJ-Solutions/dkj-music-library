@@ -41,17 +41,24 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `.verbinding-card` in de domeinlaag (`_spotify-verbinding.scss`): flex-kolom met `justify-content: center`, op de kaarten Login (`ConnectionCards.tsx`) en Sync (`SyncButton.tsx`). `.card` zelf blijft onaangeroerd.
 
 ### TEST
 
+- [x] `npm run typecheck` groen.
+- [ ] De eigenaar kijkt op /spotify of de kop van de lagere kaart nu verticaal in het midden staat.
+
 ### DEPLOY: fix/connection-card-center
 
-**Score:**
+De kaarten Login en Sync op /spotify rekken in hun `.grid-3` mee tot de hoogste kaart, waardoor de kop van de lagere kaart bovenaan bleef staan met lege ruimte eronder. Een eigen klasse `.verbinding-card` zet de inhoud van beide kaarten nu verticaal in het midden.
+
+**Score:** 1 -- cosmetisch; voorkomt een scheef ogende rij kaarten.
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie /spotify opent, ziet de kop van Login en Sync in het midden van de kaart in plaats van bovenaan.
+
+**Score:** 1 -- cosmetisch.
 
 #### Pull Request
 
