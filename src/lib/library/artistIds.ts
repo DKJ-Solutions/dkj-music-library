@@ -35,12 +35,14 @@ import {
   DEFAULT_RATING,
   FILE_KEY,
   GENRE_KEY,
+  MIX_RATING_KEY,
   PLAYLISTS_KEY,
   TITLE_KEY,
   PRIMARY_ARTIST_KEY,
   RATING_KEY,
   TRACK_ID_KEY,
   albumArtistOf,
+  type RatingKey,
 } from "./fields";
 import { albumFromPlaylists } from "./albumFromPlaylists";
 import { bpmFromPlaylists } from "./bpmFromPlaylists";
@@ -369,15 +371,16 @@ export function fillGenresFromPlaylists(db: DatabaseSync): number {
   return fillMissing(db, GENRE_KEY, (track) => genreFromPlaylists(track.playlists));
 }
 
-/** Zet `dkj_rating` op DEFAULT_RATING bij elke track waar het nog leeg is; een zelf gekozen waardering
- *  blijft staan. Geeft het aantal gevulde tracks terug. Een waardering onder de oude naam (star-N, tot
- *  29 september 2026) wordt eerst tier-N, met hetzelfde getal -- de naam veranderde, de keuze niet. */
-export function fillDefaultRatings(db: DatabaseSync): number {
+/** Zet een waardering (standaard `dkj_rating`, of `dkj_mix_rating`) op DEFAULT_RATING bij elke track
+ *  waar die nog leeg is; een zelf gekozen waardering blijft staan. Geeft het aantal gevulde tracks terug.
+ *  Een waardering onder de oude naam (star-N, tot 29 september 2026) wordt eerst tier-N, met hetzelfde
+ *  getal -- de naam veranderde, de keuze niet. */
+export function fillDefaultRatings(db: DatabaseSync, key: RatingKey = RATING_KEY): number {
   db.prepare(
-    `UPDATE ${TRACKS_TABLE} SET "${RATING_KEY}" = 'tier-' || substr("${RATING_KEY}", 6) WHERE lower("${RATING_KEY}") LIKE 'star-%'`
+    `UPDATE ${TRACKS_TABLE} SET "${key}" = 'tier-' || substr("${key}", 6) WHERE lower("${key}") LIKE 'star-%'`
   ).run();
   const result = db
-    .prepare(`UPDATE ${TRACKS_TABLE} SET "${RATING_KEY}" = ?, updated_at = ? WHERE "${RATING_KEY}" IS NULL`)
+    .prepare(`UPDATE ${TRACKS_TABLE} SET "${key}" = ?, updated_at = ? WHERE "${key}" IS NULL`)
     .run(DEFAULT_RATING, new Date().toISOString());
   return Number(result.changes);
 }
@@ -390,6 +393,8 @@ export interface LibraryIdResult {
   genresFilled: number;
   /** Tracks die in deze run de standaard-`dkj_rating` kregen (DEFAULT_RATING). */
   ratingsFilled: number;
+  /** Tracks die in deze run de standaard-`dkj_mix_rating` kregen (DEFAULT_RATING). */
+  mixRatingsFilled: number;
   /** Tracks die in deze run hun `dkj_album` uit de playlists kregen. */
   albumsFilled: number;
   /** Tracks die in deze run hun `dkj_file` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
@@ -434,6 +439,7 @@ export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot
   const bpmsFilled = fillBpmsFromPlaylists(db);
   const genresFilled = fillGenresFromPlaylists(db);
   const ratingsFilled = fillDefaultRatings(db);
+  const mixRatingsFilled = fillDefaultRatings(db, MIX_RATING_KEY);
   const yearsFilled = applyReleaseYears(db, snapshot);
-  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, genresFilled, live, playlistsChanged, primaryArtistsFilled, ratingsFilled, renumbered, titlesFilled, titlesRefreshed, tracks, yearsFilled };
+  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, genresFilled, live, mixRatingsFilled, playlistsChanged, primaryArtistsFilled, ratingsFilled, renumbered, titlesFilled, titlesRefreshed, tracks, yearsFilled };
 }

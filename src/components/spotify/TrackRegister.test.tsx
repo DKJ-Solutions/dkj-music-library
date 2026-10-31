@@ -35,6 +35,7 @@ function row(n: number, over: Partial<RegisterRow> = {}): RegisterRow {
     bpm: null,
     genre: null,
     rating: null,
+    mixRating: null,
     playcount: null,
     album: null,
     albumCandidates: [],
@@ -244,13 +245,37 @@ describe("TrackRegister", () => {
     expect(JSON.parse(init.body as string)).toEqual({ trackId: "ART01-001", rating: "tier-6" });
   });
 
+  it("toont dkj_mix_rating naast dkj_rating, met de korte kop mix rating", () => {
+    render(<TrackRegister rows={[row(1, { rating: "tier-2", mixRating: "tier-7" })]} artistCount={1} />);
+    const header = screen.getByRole("columnheader", { name: /mix rating/ });
+    expect(header.querySelector("button")?.getAttribute("title")).toBe("Sorteer op dkj_mix_rating");
+    const headers = screen.getAllByRole("columnheader").map((h) => h.textContent ?? "");
+    const rating = headers.findIndex((h) => h.includes("dkj_rating"));
+    expect(headers[rating + 1]).toContain("mix rating");
+    expect(screen.getByText("tier-7", { selector: ".register-tag" })).toBeTruthy();
+  });
+
+  it("wijzigt dkj_mix_rating via zijn eigen potloodje, los van dkj_rating", async () => {
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify({ trackId: "ART01-001", field: "dkj_mix_rating", rating: "tier-8" }), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+    render(<TrackRegister rows={[row(1, { rating: "tier-3", mixRating: "tier-4" })]} artistCount={1} />);
+    fireEvent.click(screen.getByRole("button", { name: "dkj_mix_rating van ART01-001 wijzigen" }));
+    fireEvent.click(screen.getByRole("button", { name: "tier-8" }));
+
+    expect(screen.getByText("tier-8", { selector: ".register-tag" })).toBeTruthy();
+    expect(screen.getByText("tier-3", { selector: ".register-tag" })).toBeTruthy();
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    expect(JSON.parse(init.body as string)).toEqual({ trackId: "ART01-001", rating: "tier-8", field: "dkj_mix_rating" });
+  });
+
   it("zet de vorige dkj_rating terug als opslaan mislukt, met de reden in de tooltip", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async () => new Response(JSON.stringify({ error: "save_failed", message: "schijf vol" }), { status: 500 }))
     );
     render(<TrackRegister rows={[row(1, { rating: "tier-4" })]} artistCount={1} />);
-    fireEvent.click(screen.getByRole("button", { name: /wijzigen/ }));
+    fireEvent.click(screen.getByRole("button", { name: "dkj_rating van ART01-001 wijzigen" }));
     fireEvent.click(screen.getByRole("button", { name: "tier-8" }));
 
     await waitFor(() => expect(screen.getByTitle("Opslaan mislukt: schijf vol")).toBeTruthy());

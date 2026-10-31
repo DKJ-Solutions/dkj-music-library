@@ -104,6 +104,14 @@ export const DKJ_RATING_OPTIONS = ["tier-1", "tier-2", "tier-3", "tier-4", "tier
 /** De waardering die elke track krijgt zolang je er zelf geen hebt gekozen. */
 export const DEFAULT_RATING = "tier-4";
 
+/** Het veld met hoe graag je een track in de volgende mix wilt gebruiken (Dave, 31 oktober 2026). Naast
+ *  dkj_rating, dat zegt hoe graag je hem zelf luistert; zelfde tiers en zelfde standaard. */
+export const MIX_RATING_KEY = "dkj_mix_rating";
+
+/** De velden met een waardering in tiers: allebei in het trackregister met het potloodje te wijzigen. */
+export const RATING_KEYS = [RATING_KEY, MIX_RATING_KEY] as const;
+export type RatingKey = (typeof RATING_KEYS)[number];
+
 /** Het veld met hoe vaak je een track op Spotify hebt afgespeeld. Komt uit je Extended streaming history
  *  (het privacy-export van Spotify); de Web API kent geen afspeelaantallen. Leeg tot die import er is. */
 export const PLAYCOUNT_KEY = "spotify_playcount";
@@ -181,6 +189,12 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
     key: "spotify_playcount",
     type: "integer",
     label: "Hoe vaak afgespeeld op Spotify, uit de Extended streaming history; leeg tot die geïmporteerd is",
+  },
+  {
+    key: "dkj_mix_rating",
+    type: "text",
+    label: "Hoe graag je de track in de volgende mix wilt gebruiken, tier-1 (laag) tot tier-8 (hoog); standaard tier-4, tenzij zelf ingevuld",
+    options: DKJ_RATING_OPTIONS,
   },
   // Nieuw veld? Voeg het hier toe, bv.:
   // { key: "energy", type: "integer", label: "Energie 1-10" },

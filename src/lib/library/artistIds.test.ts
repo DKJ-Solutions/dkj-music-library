@@ -263,6 +263,14 @@ describe("fillDefaultRatings", () => {
     expect(fillDefaultRatings(db)).toBe(0);
   });
 
+  it("vult dkj_mix_rating apart, zonder dkj_rating aan te raken", () => {
+    const db = memoryDb();
+    upsertTracks(db, [{ dkj_track_id: "a", dkj_rating: "tier-8" }, { dkj_track_id: "b", dkj_mix_rating: "tier-1" }]);
+    expect(fillDefaultRatings(db, "dkj_mix_rating")).toBe(1);
+    expect(getTrack(db, "a")).toMatchObject({ dkj_rating: "tier-8", dkj_mix_rating: "tier-4" });
+    expect(getTrack(db, "b")?.dkj_mix_rating).toBe("tier-1");
+  });
+
   it("zet een waardering onder de oude naam (star-N) om naar tier-N met hetzelfde getal", () => {
     const db = memoryDb();
     upsertTracks(db, [{ dkj_track_id: "a", dkj_rating: "tier-4" }, { dkj_track_id: "b", dkj_rating: "tier-4" }]);

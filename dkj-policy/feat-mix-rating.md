@@ -39,21 +39,42 @@
 
 ### PLAN
 
+Dave wil naast `dkj_rating` (hoe graag hij een nummer zelf luistert) een tweede, vergelijkbare kolom: hoe
+graag hij het nummer in de volgende mix wil gebruiken. Gekozen opzet: veld `dkj_mix_rating`, dezelfde
+tiers `tier-1` t/m `tier-8`, standaard `tier-4`, in het register direct rechts van `dkj_rating` met
+hetzelfde potloodje, ook in de compacte tabel. Hernoemen kan later via `renamedFrom`.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Schema: `dkj_mix_rating` in `TRACK_FIELDS`, met `MIX_RATING_KEY` en `RATING_KEYS` in `fields.ts`
+- [x] Standaard: `fillDefaultRatings(db, key)` vult ook `dkj_mix_rating` bij elke sync en `library:assign-ids`
+- [x] Opslaan: `setTrackRating` en `POST /api/spotify/rating` nemen een optioneel `field`; zonder blijft het `dkj_rating`
+- [x] Register: `mixRating` in de rij, zoeken en sorteren; kolom `mix rating` naast `dkj_rating`, ook compact
+- [x] Export: alle 12.479 tracks kregen `dkj_mix_rating: "tier-4"`
+- [x] README: eigen paragraaf en de lijst met vaste keuzes
 
 ### TEST
 
+- [x] Vitest: nieuwe tests voor het veld, de standaard, de route-helper, de rij en de kolom; 255 groen in `src/lib/library` en `TrackRegister`
+- [x] `tsc --noEmit` schoon
+- [ ] De eigenaar heeft de nieuwe kolom in het trackregister bekeken
+
 ### DEPLOY: feat/mix-rating
 
-**Score:**
+Het veld zit door het hele bibliotheekpad heen (schema, standaard bij de sync, de opslaanroute) en de
+export kreeg het veld bij alle tracks.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Een tweede waardering per nummer, `dkj_mix_rating`: niet hoe graag je het zelf luistert, maar hoe graag
+je het in de volgende mix wilt gebruiken. Het trackregister toont hem als kolom `mix rating` direct naast
+`dkj_rating`, ook in de compacte tabel, en je wijzigt hem met hetzelfde potloodje. Elke track begint op
+`tier-4`.
+
+**Score:** 4
 
 #### Pull Request
 
 Tweede waardering dkj_mix_rating: hoe graag je een nummer in de volgende mix wilt gebruiken
-
