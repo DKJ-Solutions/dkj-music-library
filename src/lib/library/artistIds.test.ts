@@ -10,6 +10,7 @@ import {
   artistPrefix,
   fillAlbumArtists,
   fillDefaultRatings,
+  fillMixRatings,
   fillPrimaryArtists,
   formatArtistId,
   planArtistIds,
@@ -269,5 +270,19 @@ describe("fillDefaultRatings", () => {
     db.prepare(`UPDATE tracks SET dkj_rating = 'star-3' WHERE dkj_track_id = 'a'`).run();
     fillDefaultRatings(db);
     expect([getTrack(db, "a")?.dkj_rating, getTrack(db, "b")?.dkj_rating]).toEqual(["tier-3", "tier-4"]);
+  });
+});
+
+describe("fillMixRatings", () => {
+  it("zet een lege dkj_mix_rating gelijk aan dkj_rating en laat een zelf gekozen mixwaardering staan", () => {
+    const db = memoryDb();
+    upsertTracks(db, [
+      { dkj_track_id: "a", dkj_rating: "tier-8" },
+      { dkj_track_id: "b", dkj_rating: "tier-2", dkj_mix_rating: "tier-6" },
+      { dkj_track_id: "c" },
+    ]);
+    expect(fillMixRatings(db)).toBe(2);
+    expect([getTrack(db, "a"), getTrack(db, "b"), getTrack(db, "c")].map((t) => t?.dkj_mix_rating)).toEqual(["tier-8", "tier-6", "tier-4"]);
+    expect(fillMixRatings(db)).toBe(0);
   });
 });
