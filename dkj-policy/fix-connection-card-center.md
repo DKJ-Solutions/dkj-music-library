@@ -46,7 +46,7 @@
 ### TEST
 
 - [x] `npm run typecheck` groen.
-- [ ] De eigenaar kijkt op /spotify of de kop van de lagere kaart nu verticaal in het midden staat.
+- [x] De eigenaar kijkt op /spotify of de kop van de lagere kaart nu verticaal in het midden staat.
 
 ### DEPLOY: fix/connection-card-center
 
