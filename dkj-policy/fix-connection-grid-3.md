@@ -41,17 +41,23 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `ConnectionCards.tsx`: the Connection section's wrapper from `.grid-2` to the house `.grid-3`
 
 ### TEST
 
+- [ ] The owner checks the /spotify page by eye (visible result, so no merge until approved)
+
 ### DEPLOY: fix/connection-grid-3
 
-**Score:**
+The Login and Sync cards on /spotify now sit in a `.grid-3`, three to a row, so they match the width of the cards below them instead of each taking half the row.
+
+**Score:** 1
 
 #### What makes this deploy extra special
 
-**Score:**
+The Connection cards on /spotify are narrower and line up with the other sections.
+
+**Score:** 2
 
 #### Pull Request
 
