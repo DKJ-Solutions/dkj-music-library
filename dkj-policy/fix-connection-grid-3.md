@@ -45,7 +45,7 @@
 
 ### TEST
 
-- [ ] The owner checks the /spotify page by eye (visible result, so no merge until approved)
+- [x] The owner checks the /spotify page by eye (visible result, so no merge until approved) -- seen and approved by the owner
 
 ### DEPLOY: fix/connection-grid-3
 
