@@ -11,13 +11,32 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { readRouteErrorMessage } from "@/lib/http/routeError";
 
-export function PlaylistSyncButton({ playlistId, playlistName }: { playlistId: string; playlistName: string }) {
+/** `pendingMoves` is het aantal verplaatsingen in een uitgestelde volgorde van deze playlist (PendingOrderButton):
+ *  ophalen bij Spotify vervangt de snapshot, waarna die lokale volgorde niet meer past en alleen nog
+ *  weggegooid kan worden. Daarom eerst bevestigen, zodat een klik hem nooit stil vernietigt. */
+export function PlaylistSyncButton({
+  playlistId,
+  playlistName,
+  pendingMoves = 0,
+}: {
+  playlistId: string;
+  playlistName: string;
+  pendingMoves?: number;
+}) {
   const router = useRouter();
   const [status, setStatus] = useState<"idle" | "busy" | "done" | "error">("idle");
   const [melding, setMelding] = useState<string | null>(null);
 
   async function sync() {
     if (status === "busy") return;
+    if (
+      pendingMoves > 0 &&
+      !window.confirm(
+        `Er staan ${pendingMoves} verplaatsingen nog niet in Spotify. Als je nu ophaalt, past de lokale volgorde niet meer en kun je hem alleen nog weggooien. Toch ophalen?`
+      )
+    ) {
+      return;
+    }
     setStatus("busy");
     setMelding(null);
     try {

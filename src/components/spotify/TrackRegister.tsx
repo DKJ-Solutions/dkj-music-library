@@ -974,13 +974,23 @@ export function TrackRegister({ rows: serverRows, artistCount, compact = false, 
     setMoving(true);
     setNote(null);
     try {
-      const { refreshed } = await savePlaylistOrder(playlistOrder.playlistId, playlistOrder.snapshotId, {
+      const { refreshed, pending, rateLimitedUntil } = await savePlaylistOrder(playlistOrder.playlistId, playlistOrder.snapshotId, {
         ...plan,
         targetPosition,
         expectedStartId,
         expectedTargetId,
       });
-      if (refreshed) {
+      if (pending) {
+        // Geen fout: de verplaatsing staat lokaal klaar (uitgestelde volgorde) en de pagina toont hem na de
+        // verversing. Zonder `base`, zodat de melding die verversing overleeft; de volgende sleepactie wist hem.
+        setNote({
+          error: false,
+          text: rateLimitedUntil
+            ? "Bewaard in de hub; Spotify volgt zodra het weer kan."
+            : "Bewaard in de hub; stuur de volgorde met de knop naar Spotify.",
+        });
+        startRefresh(() => router.refresh());
+      } else if (refreshed) {
         startRefresh(() => router.refresh());
       } else {
         // Geen router.refresh(): dat zou de oude volgorde terugzetten terwijl Spotify de nieuwe heeft. De

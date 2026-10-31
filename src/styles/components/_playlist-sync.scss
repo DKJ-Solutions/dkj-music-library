@@ -44,3 +44,13 @@
     transform: rotate(360deg);
   }
 }
+
+// De kop van een werkbak heeft twee knoppen naast elkaar: de uitgestelde volgorde (PendingOrderButton, alleen
+// als er een is) en de sync met Spotify. Op een smal venster zakt de tweede onder de eerste.
+.playlist-sync-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-2-5) var(--spacing-4);
+}

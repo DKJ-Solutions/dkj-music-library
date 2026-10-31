@@ -1,6 +1,10 @@
 // POST /api/spotify/playlist-order: nooit verplaatsen op verouderde plekken. Alles van Spotify en van schijf
-// wordt gemockt; de route-handler zelf draait echt.
-import { beforeEach, describe, expect, it, vi } from "vitest";
+// wordt gemockt; de route-handler zelf draait echt, met de echte (maar naar een tijdelijke map omgeleide)
+// stores voor de uitgestelde volgorde en de rate limit.
+import fs from "fs";
+import os from "os";
+import path from "path";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/spotify/snapshotStore", () => ({ readSnapshot: vi.fn() }));
 vi.mock("@/lib/spotify/httpClient", () => ({ spotifyGet: vi.fn() }));
@@ -14,7 +18,9 @@ import { fetchAllPlaylistItems } from "@/lib/spotify/ingest";
 import { reorderPlaylistItem } from "@/lib/spotify/playlistApi";
 import { refreshPlaylistInSnapshot } from "@/lib/spotify/refreshPlaylist";
 import { SpotifyRateLimitError } from "@/lib/spotify/errors";
-import { POST } from "./route";
+import { getPendingOrder, setPendingOrder } from "@/lib/spotify/pendingOrderStore";
+import { getRateLimitUntil, recordRateLimit } from "@/lib/spotify/rateLimitStore";
+import { DELETE, POST } from "./route";
 
 const ID = "P".repeat(22);
 const item = (id: string | null) => ({ addedAt: null, addedBy: null, isLocal: false, track: id ? { id } : null });
@@ -24,7 +30,11 @@ const BODY = { playlistId: ID, snapshotId: "snap1", rangeStart: 0, insertBefore:
 const request = (body: unknown) =>
   new Request("http://localhost/api/spotify/playlist-order", { method: "POST", body: JSON.stringify(body) });
 
+let dir: string;
 beforeEach(() => {
+  dir = fs.mkdtempSync(path.join(os.tmpdir(), "dkj-order-route-"));
+  process.env.SPOTIFY_PENDING_ORDER_STORE_PATH = path.join(dir, "pending-order.json");
+  process.env.SPOTIFY_RATE_LIMIT_STORE_PATH = path.join(dir, "rate-limit.json");
   vi.resetAllMocks();
   vi.mocked(readSnapshot).mockReturnValue({
     syncedAt: "x",
@@ -35,6 +45,8 @@ beforeEach(() => {
   vi.mocked(reorderPlaylistItem).mockResolvedValue("snap2");
   vi.mocked(refreshPlaylistInSnapshot).mockResolvedValue({ playlist: {} as never, libraryUpdated: true });
 });
+
+afterEach(() => fs.rmSync(dir, { recursive: true, force: true }));
 
 describe("playlist-order route", () => {
   it("verplaatst als de live playlist klopt en ververst daarna", async () => {
@@ -77,14 +89,69 @@ describe("playlist-order route", () => {
     expect(spotifyGet).not.toHaveBeenCalled();
   });
 
-  it("meldt een lange rate limit meteen (503) en geeft de playlist weer vrij", async () => {
+  it("bewaart de verplaatsing lokaal als Spotify een lange rate limit geeft, en geeft de playlist weer vrij", async () => {
     vi.mocked(spotifyGet).mockRejectedValueOnce(new SpotifyRateLimitError("rate limit", 19429));
     const res = await POST(request(BODY));
-    expect(res.status).toBe(503);
-    expect(await res.json()).toMatchObject({ error: "rate_limited", retryAfterSeconds: 19429 });
+    expect(res.status).toBe(200);
+    expect(await res.json()).toMatchObject({ pending: true, moveCount: 1 });
     expect(reorderPlaylistItem).not.toHaveBeenCalled();
-    // Het slot is los: de volgende poging komt gewoon door.
-    expect((await POST(request(BODY))).status).toBe(200);
+    // a b c -> a naar plek 3 (voor het einde): b c a
+    expect(getPendingOrder(ID)).toMatchObject({ baseSnapshotId: "snap1", order: [1, 2, 0], moveCount: 1 });
+    // Het slot is los: de volgende verplaatsing komt gewoon aan (nu op de uitgestelde volgorde b c a).
+    const next = { ...BODY, rangeStart: 2, insertBefore: 0, targetPosition: 0, expectedStartId: "a", expectedTargetId: "b" };
+    expect((await POST(request(next))).status).toBe(200);
+    expect(getPendingOrder(ID)).toMatchObject({ order: [0, 1, 2], moveCount: 2 });
+  });
+
+  it("bewaart ook als de PUT zelf de rate limit raakt", async () => {
+    vi.mocked(reorderPlaylistItem).mockRejectedValueOnce(new SpotifyRateLimitError("rate limit", 3600));
+    const res = await POST(request(BODY));
+    expect(res.status).toBe(200);
+    const data = (await res.json()) as { pending: boolean; rateLimitedUntil: number };
+    expect(data.pending).toBe(true);
+    expect(data.rateLimitedUntil).toBeGreaterThan(Date.now());
+    expect(getPendingOrder(ID)?.order).toEqual([1, 2, 0]);
+  });
+
+  it("gaat bij een actieve rate limit niet naar Spotify maar bewaart lokaal, met het einde van de ban", async () => {
+    const until = recordRateLimit(3600);
+    const res = await POST(request(BODY));
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ pending: true, moveCount: 1, rateLimitedUntil: until });
+    expect(spotifyGet).not.toHaveBeenCalled();
+    expect(fetchAllPlaylistItems).not.toHaveBeenCalled();
+    expect(getRateLimitUntil()).toBe(until);
+  });
+
+  it("stuurt zodra er een uitgestelde volgorde is ALLES daarheen, ook zonder rate limit, en controleert de getoonde volgorde", async () => {
+    setPendingOrder(ID, { baseSnapshotId: "snap1", order: [2, 1, 0], moveCount: 1 }); // getoond: c b a
+    // Getoond staat c op plek 0 en a op plek 2: een verplaatsing die uitgaat van Spotify's a b c wordt geweigerd.
+    expect((await POST(request(BODY))).status).toBe(409);
+    expect(getPendingOrder(ID)?.moveCount).toBe(1);
+
+    const res = await POST(request({ ...BODY, expectedStartId: "c", expectedTargetId: "a" })); // c voor het einde
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ pending: true, moveCount: 2, rateLimitedUntil: null });
+    expect(getPendingOrder(ID)?.order).toEqual([1, 0, 2]); // c b a -> b a c
+    expect(spotifyGet).not.toHaveBeenCalled();
+    expect(reorderPlaylistItem).not.toHaveBeenCalled();
+  });
+
+  it("geeft 409 pending_conflict als de uitgestelde volgorde bij een andere snapshot hoort", async () => {
+    setPendingOrder(ID, { baseSnapshotId: "snapOud", order: [2, 1, 0], moveCount: 1 });
+    const res = await POST(request(BODY));
+    expect(res.status).toBe(409);
+    expect(await res.json()).toMatchObject({ error: "pending_conflict" });
+    expect(getPendingOrder(ID)?.order).toEqual([2, 1, 0]);
+  });
+
+  it("gooit de uitgestelde volgorde weg met DELETE, ook tijdens een rate limit", async () => {
+    setPendingOrder(ID, { baseSnapshotId: "snap1", order: [2, 1, 0], moveCount: 1 });
+    recordRateLimit(3600);
+    const body = JSON.stringify({ playlistId: ID });
+    const res = await DELETE(new Request("http://localhost/api/spotify/playlist-order", { method: "DELETE", body }));
+    expect(res.status).toBe(200);
+    expect(getPendingOrder(ID)).toBeNull();
   });
 
   it("weigert een tweede gelijktijdige verplaatsing in dezelfde playlist met 429", async () => {
