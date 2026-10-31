@@ -39,19 +39,35 @@
 
 ### PLAN
 
+Dave, 31 oktober 2026: "Volgorde naar Spotify sturen" en "Sync met Spotify" lijken dubbel; maak visueel
+duidelijk dat de ene van a naar b synct en de andere van b naar a.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `SyncDirection.tsx`: richtingsicoon (pijl uit/in een bak) en routelabel "Hub → Spotify" / "Spotify → Hub"
+- [x] PendingOrderButton wordt "Volgorde versturen · Hub → Spotify", PlaylistSyncButton "Ophalen · Spotify → Hub"
+- [x] Meldingen in TrackRegister noemen de nieuwe knopnaam "Ophalen uit Spotify"
 
 ### TEST
 
+- [x] `tsc --noEmit` schoon, `vitest run src/components/spotify` groen (136 tests)
+- [x] Gerenderde HTML van een werkbak met uitgestelde volgorde gecontroleerd: beide knoppen met icoon en routelabel
+- [ ] Dave kijkt naar de knoppen in de werkbak
+
 ### DEPLOY: feat/sync-button-direction
 
-**Score:**
+De twee knoppen in de kop van een werkbak laten nu zien welke kant ze op werken. "Volgorde versturen" heeft
+een pijl omhoog en het label **Hub → Spotify**; de sync-knop heet nu "Ophalen", met een pijl omlaag en het
+label **Spotify → Hub**. Ook op de pagina van een gepubliceerde mix heet die knop zo.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+Wie tijdens een rate limit verplaatst, ziet meteen welke knop de lokale volgorde naar Spotify stuurt en welke
+hem juist overschrijft met wat in Spotify staat.
+
+**Score:** 2
 
 #### Pull Request
 

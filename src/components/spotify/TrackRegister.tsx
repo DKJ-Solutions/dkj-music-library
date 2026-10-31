@@ -831,7 +831,7 @@ export function TrackRegister({ rows: serverRows, artistCount, compact = false, 
   // `base`: de serverRows waarbij de melding hoort; komt er een nieuwe stand binnen, dan is hij achterhaald.
   const [note, setNote] = useState<{ error: boolean; text: string; base?: RegisterRow[] } | null>(null);
   // Spotify heeft de verplaatsing, maar de snapshot niet: de plekken van deze pagina kloppen niet meer.
-  // Slepen blijft uit tot er een nieuwe stand binnen is (Sync met Spotify).
+  // Slepen blijft uit tot er een nieuwe stand binnen is (Ophalen uit Spotify).
   const [desyncedBase, setDesyncedBase] = useState<RegisterRow[] | null>(null);
   const initialRows = useMemo(() => {
     if (!moved || moved.base !== serverRows) return serverRows;
@@ -958,7 +958,7 @@ export function TrackRegister({ rows: serverRows, artistCount, compact = false, 
     const plan = planPlaylistMove(positions, from, to);
     if (!plan) {
       if (positions[from] === undefined || positions[to] === undefined) {
-        setNote({ error: true, text: "Deze rij staat volgens de snapshot niet in de playlist: klik eerst op Sync met Spotify." });
+        setNote({ error: true, text: "Deze rij staat volgens de snapshot niet in de playlist: klik eerst op Ophalen uit Spotify." });
       }
       return;
     }
@@ -966,7 +966,7 @@ export function TrackRegister({ rows: serverRows, artistCount, compact = false, 
     const targetPosition = positions[to];
     const expectedTargetId = targetPosition === undefined ? null : playlistOrder.itemIds[targetPosition];
     if (!expectedStartId || targetPosition === undefined || !expectedTargetId) {
-      setNote({ error: true, text: "Deze plek heeft geen Spotify-track: klik eerst op Sync met Spotify." });
+      setNote({ error: true, text: "Deze plek heeft geen Spotify-track: klik eerst op Ophalen uit Spotify." });
       return;
     }
     const previous = moved;
@@ -994,9 +994,9 @@ export function TrackRegister({ rows: serverRows, artistCount, compact = false, 
         startRefresh(() => router.refresh());
       } else {
         // Geen router.refresh(): dat zou de oude volgorde terugzetten terwijl Spotify de nieuwe heeft. De
-        // getoonde volgorde blijft staan; slepen wacht tot Sync met Spotify een nieuwe stand brengt.
+        // getoonde volgorde blijft staan; slepen wacht tot Ophalen uit Spotify een nieuwe stand brengt.
         setDesyncedBase(serverRows);
-        setNote({ error: true, text: "Verplaatst in Spotify, maar de lijst bijwerken mislukte: klik op Sync met Spotify.", base: serverRows });
+        setNote({ error: true, text: "Verplaatst in Spotify, maar de lijst bijwerken mislukte: klik op Ophalen uit Spotify.", base: serverRows });
       }
     } catch (err) {
       setMoved(previous);

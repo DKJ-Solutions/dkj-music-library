@@ -15,8 +15,8 @@
   color: var(--negative-5);
 }
 
-// Het sync-icoon voor de tekst van de knop: lijnen in de tekstkleur, zo hoog als de tekst. Draait rond
-// zolang de sync loopt.
+// Het icoon voor de tekst van de knop: lijnen in de tekstkleur, zo hoog als de tekst. Een pijl uit of in een
+// bak voor de richting (SyncDirection.tsx), het draaiende sync-icoon zolang er iets loopt.
 .playlist-sync__icon {
   width: 1em;
   height: 1em;
@@ -43,6 +43,28 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+// Het routelabel in een sync-knop (SyncDirection.tsx): "Hub → Spotify" of "Spotify → Hub", als een klein
+// omlijnd label achter de tekst, in de tekstkleur van de knop. Zo zie je in één oogopslag welke kant elke
+// knop op werkt.
+.sync-route {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  margin-left: var(--spacing-2);
+  padding: 0 var(--spacing-1-5);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1.6;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.sync-route__arrow {
+  font-weight: 700;
 }
 
 // De kop van een werkbak heeft twee knoppen naast elkaar: de uitgestelde volgorde (PendingOrderButton, alleen
