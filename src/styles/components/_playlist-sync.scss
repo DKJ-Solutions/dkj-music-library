@@ -45,24 +45,6 @@
   }
 }
 
-// Het routelabel in een sync-knop (SyncDirection.tsx): "Hub → Spotify" of "Spotify → Hub", als gewone
-// tekst achter een dun streepje, in de tekstkleur van de knop. Zo zie je in één oogopslag welke kant elke
-// knop op werkt. Geen omlijning eromheen (Dave, 31 oktober 2026: een cirkel in de knop is raar).
-.sync-route {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-1);
-  margin-left: var(--spacing-2);
-  padding-left: var(--spacing-2);
-  border-left: 1px solid currentColor;
-  opacity: 0.8;
-  white-space: nowrap;
-}
-
-.sync-route__arrow {
-  font-weight: 700;
-}
-
 // De kop van een werkbak heeft twee knoppen naast elkaar: de uitgestelde volgorde (PendingOrderButton, alleen
 // als er een is) en de sync met Spotify. Op een smal venster zakt de tweede onder de eerste.
 .playlist-sync-group {

@@ -44,9 +44,10 @@ duidelijk dat de ene van a naar b synct en de andere van b naar a.
 
 ### CREATE
 
-- [x] `SyncDirection.tsx`: richtingsicoon (pijl uit/in een bak) en routelabel "Hub → Spotify" / "Spotify → Hub"
-- [x] PendingOrderButton wordt "Volgorde versturen · Hub → Spotify", PlaylistSyncButton "Ophalen · Spotify → Hub"
-- [x] Meldingen in TrackRegister noemen de nieuwe knopnaam "Ophalen uit Spotify"
+- [x] `SyncDirection.tsx`: richtingsicoon (pijl uit/in een bak)
+- [~] Routelabel "Hub → Spotify" / "Spotify → Hub" in de knop -- gebouwd, door Dave afgekeurd ("die cirkel in de knop is raar"), weggehaald
+- [x] PendingOrderButton heet "Push", PlaylistSyncButton "Fetch" (Dave: "doe anders gewoon fetch and push")
+- [x] Meldingen in TrackRegister noemen de nieuwe knopnaam "Fetch"
 
 ### TEST
 
@@ -56,9 +57,9 @@ duidelijk dat de ene van a naar b synct en de andere van b naar a.
 
 ### DEPLOY: feat/sync-button-direction
 
-De twee knoppen in de kop van een werkbak laten nu zien welke kant ze op werken. "Volgorde versturen" heeft
-een pijl omhoog en het label **Hub → Spotify**; de sync-knop heet nu "Ophalen", met een pijl omlaag en het
-label **Spotify → Hub**. Ook op de pagina van een gepubliceerde mix heet die knop zo.
+De twee knoppen in de kop van een werkbak heten nu **Push** en **Fetch**, zoals in git. Push (pijl omhoog)
+stuurt de lokale volgorde naar Spotify, Fetch (pijl omlaag) haalt de playlist opnieuw op uit Spotify. Fetch was
+"Sync met Spotify" en heet ook op de pagina van een gepubliceerde mix zo.
 
 **Score:** 2
 

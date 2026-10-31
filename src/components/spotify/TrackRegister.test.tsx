@@ -131,7 +131,7 @@ describe("TrackRegister", () => {
       vi.mocked(savePlaylistOrder).mockResolvedValue({ refreshed: false, pending: false, rateLimitedUntil: null });
       render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={order} />);
       fireEvent.keyDown(grip(1), { key: "ArrowDown" });
-      await screen.findByText(/klik op Ophalen uit Spotify/);
+      await screen.findByText(/klik op Fetch/);
       expect(titles()).toEqual(["Nummer 2", "Nummer 1", "Nummer 3"]);
       expect(refresh).not.toHaveBeenCalled();
       expect(grip(1).getAttribute("aria-disabled")).toBe("true");

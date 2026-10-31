@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { readRouteErrorMessage } from "@/lib/http/routeError";
 import { formatClock as clock } from "@/lib/library/pendingOrder";
-import { SyncDirectionIcon, SyncRoute } from "./SyncDirection";
+import { SyncDirectionIcon } from "./SyncDirection";
 
 type Status = "idle" | "syncing" | "done" | "error";
 
@@ -138,8 +138,7 @@ export function PendingOrderButton({
         aria-label={status === "syncing" ? "Bezig met versturen…" : "Volgorde naar Spotify sturen"}
       >
         <SyncDirectionIcon direction="push" spinning={status === "syncing"} />
-        {status === "syncing" ? "Bezig met versturen…" : "Volgorde versturen"}
-        <SyncRoute direction="push" />
+        {status === "syncing" ? "Pushen…" : "Push"}
       </button>
     </div>
   );
