@@ -11,6 +11,7 @@
 
 import { getValidAccessToken } from "./auth";
 import { SpotifyApiError, SpotifyRateLimitError } from "./errors";
+import { recordRateLimit } from "./rateLimitStore";
 
 export const SPOTIFY_API_BASE = "https://api.spotify.com/v1";
 
@@ -41,6 +42,13 @@ async function waitOutRateLimit(res: Response, label: string, attempt: number): 
   const waitSeconds = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0 ? retryAfterSeconds : 1;
   if (waitSeconds > MAX_RETRY_WAIT_SECONDS) {
     console.warn(`[spotify/httpClient] 429 op ${label} -- Retry-After ${waitSeconds}s is te lang om af te wachten, opgegeven`);
+    // Het einde van zo'n straf staat vast (app-breed): bewaar het, zodat de routes Spotify niet nodeloos
+    // aanroepen en een uitgestelde volgorde weet vanaf wanneer hij verstuurd kan worden.
+    try {
+      recordRateLimit(waitSeconds);
+    } catch (err) {
+      console.warn("[spotify/httpClient] rate limit niet kunnen vastleggen:", err);
+    }
     throw new SpotifyRateLimitError(
       `Spotify vraagt ${waitSeconds}s te wachten (rate limit) op ${label}`,
       waitSeconds

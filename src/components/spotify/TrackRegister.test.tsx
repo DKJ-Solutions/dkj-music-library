@@ -112,7 +112,7 @@ describe("TrackRegister", () => {
     });
 
     it("verplaatst met de pijltoets, optimistisch, met de plekken van de playlist, en ververst daarna", async () => {
-      vi.mocked(savePlaylistOrder).mockResolvedValue({ refreshed: true });
+      vi.mocked(savePlaylistOrder).mockResolvedValue({ refreshed: true, pending: false, rateLimitedUntil: null });
       render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={order} />);
       fireEvent.keyDown(grip(1), { key: "ArrowDown" });
       expect(titles()).toEqual(["Nummer 2", "Nummer 1", "Nummer 3"]);
@@ -128,13 +128,23 @@ describe("TrackRegister", () => {
     });
 
     it("houdt de verplaatste volgorde, ververst niet en zet slepen uit als de snapshot na de PUT niet bijwerkte", async () => {
-      vi.mocked(savePlaylistOrder).mockResolvedValue({ refreshed: false });
+      vi.mocked(savePlaylistOrder).mockResolvedValue({ refreshed: false, pending: false, rateLimitedUntil: null });
       render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={order} />);
       fireEvent.keyDown(grip(1), { key: "ArrowDown" });
       await screen.findByText(/klik op Sync met Spotify/);
       expect(titles()).toEqual(["Nummer 2", "Nummer 1", "Nummer 3"]);
       expect(refresh).not.toHaveBeenCalled();
       expect(grip(1).getAttribute("aria-disabled")).toBe("true");
+    });
+
+    it("meldt een lokaal bewaarde verplaatsing als informatie, niet als fout, en ververst de pagina", async () => {
+      vi.mocked(savePlaylistOrder).mockResolvedValue({ refreshed: true, pending: true, rateLimitedUntil: Date.now() + 3_600_000 });
+      render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={order} />);
+      fireEvent.keyDown(grip(1), { key: "ArrowDown" });
+      const note = await screen.findByText(/Bewaard in de hub; Spotify volgt zodra het weer kan/);
+      expect(note.className).not.toContain("is-error");
+      await waitFor(() => expect(refresh).toHaveBeenCalled());
+      expect(titles()).toEqual(["Nummer 2", "Nummer 1", "Nummer 3"]);
     });
 
     it("meldt kort dat een rij zonder plek in de playlist niet verplaatst kan worden", () => {

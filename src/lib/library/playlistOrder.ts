@@ -1,7 +1,8 @@
 // De volgorde van een playlist in het trackregister, en het verslepen van een rij daarin (Dave, 31 oktober
-// 2026). Spotify is de ENIGE bron van die volgorde: de app bewaart er niets van. De tabel toont de rijen
-// in de volgorde van de playlist; een sleepactie wordt een verplaatsing bij Spotify
-// (POST /api/spotify/playlist-order -> PUT /playlists/{id}/items).
+// 2026). Spotify is de bron van die volgorde, behalve voor een uitgestelde volgorde zolang Spotify niet te
+// schrijven is (pendingOrder.ts, pendingOrderStore.ts). De tabel toont de rijen in de volgorde van de
+// playlist; een sleepactie wordt een verplaatsing bij Spotify
+// (POST /api/spotify/playlist-order -> PUT /playlists/{id}/items), of bij een rate limit een lokale.
 //
 // Pure module: geen fs, geen React -- vanuit een 'use client'-bestand te gebruiken, en los te testen.
 
