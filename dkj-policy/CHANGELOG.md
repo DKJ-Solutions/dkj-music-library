@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**23 / 25 minor entries** <!-- pending-tally -->
+**24 / 26 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/werkbak-drag-order · 20261031-131625Z
+
+Op een werkbakpagina (/mixen/preparation/<id>) staat de tabel nu in de volgorde van de Spotify-playlist zelf, en je kunt een track met de greep links naar een andere plek slepen; die verplaatsing gaat direct naar de playlist in Spotify. Sleep je in Spotify, dan zet de sync-knop de pagina gelijk. Is de playlist in Spotify veranderd sinds de pagina laadde, dan verplaatst de app niets maar haalt eerst de nieuwe volgorde op. Dit is de eerste keer dat de app de inhoud van een playlist in Spotify wijzigt.
+
+**Score:** 4
+
+#### What makes this deploy extra special
+
+Je bepaalt de kansrijkste tracks voor de volgende mix nu door ze bovenaan te slepen, en die volgorde staat ook in Spotify.
+
+**Score:** 4
+
+#### Pull Request
+
+werkbak-volgorde slepen, in sync met de Spotify-playlist
+
+[PR #135](https://github.com/DKJ-Solutions/dkj-music-library/pull/135)
+
+---
 
 ### DEPLOY: fix/connection-grid-3 · 20261031-110819Z
 
