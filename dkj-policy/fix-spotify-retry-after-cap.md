@@ -39,19 +39,38 @@
 
 ### PLAN
 
+Melding van de eigenaar: slepen in werkbak 5p4okOZaBczCnGduUhfFQd gaf steeds "Er loopt al een
+verplaatsing in deze playlist." De serverlog liet zien waarom: Spotify gaf 429 met Retry-After 19429 s,
+`spotifyGet` sliep dat uit en de verplaatsing hield het slot (`inFlight`) urenlang vast.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `SpotifyRateLimitError` (subklasse van `SpotifyApiError`, status 429, met `retryAfterSeconds`)
+- [x] `httpClient`: 429-afhandeling van GET en PUT samengebracht in `waitOutRateLimit`, met bovengrens `MAX_RETRY_WAIT_SECONDS` (60 s)
+- [x] playlist-order-route: `SpotifyRateLimitError` -> 503 `rate_limited` met het tijdstip waarop het weer kan
 
 ### TEST
 
+- [x] httpClient-tests: lange Retry-After gooit meteen (GET en PUT), precies 60 s wordt nog afgewacht
+- [x] route-test: 503 bij rate limit en het slot is daarna weer vrij
+- [x] vitest (Spotify-tests, 398 groen), `tsc --noEmit`, eslint
+
 ### DEPLOY: fix/spotify-retry-after-cap
 
-**Score:**
+Spotify-aanroepen wachten een rate limit nog maar tot 60 seconden af. Bij een langere `Retry-After`
+(Spotify gaf er een van ruim vijf uur) stopt de aanvraag meteen met een `SpotifyRateLimitError`. Tot nu toe
+sliep de aanvraag uren door. Bij het verplaatsen in een werkbak hield ze daarbij het slot van de playlist
+vast, zodat elke volgende sleep "Er loopt al een verplaatsing in deze playlist." gaf. Nu meldt de werkbak
+dat Spotify even niet laat schrijven, en vanaf hoe laat het weer kan.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Slepen in een werkbak raakt niet meer urenlang op slot na een rate limit van Spotify. De melding zegt
+voortaan wat er aan de hand is en vanaf wanneer het weer kan.
+
+**Score:** 3
 
 #### Pull Request
 

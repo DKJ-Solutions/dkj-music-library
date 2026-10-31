@@ -10,13 +10,19 @@
 // 'use client'-bestand gebruikt worden.
 
 import { getValidAccessToken } from "./auth";
-import { SpotifyApiError } from "./errors";
+import { SpotifyApiError, SpotifyRateLimitError } from "./errors";
 
 export const SPOTIFY_API_BASE = "https://api.spotify.com/v1";
 
 // Bovengrens tegen een oneindige wachtlus als Spotify structureel 429 blijft geven -- beter een
 // duidelijke fout dan een script dat voor altijd blijft hangen.
 const MAX_RETRIES = 5;
+
+// Langste Retry-After die we binnen één aanvraag uitzitten. Spotify geeft na veel verkeer soms uren
+// (gemeten 31 oktober 2026: 19429 s op een werkbak); wie dat uitslaapt houdt een HTTP-aanvraag -- en bij
+// het verplaatsen ook het slot van die playlist -- urenlang bezet, terwijl de pagina allang weg is.
+// Daarboven geven we meteen een SpotifyRateLimitError met de wachttijd, zodat de gebruiker weet hoe lang.
+export const MAX_RETRY_WAIT_SECONDS = 60;
 
 export interface SpotifyFetchOptions {
   /** Override voor tests: eigen fetch-implementatie i.p.v. het globale fetch. */
@@ -25,6 +31,25 @@ export interface SpotifyFetchOptions {
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/** Wacht de Retry-After van een 429 uit, of gooit SpotifyRateLimitError als die langer is dan
+ *  MAX_RETRY_WAIT_SECONDS. `label` is wat de waarschuwing noemt (bv. "/v1/me" of "PUT /v1/..."). */
+async function waitOutRateLimit(res: Response, label: string, attempt: number): Promise<void> {
+  const retryAfterHeader = res.headers.get("Retry-After");
+  const retryAfterSeconds = retryAfterHeader ? Number(retryAfterHeader) : 1;
+  const waitSeconds = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0 ? retryAfterSeconds : 1;
+  if (waitSeconds > MAX_RETRY_WAIT_SECONDS) {
+    console.warn(`[spotify/httpClient] 429 op ${label} -- Retry-After ${waitSeconds}s is te lang om af te wachten, opgegeven`);
+    throw new SpotifyRateLimitError(
+      `Spotify vraagt ${waitSeconds}s te wachten (rate limit) op ${label}`,
+      waitSeconds
+    );
+  }
+  console.warn(
+    `[spotify/httpClient] 429 op ${label} -- wacht ${waitSeconds}s (Retry-After), poging ${attempt + 1}/${MAX_RETRIES + 1}`
+  );
+  await sleep(waitSeconds * 1000);
 }
 
 /** Het foutlichaam van een niet-2xx-respons, zonder het te verliezen.
@@ -96,13 +121,7 @@ export async function spotifyGet<T>(
     });
 
     if (res.status === 429) {
-      const retryAfterHeader = res.headers.get("Retry-After");
-      const retryAfterSeconds = retryAfterHeader ? Number(retryAfterHeader) : 1;
-      const waitSeconds = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0 ? retryAfterSeconds : 1;
-      console.warn(
-        `[spotify/httpClient] 429 op ${url.pathname} -- wacht ${waitSeconds}s (Retry-After), poging ${attempt + 1}/${MAX_RETRIES + 1}`
-      );
-      await sleep(waitSeconds * 1000);
+      await waitOutRateLimit(res, url.pathname, attempt);
       continue;
     }
 
@@ -157,13 +176,7 @@ export async function spotifyPut(
     });
 
     if (res.status === 429) {
-      const retryAfterHeader = res.headers.get("Retry-After");
-      const retryAfterSeconds = retryAfterHeader ? Number(retryAfterHeader) : 1;
-      const waitSeconds = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0 ? retryAfterSeconds : 1;
-      console.warn(
-        `[spotify/httpClient] 429 op PUT ${url.pathname} -- wacht ${waitSeconds}s (Retry-After), poging ${attempt + 1}/${MAX_RETRIES + 1}`
-      );
-      await sleep(waitSeconds * 1000);
+      await waitOutRateLimit(res, `PUT ${url.pathname}`, attempt);
       continue;
     }
 

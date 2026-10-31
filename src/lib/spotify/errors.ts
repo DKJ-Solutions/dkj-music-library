@@ -49,6 +49,21 @@ export class SpotifyApiError extends Error {
   }
 }
 
+// Gegooid door httpClient.ts als Spotify een 429 geeft met een Retry-After die langer is dan we binnen
+// één aanvraag willen wachten (MAX_RETRY_WAIT_SECONDS daar). Spotify geeft na veel verkeer soms uren
+// (gemeten 31 oktober 2026: 19429 s); blind slapen hield toen een verplaatsing urenlang open, met haar
+// slot (`move_busy`) erbij. Een subklasse van SpotifyApiError met status 429, zodat bestaande
+// `instanceof SpotifyApiError`-afhandeling blijft werken.
+export class SpotifyRateLimitError extends SpotifyApiError {
+  public readonly retryAfterSeconds: number;
+
+  constructor(message: string, retryAfterSeconds: number) {
+    super(message, 429, null);
+    this.name = "SpotifyRateLimitError";
+    this.retryAfterSeconds = retryAfterSeconds;
+  }
+}
+
 /** Spotify's ÉIGEN uitleg uit een foutlichaam, of `null` als er geen leesbare boodschap in zit.
  *
  *  WAAROM DIT BESTAAT (Dave, 2026-07-25). Bij 48 mislukte schrijfacties meldde de hub *"waarschijnlijk

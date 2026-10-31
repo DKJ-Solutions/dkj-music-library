@@ -13,6 +13,7 @@ import { spotifyGet } from "@/lib/spotify/httpClient";
 import { fetchAllPlaylistItems } from "@/lib/spotify/ingest";
 import { reorderPlaylistItem } from "@/lib/spotify/playlistApi";
 import { refreshPlaylistInSnapshot } from "@/lib/spotify/refreshPlaylist";
+import { SpotifyRateLimitError } from "@/lib/spotify/errors";
 import { POST } from "./route";
 
 const ID = "P".repeat(22);
@@ -74,6 +75,16 @@ describe("playlist-order route", () => {
   it("geeft 409 zonder Spotify aan te roepen als de pagina een ander snapshot_id heeft dan de opslag", async () => {
     expect((await POST(request({ ...BODY, snapshotId: "oud" }))).status).toBe(409);
     expect(spotifyGet).not.toHaveBeenCalled();
+  });
+
+  it("meldt een lange rate limit meteen (503) en geeft de playlist weer vrij", async () => {
+    vi.mocked(spotifyGet).mockRejectedValueOnce(new SpotifyRateLimitError("rate limit", 19429));
+    const res = await POST(request(BODY));
+    expect(res.status).toBe(503);
+    expect(await res.json()).toMatchObject({ error: "rate_limited", retryAfterSeconds: 19429 });
+    expect(reorderPlaylistItem).not.toHaveBeenCalled();
+    // Het slot is los: de volgende poging komt gewoon door.
+    expect((await POST(request(BODY))).status).toBe(200);
   });
 
   it("weigert een tweede gelijktijdige verplaatsing in dezelfde playlist met 429", async () => {

@@ -23,11 +23,16 @@
 // schrijven. Tussen controle 3 en de PUT blijft een venster van enkele honderden milliseconden over, buiten
 // deze app om; Spotify heeft geen lock.
 //
+// Een lange rate limit van Spotify (Retry-After boven MAX_RETRY_WAIT_SECONDS in httpClient.ts) wordt niet
+// uitgezeten maar meteen gemeld (503 `rate_limited`, met het tijdstip waarop het weer kan). Vóór 31 oktober
+// 2026 sliep de aanvraag dan uren en hield ze het slot hierboven vast, zodat elke volgende poging
+// `move_busy` kreeg.
+//
 // Alleen werkbakken (isPreparationPlaylist): meer schrijft de hub niet.
 import { NextResponse } from "next/server";
 import { sameOriginGuard } from "@/lib/http/sameOrigin";
 import { isPreparationPlaylist } from "@/lib/mixes/preparation";
-import { SpotifyApiError, SpotifyReauthRequiredError } from "@/lib/spotify/errors";
+import { SpotifyApiError, SpotifyRateLimitError, SpotifyReauthRequiredError } from "@/lib/spotify/errors";
 import { matchesLivePlaylist } from "@/lib/library/playlistOrder";
 import { fetchAllPlaylistItems } from "@/lib/spotify/ingest";
 import { spotifyGet } from "@/lib/spotify/httpClient";
@@ -117,6 +122,20 @@ export async function POST(request: Request) {
   } catch (err) {
     if (err instanceof SpotifyReauthRequiredError) {
       return NextResponse.json({ error: "reauth_required", message: err.message }, { status: 401 });
+    }
+    if (err instanceof SpotifyRateLimitError) {
+      const until = new Date(Date.now() + err.retryAfterSeconds * 1000).toLocaleTimeString("nl-NL", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      return NextResponse.json(
+        {
+          error: "rate_limited",
+          message: `Spotify laat de hub even niet schrijven (rate limit): probeer het na ${until} opnieuw.`,
+          retryAfterSeconds: err.retryAfterSeconds,
+        },
+        { status: 503 }
+      );
     }
     if (err instanceof SpotifyApiError && (err.status === 403 || err.status === 404)) {
       return NextResponse.json(
