@@ -471,6 +471,17 @@ describe("TrackRegister", () => {
     expect(frame.getAttribute("src")).toBe("https://open.spotify.com/embed/track/sp1");
   });
 
+  it("zet de afspeelknop in elke tabel helemaal links", () => {
+    const firstCell = () => document.querySelector(".register-table tbody tr td");
+    render(<TrackRegister rows={[row(1)]} artistCount={1} />);
+    expect(firstCell()?.classList.contains("register-play-cell")).toBe(true);
+    fireEvent.click(screen.getByRole("switch"));
+    expect(firstCell()?.classList.contains("register-play-cell")).toBe(true);
+    cleanup();
+    render(<TrackRegister rows={[row(1)]} artistCount={1} compact />);
+    expect(firstCell()?.classList.contains("register-play-cell")).toBe(true);
+  });
+
   it("geeft een track zonder spotify_track_id geen afspeelknop", () => {
     render(<TrackRegister rows={[row(1, { spotifyTrackId: null })]} artistCount={1} />);
     expect(screen.queryByRole("button", { name: /afspelen/ })).toBeNull();
