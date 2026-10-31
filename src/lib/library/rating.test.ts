@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { openLibraryDb } from "./db";
-import { setTrackRating } from "./rating";
+import { isRatingKey, setTrackRating } from "./rating";
 import { TrackInputError, countTracks, getTrack, upsertTracks } from "./trackStore";
 
 const memoryDb = () => openLibraryDb(":memory:").db;
@@ -24,5 +24,26 @@ describe("setTrackRating", () => {
     upsertTracks(db, [{ dkj_track_id: "a", dkj_rating: "tier-4" }]);
     expect(() => setTrackRating(db, "a", "tier-9")).toThrow(TrackInputError);
     expect(getTrack(db, "a")?.dkj_rating).toBe("tier-4");
+  });
+});
+
+describe("setTrackRating voor dkj_mix_rating", () => {
+  it("zet alleen dkj_mix_rating en laat dkj_rating staan", () => {
+    const db = memoryDb();
+    upsertTracks(db, [{ dkj_track_id: "a", dkj_rating: "tier-4", dkj_mix_rating: "tier-4" }]);
+    expect(setTrackRating(db, "a", "tier-8", "dkj_mix_rating")).toBe("tier-8");
+    expect(getTrack(db, "a")).toMatchObject({ dkj_rating: "tier-4", dkj_mix_rating: "tier-8" });
+  });
+
+  it("weigert ook daar een waarde die geen tier is", () => {
+    const db = memoryDb();
+    upsertTracks(db, [{ dkj_track_id: "a", dkj_mix_rating: "tier-4" }]);
+    expect(() => setTrackRating(db, "a", "tier-0", "dkj_mix_rating")).toThrow(TrackInputError);
+  });
+});
+
+describe("isRatingKey", () => {
+  it("kent alleen de twee waarderingen", () => {
+    expect([isRatingKey("dkj_rating"), isRatingKey("dkj_mix_rating"), isRatingKey("title"), isRatingKey(undefined)]).toEqual([true, true, false, false]);
   });
 });

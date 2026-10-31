@@ -2,7 +2,75 @@
 
 ## [Unreleased]
 
-**19 / 21 minor entries** <!-- pending-tally -->
+**22 / 24 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/play-button-left · 20261031-110621Z
+
+De afspeelknop staat in elke tabel helemaal links: in de gewone tabel, in de verborgen kolommen (waar hij
+eerst ontbrak) en op de mixpagina's, waar hij nu vóór de `#`-kolom staat.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Wie het register gebruikt, vindt de afspeelknop nu in elke tabel op dezelfde plek, ook in de verborgen kolommen.
+
+**Score:** 2
+
+#### Pull Request
+
+Afspeelknop altijd helemaal links in de tabel
+
+[PR #131](https://github.com/DKJ-Solutions/dkj-music-library/pull/131)
+
+---
+
+### DEPLOY: feat/mix-rating · 20261031-105842Z
+
+Het veld zit door het hele bibliotheekpad heen (schema, standaard bij de sync, de opslaanroute) en de
+export kreeg het veld bij alle tracks.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Een tweede waardering per nummer, `dkj_mix_rating`: niet hoe graag je het zelf luistert, maar hoe graag
+je het in de volgende mix wilt gebruiken. Het trackregister toont hem als kolom `mix rating` direct naast
+`dkj_rating`; op de mixpagina's (`/mixen/preparation`, `/mixen/published`) staat alleen de mix rating, en
+de tabel opent daar met de hoogste mix rating bovenaan. Je wijzigt hem met hetzelfde potloodje. Elke track begint op
+de waarde van zijn `dkj_rating`; daarna staan de twee los van elkaar.
+
+**Score:** 4
+
+#### Pull Request
+
+Tweede waardering dkj_mix_rating: hoe graag je een nummer in de volgende mix wilt gebruiken
+
+[PR #130](https://github.com/DKJ-Solutions/dkj-music-library/pull/130)
+
+---
+
+### DEPLOY: feat/preparation-card-to-spotify · 20261031-102841Z
+
+De Preparation-kaart (naar /mixen/preparation, de Spotify-werkbakken op "Vol. X") staat niet meer op de hub
+/mixen maar onder Playlists op /spotify, en daarmee ook op /spotify/playlists, die dezelfde kaarten toont. De
+pagina zelf blijft op /mixen/preparation.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+De werkbakken zijn Spotify-playlists, dus de ingang staat nu bij de andere playlist-pagina's.
+
+**Score:** 2
+
+#### Pull Request
+
+Preparation-kaart van /mixen naar de sectie Playlists op /spotify
+
+[PR #129](https://github.com/DKJ-Solutions/dkj-music-library/pull/129)
+
+---
 
 ### DEPLOY: fix/126-page-column · 20261030-173110Z
 

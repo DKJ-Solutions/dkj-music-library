@@ -1,20 +1,17 @@
 // De mixen-hub op /mixen: één grid met een card-link per pagina eronder, zelfde vorm als de Spotify-hub op
 // /spotify. De Published-card drilt door naar /mixen/published, waar een card per mix staat die op
-// djcylow.com gepubliceerd is; de Planned-card naar /mixen/planned, voor de mixen die nog moeten komen; de
-// Preparation-card naar /mixen/preparation, een card per Spotify-werkbak die op "Vol. X" eindigt.
+// djcylow.com gepubliceerd is; de Planned-card naar /mixen/planned, voor de mixen die nog moeten komen. De
+// Preparation-card (/mixen/preparation, de Spotify-werkbakken op "Vol. X") staat sinds 31 oktober 2026 op
+// /spotify, onder Playlists (components/spotify/playlistCards.ts).
 import { PageCardGrid, type PageCard } from "@/components/PageCardGrid";
 import { readMixes } from "@/lib/mixes/mixStore";
-import { preparationPlaylists } from "@/lib/mixes/preparation";
-import { readSnapshot } from "@/lib/spotify/snapshotStore";
 import { pageTitle } from "@/lib/pages";
 
-// Leest de mix-JSON's en de Spotify-snapshot van schijf voor de aantallen op de cards, en die wijzigen buiten
-// de build.
+// Leest de mix-JSON's van schijf voor het aantal op de Published-card, en die wijzigen buiten de build.
 export const dynamic = "force-dynamic";
 
 export default function MixenHubPage() {
   const published = readMixes().filter((mix) => mix.slug).length;
-  const preparation = preparationPlaylists(readSnapshot()?.playlists ?? []).length;
   const cards: PageCard[] = [
     {
       href: "/mixen/published",
@@ -27,12 +24,6 @@ export default function MixenHubPage() {
       icon: "calendar",
       label: pageTitle("/mixen/planned"),
       sub: "De mixen die nog op djcylow.com moeten verschijnen",
-    },
-    {
-      href: "/mixen/preparation",
-      icon: "list",
-      label: pageTitle("/mixen/preparation"),
-      sub: `De Spotify-werkbakken op Vol. X · ${preparation} playlists`,
     },
   ];
 

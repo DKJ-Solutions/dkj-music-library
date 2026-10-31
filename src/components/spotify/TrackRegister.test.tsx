@@ -35,6 +35,7 @@ function row(n: number, over: Partial<RegisterRow> = {}): RegisterRow {
     bpm: null,
     genre: null,
     rating: null,
+    mixRating: null,
     playcount: null,
     album: null,
     albumCandidates: [],
@@ -57,7 +58,7 @@ describe("TrackRegister", () => {
   ];
 
   it("nummert de rijen van de compacte tabel 1 tot en met n, ook na sorteren", () => {
-    const three = [row(1, { rating: "tier-2" }), row(2, { rating: "tier-8" }), row(3, { rating: "tier-5" })];
+    const three = [row(1, { mixRating: "tier-2" }), row(2, { mixRating: "tier-8" }), row(3, { mixRating: "tier-5" })];
     render(<TrackRegister rows={three} artistCount={1} compact />);
     const positions = () => Array.from(document.querySelectorAll(".register-position"), (cell) => cell.textContent);
     const titles = () => Array.from(document.querySelectorAll(".register-title"), (cell) => cell.textContent);
@@ -66,6 +67,15 @@ describe("TrackRegister", () => {
     fireEvent.click(screen.getByRole("button", { name: /dkj_title/ }));
     expect(positions()).toEqual(["1", "2", "3"]);
     expect(titles()).toEqual(["Nummer 1", "Nummer 2", "Nummer 3"]);
+  });
+
+  it("toont in de compacte tabel alleen dkj_mix_rating, en sorteert daarop", () => {
+    const three = [row(1, { rating: "tier-8", mixRating: "tier-1" }), row(2, { rating: "tier-1", mixRating: "tier-7" })];
+    render(<TrackRegister rows={three} artistCount={1} compact />);
+    expect(screen.getByRole("columnheader", { name: /mix rating/ })).toBeTruthy();
+    expect(screen.queryByRole("columnheader", { name: /dkj_rating/ })).toBeNull();
+    expect(screen.queryByText("tier-8", { selector: ".register-tag" })).toBeNull();
+    expect(Array.from(document.querySelectorAll(".register-title"), (cell) => cell.textContent)).toEqual(["Nummer 2", "Nummer 1"]);
   });
 
   it("heeft geen plek-kolom in de gewone tabel", () => {
@@ -244,13 +254,37 @@ describe("TrackRegister", () => {
     expect(JSON.parse(init.body as string)).toEqual({ trackId: "ART01-001", rating: "tier-6" });
   });
 
+  it("toont dkj_mix_rating naast dkj_rating, met de korte kop mix rating", () => {
+    render(<TrackRegister rows={[row(1, { rating: "tier-2", mixRating: "tier-7" })]} artistCount={1} />);
+    const header = screen.getByRole("columnheader", { name: /mix rating/ });
+    expect(header.querySelector("button")?.getAttribute("title")).toBe("Sorteer op dkj_mix_rating");
+    const headers = screen.getAllByRole("columnheader").map((h) => h.textContent ?? "");
+    const rating = headers.findIndex((h) => h.includes("dkj_rating"));
+    expect(headers[rating + 1]).toContain("mix rating");
+    expect(screen.getByText("tier-7", { selector: ".register-tag" })).toBeTruthy();
+  });
+
+  it("wijzigt dkj_mix_rating via zijn eigen potloodje, los van dkj_rating", async () => {
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify({ trackId: "ART01-001", field: "dkj_mix_rating", rating: "tier-8" }), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+    render(<TrackRegister rows={[row(1, { rating: "tier-3", mixRating: "tier-4" })]} artistCount={1} />);
+    fireEvent.click(screen.getByRole("button", { name: "dkj_mix_rating van ART01-001 wijzigen" }));
+    fireEvent.click(screen.getByRole("button", { name: "tier-8" }));
+
+    expect(screen.getByText("tier-8", { selector: ".register-tag" })).toBeTruthy();
+    expect(screen.getByText("tier-3", { selector: ".register-tag" })).toBeTruthy();
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    expect(JSON.parse(init.body as string)).toEqual({ trackId: "ART01-001", rating: "tier-8", field: "dkj_mix_rating" });
+  });
+
   it("zet de vorige dkj_rating terug als opslaan mislukt, met de reden in de tooltip", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async () => new Response(JSON.stringify({ error: "save_failed", message: "schijf vol" }), { status: 500 }))
     );
     render(<TrackRegister rows={[row(1, { rating: "tier-4" })]} artistCount={1} />);
-    fireEvent.click(screen.getByRole("button", { name: /wijzigen/ }));
+    fireEvent.click(screen.getByRole("button", { name: "dkj_rating van ART01-001 wijzigen" }));
     fireEvent.click(screen.getByRole("button", { name: "tier-8" }));
 
     await waitFor(() => expect(screen.getByTitle("Opslaan mislukt: schijf vol")).toBeTruthy());
@@ -435,6 +469,17 @@ describe("TrackRegister", () => {
     fireEvent.click(screen.getByRole("button", { name: "Nummer 1 afspelen" }));
     const frame = await screen.findByTitle("Spotify-speler: Nummer 1");
     expect(frame.getAttribute("src")).toBe("https://open.spotify.com/embed/track/sp1");
+  });
+
+  it("zet de afspeelknop in elke tabel helemaal links", () => {
+    const firstCell = () => document.querySelector(".register-table tbody tr td");
+    render(<TrackRegister rows={[row(1)]} artistCount={1} />);
+    expect(firstCell()?.classList.contains("register-play-cell")).toBe(true);
+    fireEvent.click(screen.getByRole("switch"));
+    expect(firstCell()?.classList.contains("register-play-cell")).toBe(true);
+    cleanup();
+    render(<TrackRegister rows={[row(1)]} artistCount={1} compact />);
+    expect(firstCell()?.classList.contains("register-play-cell")).toBe(true);
   });
 
   it("geeft een track zonder spotify_track_id geen afspeelknop", () => {

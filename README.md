@@ -7,7 +7,7 @@ machine.
   groeperen en filteren, een dashboard, de BPM- en wereld-indeling, en de brug naar de DJ Cylow-mixen.
   Er gaat maar één ding terug naar Spotify, en dat staat in `src/lib/spotify/playlistApi.ts`: de naam
   en beschrijving van een playlist die bij een mix hoort. Verder schrijft de app niets naar Spotify. In
-  de eigen bibliotheek kun je één veld zelf aanpassen: `dkj_rating`, in het trackregister.
+  de eigen bibliotheek kun je twee velden zelf aanpassen: `dkj_rating` en `dkj_mix_rating`, in het trackregister.
 - **Desktop-mirror**: moet nog gebouwd worden.
 
 De app kwam op 2026-09-27 uit de private repo `life-hub`, en is daar in zijn geheel weggehaald.
@@ -297,6 +297,18 @@ een tier, en hij wordt meteen opgeslagen (`POST /api/spotify/rating`, zie
 `src/lib/library/rating.ts`). Dat schrijft in de database én in de export. Mislukt het opslaan, dan
 komt de vorige waarde terug en staat de reden in de tooltip.
 
+### De mixwaardering: `dkj_mix_rating`
+
+`dkj_mix_rating` werkt precies als `dkj_rating`, maar zegt iets anders: niet hoe graag je een nummer zelf
+luistert, maar hoe graag je het in de **volgende mix** wilt gebruiken. Dezelfde tiers (`tier-1` laag tot
+`tier-8` hoog) en hetzelfde potloodje. Zolang hij leeg is, krijgt hij bij elke sync de waarde van
+`dkj_rating` (en `tier-4` als die er niet is; `fillMixRatings` in `src/lib/library/artistIds.ts`). Daarna
+staan de twee los van elkaar: een mixwaardering die je zelf kiest, blijft staan. In het trackregister staat hij direct rechts van `dkj_rating`, onder de korte kop
+`mix rating`. In de compacte tabel van de mixpagina's (`/mixen/preparation/<id>` en
+`/mixen/published/<slug>`) staat alleen deze waardering, zonder `dkj_rating`, en die tabel opent met de hoogste
+mixwaardering bovenaan. De route is dezelfde `POST /api/spotify/rating`, met
+`field: "dkj_mix_rating"` in de body; zonder `field` gaat het om `dkj_rating`.
+
 #### Je wijzigingen op main zetten: `npm run library:publish`
 
 De export staat in git, en direct op `main` committen mag niet: alles gaat via een branch en een PR.
@@ -315,7 +327,7 @@ en `ship-pr` van de dkj-policy-plugin. Je eindigt op een bijgewerkte `main`.
 
 ### Velden met vaste keuzes
 
-`dkj_bpm`, `dkj_genre`, `dkj_rating`, `dkj_album` en `dkj_group` accepteren alleen hun eigen opties; elke andere waarde breekt de import af.
+`dkj_bpm`, `dkj_genre`, `dkj_rating`, `dkj_mix_rating`, `dkj_album` en `dkj_group` accepteren alleen hun eigen opties; elke andere waarde breekt de import af.
 Hoofdletters en spaties tellen niet mee (`128 bpm` wordt `128BPM`).
 
 - **`dkj_group`**: een lijst uit `MMC`, `DJ CYLOW` en `Prive`. De sync vult hem zolang hij leeg is met

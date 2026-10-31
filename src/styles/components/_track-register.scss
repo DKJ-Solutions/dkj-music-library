@@ -312,7 +312,7 @@
   color: var(--fg-1);
 }
 
-// De afspeelknop in een EIGEN KOLOM vóór dkj_title (Dave; PlayButton in TrackRegister.tsx): 40px breed,
+// De afspeelknop in een EIGEN KOLOM, in elke tabel helemaal links (Dave; PLAY_COLUMN in TrackRegister.tsx): 40px breed,
 // het knopje op de linkermarge van de tabel, en de rest van de ruimte als afstand tot de titel.
 .register-table .register-play-cell {
   padding-right: 0;

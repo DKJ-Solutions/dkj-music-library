@@ -4,7 +4,7 @@
 // zit in register.ts; hier alleen de weergave en de filterstand.
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { DKJ_ALBUM_COLOURS, DKJ_ALBUM_OPTIONS, DKJ_BPM_OPTIONS, DKJ_GENRE_OPTIONS, DKJ_RATING_OPTIONS, TRACK_FIELDS } from "@/lib/library/fields";
+import { DKJ_ALBUM_COLOURS, DKJ_ALBUM_OPTIONS, DKJ_BPM_OPTIONS, DKJ_GENRE_OPTIONS, DKJ_RATING_OPTIONS, MIX_RATING_KEY, RATING_KEY, TRACK_FIELDS, type RatingKey } from "@/lib/library/fields";
 import { mixUrl } from "@/lib/library/djcylowMix";
 import { playlistUrl } from "@/lib/library/playlistLink";
 import { saveRating } from "@/lib/library/saveRating";
@@ -65,10 +65,10 @@ interface Column {
   className?: string;
 }
 
-/** Wat een bewerkbare cel nodig heeft: de waardering van een rij in de tabel zetten (Rating), en de
+/** Wat een bewerkbare cel nodig heeft: een waardering van een rij in de tabel zetten (Rating), en de
  *  track die in de speler staat kiezen (PlayButton). */
 interface CellEdit {
-  setRating: (trackId: string, rating: string | null) => void;
+  setRating: (trackId: string, field: RatingKey, rating: string | null) => void;
   playingId: string | null;
   togglePlay: (row: RegisterRow) => void;
 }
@@ -263,20 +263,25 @@ function RatingSymbol({ rating }: { rating: string }) {
  *  Optimistisch: de tabel toont de keuze direct, zodat sorteren en zoeken er meteen mee werken. Mislukt
  *  het opslaan, dan komt de vorige waarde terug en staat de reden in de tooltip -- een waardering die
  *  alleen in de browser staat, zou bij de volgende paginalading stilletjes verdwijnen. */
-function Rating({ row, term, setRating }: { row: RegisterRow; term: string; setRating: CellEdit["setRating"] }) {
+/** Welke eigenschap van een rij bij welk waarderingsveld hoort. */
+const RATING_ROW_KEY = { [RATING_KEY]: "rating", [MIX_RATING_KEY]: "mixRating" } as const satisfies Record<RatingKey, keyof RegisterRow>;
+
+/** Zelfde cel voor dkj_rating en dkj_mix_rating (Dave, 31 oktober 2026): `field` zegt welke. */
+function Rating({ row, term, field, setRating }: { row: RegisterRow; term: string; field: RatingKey; setRating: CellEdit["setRating"] }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const value = row[RATING_ROW_KEY[field]];
 
   async function choose(next: string) {
-    if (next === row.rating) return;
-    const previous = row.rating;
-    setRating(row.id, next);
+    if (next === value) return;
+    const previous = value;
+    setRating(row.id, field, next);
     setBusy(true);
     setError(null);
     try {
-      await saveRating(row.id, next);
+      await saveRating(row.id, next, field);
     } catch (err) {
-      setRating(row.id, previous);
+      setRating(row.id, field, previous);
       setError(err instanceof Error ? err.message : "onbekende fout");
     } finally {
       setBusy(false);
@@ -285,10 +290,10 @@ function Rating({ row, term, setRating }: { row: RegisterRow; term: string; setR
 
   return (
     <span className={`register-rating${error ? " is-error" : ""}${busy ? " is-busy" : ""}`} title={error ? `Opslaan mislukt: ${error}` : undefined}>
-      {row.rating ? (
+      {value ? (
         <span className="register-tag">
-          <RatingSymbol rating={row.rating} />
-          <Highlight text={row.rating} term={term} />
+          <RatingSymbol rating={value} />
+          <Highlight text={value} term={term} />
         </span>
       ) : (
         <Empty />
@@ -297,8 +302,8 @@ function Rating({ row, term, setRating }: { row: RegisterRow; term: string; setR
         label="✎"
         caret={false}
         toggleClassName="register-rating-edit"
-        ariaLabel={`dkj_rating van ${row.id} wijzigen`}
-        title="Waardering wijzigen"
+        ariaLabel={`${field} van ${row.id} wijzigen`}
+        title={field === MIX_RATING_KEY ? "Mixwaardering wijzigen" : "Waardering wijzigen"}
       >
         {(close) =>
           DKJ_RATING_OPTIONS.map((option) => (
@@ -306,7 +311,7 @@ function Rating({ row, term, setRating }: { row: RegisterRow; term: string; setR
               key={option}
               type="button"
               className="register-menu-item register-menu-choice"
-              aria-current={option === row.rating ? "true" : undefined}
+              aria-current={option === value ? "true" : undefined}
               onClick={() => {
                 close();
                 void choose(option);
@@ -600,11 +605,20 @@ function ArtistIds({ ids, names, term }: { ids: string[]; names: string[]; term:
   );
 }
 
+/** De afspeelknop in een EIGEN KOLOM (Dave): vaste breedte, net genoeg voor het knopje. Hij staat in
+ *  elke tabel helemaal links -- de gewone, de verborgen kolommen en de compacte (Dave, 31 oktober 2026). */
+const PLAY_COLUMN: Column = {
+  key: "play",
+  field: "afspelen",
+  width: "40px",
+  className: "register-play-cell",
+  cell: (row, _term, edit) => <PlayButton row={row} edit={edit} />,
+};
+
 /** De gewone kolommen, in volgorde. dkj_track_id, dkj_file, dkj_artist, dkj_artist_id en djcylow_mix staan
  *  er niet in (Dave); die staan in HIDDEN_COLUMNS, achter de switch, en op alle vijf zoeken kan altijd. */
 const VISIBLE_COLUMNS: readonly Column[] = [
-  // De afspeelknop in een EIGEN KOLOM (Dave): vaste breedte, net genoeg voor het knopje.
-  { key: "play", field: "afspelen", width: "40px", className: "register-play-cell", cell: (row, _term, edit) => <PlayButton row={row} edit={edit} /> },
+  PLAY_COLUMN,
   { key: "dkjTitle", field: "dkj_title", width: "22%", cell: (row, term) => <OneLine text={row.dkjTitle} term={term} className="register-title" /> },
   { key: "albumArtist", field: "dkj_albumartiest", width: "17%", cell: (row, term) => <OneLine text={row.albumArtist} term={term} className="register-album-artist" /> },
   {
@@ -647,7 +661,16 @@ const VISIBLE_COLUMNS: readonly Column[] = [
     // Vaste breedte (Dave): symbool, "tier-8" en het potloodje moeten er altijd heel in passen, ook op
     // de smalste tabel (900px), waar 7% het getal afkapte.
     width: "104px",
-    cell: (row, term, edit) => <Rating row={row} term={term} setRating={edit.setRating} />,
+    cell: (row, term, edit) => <Rating row={row} term={term} field={RATING_KEY} setRating={edit.setRating} />,
+  },
+  {
+    key: "mixRating",
+    field: "dkj_mix_rating",
+    // Hoe graag je hem in de volgende mix wilt gebruiken (Dave, 31 oktober 2026); direct naast dkj_rating
+    // en even breed. De kop heet "mix rating", zodat hij in die 104px past; de veldnaam staat in de tooltip.
+    label: "mix rating",
+    width: "104px",
+    cell: (row, term, edit) => <Rating row={row} term={term} field={MIX_RATING_KEY} setRating={edit.setRating} />,
   },
   {
     key: "playcount",
@@ -665,6 +688,7 @@ const VISIBLE_COLUMNS: readonly Column[] = [
 
 /** De kolommen die uit de gewone tabel zijn gelaten, te zien via de switch. */
 const HIDDEN_COLUMNS: readonly Column[] = [
+  PLAY_COLUMN,
   { key: "id", field: "dkj_track_id", width: "10%", cell: (row, term) => <OneLine text={row.id} term={term} className="register-id" /> },
   { key: "file", field: "dkj_file", width: "35%", cell: (row, term) => <OneLine text={row.file} term={term} className="register-file" /> },
   { key: "artist", field: "dkj_artist", width: "20%", cell: (row, term) => <OneLine text={row.artist} term={term} className="register-artist" /> },
@@ -689,17 +713,20 @@ const COLUMN_SETS: Record<ColumnSet, readonly Column[]> = { visible: VISIBLE_COL
 
 /** De kolommen van de compacte tabel (`compact`), in hun volgorde en met hun breedte daar: year, dkj_genre,
  *  dkj_bpm, plays, dkj_album en dkj_group zijn er niet relevant (Dave, 28 oktober 2026), de rest krijgt hun
- *  ruimte, en dkj_rating staat links van spotify_playlist (Dave, 28 oktober 2026). */
+ *  ruimte. Van de twee waarderingen staat alleen dkj_mix_rating erin, links van spotify_playlist: op een
+ *  mixpagina telt hoe graag je een nummer in de mix wilt, niet hoe graag je het zelf luistert (Dave, 31
+ *  oktober 2026). */
 const COMPACT_WIDTHS: Partial<Record<Column["key"], string>> = {
-  position: "48px",
   play: "40px",
+  position: "48px",
   dkjTitle: "38%",
   albumArtist: "30%",
-  rating: "104px",
+  mixRating: "104px",
   playlists: "32%",
 };
-/** De compacte tabel opent op de hoogste dkj_rating eerst (Dave, 28 oktober 2026): tier-8 bovenaan. */
-const COMPACT_SORT: RegisterSort = { key: "rating", dir: "desc" };
+/** De compacte tabel opent op de hoogste waardering eerst (Dave, 28 oktober 2026): tier-8 bovenaan. Sinds
+ *  31 oktober 2026 is dat dkj_mix_rating, de enige waardering die er nog in staat. */
+const COMPACT_SORT: RegisterSort = { key: "mixRating", dir: "desc" };
 /** De plek van de rij in de compacte tabel, 1 tot en met n (Dave, 29 oktober 2026): volgt de getoonde
  *  volgorde, dus na het sorteren op een kop staat 1 weer bovenaan. */
 const POSITION_COLUMN: Column = {
@@ -719,11 +746,11 @@ const COMPACT_COLUMNS: readonly Column[] =Object.entries(COMPACT_WIDTHS).flatMap
 });
 
 export function TrackRegister({ rows: initialRows, artistCount, compact = false }: TrackRegisterProps) {
-  // De waarderingen die je op deze pagina hebt gekozen (Rating), over de rijen van de server
-  // heen gelegd: zo sorteren, zoeken en tellen ze meteen mee, zonder de pagina opnieuw te laden.
-  const [ratings, setRatings] = useState<Record<string, string | null>>({});
+  // De waarderingen die je op deze pagina hebt gekozen (Rating), per rij en per veld over de rijen van
+  // de server heen gelegd: zo sorteren, zoeken en tellen ze meteen mee, zonder de pagina opnieuw te laden.
+  const [ratings, setRatings] = useState<Record<string, Partial<Pick<RegisterRow, "rating" | "mixRating">>>>({});
   const rows = useMemo(
-    () => initialRows.map((row) => (row.id in ratings ? { ...row, rating: ratings[row.id] } : row)),
+    () => initialRows.map((row) => (row.id in ratings ? { ...row, ...ratings[row.id] } : row)),
     [initialRows, ratings]
   );
   // De track in de speler (Player). Een rij, geen ID: de speler blijft staan als een filter de rij wegfiltert.
@@ -740,7 +767,8 @@ export function TrackRegister({ rows: initialRows, artistCount, compact = false 
     else setClosing(true);
   };
   const edit: CellEdit = {
-    setRating: (trackId, rating) => setRatings((prev) => ({ ...prev, [trackId]: rating })),
+    setRating: (trackId, field, rating) =>
+      setRatings((prev) => ({ ...prev, [trackId]: { ...prev[trackId], [RATING_ROW_KEY[field]]: rating } })),
     playingId: playing && !closing ? playing.id : null,
     togglePlay: (row) => {
       if (playing?.id === row.id && !closing) return closePlayer();
