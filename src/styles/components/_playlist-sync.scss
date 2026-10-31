@@ -15,8 +15,8 @@
   color: var(--negative-5);
 }
 
-// Het sync-icoon voor de tekst van de knop: lijnen in de tekstkleur, zo hoog als de tekst. Draait rond
-// zolang de sync loopt.
+// Het icoon voor de tekst van de knop: lijnen in de tekstkleur, zo hoog als de tekst. Een pijl uit of in een
+// bak voor de richting (SyncDirection.tsx), het draaiende sync-icoon zolang er iets loopt.
 .playlist-sync__icon {
   width: 1em;
   height: 1em;

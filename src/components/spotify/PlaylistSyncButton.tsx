@@ -10,6 +10,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { readRouteErrorMessage } from "@/lib/http/routeError";
+import { SyncDirectionIcon } from "./SyncDirection";
 
 /** `pendingMoves` is het aantal verplaatsingen in een uitgestelde volgorde van deze playlist (PendingOrderButton):
  *  ophalen bij Spotify vervangt de snapshot, waarna die lokale volgorde niet meer past en alleen nog
@@ -71,19 +72,12 @@ export function PlaylistSyncButton({
         type="button"
         className="btn btn--primary"
         disabled={status === "busy"}
-        title={`Haal "${playlistName}" opnieuw op bij Spotify`}
+        title={`Fetch: haal "${playlistName}" opnieuw op bij Spotify`}
         onClick={sync}
+        aria-label={status === "busy" ? "Bezig met ophalen uit Spotify…" : "Fetch: ophalen uit Spotify"}
       >
-        <svg
-          className={status === "busy" ? "playlist-sync__icon is-spinning" : "playlist-sync__icon"}
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <path d="M20 12a8 8 0 0 1-14 5.3M4 12a8 8 0 0 1 14-5.3" />
-          <path d="M18 3v3.7h-3.7M6 21v-3.7h3.7" />
-        </svg>
-        {status === "busy" ? "Bezig met sync…" : "Sync met Spotify"}
+        <SyncDirectionIcon direction="pull" spinning={status === "busy"} />
+        {status === "busy" ? "Fetchen…" : "Fetch"}
       </button>
     </div>
   );

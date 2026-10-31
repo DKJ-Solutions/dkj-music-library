@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { readRouteErrorMessage } from "@/lib/http/routeError";
 import { formatClock as clock } from "@/lib/library/pendingOrder";
+import { SyncDirectionIcon } from "./SyncDirection";
 
 type Status = "idle" | "syncing" | "done" | "error";
 
@@ -134,8 +135,10 @@ export function PendingOrderButton({
         disabled={blocked || status === "syncing"}
         title={blocked && until !== null ? `Spotify laat de hub schrijven vanaf ${clock(until)}` : undefined}
         onClick={send}
+        aria-label={status === "syncing" ? "Bezig met versturen…" : "Volgorde naar Spotify sturen"}
       >
-        {status === "syncing" ? "Bezig met versturen…" : "Volgorde naar Spotify sturen"}
+        <SyncDirectionIcon direction="push" spinning={status === "syncing"} />
+        {status === "syncing" ? "Pushen…" : "Push"}
       </button>
     </div>
   );
