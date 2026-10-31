@@ -10,6 +10,15 @@
   gap: var(--spacing-4);
 }
 
+// De kaarten Login en Sync staan in een .grid-3 en rekken mee tot de hoogste kaart in de rij. Zonder dit
+// blijft de kop van de lagere kaart bovenaan staan, met de lege ruimte eronder. Nu staat de inhoud
+// (kop, en een uitslag als die er is) verticaal in het midden van de kaart.
+.verbinding-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .verbinding-result {
   margin-top: var(--spacing-4);
 }

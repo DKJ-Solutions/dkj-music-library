@@ -40,7 +40,7 @@ export default async function ConnectionCards({ params }: { params: { connected?
       <div className="grid__head">
         <h2>Connection</h2>
       </div>
-      <section className="card">
+      <section className="card verbinding-card">
         <div className="card__head verbinding-head">
           <div>
             <h3 className="card__title">Login</h3>
