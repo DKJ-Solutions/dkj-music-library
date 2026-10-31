@@ -53,7 +53,7 @@ duidelijk dat de ene van a naar b synct en de andere van b naar a.
 
 - [x] `tsc --noEmit` schoon, `vitest run src/components/spotify` groen (136 tests)
 - [x] Gerenderde HTML van een werkbak met uitgestelde volgorde gecontroleerd: beide knoppen met icoon en routelabel
-- [ ] Dave kijkt naar de knoppen in de werkbak
+- [x] Dave kijkt naar de knoppen in de werkbak ("ship it", 31 oktober 2026)
 
 ### DEPLOY: feat/sync-button-direction
 
