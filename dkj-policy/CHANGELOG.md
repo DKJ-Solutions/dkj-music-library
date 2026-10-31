@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**27 / 29 minor entries** <!-- pending-tally -->
+**28 / 30 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/connection-card-center · 20261031-185614Z
+
+De kaarten Login en Sync op /spotify rekken in hun `.grid-3` mee tot de hoogste kaart, waardoor de kop van de lagere kaart bovenaan bleef staan met lege ruimte eronder. Een eigen klasse `.verbinding-card` zet de inhoud van beide kaarten nu verticaal in het midden.
+
+**Score:** 1 -- cosmetisch; voorkomt een scheef ogende rij kaarten.
+
+#### What makes this deploy extra special
+
+Wie /spotify opent, ziet de kop van Login en Sync in het midden van de kaart in plaats van bovenaan.
+
+**Score:** 1 -- cosmetisch.
+
+#### Pull Request
+
+De kaartkop van Login en Sync verticaal in het midden van de kaart
+
+[PR #139](https://github.com/DKJ-Solutions/dkj-music-library/pull/139)
+
+---
 
 ### DEPLOY: feat/sync-button-direction · 20261031-142237Z
 
