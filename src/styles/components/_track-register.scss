@@ -864,3 +864,62 @@ a.register-menu-item:hover {
   font-size: 11.5px;
   color: var(--ink-soft);
 }
+
+// Verslepen in de tabel van een playlist (TrackRegister.tsx, GRIP_COLUMN en DragHandle; Dave, 31 oktober
+// 2026). De greep staat in een eigen smalle kolom links van de afspeelknop; zolang er op een kop gesorteerd
+// is, staat hij er gedimd (de tabel is dan niet meer in de volgorde van de playlist).
+.register-table .register-grip-cell {
+  padding-right: 0;
+}
+
+.register-grip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 24px;
+  color: var(--muted);
+  cursor: grab;
+  border-radius: var(--radius);
+
+  svg {
+    width: 10px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--accent);
+  }
+
+  &.is-disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+  }
+}
+
+.register-table tbody tr.register-dragging {
+  opacity: 0.45;
+}
+
+// Waar de rij landt: een lijn in de themakleur boven (naar boven slepen) of onder (naar beneden) de rij
+// waar je overheen bent. Een inset-schaduw, zodat de hoogte van de rij niet verandert.
+.register-table tbody tr.register-drop-before td {
+  box-shadow: inset 0 2px 0 var(--accent);
+}
+
+.register-table tbody tr.register-drop-after td {
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+// De uitkomst van de laatste verplaatsing, als die niet slaagde of niet helemaal.
+.register-order-note {
+  margin: 0 0 var(--spacing-2-5);
+  color: var(--muted);
+  font-size: var(--text-sm);
+
+  &.is-error {
+    color: var(--negative-5);
+  }
+}

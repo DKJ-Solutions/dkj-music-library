@@ -8,6 +8,15 @@ import { TrackRegister } from "./TrackRegister";
 import { CANDIDATES_FILTER, type RegisterRow } from "@/lib/library/register";
 import { REGISTER_PREFS_KEY } from "@/lib/library/registerPrefs";
 import { loadSpotifyIframeApi } from "@/lib/library/trackEmbed";
+import { PlaylistOrderError, savePlaylistOrder } from "@/lib/library/savePlaylistOrder";
+
+// TrackRegister ververst de pagina na een verplaatsing; buiten de app-router bestaat er geen router.
+const refresh = vi.fn();
+vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh }) }));
+vi.mock("@/lib/library/savePlaylistOrder", async (original) => ({
+  ...(await original<typeof import("@/lib/library/savePlaylistOrder")>()),
+  savePlaylistOrder: vi.fn(),
+}));
 
 // De iFrame API van Spotify is een script van buiten; de tests geven de component een nep-API.
 vi.mock("@/lib/library/trackEmbed", async (original) => ({
@@ -17,7 +26,11 @@ vi.mock("@/lib/library/trackEmbed", async (original) => ({
 
 // Elke test begint met een lege localStorage: anders leest de volgende test de bewaarde stand van de
 // vorige terug, en cleanup() ontkoppelt de vorige render (zijn schrijf-effect mag niet meer vuren).
-beforeEach(() => window.localStorage.clear());
+beforeEach(() => {
+  window.localStorage.clear();
+  refresh.mockClear();
+  vi.mocked(savePlaylistOrder).mockReset();
+});
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
@@ -63,6 +76,7 @@ describe("TrackRegister", () => {
     const positions = () => Array.from(document.querySelectorAll(".register-position"), (cell) => cell.textContent);
     const titles = () => Array.from(document.querySelectorAll(".register-title"), (cell) => cell.textContent);
     expect(positions()).toEqual(["1", "2", "3"]);
+    // Zonder playlistOrder (een mixpagina): de hoogste dkj_mix_rating eerst.
     expect(titles()).toEqual(["Nummer 2", "Nummer 3", "Nummer 1"]);
     fireEvent.click(screen.getByRole("button", { name: /dkj_title/ }));
     expect(positions()).toEqual(["1", "2", "3"]);
@@ -75,7 +89,90 @@ describe("TrackRegister", () => {
     expect(screen.getByRole("columnheader", { name: /mix rating/ })).toBeTruthy();
     expect(screen.queryByRole("columnheader", { name: /dkj_rating/ })).toBeNull();
     expect(screen.queryByText("tier-8", { selector: ".register-tag" })).toBeNull();
-    expect(Array.from(document.querySelectorAll(".register-title"), (cell) => cell.textContent)).toEqual(["Nummer 2", "Nummer 1"]);
+    const titles = () => Array.from(document.querySelectorAll(".register-title"), (cell) => cell.textContent);
+    expect(titles()).toEqual(["Nummer 2", "Nummer 1"]);
+  });
+
+  describe("verslepen in de tabel van een playlist", () => {
+    const three = [row(1), row(2), row(3)];
+    // Plek 1 in de playlist is een item zonder bibliotheekrij (bv. een lokaal bestand).
+    const order = { playlistId: "P".repeat(22), snapshotId: "snap1", positions: { [three[0].id]: 0, [three[1].id]: 2, [three[2].id]: 3 }, itemIds: ["sp1", null, "sp2", "sp3"] };
+    const titles = () => Array.from(document.querySelectorAll(".register-title"), (cell) => cell.textContent);
+    const grip = (n: number) => screen.getByRole("button", { name: new RegExp(`Nummer ${n} verplaatsen`) });
+
+    it("opent in de volgorde van de playlist, ook als de mix rating anders zou sorteren", () => {
+      const rated = [row(1, { mixRating: "tier-1" }), row(2, { mixRating: "tier-8" })];
+      render(<TrackRegister rows={rated} artistCount={1} compact playlistOrder={{ ...order, positions: { [rated[0].id]: 0, [rated[1].id]: 1 } }} />);
+      expect(titles()).toEqual(["Nummer 1", "Nummer 2"]);
+    });
+
+    it("heeft geen sleepgrepen zonder playlistOrder", () => {
+      render(<TrackRegister rows={three} artistCount={1} compact />);
+      expect(document.querySelector(".register-grip")).toBeNull();
+    });
+
+    it("verplaatst met de pijltoets, optimistisch, met de plekken van de playlist, en ververst daarna", async () => {
+      vi.mocked(savePlaylistOrder).mockResolvedValue({ refreshed: true });
+      render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={order} />);
+      fireEvent.keyDown(grip(1), { key: "ArrowDown" });
+      expect(titles()).toEqual(["Nummer 2", "Nummer 1", "Nummer 3"]);
+      expect(savePlaylistOrder).toHaveBeenCalledWith(order.playlistId, "snap1", {
+        rangeStart: 0,
+        insertBefore: 3,
+        targetPosition: 2,
+        expectedStartId: "sp1",
+        expectedTargetId: "sp2",
+      });
+      await waitFor(() => expect(refresh).toHaveBeenCalled());
+      expect(Array.from(document.querySelectorAll(".register-position"), (cell) => cell.textContent)).toEqual(["1", "2", "3"]);
+    });
+
+    it("houdt de verplaatste volgorde, ververst niet en zet slepen uit als de snapshot na de PUT niet bijwerkte", async () => {
+      vi.mocked(savePlaylistOrder).mockResolvedValue({ refreshed: false });
+      render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={order} />);
+      fireEvent.keyDown(grip(1), { key: "ArrowDown" });
+      await screen.findByText(/klik op Sync met Spotify/);
+      expect(titles()).toEqual(["Nummer 2", "Nummer 1", "Nummer 3"]);
+      expect(refresh).not.toHaveBeenCalled();
+      expect(grip(1).getAttribute("aria-disabled")).toBe("true");
+    });
+
+    it("meldt kort dat een rij zonder plek in de playlist niet verplaatst kan worden", () => {
+      render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={{ ...order, positions: { [three[0].id]: 0 } }} />);
+      fireEvent.keyDown(grip(1), { key: "ArrowDown" });
+      expect(screen.getByText(/niet in de playlist/)).toBeTruthy();
+      expect(savePlaylistOrder).not.toHaveBeenCalled();
+    });
+
+    it("zet de oude volgorde terug en meldt de fout als het verplaatsen mislukt", async () => {
+      vi.mocked(savePlaylistOrder).mockRejectedValue(new Error("Spotify zegt nee"));
+      render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={order} />);
+      fireEvent.keyDown(grip(3), { key: "ArrowUp" });
+      await screen.findByText(/Verplaatsen mislukt: Spotify zegt nee/);
+      expect(titles()).toEqual(["Nummer 1", "Nummer 2", "Nummer 3"]);
+      expect(refresh).not.toHaveBeenCalled();
+    });
+
+    it("ververst de pagina en toont de melding als Spotify de playlist intussen anders had", async () => {
+      vi.mocked(savePlaylistOrder).mockRejectedValue(new PlaylistOrderError("De playlist was in Spotify gewijzigd.", true));
+      render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={order} />);
+      fireEvent.keyDown(grip(1), { key: "ArrowDown" });
+      await screen.findByText(/in Spotify gewijzigd/);
+      expect(titles()).toEqual(["Nummer 1", "Nummer 2", "Nummer 3"]);
+      expect(refresh).toHaveBeenCalled();
+    });
+
+    it("zet het slepen uit zolang er gesorteerd is, en weer aan als het sorteren uit is", () => {
+      render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={order} />);
+      const title = screen.getByRole("button", { name: /dkj_title/ });
+      fireEvent.click(title);
+      expect(grip(1).getAttribute("aria-disabled")).toBe("true");
+      fireEvent.keyDown(grip(1), { key: "ArrowDown" });
+      expect(savePlaylistOrder).not.toHaveBeenCalled();
+      fireEvent.click(title);
+      fireEvent.click(title);
+      expect(grip(1).getAttribute("aria-disabled")).toBe("false");
+    });
   });
 
   it("heeft geen plek-kolom in de gewone tabel", () => {

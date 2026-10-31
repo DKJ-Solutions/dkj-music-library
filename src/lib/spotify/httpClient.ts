@@ -4,8 +4,7 @@
 // SpotifyReauthRequiredError door als re-auth nodig is -- die fout hier bewust NIET vangen, de
 // aanroeper in de route handler toont de "log opnieuw in"-melding).
 //
-// Bewust GEEN write-methodes (POST/PUT/DELETE) -- dit project is en blijft read-only (zie de
-// opdracht).
+// Schrijven kan alleen via spotifyPut hieronder (de enige schrijfweg); verder geen POST/DELETE.
 //
 // SERVER-ONLY: importeert getValidAccessToken (fs via tokenStore), mag dus nooit vanuit een
 // 'use client'-bestand gebruikt worden.
@@ -128,17 +127,21 @@ export async function spotifyGet<T>(
 
 /** Eén PUT-aanvraag met een JSON-body. Zelfde 429-afhandeling en token-verversing als `spotifyGet`.
  *
- *  Levert niets terug: de endpoints die de hub schrijft (`PUT /playlists/{id}`) antwoorden met 200 en een
- *  lege body, en `res.json()` zou daarop klappen. Een fout komt als `SpotifyApiError` naar boven.
+ *  Levert de body van het antwoord als JSON, of `null` bij een lege body: `PUT /playlists/{id}` antwoordt
+ *  met 200 en niets (`res.json()` zou daarop klappen), `PUT /playlists/{id}/items` met `{ snapshot_id }`.
+ *  Een fout komt als `SpotifyApiError` naar boven.
  *
  *  DIT IS DE ENIGE SCHRIJFWEG NAAR SPOTIFY in deze codebase (zie de scope-toelichting in config.ts).
- *  Wie hier een tweede aanroeper aan toevoegt, verbreedt daarmee wat de hub feitelijk mag doen -- dat
- *  hoort een bewuste keuze te zijn, niet een bijkomstigheid. */
+ *  Wie hier een extra aanroeper aan toevoegt, verbreedt daarmee wat de hub feitelijk mag doen -- dat
+ *  hoort een bewuste keuze te zijn, niet een bijkomstigheid. Aanroepers nu: naam en beschrijving van een
+ *  playlist (playlistApi.ts) en, sinds 31 oktober 2026, de VOLGORDE van de tracks in een playlist
+ *  (`reorderPlaylistItem`) -- de eerste schrijfactie op de inhoud van een playlist. Tracks toevoegen of
+ *  verwijderen doet nog steeds niets. */
 export async function spotifyPut(
   path: string,
   body: unknown,
   options: SpotifyFetchOptions = {}
-): Promise<void> {
+): Promise<unknown> {
   const fetchImpl = options.fetchImpl ?? fetch;
   const url = buildUrl(path);
 
@@ -173,7 +176,13 @@ export async function spotifyPut(
       );
     }
 
-    return;
+    const tekst = await res.text().catch(() => "");
+    if (tekst.trim() === "") return null;
+    try {
+      return JSON.parse(tekst);
+    } catch {
+      return null;
+    }
   }
 
   throw new SpotifyApiError(

@@ -401,6 +401,35 @@ describe("buildSnapshot", () => {
     expect(snapshot.playlists[0].tracks).toEqual(previous.playlists[0].tracks);
   });
 
+  it("houdt bij een mislukte ophaal de vorige tracks MET hun vorige snapshot_id (nooit nieuw id + oude volgorde)", async () => {
+    const previous: Snapshot = {
+      syncedAt: "2026-01-01T00:00:00.000Z",
+      playlists: [
+        {
+          id: "playlist-1",
+          name: "Playlist",
+          uri: "spotify:playlist:playlist-1",
+          collaborative: false,
+          public: false,
+          snapshotId: "snap-oud",
+          owner: { id: "u", displayName: null },
+          images: [],
+          description: null,
+          trackCount: 1,
+          tracks: [{ addedAt: null, addedBy: null, isLocal: false, track: null }],
+        },
+      ],
+    };
+    mockedFetchAllPages
+      .mockResolvedValueOnce([rawPlaylist({ snapshot_id: "snap-nieuw" })])
+      .mockRejectedValueOnce(new SpotifyApiError("server error", 500, null));
+
+    const snapshot = await buildSnapshot({ previousSnapshot: previous });
+
+    expect(snapshot.playlists[0].tracks).toEqual(previous.playlists[0].tracks);
+    expect(snapshot.playlists[0].snapshotId).toBe("snap-oud");
+  });
+
   it("vangt een niet-403-fout van fetchAllPlaylistItems per playlist af i.p.v. de hele sync te laten falen", async () => {
     mockedFetchAllPages
       .mockResolvedValueOnce([rawPlaylist()])
