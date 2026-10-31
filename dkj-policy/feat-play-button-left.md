@@ -51,7 +51,7 @@ stond de `#`-kolom ervoor, en in de verborgen kolommen ontbrak hij helemaal.
 ### TEST
 
 - [x] `TrackRegister.test.tsx` (36 groen), `tsc --noEmit` en eslint schoon
-- [ ] Dave kijkt naar de tabellen (gewone, verborgen kolommen, mixpagina)
+- [x] Dave kijkt naar de tabellen (gewone, verborgen kolommen, mixpagina) -- goedgekeurd ("ship it")
 
 ### DEPLOY: feat/play-button-left
 
