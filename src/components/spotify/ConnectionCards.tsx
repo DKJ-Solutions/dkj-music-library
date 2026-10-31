@@ -34,9 +34,9 @@ export default async function ConnectionCards({ params }: { params: { connected?
     : null;
 
   return (
-    // Twee kaarten, Login en Sync (Dave, #122). Wat de laatste sync opleverde staat als subregel onder de
-    // kop Playlists op /spotify.
-    <div className="grid-2">
+    // Twee kaarten, Login en Sync (Dave, #122), in een .grid-3 zodat ze even breed zijn als de kaarten
+    // eronder. Wat de laatste sync opleverde staat als subregel onder de kop Playlists op /spotify.
+    <div className="grid-3">
       <div className="grid__head">
         <h2>Connection</h2>
       </div>
