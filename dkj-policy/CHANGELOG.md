@@ -2,7 +2,28 @@
 
 ## [Unreleased]
 
-**21 / 23 minor entries** <!-- pending-tally -->
+**22 / 24 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/play-button-left · 20261031-110621Z
+
+De afspeelknop staat in elke tabel helemaal links: in de gewone tabel, in de verborgen kolommen (waar hij
+eerst ontbrak) en op de mixpagina's, waar hij nu vóór de `#`-kolom staat.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Wie het register gebruikt, vindt de afspeelknop nu in elke tabel op dezelfde plek, ook in de verborgen kolommen.
+
+**Score:** 2
+
+#### Pull Request
+
+Afspeelknop altijd helemaal links in de tabel
+
+[PR #131](https://github.com/DKJ-Solutions/dkj-music-library/pull/131)
+
+---
 
 ### DEPLOY: feat/mix-rating · 20261031-105842Z
 
