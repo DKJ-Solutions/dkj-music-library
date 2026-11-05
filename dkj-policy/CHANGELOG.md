@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**28 / 30 minor entries** <!-- pending-tally -->
+**29 / 31 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/140-local-first-playlist-order · 20261105-174237Z
+
+Dragging a track on a werkbak page (`/mixen/preparation/<id>`) now only saves the new order in the hub. A Push button on every werkbak sends all moves to Spotify in one go. One push replaces the checks, writes and refetches each single drag used to cost, so the hub hits Spotify's rate limit far less, and dragging no longer waits on Spotify. If tracks were added to or removed from the playlist in Spotify in the meantime, the push and Fetch rebase the local order onto it: new tracks go to the bottom and vanished ones drop out. The local order is no longer thrown away.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Dave sorts his werkbakken without running into rate limits, and he decides himself when Spotify follows.
+
+**Score:** 4
+
+#### Pull Request
+
+Save werkbak drag moves locally first and push them to Spotify in bulk
+
+[PR #141](https://github.com/DKJ-Solutions/dkj-music-library/pull/141)
+
+---
 
 ### DEPLOY: fix/connection-card-center · 20261031-185614Z
 
