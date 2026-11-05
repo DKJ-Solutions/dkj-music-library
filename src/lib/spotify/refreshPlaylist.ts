@@ -5,6 +5,7 @@
 // SERVER-ONLY: leest en schrijft de snapshot en de bibliotheek.
 import { updateLibraryFromSnapshot } from "@/lib/library/librarySync";
 import { syncOnePlaylist } from "./ingest";
+import { rebasePendingOrder } from "./pendingOrderRebase";
 import { readSnapshot, writeSnapshot } from "./snapshotStore";
 import type { Playlist } from "./types";
 
@@ -18,6 +19,9 @@ export async function refreshPlaylistInSnapshot(
   if (!previous) throw new NoSnapshotError();
   const { snapshot, playlist } = await syncOnePlaylist(previous, playlistId);
   writeSnapshot(snapshot);
+  // Een uitgestelde volgorde (Fetch of push) verhuist mee naar de nieuwe stand, zie pendingOrderRebase.ts.
+  const before = previous.playlists.find((p) => p.id === playlistId);
+  if (before) rebasePendingOrder(before, playlist);
 
   let libraryUpdated = true;
   try {

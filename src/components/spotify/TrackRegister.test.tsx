@@ -137,11 +137,11 @@ describe("TrackRegister", () => {
       expect(grip(1).getAttribute("aria-disabled")).toBe("true");
     });
 
-    it("meldt een lokaal bewaarde verplaatsing als informatie, niet als fout, en ververst de pagina", async () => {
+    it("meldt een lokaal bewaarde verplaatsing (de enige uitkomst van slepen) als informatie, niet als fout, en ververst de pagina", async () => {
       vi.mocked(savePlaylistOrder).mockResolvedValue({ refreshed: true, pending: true, rateLimitedUntil: Date.now() + 3_600_000 });
       render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={order} />);
       fireEvent.keyDown(grip(1), { key: "ArrowDown" });
-      const note = await screen.findByText(/Bewaard in de hub; Spotify volgt zodra het weer kan/);
+      const note = await screen.findByText(/Bewaard in de hub; stuur de volgorde met Push naar Spotify/);
       expect(note.className).not.toContain("is-error");
       await waitFor(() => expect(refresh).toHaveBeenCalled());
       expect(titles()).toEqual(["Nummer 2", "Nummer 1", "Nummer 3"]);

@@ -39,19 +39,32 @@
 
 ### PLAN
 
+Issue #140. The owner chose local-first ordering because it means fewer Spotify API calls and faster dragging (conversation, November 5, 2026). The condition was that a conflict must not throw the sorting work away, so the push rebases instead.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] POST /api/spotify/playlist-order only queues locally, with no Spotify call
+- [x] Push button always on a werkbak page, disabled with "Niets te pushen" at 0 moves
+- [x] Rebase (`rebaseOrder`) in the push and after a Fetch/full sync, so the local order survives tracks being added or removed in Spotify
+- [x] Fetch no longer asks for a destructive confirmation (`pendingMoves` prop removed)
 
 ### TEST
 
+- [x] vitest suites for lib, api/spotify, components/spotify and mixen (1043 tests) green; `tsc --noEmit` and `eslint src` clean
+- [x] Both werkbak pages render (200) with the Push button
+- [ ] The owner looks at the werkbak pages
+
 ### DEPLOY: feat/140-local-first-playlist-order
 
-**Score:**
+Dragging a track on a werkbak page (`/mixen/preparation/<id>`) now only saves the new order in the hub. A Push button on every werkbak sends all moves to Spotify in one go. One push replaces the checks, writes and refetches each single drag used to cost, so the hub hits Spotify's rate limit far less, and dragging no longer waits on Spotify. If tracks were added to or removed from the playlist in Spotify in the meantime, the push and Fetch rebase the local order onto it: new tracks go to the bottom and vanished ones drop out. The local order is no longer thrown away.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+Dave sorts his werkbakken without running into rate limits, and he decides himself when Spotify follows.
+
+**Score:** 4
 
 #### Pull Request
 
