@@ -52,7 +52,7 @@ Issue #140. The owner chose local-first ordering because it means fewer Spotify 
 
 - [x] vitest suites for lib, api/spotify, components/spotify and mixen (1043 tests) green; `tsc --noEmit` and `eslint src` clean
 - [x] Both werkbak pages render (200) with the Push button
-- [ ] The owner looks at the werkbak pages
+- [x] The owner looks at the werkbak pages (Dave: "gezien en akkoord", November 5, 2026)
 
 ### DEPLOY: feat/140-local-first-playlist-order
 
