@@ -6,6 +6,9 @@
 // `order[p]` is de index (in de snapshot) van het item dat op getoonde plek p staat. De identiteit
 // [0, 1, 2, …] is "niets verplaatst".
 //
+// Verandert de playlist in Spotify terwijl er een uitgestelde volgorde staat, dan wordt die niet weggegooid
+// maar herbaseerd (rebaseOrder).
+//
 // Pure module: geen fs, geen React -- los te testen, en door de routes en de pagina te delen.
 import type { PlaylistMove } from "./playlistOrder";
 
@@ -77,6 +80,37 @@ export function planSyncMoves(
     working.splice(0, working.length, ...applyMove(working, move));
   }
   return moves;
+}
+
+/** HERBASEREN (Dave, 5 november 2026): de uitgestelde volgorde `order` hoort bij een lijst met track-ID's
+ *  `baseIds`; de playlist is intussen veranderd naar `newIds` (tracks toegevoegd of weggehaald in Spotify, of
+ *  een Fetch). Geeft een permutatie van indices in `newIds` die de lokale volgorde behoudt voor wat er nog
+ *  staat, laat verdwenen tracks vallen en zet nieuwe onderaan (in hun eigen volgorde).
+ *
+ *  Dubbele ID's (en items zonder track, null) worden per voorkomen gekoppeld: het n-de exemplaar in de
+ *  gewenste volgorde hoort bij het n-de exemplaar in `newIds`. Wat daarna overblijft in `newIds` is nieuw;
+ *  wat in de gewenste volgorde geen exemplaar meer vindt, is verdwenen. */
+export function rebaseOrder(
+  baseIds: readonly (string | null)[],
+  order: readonly number[],
+  newIds: readonly (string | null)[]
+): number[] {
+  const queues = new Map<string | null, number[]>();
+  newIds.forEach((id, index) => {
+    const queue = queues.get(id);
+    if (queue) queue.push(index);
+    else queues.set(id, [index]);
+  });
+  const used = new Set<number>();
+  const rebased: number[] = [];
+  for (const baseIndex of order) {
+    const next = queues.get(baseIds[baseIndex])?.shift();
+    if (next === undefined) continue;
+    used.add(next);
+    rebased.push(next);
+  }
+  for (let i = 0; i < newIds.length; i++) if (!used.has(i)) rebased.push(i);
+  return rebased;
 }
 
 /** "HH:MM" in de lokale tijd, voor in een melding of op de knop. */

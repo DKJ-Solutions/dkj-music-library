@@ -106,14 +106,34 @@ describe("playlist-order sync route", () => {
     expect(getPendingOrder(ID)).toBeNull();
   });
 
-  it("geeft 409 pending_conflict en verplaatst niets als Spotify andere tracks heeft", async () => {
+  it("herbaseert bij nieuwe tracks in Spotify: lokale volgorde blijft, nieuwe tracks komen onderaan", async () => {
     setPendingOrder(ID, { baseSnapshotId: "snap1", order: DESIRED_ORDER, moveCount: 1 });
     live = [...live, "nieuw"];
     const res = await POST(request());
-    expect(res.status).toBe(409);
-    expect(await res.json()).toMatchObject({ error: "pending_conflict" });
-    expect(reorderPlaylistItem).not.toHaveBeenCalled();
-    expect(getPendingOrder(ID)).not.toBeNull();
+    expect(res.status).toBe(200);
+    expect(live).toEqual([...DESIRED, "nieuw"]);
+    expect(getPendingOrder(ID)).toBeNull();
+  });
+
+  it("herbaseert bij tracks die uit Spotify zijn verdwenen: ze worden overgeslagen, de rest houdt zijn volgorde", async () => {
+    setPendingOrder(ID, { baseSnapshotId: "snap1", order: DESIRED_ORDER, moveCount: 1 });
+    live = ["a", "b", "a", "c"]; // het item zonder track is weggehaald
+    const res = await POST(request());
+    expect(res.status).toBe(200);
+    expect(live).toEqual(["c", "a", "b", "a"]);
+    expect(getPendingOrder(ID)).toBeNull();
+  });
+
+  it("herbaseert met dubbelen: een extra exemplaar komt onderaan, een ontbrekend exemplaar valt weg", async () => {
+    setPendingOrder(ID, { baseSnapshotId: "snap1", order: DESIRED_ORDER, moveCount: 1 });
+    live = ["a", "b", null, "a", "a", "c"]; // een derde a erbij
+    expect((await POST(request())).status).toBe(200);
+    expect(live).toEqual(["c", "a", null, "b", "a", "a"]);
+
+    setPendingOrder(ID, { baseSnapshotId: "snap1", order: DESIRED_ORDER, moveCount: 1 });
+    live = ["a", "b", null, "c"]; // een a minder
+    expect((await POST(request())).status).toBe(200);
+    expect(live).toEqual(["c", "a", null, "b"]);
   });
 
   it("geeft 409 pending_conflict als de opgeslagen snapshot een andere is dan waarop de volgorde is gebouwd", async () => {

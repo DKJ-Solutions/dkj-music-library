@@ -41,6 +41,16 @@ describe("PendingOrderButton", () => {
     expect(screen.getByRole("button", { name: "Volgorde naar Spotify sturen" })).toBeEnabled();
   });
 
+  it("staat er ook zonder verplaatsingen: uit, met de melding dat er niets te pushen is, en doet bij een klik niets", () => {
+    const spy = mockFetch(async () => reply(200, {}));
+    render(<PendingOrderButton {...PROPS} moveCount={0} />);
+    expect(screen.getByText("Niets te pushen")).toBeTruthy();
+    const button = screen.getByRole("button", { name: "Volgorde naar Spotify sturen" });
+    expect(button).toBeDisabled();
+    fireEvent.click(button);
+    expect(spy).not.toHaveBeenCalled();
+  });
+
   it("is geblokkeerd zolang de rate limit loopt, noemt het tijdstip en gaat vanzelf aan als dat voorbij is", () => {
     vi.useFakeTimers();
     const now = Date.now();

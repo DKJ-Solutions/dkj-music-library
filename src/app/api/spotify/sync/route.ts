@@ -8,6 +8,7 @@ import { NextResponse } from "next/server";
 import { buildSnapshot } from "@/lib/spotify/ingest";
 import { archiveCurrentSnapshot, readSnapshot, writeSnapshot } from "@/lib/spotify/snapshotStore";
 import { SpotifyReauthRequiredError } from "@/lib/spotify/errors";
+import { rebasePendingOrders } from "@/lib/spotify/pendingOrderRebase";
 import { sameOriginGuard } from "@/lib/http/sameOrigin";
 import { updateLibraryFromSnapshot } from "@/lib/library/librarySync";
 import type { ArtistIdResult } from "@/lib/library/artistIds";
@@ -42,6 +43,12 @@ export async function POST(request: Request) {
     // zo blijft de vorige versie intact als de sync halverwege was misgelopen.
     archiveCurrentSnapshot();
     writeSnapshot(snapshot);
+    // Uitgestelde volgordes van werkbakken verhuizen mee naar de nieuwe stand (pendingOrderRebase.ts).
+    try {
+      rebasePendingOrders(previousSnapshot, snapshot);
+    } catch (err) {
+      console.error("[api/spotify/sync] uitgestelde volgorde herbaseren mislukt:", err);
+    }
 
     // Elk nummer en elke artiest in de nieuwe snapshot een eigen ID geven (trackIds.ts, artistIds.ts)
     // en de export in

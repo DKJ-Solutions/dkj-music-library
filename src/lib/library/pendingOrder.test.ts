@@ -1,6 +1,6 @@
 // pendingOrder.ts: de permutatie van een uitgestelde volgorde en het plan om Spotify daarheen te brengen.
 import { describe, expect, it } from "vitest";
-import { applyMove, identityOrder, isPermutation, permuteBy, planSyncMoves, sameMultiset } from "./pendingOrder";
+import { applyMove, identityOrder, isPermutation, permuteBy, planSyncMoves, rebaseOrder, sameMultiset } from "./pendingOrder";
 
 describe("identityOrder / isPermutation / permuteBy", () => {
   it("maakt de identiteit en herkent permutaties", () => {
@@ -82,5 +82,71 @@ describe("planSyncMoves", () => {
   it("geeft null als Spotify andere items heeft dan de gewenste volgorde", () => {
     expect(planSyncMoves(["a", "b", "x"], ["a", "b", "c"])).toBeNull();
     expect(planSyncMoves(["a", "b"], ["a", "b", "c"])).toBeNull();
+  });
+});
+
+describe("rebaseOrder", () => {
+  // Basis a b c d; lokale volgorde d a c b = indices [3, 0, 2, 1].
+  const base = ["a", "b", "c", "d"];
+  const order = [3, 0, 2, 1];
+  const ids = (list: (string | null)[], rebased: number[]) => permuteBy(list, rebased);
+
+  it("laat de volgorde ongemoeid als er niets veranderde", () => {
+    expect(rebaseOrder(base, order, base)).toEqual(order);
+  });
+
+  it("zet nieuwe tracks onderaan, in hun eigen volgorde", () => {
+    const next = ["a", "b", "x", "c", "d", "y"];
+    const rebased = rebaseOrder(base, order, next);
+    expect(isPermutation(rebased, next.length)).toBe(true);
+    expect(ids(next, rebased)).toEqual(["d", "a", "c", "b", "x", "y"]);
+  });
+
+  it("laat verdwenen tracks vallen en houdt de volgorde van de rest", () => {
+    const next = ["a", "c", "d"];
+    const rebased = rebaseOrder(base, order, next);
+    expect(isPermutation(rebased, 3)).toBe(true);
+    expect(ids(next, rebased)).toEqual(["d", "a", "c"]);
+  });
+
+  it("combineert toevoegen, weghalen en een andere basisvolgorde", () => {
+    const next = ["z", "d", "c", "a"]; // b weg, z nieuw, volgorde in Spotify anders
+    expect(ids(next, rebaseOrder(base, order, next))).toEqual(["d", "a", "c", "z"]);
+  });
+
+  it("koppelt dubbele ID's per voorkomen: niets samenvoegen, een extra exemplaar onderaan, een ontbrekend vervalt", () => {
+    const dupBase = ["a", "b", "a", "c"];
+    const dupOrder = [3, 2, 1, 0]; // c a b a
+    expect(ids(dupBase, rebaseOrder(dupBase, dupOrder, dupBase))).toEqual(["c", "a", "b", "a"]);
+
+    const more = ["a", "b", "a", "a", "c"];
+    const moreRebased = rebaseOrder(dupBase, dupOrder, more);
+    expect(isPermutation(moreRebased, 5)).toBe(true);
+    expect(ids(more, moreRebased)).toEqual(["c", "a", "b", "a", "a"]);
+
+    const fewer = ["a", "b", "c"];
+    const fewerRebased = rebaseOrder(dupBase, dupOrder, fewer);
+    expect(isPermutation(fewerRebased, 3)).toBe(true);
+    expect(ids(fewer, fewerRebased)).toEqual(["c", "a", "b"]);
+  });
+
+  it("behandelt items zonder track (null) als gewone, dubbele items", () => {
+    const nullBase = [null, "a", null];
+    const rebased = rebaseOrder(nullBase, [2, 1, 0], [null, "a", null, null]);
+    expect(isPermutation(rebased, 4)).toBe(true);
+    expect(rebased).toEqual([0, 1, 2, 3]);
+  });
+
+  it("geeft een lege volgorde voor een lege playlist en alles onderaan voor een lege lokale volgorde", () => {
+    expect(rebaseOrder(base, order, [])).toEqual([]);
+    expect(rebaseOrder([], [], ["a", "b"])).toEqual([0, 1]);
+  });
+
+  it("geeft altijd een permutatie, ook bij willekeurige wijzigingen (uitputtend voor 4 basisitems)", () => {
+    const pool = ["a", "b", "c", "d", "x"];
+    for (let mask = 0; mask < 32; mask++) {
+      const next = pool.filter((_, i) => mask & (1 << i));
+      expect(isPermutation(rebaseOrder(base, order, next), next.length)).toBe(true);
+    }
   });
 });

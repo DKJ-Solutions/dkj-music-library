@@ -4,21 +4,24 @@
 // Body: { playlistId }  ->  { synced: true, moves, refreshed }
 //
 // Stappen: (1) weiger zolang de rate limit loopt (503 `rate_limited`, met `rateLimitedUntil`); (2) haal de
-// LIVE items op; (3) hoort de uitgestelde volgorde bij de opgeslagen snapshot en bevat Spotify dezelfde items
-// als de gewenste volgorde (planSyncMoves), dan volgen de verplaatsingen van live naar gewenst, één PUT per
-// verplaatsing, met het snapshot_id van de vorige PUT; (4) haal de playlist opnieuw op in de snapshot en gooi
-// de uitgestelde volgorde weg.
+// LIVE items op; (3) HERBASEER de uitgestelde volgorde op die live items (rebaseOrder): de lokale volgorde
+// blijft voor de tracks die er nog zijn, verdwenen tracks vallen weg en nieuwe komen onderaan (Dave, 5
+// november 2026: voorheen 409 `pending_conflict` en alleen weggooien, wat het sorteerwerk kostte, nu dat er
+// uren tussen een verplaatsing en de push kunnen zitten). Daarna volgen de verplaatsingen van live naar
+// gewenst (planSyncMoves), één PUT per verplaatsing, met het snapshot_id van de vorige PUT; (4) haal de
+// playlist opnieuw op in de snapshot en gooi de uitgestelde volgorde weg.
 //
 // Valt er halverwege een 429, dan blijft de uitgestelde volgorde staan: het gewenste eindbeeld is nog geldig
 // en de volgende keer wordt het vanuit de dan LIVE volgorde opnieuw uitgerekend, dus gedane verplaatsingen
-// gaan niet dubbel. Verschilt Spotify van de uitgestelde volgorde (tracks toegevoegd of weggehaald, of een
-// andere snapshot opgeslagen), dan 409 `pending_conflict` en gebeurt er niets; alleen weggooien
-// (DELETE op ../route.ts) helpt dan. Lukt het ophalen na de laatste PUT niet, dan blijft de uitgestelde
-// volgorde ook staan (`refreshed: false`): een volgende sync vindt dan niets meer te verplaatsen en ruimt hem op.
+// gaan niet dubbel. Een 409 `pending_conflict` blijft alleen over voor een vermelding die al bij een andere
+// snapshot hoorde dan de opgeslagen (de indices zijn dan van een lijst die we niet meer hebben); weggooien
+// (DELETE op ../route.ts) blijft beschikbaar. Lukt het ophalen na de laatste PUT niet, dan blijft de
+// uitgestelde volgorde ook staan (`refreshed: false`): een volgende push vindt dan niets meer te verplaatsen
+// en ruimt hem op.
 import { NextResponse } from "next/server";
 import { sameOriginGuard } from "@/lib/http/sameOrigin";
 import { tryLockPlaylist, unlockPlaylist } from "@/lib/library/moveLock";
-import { formatClock, isPermutation, permuteBy, planSyncMoves } from "@/lib/library/pendingOrder";
+import { formatClock, isPermutation, permuteBy, planSyncMoves, rebaseOrder } from "@/lib/library/pendingOrder";
 import { isPreparationPlaylist } from "@/lib/mixes/preparation";
 import { SpotifyApiError, SpotifyRateLimitError, SpotifyReauthRequiredError } from "@/lib/spotify/errors";
 import { spotifyGet } from "@/lib/spotify/httpClient";
@@ -48,7 +51,7 @@ const conflict = () =>
   NextResponse.json(
     {
       error: "pending_conflict",
-      message: "De playlist in Spotify wijkt af van de stand waarop de lokale volgorde is gebouwd (tracks toegevoegd of weggehaald). Gooi de lokale volgorde weg.",
+      message: "De lokale volgorde hoort bij een oudere stand van de playlist dan de opgeslagen. Gooi de lokale volgorde weg.",
     },
     { status: 409 }
   );
@@ -80,14 +83,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "move_busy", message: "Er loopt al een verplaatsing in deze playlist." }, { status: 429 });
   }
   try {
-    const desired = permuteBy(stored.tracks, pending.order).map((item) => item.track?.id ?? null);
     const snapshotOf = async () =>
       (await spotifyGet<{ snapshot_id?: string }>(`/playlists/${encodeURIComponent(playlistId)}`, { fields: "snapshot_id" }))
         .snapshot_id;
     let snapshotId = await snapshotOf();
     const live = (await fetchAllPlaylistItems(playlistId)).map((item) => item.track?.id ?? null);
+    const baseIds = stored.tracks.map((item) => item.track?.id ?? null);
+    const desired = permuteBy(live, rebaseOrder(baseIds, pending.order, live));
+    // Altijd mogelijk: `desired` is een herschikking van `live` zelf.
     const moves = planSyncMoves(live, desired);
-    if (!moves || !snapshotId) return conflict();
+    if (!moves || !snapshotId) throw new Error("Spotify gaf geen snapshot_id of geen plan");
 
     for (const move of moves) {
       // Een PUT zonder snapshot_id in het antwoord is wel geslaagd: dan het actuele id opnieuw vragen.

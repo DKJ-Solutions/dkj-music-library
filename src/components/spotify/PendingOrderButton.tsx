@@ -1,13 +1,15 @@
 "use client";
 
-// De knop naast PlaylistSyncButton in de kop van een werkbak, alleen zichtbaar als er een uitgestelde volgorde
-// is (pendingOrderStore.ts): verplaatsingen die je deed terwijl Spotify niet schrijven liet. Hij toont de
-// afwijking ("N verplaatsingen nog niet in Spotify") en weet of versturen al kan:
+// De Push-knop naast PlaylistSyncButton in de kop van een werkbak, ALTIJD zichtbaar (Dave, 5 november 2026):
+// elke verplaatsing wordt eerst lokaal bewaard (pendingOrderStore.ts) en deze knop stuurt ze in één keer naar
+// Spotify. Hij toont de afwijking ("N verplaatsingen nog niet in Spotify") en weet of versturen kan:
+//   - niets te versturen: 0 verplaatsingen; de knop is uit en zegt dat er niets te pushen is;
 //   - geblokkeerd: de rate limit loopt nog; de knop is uit en noemt het tijdstip, en gaat vanzelf aan zodra dat
 //     voorbij is (een timer in de browser, geen herlaad nodig);
-//   - klaar: "Volgorde naar Spotify sturen" (POST /api/spotify/playlist-order/sync);
-//   - conflict: Spotify wijkt af van de stand waarop de lokale volgorde is gebouwd; alleen weggooien
-//     (DELETE /api/spotify/playlist-order) is dan nog zinvol.
+//   - klaar: "Volgorde naar Spotify sturen" (POST /api/spotify/playlist-order/sync), dat bij een gewijzigde
+//     playlist de lokale volgorde herbaseert in plaats van te weigeren;
+//   - conflict: alleen voor een oude vermelding die bij een andere snapshot hoort dan de opgeslagen; alleen
+//     weggooien (DELETE /api/spotify/playlist-order) is dan nog zinvol.
 //
 // `rateLimitedUntil` komt van de server en is dan al een tijdstip in de toekomst (of null). De eerste render
 // leest geen klok, zodat server en browser dezelfde HTML geven; pas de timer hieronder zet de knop aan.
@@ -54,7 +56,7 @@ export function PendingOrderButton({
   const blocked = until !== null && elapsedUntil !== until;
 
   async function send() {
-    if (status === "syncing" || blocked || conflict) return;
+    if (status === "syncing" || blocked || conflict || moveCount === 0) return;
     setStatus("syncing");
     setMelding(null);
     try {
@@ -106,7 +108,8 @@ export function PendingOrderButton({
     }
   }
 
-  const drift = `${moveCount} ${moveCount === 1 ? "verplaatsing" : "verplaatsingen"} nog niet in Spotify`;
+  const nothing = moveCount === 0;
+  const drift = nothing ? "Niets te pushen" : `${moveCount} ${moveCount === 1 ? "verplaatsing" : "verplaatsingen"} nog niet in Spotify`;
 
   if (conflict) {
     return (
@@ -127,12 +130,12 @@ export function PendingOrderButton({
         className={status === "error" ? "playlist-sync__note playlist-sync__note--error" : "playlist-sync__note"}
         role="status"
       >
-        {melding ?? (blocked && until !== null ? `${drift} · Sync kan vanaf ${clock(until)}` : drift)}
+        {melding ?? (blocked && !nothing && until !== null ? `${drift} · Sync kan vanaf ${clock(until)}` : drift)}
       </span>
       <button
         type="button"
         className="btn btn--primary"
-        disabled={blocked || status === "syncing"}
+        disabled={nothing || blocked || status === "syncing"}
         title={blocked && until !== null ? `Spotify laat de hub schrijven vanaf ${clock(until)}` : undefined}
         onClick={send}
         aria-label={status === "syncing" ? "Bezig met versturen…" : "Volgorde naar Spotify sturen"}
