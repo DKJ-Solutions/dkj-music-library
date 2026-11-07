@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**35 / 40 minor entries** <!-- pending-tally -->
+**35 / 41 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/151-pc-spotify-fuzzy-link · 20261107-173324Z
+
+`/compare/pc-spotify` now suggests a local file for a track whose file name is spelt differently (`ft.` for `feat.`, a renamed file), so it no longer shows up both as *to download* and as *local only*. You confirm or correct the suggestion with one click, or link any track to a file by hand; the link is stored in `dkj_local_file` and travels with the library export.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+N/A
+
+**Score:** N/A
+
+#### Pull Request
+
+PC <-> Spotify: suggest a fuzzy match and link a file by hand
+
+[PR #161](https://github.com/DKJ-Solutions/dkj-music-library/pull/161)
+
+---
 
 ### DEPLOY: docs/159-readme-werkbak-move · 20261107-164913Z
 
