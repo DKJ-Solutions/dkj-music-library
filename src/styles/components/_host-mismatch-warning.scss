@@ -11,7 +11,7 @@
   border-radius: 10px;
   background: var(--surface-2);
   box-shadow: inset 3px 0 0 var(--status-critical);
-  font-size: 12.5px;
+  font-size: var(--text-sm);
   line-height: 1.55;
   color: var(--ink-soft);
 }
@@ -30,7 +30,7 @@
 
 .host-mismatch-warning code {
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: var(--text-xs);
   padding: 1px 5px;
   border-radius: 4px;
   background: var(--tile);
@@ -47,7 +47,7 @@
 // als iets om aan te klikken.
 .host-mismatch-warning a {
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: var(--text-xs);
   color: var(--accent-ink);
   text-decoration: underline;
   text-underline-offset: 2px;

@@ -24,7 +24,7 @@
 
 .world-tile:hover {
   transform: translateY(-2px);
-  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  border-color: var(--accent-edge-line);
 }
 
 // Niet-klikbare variant (bv. de "overig"-BPM-tegel op /spotify/playlists/musicmoodcolours, zie
@@ -47,14 +47,14 @@
   background: var(--tile);
   display: grid;
   place-items: center;
-  font-size: 19px;
+  font-size: var(--text-h2);
   line-height: 1;
 }
 
 .world-tile .label {
   flex: 1;
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   font-size: var(--text-base);
   letter-spacing: -0.005em;
   color: var(--fg-1);
@@ -62,7 +62,7 @@
 
 .world-tile .count {
   font-family: var(--font-mono);
-  font-size: 12.5px;
+  font-size: var(--text-sm);
   font-variant-numeric: tabular-nums;
   color: var(--accent-ink);
   background: var(--accent-soft);

@@ -39,19 +39,31 @@
 
 ### PLAN
 
+`check-house-style` at v6.9.0 reported 116 `type` and 11 `colour` findings in `src/styles/**` (#148). Map each onto the house scale, a house weight or a domain token, so the check holds without an allowlist.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Sizes rounded to the nearest house step: 19px to `--text-h2`, 15px to `--text-h3`, 13/13.5px to `--text-base`, 12/12.5px to `--text-sm`, 11/11.5px to `--text-xs`. Below the house scale, two domain steps in `_root.scss`: `--text-micro` (10px, for 9.5/10/10.5px) and `--text-glyph` (7px, the sort arrow)
+- [x] Weights: 600 and 700 to `--font-weight-bold`, 400 and 500 to `--font-weight-regular` (the house has no semibold)
+- [x] The relative `code` sizes (0.92em, 0.88em) removed, since the house sets `code` once in `:where(code)`; `th code` reads `inherit` instead of `1em`
+- [x] Every `color-mix()` in a colour property moved into a domain token in `_root.scss` (`--accent-edge`, `--accent-edge-line`, `--accent-edge-strong`, `--accent-line-mix`, `--accent-wash`, `--accent-wash-strong`, `--surface-row`, and `--emotion-<colour>-tint` / `-edge` per emotion colour)
 
 ### TEST
 
+- [x] `check-house-style` at v6.9.0: `[OK] the brand book holds`, 0 findings; `main.scss` compiles with sass. The full gate runs in `ship-pr` after the owner's look
+- [ ] The owner judges the pages with dense tables (track register, playlist manager, mix bridge, dashboard): the 600 to 700 weights and the half-pixel sizes rounded to the scale shift slightly
+
 ### DEPLOY: fix/148-house-style-type-colour
 
-**Score:**
+The app's own styling now reads every font size, weight and derived colour from the house brand book or a named domain token, so the `house-style` check is green again. Text that was set in-between sizes (12.5px, 13.5px, semibold) now sits on the house scale, so some labels are a touch larger or bolder.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A
+
+**Score:** N/A
 
 #### Pull Request
 
