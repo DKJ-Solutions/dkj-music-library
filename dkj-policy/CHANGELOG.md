@@ -2,7 +2,30 @@
 
 ## [Unreleased]
 
-**30 / 32 minor entries** <!-- pending-tally -->
+**30 / 33 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/147-triage-label-names · 20261107-152121Z
+
+The triage-label seam in `scripts/repo-config.ps1` now declares the current label names
+(`awaiting-recurrences`, `awaiting-decision-dev` and the other `awaiting-*` parking labels) instead of the
+retired `dossier` and `needs-decision`, so `adopt-triage-labels` prints the labels the sweeps actually set
+(#147). Only this repo's own workflow tooling notices.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+N/A
+
+**Score:** N/A
+
+#### Pull Request
+
+repo-config.ps1 declares the triage labels under their current names
+
+[PR #150](https://github.com/DKJ-Solutions/dkj-music-library/pull/150)
+
+---
 
 ### DEPLOY: fix/128-env-onedrive-retry · 20261107-151243Z
 
