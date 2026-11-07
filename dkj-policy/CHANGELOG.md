@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**34 / 38 minor entries** <!-- pending-tally -->
+**35 / 39 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/123-spotify-config-melding · 20261107-164616Z
+
+Without Spotify credentials the Login card on /spotify now says so itself, with the setup steps (copy `.env.local.example` to `.env.local` and fill in the client ID and secret from the Spotify Developer Dashboard, or keep a filled-in copy in OneDrive), in place of the login button. The login route no longer answers a browser with raw JSON: it sends it back to /spotify, where the card explains what is missing.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+A fresh checkout without keys no longer strands the owner on a bare JSON page; the fix is named on the page they were already on.
+
+**Score:** 2
+
+#### Pull Request
+
+Missing Spotify credentials show a setup notice instead of raw JSON
+
+[PR #154](https://github.com/DKJ-Solutions/dkj-music-library/pull/154)
+
+---
 
 ### DEPLOY: feat/145-desktop-mirror · 20261107-155253Z
 
