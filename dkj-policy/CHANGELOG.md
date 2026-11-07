@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**35 / 42 minor entries** <!-- pending-tally -->
+**35 / 43 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/148-house-style-type-colour · 20261107-174049Z
+
+The app's own styling now reads every font size, weight and derived colour from the house brand book or a named domain token, so the `house-style` check is green again. Text that was set in-between sizes (12.5px, 13.5px, semibold) now sits on the house scale, so some labels are a touch larger or bolder.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+N/A
+
+**Score:** N/A
+
+#### Pull Request
+
+Map the repo layer's sizes, weights and derived colours onto house tokens
+
+[PR #163](https://github.com/DKJ-Solutions/dkj-music-library/pull/163)
+
+---
 
 ### DEPLOY: fix/149-drop-eyebrows · 20261107-173713Z
 
