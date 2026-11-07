@@ -576,7 +576,7 @@ Spotify-sleutels uit OneDrive overnemen bij een verse clone
 
 ---
 
-### DEPLOY: config/120-dkj-marketplace · 20261030-150523Z
+### DEPLOY: feat/120-dkj-marketplace · 20261030-150523Z
 
 Deze repo installeert zijn plugins nu uit `dkj-marketplace`, de nieuwe naam van de plugin-source sinds
 v6.0.0 ([#120](https://github.com/DKJ-Solutions/dkj-music-library/issues/120)): de settings-keys, de
