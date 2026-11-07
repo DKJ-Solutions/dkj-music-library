@@ -22,9 +22,8 @@ export function SpotifyIdSection({ plan }: { plan: SpotifyIdPlan }) {
   return (
     <section className="layer">
       <div className="band">
-        <span className="eyebrow">id_spotify in de beschrijving</span>
+        <h2>id_spotify in de beschrijving</h2>
         <span className="mix-group-count">{summary.matched}</span>
-        <span className="rule"></span>
       </div>
       <p className="section-lede">
         De mix-bron levert naast <code>id</code> ook <code>id_spotify</code> —{" "}

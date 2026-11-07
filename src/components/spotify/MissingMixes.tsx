@@ -58,9 +58,8 @@ export function MissingMixes({ mixes }: { mixes: readonly MissingMix[] }) {
   return (
     <div className="missing-mixes">
       <div className="band">
-        <span className="eyebrow">Ontbreekt op Spotify</span>
+        <h2>Ontbreekt op Spotify</h2>
         <span className="missing-count">{mixes.length}</span>
-        <span className="rule"></span>
       </div>
       <p className="section-lede">
         Mixen die op de DJ Cylow-website staan maar geen eigen playlist hebben, en waarvan het ID dus in

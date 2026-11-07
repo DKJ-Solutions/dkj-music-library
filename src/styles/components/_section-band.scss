@@ -1,0 +1,12 @@
+// De sectiekop (#149): een h2 met, waar de sectie er een heeft, de teller ernaast op dezelfde regel.
+// Vervangt het eyebrow-label, dat de huisstijl sinds v6.9.0 niet meer kent: de sectietitel is de h2.
+.band {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-2);
+
+  h2 {
+    margin: 0;
+  }
+}

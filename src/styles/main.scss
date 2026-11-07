@@ -13,6 +13,7 @@
 @use "components/playlist-toolbar"; // Spotify-toolbar (zoek/groepeer/filter-chips)
 @use "components/playlist-list"; // De gegroepeerde rijenlijst onder de toolbar
 @use "components/world-nav"; // Spotify-werelden: nav-tegels + terug-link (sub-routes per top-folder)
+@use "components/section-band"; // De sectiekop: h2 + teller op een regel (#149)
 @use "components/dashboard"; // /spotify/dashboard -- ranked bar-lijst + dedup-tabel
 @use "components/host-mismatch-warning"; // /spotify: app-host <-> OAuth-callback-host lopen uiteen
 @use "components/mix-bridge"; // Mixen <-> playlists: de brug met de DJ Cylow-mix-JSON's

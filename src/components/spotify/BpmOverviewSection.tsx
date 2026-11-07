@@ -15,8 +15,7 @@ export function BpmOverviewSection({ playlists }: { playlists: EnrichedPlaylist[
   return (
     <section className="layer">
       <div className="band">
-        <span className="eyebrow">MMC-BPM</span>
-        <span className="rule"></span>
+        <h2>MMC-BPM</h2>
       </div>
       <p className="section-lede">
         Dave&apos;s vaste BPM-indeling van zijn genummerde mixen -- House Mix is altijd 128, Drum
