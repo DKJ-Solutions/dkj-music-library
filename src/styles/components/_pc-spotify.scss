@@ -1,0 +1,33 @@
+// /compare/pc-spotify (#144): de downloadlijst per playlist en de bestanden die alleen lokaal staan. De
+// lijsten scrollen binnen hun card, zodat de pagina zelf op één scherm blijft. Leest alleen de domeintokens
+// uit base/_root.scss (--line, --ink-soft), die in elke versie van de huisstijl bestaan.
+.pc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 60vh;
+  overflow-y: auto;
+  font-size: var(--text-sm);
+}
+
+.pc-list li {
+  padding: var(--spacing-1) 0;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+
+.pc-playlist summary {
+  cursor: pointer;
+  padding: var(--spacing-1-5) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.pc-playlist ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 var(--spacing-4);
+}
+
+.pc-count {
+  color: var(--ink-soft);
+}
