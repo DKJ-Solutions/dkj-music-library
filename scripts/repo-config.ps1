@@ -453,20 +453,38 @@ function Get-AlwaysOnBudget {
 # blocked on the SUBMITTER -- it moves the mirrored Asana card to the blocked column and obliges a
 # question comment to the person who filed it -- and neither is true of a decision that is the owner's.
 # Same 'copy' reasoning: "waiting on the owner" asserts nothing about the adopting repo.
+#
+# RENAMED SINCE, AND KEPT IN STEP WITH THE PLUGIN (issue #147, November 7, 2026). The plugin renamed
+# both records and added the other parking labels the sweeps set: 'dossier' -> 'record' ->
+# 'awaiting-more-recurrences' -> 'awaiting-recurrences' (upstream #2723, #2904), and 'needs-decision' ->
+# 'awaiting-decision' -> 'awaiting-decision-dev' (upstream #2741, #2890). This list mirrors the
+# built-in set in dkj-policy v6.9.0's adopt-triage-labels.ps1 entry for entry, so adopt-triage-labels
+# prints the labels a sweep actually sets. When the plugin's set moves again, copy it here unchanged.
 $script:TriageLabels = @(
-    [pscustomobject]@{ Name = 'prio-1'; Color = '006B75'; Description = 'Priority 1 of 4 (lowest) -- nobody is waiting for it' }
-    [pscustomobject]@{ Name = 'prio-2'; Color = 'FBCA04'; Description = 'Priority 2 of 4 -- worth doing, no pressure' }
-    [pscustomobject]@{ Name = 'prio-3'; Color = 'D93F0B'; Description = 'Priority 3 of 4 -- do this before the ordinary backlog' }
+    [pscustomobject]@{ Name = 'prio-1'; Color = 'FFA726'; Description = 'Priority 1 of 4 (lowest) -- nobody is waiting for it' }
+    [pscustomobject]@{ Name = 'prio-2'; Color = 'F57C00'; Description = 'Priority 2 of 4 -- worth doing, no pressure' }
+    [pscustomobject]@{ Name = 'prio-3'; Color = 'E0321A'; Description = 'Priority 3 of 4 -- do this before the ordinary backlog' }
     [pscustomobject]@{ Name = 'prio-4'; Color = 'B60205'; Description = 'Priority 4 of 4 (highest) -- takes precedence over other work' }
-    [pscustomobject]@{ Name = 'dossier'; Color = '5319E7'; Description = 'Collects every instance of one recurring problem until its root cause is fixed' }
-    [pscustomobject]@{ Name = 'needs-decision'; Color = 'BFD4F2'; Description = 'Waiting on the owner''s choice -- parks the issue so no session picks it up' }
+    [pscustomobject]@{ Name = 'awaiting-recurrences'; Color = '5319E7'; Description = 'Collects every instance of one recurring problem until its root cause is fixed' }
+    [pscustomobject]@{ Name = 'awaiting-decision-dev'; Color = '5319E7'; Description = 'Waiting on the owner''s choice -- parks the issue so no session picks it up' }
+    [pscustomobject]@{ Name = 'awaiting-decision-client'; Color = '5319E7'; Description = 'Waiting on the client''s choice -- parks the issue so no session picks it up' }
+    [pscustomobject]@{ Name = 'awaiting-review-dev'; Color = '5319E7'; Description = 'Waiting on the dev''s review by eye -- parks the issue so no session picks it up' }
+    [pscustomobject]@{ Name = 'awaiting-review-client'; Color = '5319E7'; Description = 'Waiting on the client''s review by eye -- parks the issue so no session picks it up' }
+    [pscustomobject]@{ Name = 'awaiting-pull'; Color = '5319E7'; Description = 'Waiting on another issue to land through a pull request -- parks the issue so no session picks it up' }
+    [pscustomobject]@{ Name = 'awaiting-pull-external'; Color = '5319E7'; Description = 'Waiting on a pull request in another repo -- parks the issue so no session picks it up' }
+    [pscustomobject]@{ Name = 'awaiting-action-external'; Color = '5319E7'; Description = 'Waiting on an external event or date -- parks the issue so no session picks it up' }
+    [pscustomobject]@{ Name = 'awaiting-action-dev'; Color = '5319E7'; Description = 'Waiting on an act only the owner performs -- parks the issue so no session picks it up' }
+    [pscustomobject]@{ Name = 'awaiting-release'; Color = '5319E7'; Description = 'Waiting on the next release -- parks the issue so no session picks it up' }
+    [pscustomobject]@{ Name = 'awaiting-release-external'; Color = '5319E7'; Description = 'Waiting on a release of another repo -- parks the issue so no session picks it up' }
+    [pscustomobject]@{ Name = 'awaiting-recurrences-first'; Color = '5319E7'; Description = 'Waiting on a first reproducible recurrence -- parks the issue so no session picks it up' }
 )
 
 function Get-TriageLabels {
     <# The canonical triage labels this workflow's consumers are invited to share -- the four
-       priority rungs 'prio-1' (lowest) through 'prio-4' (highest), plus 'dossier', the kind label for
-       a collecting issue, and 'needs-decision', the parking label for an issue awaiting the owner's
-       choice -- as an array of objects with Name, Color and Description (the exact fields
+       priority rungs 'prio-1' (lowest) through 'prio-4' (highest), plus 'awaiting-recurrences', the
+       kind label for a collecting issue, and the awaiting-* parking labels a sweep sets (e.g.
+       'awaiting-decision-dev' for an issue awaiting the owner's choice) -- as an array of objects
+       with Name, Color and Description (the exact fields
        a `gh label create` call needs). Read by adopt-triage-labels.ps1, which composes and prints the
        create command for whichever of them this repo's tracker is missing; it never creates a label
        itself. Optional in the script contract -- a consumer that has not answered this seam gets the

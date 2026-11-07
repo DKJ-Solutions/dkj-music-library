@@ -39,19 +39,36 @@
 
 ### PLAN
 
+Issue #147: the `Get-TriageLabels` seam still names `dossier` and `needs-decision`, so
+`adopt-triage-labels` checks for labels no sweep sets and never mentions the `awaiting-*` parking labels.
+Fix: mirror the plugin's built-in set (dkj-policy v6.9.0) in the seam. Afterwards, delete the unused
+`needs-decision` label from the tracker (no issue carries it, and `awaiting-decision-dev` already exists, so
+it cannot be renamed).
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `scripts/repo-config.ps1`: `$script:TriageLabels` now matches the plugin's built-in set entry for
+      entry (four prio rungs, `awaiting-recurrences`, and the eleven `awaiting-*` parking labels); the
+      comment names the renames and the rule to copy the plugin's set unchanged when it moves.
 
 ### TEST
 
+- [x] Gates run by `ship-pr`.
+
 ### DEPLOY: fix/147-triage-label-names
 
-**Score:**
+The triage-label seam in `scripts/repo-config.ps1` now declares the current label names
+(`awaiting-recurrences`, `awaiting-decision-dev` and the other `awaiting-*` parking labels) instead of the
+retired `dossier` and `needs-decision`, so `adopt-triage-labels` prints the labels the sweeps actually set
+(#147). Only this repo's own workflow tooling notices.
+
+**Score:** 1
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A
+
+**Score:** N/A
 
 #### Pull Request
 
