@@ -1,6 +1,6 @@
 // "Werelden" (sub-routes per top-folder, zie classifyWorld.ts): de drie nav-tegels met tellers op
 // /spotify, en de terug-link boven de masthead op elke wereld-route. Idioom hergebruikt van
-// app-card.scss (dezelfde kaart-hover/schaduw-taal) en het band/eyebrow-recept -- geen nieuw
+// app-card.scss (dezelfde kaart-hover/schaduw-taal) en de .band-kop (_section-band.scss) -- geen nieuw
 // visueel vocabulaire, alleen een compactere variant voor drie tegels i.p.v. een volle grid.
 .world-grid {
   display: grid;

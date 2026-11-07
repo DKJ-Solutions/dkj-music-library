@@ -61,8 +61,7 @@ function DedupSection({
   return (
     <section className="layer">
       <div className="band">
-        <span className="eyebrow">Dedup</span>
-        <span className="rule"></span>
+        <h2>Dedup</h2>
       </div>
       <p className="section-lede">
         Tracks die in meerdere playlists tegelijk staan -- handig om te zien waar je bibliotheek
@@ -131,8 +130,7 @@ function TopArtistsSection({
   return (
     <section className="layer">
       <div className="band">
-        <span className="eyebrow">Top-artiesten</span>
-        <span className="rule"></span>
+        <h2>Top-artiesten</h2>
       </div>
       <p className="section-lede">
         Meest voorkomende artiesten over je hele bibliotheek -- geteld per track-entry, dus
@@ -205,8 +203,7 @@ function DistributionsSection({
   return (
     <section className="layer">
       <div className="band">
-        <span className="eyebrow">Verdelingen</span>
-        <span className="rule"></span>
+        <h2>Verdelingen</h2>
       </div>
       <p className="section-lede">
         Hoe je {fmt(totalTracks)} tracks verdeeld zijn over de dimensies die de bestaande

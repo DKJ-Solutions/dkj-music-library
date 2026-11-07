@@ -11,8 +11,7 @@ export function MixBridgeNav() {
   return (
     <section className="layer">
       <div className="band">
-        <span className="eyebrow">{pageTitle("/compare/playlists-mixes")}</span>
-        <span className="rule"></span>
+        <h2>{pageTitle("/compare/playlists-mixes")}</h2>
       </div>
       <p className="section-lede">
         De MMC-playlists horen een weerspiegeling te zijn van de mix-metadata van de DJ

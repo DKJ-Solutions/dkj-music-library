@@ -205,9 +205,8 @@ function UnmirroredPlaylists({ playlists }: { playlists: MixMatchCandidate[] }) 
   return (
     <section className="layer">
       <div className="band">
-        <span className="eyebrow">Genummerd, maar geen mix in de data</span>
+        <h2>Genummerd zonder mix</h2>
         <span className="mix-group-count">{playlists.length}</span>
-        <span className="rule"></span>
       </div>
       <p className="section-lede">
         Deze MMC-playlists dragen een <code>Vol.</code>-nummer en zouden dus klaar en live moeten
@@ -235,9 +234,8 @@ function MixStatusGroup({ status, links }: { status: MixLinkStatus; links: MixLi
   return (
     <section className="layer">
       <div className="band">
-        <span className="eyebrow">{meta.label}</span>
+        <h2>{meta.label}</h2>
         <span className="mix-group-count">{links.length}</span>
-        <span className="rule"></span>
       </div>
       <p className="section-lede">{meta.hint}</p>
 

@@ -39,19 +39,33 @@
 
 ### PLAN
 
+#### Issue #149
+
+The v6.9.0 brand book has no `.eyebrow` ("No eyebrow above a heading"), so nine section labels rendered as plain spans after #142. Every one of them titles its section (it is the first thing in the section's `.band`), so each becomes that section's `h2`, at five words at most. `.band` and `.rule` are this repo's own classes and had no styling left either: the empty `.rule` spans go, and `.band` gets one domain rule so a section's count stays on the heading's line.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Nine `<span className="eyebrow">` in six components become `<h2>`; "Genummerd, maar geen mix in de data" (7 words) becomes "Genummerd zonder mix"
+- [x] The empty `<span className="rule">` beside each removed
+- [x] `src/styles/components/_section-band.scss`: `.band` as one flex row (h2 + count), house tokens only; `@use`d in `main.scss`
+- [x] The comments in `_dashboard.scss`, `_mix-bridge.scss` and `_world-nav.scss` no longer name `.eyebrow` or `app-card.scss`
 
 ### TEST
 
+- [x] No gate run at the park (issues-sweep step 4): `ship-pr` runs the full gate once the owner has looked. `MissingMixes.test.tsx` finds its heading by text, so the `h2` still satisfies it
+- [ ] The owner judges the section headings on `/spotify/dashboard`, `/compare/playlists-mixes`, `/spotify/playlists/musicmoodcolours` and `/spotify/playlists/manager`
+
 ### DEPLOY: fix/149-drop-eyebrows
 
-**Score:**
+The section labels on the Spotify dashboard, the playlists/mixes bridge, the MusicMoodColours page and the playlist manager are headings again: each is now its section's `h2` in the house heading style, with its count beside it, instead of the plain text it had become after the v6.9.0 brand book dropped `.eyebrow`.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A
+
+**Score:** N/A
 
 #### Pull Request
 
