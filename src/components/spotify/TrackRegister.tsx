@@ -10,6 +10,7 @@ import { mixUrl } from "@/lib/library/djcylowMix";
 import { playlistUrl } from "@/lib/library/playlistLink";
 import { moveItem, planPlaylistMove } from "@/lib/library/playlistOrder";
 import { PlaylistOrderError, savePlaylistOrder } from "@/lib/library/savePlaylistOrder";
+import { moveTrackToPlaylist } from "@/lib/library/moveTrack";
 import { saveRating } from "@/lib/library/saveRating";
 import { loadSpotifyIframeApi, trackEmbedUrl, trackUri, type SpotifyEmbedController } from "@/lib/library/trackEmbed";
 import {
@@ -58,7 +59,7 @@ const DEFAULT_PREFS: RegisterPrefs = defaultRegisterPrefs();
  *  sorteert niet; zijn kop heeft alleen een naam voor een schermlezer. De plek-kolom ("position") is ook
  *  geen veld: hij nummert de rijen 1 tot en met n in de volgorde waarin ze nu staan. */
 interface Column {
-  key: SortKey | "play" | "position" | "grip";
+  key: SortKey | "play" | "position" | "grip" | "moveTo";
   field: string;
   /** Kortere kop in de tabel dan de veldnaam, zodat de kolom smal kan blijven; de tooltip noemt het veld. */
   label?: string;
@@ -76,6 +77,15 @@ interface CellEdit {
   togglePlay: (row: RegisterRow) => void;
   /** Het verslepen van rijen (DragHandle); null als de tabel geen playlist-volgorde heeft. */
   drag: DragEdit | null;
+  /** Een track naar een andere werkbak verplaatsen (MoveToMenu, #134); null zonder doelwerkbakken. */
+  moveTo: MoveToEdit | null;
+}
+
+/** Wat het verplaats-menu van een rij nodig heeft: de andere werkbakken, en of er nu verplaatst kan worden. */
+interface MoveToEdit {
+  targets: { id: string; name: string }[];
+  enabled: boolean;
+  move: (row: RegisterRow, target: { id: string; name: string }) => void;
 }
 
 /** Wat de sleepgreep van een rij nodig heeft. `enabled` is false zolang er op een kop gesorteerd is (dan is
@@ -98,6 +108,9 @@ export interface PlaylistOrderProps {
   /** De Spotify-track-ID per plek van de playlist (null bij een item zonder track): de sleepactie stuurt de
    *  verwachte ID's op beide plekken mee, zodat de server tegen de live playlist kan controleren. */
   itemIds: (string | null)[];
+  /** De andere werkbakken, waarnaar een track verplaatst kan worden (Dave, #134). Leeg of weggelaten: geen
+   *  verplaats-kolom. */
+  moveTargets?: { id: string; name: string }[];
 }
 
 /** Klik op een kop: oplopend, nog eens: aflopend, een derde keer: weer de oorspronkelijke volgorde. */
@@ -669,6 +682,42 @@ function DragHandle({ row, index, drag }: { row: RegisterRow; index: number; dra
   );
 }
 
+/** Het menu "naar werkbak" van een rij (Dave, #134): een top nummer dat niet bij de rest past, verhuist naar een
+ *  andere werkbak in plaats van weg te vallen. Het komt daar onderaan te staan. */
+function MoveToMenu({ row, moveTo }: { row: RegisterRow; moveTo: MoveToEdit | null }) {
+  if (!moveTo || moveTo.targets.length === 0) return null;
+  const name = row.dkjTitle || row.title || row.id;
+  return (
+    <Dropdown
+      label="⇄"
+      caret={false}
+      toggleClassName="register-move-toggle"
+      ariaLabel={`${name} naar een andere werkbak verplaatsen`}
+      title={moveTo.enabled ? "Naar een andere werkbak verplaatsen" : "Even geduld: de vorige verplaatsing loopt nog"}
+    >
+      {(close) => (
+        <>
+          <p className="register-menu-note">Verplaatsen naar (komt onderaan):</p>
+          {moveTo.targets.map((target) => (
+            <button
+              key={target.id}
+              type="button"
+              className="register-menu-item"
+              disabled={!moveTo.enabled}
+              onClick={() => {
+                close();
+                moveTo.move(row, target);
+              }}
+            >
+              {target.name}
+            </button>
+          ))}
+        </>
+      )}
+    </Dropdown>
+  );
+}
+
 /** De afspeelknop in een EIGEN KOLOM (Dave): vaste breedte, net genoeg voor het knopje. Hij staat in
  *  elke tabel helemaal links -- de gewone, de verborgen kolommen en de compacte (Dave, 31 oktober 2026). */
 const PLAY_COLUMN: Column = {
@@ -812,6 +861,14 @@ const GRIP_COLUMN: Column = {
   className: "register-grip-cell",
   cell: (row, _term, edit, position) => <DragHandle row={row} index={position - 1} drag={edit.drag} />,
 };
+/** Het verplaats-menu helemaal rechts, alleen in de tabel van een werkbak met andere werkbakken (#134). */
+const MOVE_TO_COLUMN: Column = {
+  key: "moveTo",
+  field: "naar werkbak",
+  width: "40px",
+  className: "register-move-cell",
+  cell: (row, _term, edit) => <MoveToMenu row={row} moveTo={edit.moveTo} />,
+};
 /** Zoveel nummers heeft een mix meestal (Dave, 29 oktober 2026): onder die rij trekt de compacte tabel een
  *  lijn, zodat je ziet dat de werkbak genoeg nummers heeft voor de volgende stap. */
 const MIX_SIZE = 36;
@@ -870,6 +927,7 @@ export function TrackRegister({ rows: serverRows, artistCount, compact = false, 
       setPlaying(row);
     },
     drag: null,
+    moveTo: null,
   };
   const [query, setQuery] = useState(DEFAULT_PREFS.query);
   const [yearFrom, setYearFrom] = useState(DEFAULT_PREFS.yearFrom);
@@ -946,8 +1004,46 @@ export function TrackRegister({ rows: serverRows, artistCount, compact = false, 
     goTo(0);
   };
   const orderable = compact && playlistOrder !== undefined;
-  const columns = compact ? (orderable ? [GRIP_COLUMN, ...COMPACT_COLUMNS] : COMPACT_COLUMNS) : COLUMN_SETS[columnSet];
+  const moveTargets = orderable ? (playlistOrder.moveTargets ?? []) : [];
+  const columns = compact
+    ? orderable
+      ? [GRIP_COLUMN, ...COMPACT_COLUMNS, ...(moveTargets.length > 0 ? [MOVE_TO_COLUMN] : [])]
+      : COMPACT_COLUMNS
+    : COLUMN_SETS[columnSet];
   const dragEnabled = orderable && sort === null && !moving && !refreshing && desyncedBase !== serverRows;
+
+  /** Verplaatst de track van deze rij naar een andere werkbak (#134). De server voegt hem daar eerst onderaan
+   *  toe en haalt hem pas daarna hier weg; daarna leest de pagina beide werkbakken opnieuw. */
+  async function moveRowToPlaylist(row: RegisterRow, target: { id: string; name: string }) {
+    if (!playlistOrder || moving || refreshing) return;
+    const position = playlistOrder.positions[row.id];
+    const trackId = position === undefined ? null : playlistOrder.itemIds[position];
+    const name = row.dkjTitle || row.title || row.id;
+    if (!trackId) {
+      setNote({ error: true, text: "Deze rij heeft volgens de snapshot geen Spotify-track in deze werkbak: klik eerst op Fetch." });
+      return;
+    }
+    setMoving(true);
+    setNote(null);
+    try {
+      const { refreshed } = await moveTrackToPlaylist(playlistOrder.playlistId, target.id, trackId);
+      setNote({
+        error: !refreshed,
+        text: refreshed
+          ? `${name} staat nu onderaan ${target.name}.`
+          : `${name} is verplaatst naar ${target.name}, maar de lijst bijwerken mislukte: klik op Fetch.`,
+      });
+      startRefresh(() => router.refresh());
+    } catch (err) {
+      setNote({ error: true, text: `Verplaatsen mislukt: ${err instanceof Error ? err.message : "onbekende fout"}` });
+    } finally {
+      setMoving(false);
+    }
+  }
+  edit.moveTo =
+    moveTargets.length > 0
+      ? { targets: moveTargets, enabled: !moving && !refreshing, move: (row, target) => void moveRowToPlaylist(row, target) }
+      : null;
 
   /** Verplaatst de rij op tabelindex `from` naar `to`: eerst in de tabel (optimistisch), dan bij Spotify. Mislukt
    *  het, of blijkt de playlist intussen anders, dan komt de oude volgorde terug met de reden erbij -- er wordt
@@ -1178,9 +1274,9 @@ export function TrackRegister({ rows: serverRows, artistCount, compact = false, 
             <thead>
               <tr>
                 {columns.map(({ key, field, label, className }) => {
-                  if (key === "play" || key === "grip") {
+                  if (key === "play" || key === "grip" || key === "moveTo") {
                     return (
-                      <th key={key} className={key === "grip" ? className : "register-play-cell"}>
+                      <th key={key} className={key === "play" ? "register-play-cell" : className}>
                         <span className="register-hidden-label">{field}</span>
                       </th>
                     );

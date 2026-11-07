@@ -923,3 +923,40 @@ a.register-menu-item:hover {
     color: var(--negative-5);
   }
 }
+
+// Naar een andere werkbak verplaatsen (TrackRegister.tsx, MOVE_TO_COLUMN en MoveToMenu; Dave, #134). Een smalle
+// kolom helemaal rechts in de tabel van een werkbak, met dezelfde stille knop als het potlood van een waardering.
+.register-table .register-move-cell {
+  padding-left: 0;
+  text-align: center;
+}
+
+.register-move-toggle {
+  font: inherit;
+  font-size: var(--text-sm);
+  line-height: 1;
+  padding: 2px 4px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--fg-3);
+  cursor: pointer;
+
+  &:hover,
+  &[aria-expanded="true"] {
+    color: var(--primary);
+    border-color: var(--line);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+  }
+}
+
+.register-menu-note {
+  margin: 0;
+  padding: 4px 10px;
+  font-size: var(--text-xs);
+  color: var(--fg-3);
+}

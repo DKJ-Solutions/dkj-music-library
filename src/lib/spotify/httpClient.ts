@@ -4,7 +4,7 @@
 // SpotifyReauthRequiredError door als re-auth nodig is -- die fout hier bewust NIET vangen, de
 // aanroeper in de route handler toont de "log opnieuw in"-melding).
 //
-// Schrijven kan alleen via spotifyPut hieronder (de enige schrijfweg); verder geen POST/DELETE.
+// Schrijven kan alleen via spotifyWrite hieronder (PUT, POST en DELETE; de enige schrijfweg).
 //
 // SERVER-ONLY: importeert getValidAccessToken (fs via tokenStore), mag dus nooit vanuit een
 // 'use client'-bestand gebruikt worden.
@@ -152,19 +152,21 @@ export async function spotifyGet<T>(
   );
 }
 
-/** Eén PUT-aanvraag met een JSON-body. Zelfde 429-afhandeling en token-verversing als `spotifyGet`.
+/** Eén schrijfaanvraag (PUT, POST of DELETE) met een JSON-body. Zelfde 429-afhandeling en token-verversing
+ *  als `spotifyGet`.
  *
  *  Levert de body van het antwoord als JSON, of `null` bij een lege body: `PUT /playlists/{id}` antwoordt
- *  met 200 en niets (`res.json()` zou daarop klappen), `PUT /playlists/{id}/items` met `{ snapshot_id }`.
- *  Een fout komt als `SpotifyApiError` naar boven.
+ *  met 200 en niets (`res.json()` zou daarop klappen), de `/playlists/{id}/items`-aanroepen met
+ *  `{ snapshot_id }`. Een fout komt als `SpotifyApiError` naar boven.
  *
  *  DIT IS DE ENIGE SCHRIJFWEG NAAR SPOTIFY in deze codebase (zie de scope-toelichting in config.ts).
  *  Wie hier een extra aanroeper aan toevoegt, verbreedt daarmee wat de hub feitelijk mag doen -- dat
- *  hoort een bewuste keuze te zijn, niet een bijkomstigheid. Aanroepers nu: naam en beschrijving van een
- *  playlist (playlistApi.ts) en, sinds 31 oktober 2026, de VOLGORDE van de tracks in een playlist
- *  (`reorderPlaylistItem`) -- de eerste schrijfactie op de inhoud van een playlist. Tracks toevoegen of
- *  verwijderen doet nog steeds niets. */
-export async function spotifyPut(
+ *  hoort een bewuste keuze te zijn, niet een bijkomstigheid. Aanroepers nu, allemaal in playlistApi.ts: naam
+ *  en beschrijving van een playlist, sinds 31 oktober 2026 de VOLGORDE van de tracks in een playlist
+ *  (`reorderPlaylistItem`), en sinds 7 november 2026 (#134) het verplaatsen van een track van de ene werkbak
+ *  naar de andere (`addPlaylistItems` + `removePlaylistItems`). */
+export async function spotifyWrite(
+  method: "PUT" | "POST" | "DELETE",
   path: string,
   body: unknown,
   options: SpotifyFetchOptions = {}
@@ -175,7 +177,7 @@ export async function spotifyPut(
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     const accessToken = await getValidAccessToken();
     const res = await fetchImpl(url, {
-      method: "PUT",
+      method,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
@@ -184,14 +186,14 @@ export async function spotifyPut(
     });
 
     if (res.status === 429) {
-      await waitOutRateLimit(res, `PUT ${url.pathname}`, attempt);
+      await waitOutRateLimit(res, `${method} ${url.pathname}`, attempt);
       continue;
     }
 
     if (!res.ok) {
       const errorBody = await readErrorBody(res);
       throw new SpotifyApiError(
-        `Spotify API gaf ${res.status} terug op PUT ${url.pathname}`,
+        `Spotify API gaf ${res.status} terug op ${method} ${url.pathname}`,
         res.status,
         errorBody
       );
@@ -207,10 +209,15 @@ export async function spotifyPut(
   }
 
   throw new SpotifyApiError(
-    `Spotify API bleef 429 (rate limit) geven op PUT ${url.pathname} na ${MAX_RETRIES} pogingen`,
+    `Spotify API bleef 429 (rate limit) geven op ${method} ${url.pathname} na ${MAX_RETRIES} pogingen`,
     429,
     null
   );
+}
+
+/** `spotifyWrite` met PUT -- de vorm die naam, beschrijving en volgorde gebruiken. */
+export function spotifyPut(path: string, body: unknown, options: SpotifyFetchOptions = {}): Promise<unknown> {
+  return spotifyWrite("PUT", path, body, options);
 }
 
 export interface SpotifyPagingObject<T> {

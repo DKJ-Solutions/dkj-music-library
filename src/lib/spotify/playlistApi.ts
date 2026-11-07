@@ -1,5 +1,5 @@
 // De enige plek waar deze hub iets naar Spotify TERUGSCHRIJFT (naam, beschrijving en, onderaan, de volgorde
-// van de tracks). Al het andere in src/lib/spotify/ leest
+// van de tracks en het verplaatsen van een track naar een andere werkbak). Al het andere in src/lib/spotify/ leest
 // alleen: de snapshot, de classificaties en de correctie-overrides blijven allemaal lokaal.
 //
 // Aanleiding (Dave, 2026-07-25): het mix-ID als `mix:YYYYMMDD` in de beschrijving van een eigen
@@ -19,7 +19,7 @@
 // playlistnaam die bij een mix hoort -- is de naam wél een veld dat de bron dicteert, en heeft Dave
 // gevraagd hem gelijk te trekken (2026-08-11). De grens is dus niet weggehaald maar verlegd, en waar hij
 // nu ligt staat hieronder: de naam komt uit de bron, niet van een aanroeper die er zelf iets van maakt.
-import { spotifyPut, type SpotifyFetchOptions } from "./httpClient";
+import { spotifyPut, spotifyWrite, type SpotifyFetchOptions } from "./httpClient";
 
 /** Zet de beschrijving van één playlist. Alleen mogelijk voor playlists die de ingelogde gebruiker bezit
  *  (of die collaborative zijn) -- Spotify antwoordt anders met 403.
@@ -106,4 +106,48 @@ export async function reorderPlaylistItem(
   const snapshotId = (body as { snapshot_id?: unknown } | null)?.snapshot_id;
   // Staat het snapshot_id er niet in, dan IS de verplaatsing wel gedaan (de PUT slaagde): null, geen fout.
   return typeof snapshotId === "string" && snapshotId !== "" ? snapshotId : null;
+}
+
+/** Het nieuwe snapshot_id uit een antwoord van `/playlists/{id}/items`, of null als het ontbrak. */
+function snapshotIdOf(body: unknown): string | null {
+  const snapshotId = (body as { snapshot_id?: unknown } | null)?.snapshot_id;
+  return typeof snapshotId === "string" && snapshotId !== "" ? snapshotId : null;
+}
+
+/** Een Spotify-track-ID als URI. Alleen base62 van 22 tekens: alles anders gaat niet naar Spotify. */
+export function spotifyTrackUri(trackId: string): string {
+  if (!/^[A-Za-z0-9]{22}$/.test(trackId)) throw new Error(`Geen geldig Spotify-track-ID: ${trackId}`);
+  return `spotify:track:${trackId}`;
+}
+
+/** Zet tracks ONDERAAN een playlist (`POST /playlists/{id}/items`). Hoort bij het verplaatsen van een track
+ *  naar een andere werkbak (Dave, #134): onderaan, zodat de volgorde die je in de doelwerkbak al hebt gesleept
+ *  blijft staan. Levert het nieuwe snapshot_id, of null als het in het antwoord ontbrak. */
+export async function addPlaylistItems(
+  playlistId: string,
+  trackIds: string[],
+  options: SpotifyFetchOptions = {}
+): Promise<string | null> {
+  const uris = trackIds.map(spotifyTrackUri);
+  const body = await spotifyWrite("POST", `/playlists/${encodeURIComponent(playlistId)}/items`, { uris }, options);
+  return snapshotIdOf(body);
+}
+
+/** Haalt tracks UIT een playlist (`DELETE /playlists/{id}/items`), de andere helft van het verplaatsen (#134).
+ *  Spotify haalt ELK exemplaar van de track weg, ook een dubbel: de track verhuist dan helemaal.
+ *  `snapshotId` is de versie waartegen Spotify dat doet. Levert het nieuwe snapshot_id, of null. */
+export async function removePlaylistItems(
+  playlistId: string,
+  trackIds: string[],
+  snapshotId: string | null,
+  options: SpotifyFetchOptions = {}
+): Promise<string | null> {
+  const items = trackIds.map((id) => ({ uri: spotifyTrackUri(id) }));
+  const body = await spotifyWrite(
+    "DELETE",
+    `/playlists/${encodeURIComponent(playlistId)}/items`,
+    snapshotId ? { items, snapshot_id: snapshotId } : { items },
+    options
+  );
+  return snapshotIdOf(body);
 }
