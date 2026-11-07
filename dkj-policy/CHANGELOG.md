@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**29 / 31 minor entries** <!-- pending-tally -->
+**30 / 32 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/128-env-onedrive-retry · 20261107-151243Z
+
+When the Spotify keys are missing at the moment the hub needs them, it now copies `.env.local` from OneDrive again and loads the keys straight away. Before, `predev` copied it only once at start, and OneDrive was often still syncing then, so the login showed a "SPOTIFY_CLIENT_ID en/of SPOTIFY_CLIENT_SECRET ontbreken" error until somebody ran `npm run env:onedrive` by hand. That error now also names that command.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+On a fresh session the Spotify login works as soon as OneDrive has synced the file, without a restart or a manual copy.
+
+**Score:** 2
+
+#### Pull Request
+
+Retry the OneDrive .env.local copy when the Spotify keys are missing
+
+[PR #146](https://github.com/DKJ-Solutions/dkj-music-library/pull/146)
+
+---
 
 ### DEPLOY: feat/140-local-first-playlist-order · 20261105-174237Z
 
