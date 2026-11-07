@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**33 / 37 minor entries** <!-- pending-tally -->
+**34 / 38 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/145-desktop-mirror · 20261107-155253Z
+
+The Desktop mirror is built: `/mirror` (with its own card on Home) mirrors the working drive with the music and the rekordbox library one way to a reserve drive, with robocopy. A dry run first lists what will be copied and what will be deleted on the reserve, and only then does a button mirror exactly that plan: the server runs a fresh dry run first and refuses if anything changed. It also refuses while rekordbox runs, when a drive is missing, when the two paths overlap, and when a file on the reserve is newer than on the working drive. The page shows the time of the last successful mirror. The two paths go in `data/mirror/config.json` (see `mirror-config.example.json`).
+
+**Score:** 4
+
+#### What makes this deploy extra special
+
+A dead working drive now costs at most the changes since the last mirror, and the mirror can never quietly throw away work done on the reserve.
+
+**Score:** 4
+
+#### Pull Request
+
+Desktop mirror: one-way mirror of the working music drive to a reserve drive
+
+[PR #158](https://github.com/DKJ-Solutions/dkj-music-library/pull/158)
+
+---
 
 ### DEPLOY: feat/144-pc-spotify-scan · 20261107-154921Z
 
