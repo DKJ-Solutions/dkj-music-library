@@ -5,8 +5,9 @@ machine.
 
 - **Spotify-mirror** (`/spotify`): een read-only back-up van de Spotify-playlists, met doorzoeken,
   groeperen en filteren, een dashboard, de BPM- en wereld-indeling, en de brug naar de DJ Cylow-mixen.
-  Er gaat maar één ding terug naar Spotify, en dat staat in `src/lib/spotify/playlistApi.ts`: de naam
-  en beschrijving van een playlist die bij een mix hoort. Verder schrijft de app niets naar Spotify. In
+  Alles wat de app naar Spotify terugschrijft staat in `src/lib/spotify/playlistApi.ts`: de naam en
+  beschrijving van een playlist die bij een mix hoort, en de volgorde van de tracks in een werkbak (slepen
+  op `/mixen/preparation/<id>`, met Push naar Spotify). Verder schrijft de app niets naar Spotify. In
   de eigen bibliotheek kun je twee velden zelf aanpassen: `dkj_rating` en `dkj_mix_rating`, in het trackregister.
 - **Desktop-mirror**: moet nog gebouwd worden.
 
