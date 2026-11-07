@@ -52,7 +52,7 @@ Owner's decision on #151 (November 7, 2026): a fuzzy artist + title match that s
 ### TEST
 
 - [x] `vitest` on `src/lib` and `src/components` (1071 passed, new cases for links, suggestions, threshold and one-to-one), `tsc --noEmit` and `eslint` clean; `check-house-style` adds no finding (the 127 on main are #148's). The full gate runs in `ship-pr` after the owner's look
-- [ ] The owner opens `/compare/pc-spotify` against the music folder, judges the suggestions and links one by hand
+- [~] The owner opens `/compare/pc-spotify` against the music folder, judges the suggestions and links one by hand -- not done as a separate look: davekokbwj approved the branch through issues-sweep-reviews on 2026-11-07 without one.
 
 ### DEPLOY: feat/151-pc-spotify-fuzzy-link
 
