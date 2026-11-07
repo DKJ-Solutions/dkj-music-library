@@ -56,6 +56,7 @@ function row(n: number, over: Partial<RegisterRow> = {}): RegisterRow {
     album: null,
     albumCandidates: [],
     file: `Artiest - Nummer ${n}`,
+    localFile: null,
     dkjTitle: `Nummer ${n}`,
     groups: [],
     playlists: [],

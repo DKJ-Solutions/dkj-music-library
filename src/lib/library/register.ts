@@ -38,6 +38,8 @@ export interface RegisterRow {
    *  dan blijft `album` leeg tot je zelf kiest. */
   albumCandidates: string[];
   file: string | null;
+  /** Het lokale bestand dat zelf aan de track gekoppeld is (dkj_local_file), pad vanaf de muziekmap. */
+  localFile: string | null;
   /** Alleen de titel (dkj_title). */
   dkjTitle: string | null;
   /** De eigen groepen (dkj_group), in de volgorde van de options. */
@@ -106,6 +108,7 @@ export function toRegisterRow(track: StoredTrack, artistNames: Record<string, st
     album: text(track.dkj_album),
     albumCandidates: albumsOfPlaylists(playlists.map((p) => p.name)),
     file: text(track.dkj_file),
+    localFile: text(track.dkj_local_file),
     dkjTitle: text(track.dkj_title),
     groups: Array.isArray(track.dkj_group) ? track.dkj_group.filter((g): g is string => typeof g === "string") : [],
     playlists,

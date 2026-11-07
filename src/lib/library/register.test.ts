@@ -46,6 +46,7 @@ describe("toRegisterRow", () => {
       album: null,
       albumCandidates: [],
       file: "Mark Ronson - Uptown Funk",
+      localFile: null,
       dkjTitle: "Uptown Funk",
       groups: ["MMC"],
       playlists: [{ id: "p1", name: "Funk" }],
