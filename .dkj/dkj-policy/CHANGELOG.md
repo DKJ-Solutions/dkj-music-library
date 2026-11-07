@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**35 / 44 minor entries** <!-- pending-tally -->
+**35 / 45 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/164-house-style-pin · 20261107-181359Z
+
+`src/styles/house/house-style.css` is the v6.10.0 brand book copy again, so the `house-style` check is green on `main`. Only three comments changed; nothing looks different.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+N/A
+
+**Score:** N/A
+
+#### Pull Request
+
+house-style.css to the v6.10.0 pin
+
+[PR #166](https://github.com/DKJ-Solutions/dkj-music-library/pull/166)
+
+---
 
 ### DEPLOY: feat/143-dkj-folder-move · 20261107-180944Z
 
