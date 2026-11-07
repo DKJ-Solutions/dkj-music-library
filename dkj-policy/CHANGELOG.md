@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**30 / 33 minor entries** <!-- pending-tally -->
+**30 / 34 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/152-readme-spotify-writes · 20261107-153412Z
+
+The README now lists every write the app makes to Spotify: a mix playlist's name and description, and the track order of a werkbak. It used to say the app writes only the name and description.
+
+**Score:** 1 -- prevents a reader trusting the README that the app never changes a playlist's contents, which has not been true since the werkbak order was added.
+
+#### What makes this deploy extra special
+
+N/A
+
+**Score:** N/A
+
+#### Pull Request
+
+README: list every write the app makes to Spotify
+
+[PR #153](https://github.com/DKJ-Solutions/dkj-music-library/pull/153)
+
+---
 
 ### DEPLOY: fix/147-triage-label-names · 20261107-152121Z
 
