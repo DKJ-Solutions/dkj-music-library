@@ -10,7 +10,7 @@
       1. weigert als je niet op main staat, of als er naast data/library/export/ nog iets gewijzigd is --
          dan zou andermans werk (of half werk) meeliften;
       2. vat samen wat er veranderde (scripts/library/export-diff.ts, bv. "2 tracks gewijzigd (dkj_rating 2)");
-      3. maakt een branch chore/library-<tijd> met zijn branchdocument (new-branch van de plugin) en vult
+      3. maakt een branch feat/library-<tijd> met zijn branchdocument (new-branch van de plugin) en vult
          dat document zelf in;
       4. commit de export, en draait open-pr en ship-pr van de plugin: de gates, de PR, de merge en de fold.
          Een datawijziging heeft geen zichtbaar resultaat, dus die PR wacht niet op een blik;
@@ -82,7 +82,7 @@ try {
     Write-Host "library:publish: veranderd sinds main -- $summary"
 
     $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
-    $name = "chore/library-$stamp"
+    $name = "feat/library-$stamp"
     if ($DryRun) {
         Write-Host "library:publish: -DryRun -- zou $name maken, de export committen en via open-pr en ship-pr op main zetten."
         exit 0
@@ -118,7 +118,7 @@ try {
     [IO.File]::WriteAllText($docPath, $doc, (New-Object System.Text.UTF8Encoding($false)))
 
     # 4. Commit, PR, merge, fold.
-    Invoke-Step 'commit' { git add -- $exportDir $docPath; git commit -q -m "chore: bibliotheek bijgewerkt vanuit de app ($summary)" }
+    Invoke-Step 'commit' { git add -- $exportDir $docPath; git commit -q -m "feat: bibliotheek bijgewerkt vanuit de app ($summary)" }
     Invoke-Step 'push' { git push -q }
     Invoke-Step 'open-pr' { powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $scripts 'release/open-pr.ps1') -NoResolves }
     Invoke-Step 'ship-pr' { powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $scripts 'release/ship-pr.ps1') -NoResolves }

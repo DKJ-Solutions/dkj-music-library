@@ -39,21 +39,42 @@
 
 ### PLAN
 
+Make this repo use the source's branch-prefix table (DKJ-Solutions/dkj-marketplace#3886): `feat/` ->
+`feature`, `fix/` -> `bug`, `docs/` -> no label, `chore/` refused. This repo's table still allowed
+`chore/` (label `documentation`).
+
+#### Pending entry retype
+
+| Entry | Old type | New type | Why |
+|---|---|---|---|
+| `config/120-dkj-marketplace` | Config (unknown prefix) | Feat (`feat/120-dkj-marketplace`) | tooling/config work: settings keys, imports and CI runners moved to the new marketplace name |
+
+No other pending entry carries a type outside Feat/Fix/Docs; released history is left alone.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `scripts/lib/branch-info.ps1`: prefix table, `Get-BranchTypes`, `Get-BranchPrefix`, `Get-BranchInfo` and `Test-BranchName` copied from the source (chore/ row removed and refused, the shell character-set rule added); header says it follows the source table (#3886)
+- [x] `.dkj/dkj-policy/CHANGELOG.md`: the pending `config/120-dkj-marketplace` entry retyped to `feat/120-dkj-marketplace`
+- [x] `scripts/library/publish-library.ps1` and `README.md`: `npm run library:publish` creates `feat/library-<time>` instead of the now-refused `chore/library-<time>`, and commits as `feat:`
+- [x] Label `feature` exists on the tracker (nothing to create)
 
 ### TEST
 
+- [x] `branch-info.ps1` dot-sources cleanly and is pure ASCII; `Get-BranchTypes` returns Feat, Fix, Docs, Chore; feat/fix/docs map to feature/bug/no label; `chore/x` is refused; `config/x` is unknown but valid; `feat/a;b` is refused
+- [~] No repo test suite touches branch-info (no `scripts/tests` here); the gates run in open-pr
+
 ### DEPLOY: fix/169-source-branch-prefixes
 
-**Score:**
+This repo now uses the same branch prefixes as every DKJ repo (DKJ-Solutions/dkj-marketplace#3886): `feat/` -> `feature`, `fix/` -> `bug`, `docs/` -> no label, and `chore/` is refused. `scripts/lib/branch-info.ps1` carries the source's functions, `npm run library:publish` now opens a `feat/library-<time>` branch, and the one pending entry under a retired type (`config/120`) is filed as `feat/`.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A
+
+**Score:** N/A
 
 #### Pull Request
 
 Use the source's branch prefixes
-
