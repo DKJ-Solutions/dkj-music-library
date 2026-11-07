@@ -42,7 +42,7 @@
 ### CREATE
 
 - [x] `house-style.css` en `house-theme.js` vervangen door de v6.9.0-kopieën (sha256 gelijk aan de pin-tabel van de dkj-brandbook-skill; geen netwerk-, eval- of cookiecode)
-- [x] `house-product.css` (v6.9.0, sha256 gelijk) gevendord naast de kern en in `src/app/layout.tsx` na `house-style.css` geladen: de site-header en de breadcrumb-balk staan sinds DKJ-Solutions/dkj-marketplace#3831 in de productlaag
+- [x] `house-product.css` (v6.9.0, sha256 gelijk) gevendord naast de kern (met `-text` in `.gitattributes`, zoals de andere twee) en in `src/app/layout.tsx` na `house-style.css` geladen: de site-header en de breadcrumb-balk staan sinds DKJ-Solutions/dkj-marketplace#3831 in de productlaag
 - [x] Vervallen tokens hernoemd in de eigen laag (12 bestanden in `src/styles/`), volgens de hernoemtabellen van de brand book-README: `--muted` naar `--primary-muted`, `--paper-1..4` naar `--bg-1..4`, `--radius-lg` naar `--radius-3`
 - [x] `check-house-style`: geen `pin`-, `redefine`- of `retired`-bevinding meer. De 116 `type`- en 11 `colour`-bevindingen van de nieuwere regels staan in #148, de `.eyebrow`-labels zonder huisstijl in #149
 
