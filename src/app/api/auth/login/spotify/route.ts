@@ -36,8 +36,10 @@ export async function GET(request: NextRequest) {
   try {
     config = getSpotifyConfig();
   } catch (err) {
+    // Terug naar de pagina in plaats van kale JSON in de browser (#123): de Login-kaart toont dan zelf
+    // wat er aan de configuratie ontbreekt.
     if (err instanceof SpotifyConfigError) {
-      return NextResponse.json({ error: err.message }, { status: 500 });
+      return NextResponse.redirect(new URL("/spotify?error=config_missing", request.url));
     }
     throw err;
   }

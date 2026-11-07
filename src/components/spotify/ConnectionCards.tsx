@@ -6,13 +6,15 @@
 import { headers } from "next/headers";
 import { readTokens } from "@/lib/spotify/tokenStore";
 import { getEnrichedSnapshot } from "@/lib/spotify/enrichedPlaylists";
-import { getSpotifyRedirectUri } from "@/lib/spotify/config";
+import { findSpotifyConfigProblem, getSpotifyRedirectUri } from "@/lib/spotify/config";
 import { findRedirectHostMismatch } from "@/lib/spotify/redirectHost";
 import SyncButton from "@/components/spotify/SyncButton";
 
 const ERROR_MESSAGES: Record<string, string> = {
   state_mismatch: "De login-poging kon niet worden geverifieerd (state komt niet overeen). Probeer opnieuw.",
   token_exchange_failed: "Het inwisselen van de code voor tokens is mislukt. Zie de serverconsole (het venster waarin `npm run dev` draait) voor details.",
+  // Alleen te zien als de configuratie intussen wél klopt: anders staat de melding zelf al op de kaart.
+  config_missing: "De Spotify-configuratie ontbrak bij het inloggen. Ze is er nu wel; probeer opnieuw.",
 };
 
 export default async function ConnectionCards({ params }: { params: { connected?: string; error?: string } }) {
@@ -23,11 +25,14 @@ export default async function ConnectionCards({ params }: { params: { connected?
   );
   const tokens = readTokens();
   const enriched = getEnrichedSnapshot();
+  // Ontbreken de sleutels, dan staat de melding op de kaart in plaats van de inlogknop (#123). De
+  // ?error=config_missing van de login-route voegt dan niets toe en wordt niet nog eens getoond.
+  const configProblem = findSpotifyConfigProblem();
   // Sinds de login-route zichzelf op de juiste host zet (api/auth/login/spotify) hóórt een
   // state_mismatch hier niet meer door het adres te komen. Komt hij tóch voor terwijl de hosts
   // uiteenlopen, dan is dat waardevolle informatie -- dan heeft de hop niet gedaan wat hij moest doen --
   // dus blijft de melding die oorzaak noemen, nu als "onverwacht" in plaats van als instructie.
-  const errorMessage = params.error
+  const errorMessage = params.error && !(params.error === "config_missing" && configProblem)
     ? params.error === "state_mismatch" && hostMismatch
       ? `De login-poging kon niet worden geverifieerd (state komt niet overeen), terwijl je de app op ${hostMismatch.browserHost} hebt geopend en de callback op ${hostMismatch.redirectHost} binnenkomt. Dat zou de login-route zelf moeten hebben rechtgezet, dus dit is onverwacht. Open de app op ${hostMismatch.correctUrl} en probeer het daar.`
       : (ERROR_MESSAGES[params.error] ?? `Onbekende fout: ${params.error}`)
@@ -47,7 +52,9 @@ export default async function ConnectionCards({ params }: { params: { connected?
             <p className="card__sub">
               {tokens
                 ? `Verbonden. Toegangstoken verloopt ${new Date(tokens.expiresAt).toLocaleString("nl-NL")}.`
-                : "Nog niet ingelogd. Log eerst in bij Spotify."}
+                : configProblem
+                  ? "Inloggen kan nog niet: de Spotify-sleutels ontbreken."
+                  : "Nog niet ingelogd. Log eerst in bij Spotify."}
             </p>
           </div>
           {tokens ? (
@@ -56,14 +63,15 @@ export default async function ConnectionCards({ params }: { params: { connected?
                 Loskoppelen
               </button>
             </form>
-          ) : (
+          ) : configProblem ? null : (
             <a className="btn btn--primary" href="/api/auth/login/spotify">
               Inloggen bij Spotify
             </a>
           )}
         </div>
 
-        {errorMessage && <p className="msg msg--warn verbinding-result">{errorMessage}</p>}
+        {configProblem && <p className="msg msg--warn verbinding-result">{configProblem}</p>}
+        {errorMessage &&<p className="msg msg--warn verbinding-result">{errorMessage}</p>}
       </section>
 
       <SyncButton card={{ connected: !!tokens, hasSnapshot: !!enriched }} />

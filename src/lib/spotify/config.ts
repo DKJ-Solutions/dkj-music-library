@@ -71,9 +71,11 @@ export function getSpotifyConfig(recoverEnv: () => void = recoverSpotifyEnv): Sp
 
   if (!clientId || !clientSecret) {
     throw new SpotifyConfigError(
-      "SPOTIFY_CLIENT_ID en/of SPOTIFY_CLIENT_SECRET ontbreken. Zet je ingevulde .env.local in " +
-        "%OneDrive%\\dkj-solutions\\dkj-music-library -- staat hij daar al (OneDrive kan nog aan het " +
-        "synchroniseren zijn), probeer het dan zo opnieuw, of draai `npm run env:onedrive` (zie de README, 'Starten')."
+      "SPOTIFY_CLIENT_ID en/of SPOTIFY_CLIENT_SECRET ontbreken. Kopieer .env.local.example naar " +
+        ".env.local en vul de client-ID en het secret uit het Spotify Developer Dashboard in -- of zet je " +
+        "ingevulde .env.local in %OneDrive%\\dkj-solutions\\dkj-music-library. Staat hij daar al (OneDrive " +
+        "kan nog aan het synchroniseren zijn), probeer het dan zo opnieuw, of draai `npm run env:onedrive` " +
+        "(zie de README, 'Starten')."
     );
   }
 
@@ -87,4 +89,20 @@ export function getSpotifyConfig(recoverEnv: () => void = recoverSpotifyEnv): Sp
   }
 
   return { clientId, clientSecret, redirectUri };
+}
+
+/** De melding van `getSpotifyConfig()` als de configuratie niet klopt, anders null.
+ *
+ *  Voor de Login-kaart op /spotify (#123): die toont de melding in plaats van de inlogknop, zodat een
+ *  ontbrekende `.env.local` op de pagina zelf te zien is en niet pas na een klik als kale JSON. Het herstel
+ *  van `getSpotifyConfig()` (#128) draait hier ook, zodat de kaart een inmiddels gesynchroniseerde OneDrive-
+ *  kopie meteen oppikt; tests geven een eigen `recoverEnv` mee. */
+export function findSpotifyConfigProblem(recoverEnv: () => void = recoverSpotifyEnv): string | null {
+  try {
+    getSpotifyConfig(recoverEnv);
+    return null;
+  } catch (err) {
+    if (err instanceof SpotifyConfigError) return err.message;
+    throw err;
+  }
 }
