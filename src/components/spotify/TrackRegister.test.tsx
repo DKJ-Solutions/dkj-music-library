@@ -9,6 +9,7 @@ import { CANDIDATES_FILTER, type RegisterRow } from "@/lib/library/register";
 import { REGISTER_PREFS_KEY } from "@/lib/library/registerPrefs";
 import { loadSpotifyIframeApi } from "@/lib/library/trackEmbed";
 import { PlaylistOrderError, savePlaylistOrder } from "@/lib/library/savePlaylistOrder";
+import { moveTrackToPlaylist } from "@/lib/library/moveTrack";
 
 // TrackRegister ververst de pagina na een verplaatsing; buiten de app-router bestaat er geen router.
 const refresh = vi.fn();
@@ -17,6 +18,7 @@ vi.mock("@/lib/library/savePlaylistOrder", async (original) => ({
   ...(await original<typeof import("@/lib/library/savePlaylistOrder")>()),
   savePlaylistOrder: vi.fn(),
 }));
+vi.mock("@/lib/library/moveTrack", () => ({ moveTrackToPlaylist: vi.fn() }));
 
 // De iFrame API van Spotify is een script van buiten; de tests geven de component een nep-API.
 vi.mock("@/lib/library/trackEmbed", async (original) => ({
@@ -30,6 +32,7 @@ beforeEach(() => {
   window.localStorage.clear();
   refresh.mockClear();
   vi.mocked(savePlaylistOrder).mockReset();
+  vi.mocked(moveTrackToPlaylist).mockReset();
 });
 afterEach(() => {
   cleanup();
@@ -182,6 +185,37 @@ describe("TrackRegister", () => {
       fireEvent.click(title);
       fireEvent.click(title);
       expect(grip(1).getAttribute("aria-disabled")).toBe("false");
+    });
+  });
+
+  describe("naar een andere werkbak verplaatsen (#134)", () => {
+    const two = [row(1), row(2)];
+    const target = { id: "T".repeat(22), name: "Blue Mix Vol. X" };
+    const order = { playlistId: "P".repeat(22), snapshotId: "snap1", positions: { [two[0].id]: 0, [two[1].id]: 1 }, itemIds: ["sp1", "sp2"] };
+    const toggle = (n: number) => screen.getByRole("button", { name: new RegExp(`Nummer ${n} naar een andere werkbak`) });
+
+    it("heeft geen verplaats-kolom zonder andere werkbakken", () => {
+      render(<TrackRegister rows={two} artistCount={1} compact playlistOrder={order} />);
+      expect(document.querySelector(".register-move-toggle")).toBeNull();
+    });
+
+    it("stuurt het Spotify-ID van de rij naar de gekozen werkbak, meldt het en ververst", async () => {
+      vi.mocked(moveTrackToPlaylist).mockResolvedValue({ added: true, refreshed: true });
+      render(<TrackRegister rows={two} artistCount={1} compact playlistOrder={{ ...order, moveTargets: [target] }} />);
+      fireEvent.click(toggle(2));
+      fireEvent.click(screen.getByRole("button", { name: target.name }));
+      expect(moveTrackToPlaylist).toHaveBeenCalledWith(order.playlistId, target.id, "sp2");
+      await waitFor(() => expect(refresh).toHaveBeenCalled());
+      expect(screen.getByRole("status").textContent).toBe("Nummer 2 staat nu onderaan Blue Mix Vol. X.");
+    });
+
+    it("toont de reden als het verplaatsen mislukt", async () => {
+      vi.mocked(moveTrackToPlaylist).mockRejectedValue(new Error("Spotify zegt nee"));
+      render(<TrackRegister rows={two} artistCount={1} compact playlistOrder={{ ...order, moveTargets: [target] }} />);
+      fireEvent.click(toggle(1));
+      fireEvent.click(screen.getByRole("button", { name: target.name }));
+      await waitFor(() => expect(screen.getByRole("status").textContent).toBe("Verplaatsen mislukt: Spotify zegt nee"));
+      expect(refresh).not.toHaveBeenCalled();
     });
   });
 

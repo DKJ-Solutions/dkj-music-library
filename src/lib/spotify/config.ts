@@ -20,12 +20,12 @@ export const SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token";
 // De grens is daarmee smal gehouden, en dat is bewust:
 //   * `playlist-modify-private` + `-public` geven toegang tot de playlist-METADATA (naam, beschrijving,
 //     openbaarheid). De hub gebruikt daarvan alléén de beschrijving en de naam.
-//   * Tracks toevoegen of verwijderen valt ook onder deze scopes, maar daar is in de hele codebase geen
-//     enkele aanroep voor. De schrijfacties naar Spotify zijn `updatePlaylistDescription()`,
-//     `updatePlaylistName()` en `reorderPlaylistItem()` in playlistApi.ts: de eerste twee raken uitsluitend
-//     `description` resp. `name`, de derde (sinds 31 oktober 2026, Dave) alleen de VOLGORDE van de tracks in
-//     een werkbak -- de eerste schrijfactie op de inhoud van een playlist, maar zonder dat er een track bij
-//     komt of weggaat.
+//   * De schrijfacties naar Spotify staan allemaal in playlistApi.ts: `updatePlaylistDescription()` en
+//     `updatePlaylistName()` raken uitsluitend `description` resp. `name`, `reorderPlaylistItem()` (sinds 31
+//     oktober 2026, Dave) alleen de VOLGORDE van de tracks in een werkbak, en `addPlaylistItems()` +
+//     `removePlaylistItems()` (sinds 7 november 2026, Dave, #134) verplaatsen een track van de ene werkbak naar
+//     een andere -- de enige plek waar een track ergens bij komt of weggaat, en alleen tussen werkbakken
+//     (api/spotify/playlist-move).
 //   * Niet gevraagd blijven o.a. `user-library-modify`, `ugc-image-upload` en alle playback-scopes.
 //
 // LET OP bij een wijziging hier: een uitgebreidere scope-set geldt pas na opnieuw inloggen. Een bestaand

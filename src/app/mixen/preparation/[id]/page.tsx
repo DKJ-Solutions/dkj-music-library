@@ -28,8 +28,14 @@ export const dynamic = "force-dynamic";
 
 export default async function PreparationPlaylistPage({ params }: { params: Promise<{ id: string }> }) {
   const id = decodeURIComponent((await params).id);
-  const playlist = readSnapshot()?.playlists.find((p) => p.id === id && isPreparationPlaylist(p.name));
+  const playlists = readSnapshot()?.playlists ?? [];
+  const playlist = playlists.find((p) => p.id === id && isPreparationPlaylist(p.name));
   if (!playlist) notFound();
+  // De andere werkbakken: daarheen kan een track uit deze verhuizen (Dave, #134; api/spotify/playlist-move).
+  const moveTargets = playlists
+    .filter((p) => p.id !== playlist.id && isPreparationPlaylist(p.name))
+    .map((p) => ({ id: p.id, name: p.name }))
+    .sort((a, b) => a.name.localeCompare(b.name, "nl"));
 
   // Het register kent per track de playlists waarin hij staat (spotify_playlist), dus dit zijn precies de
   // tracks van deze werkbak zoals de bibliotheek ze kent -- in de volgorde van de playlist op Spotify
@@ -82,6 +88,7 @@ export default async function PreparationPlaylistPage({ params }: { params: Prom
             snapshotId: playlist.snapshotId,
             positions: register.positions,
             itemIds: shown.tracks.map((item) => item.track?.id ?? null),
+            moveTargets,
           }}
         />
       )}

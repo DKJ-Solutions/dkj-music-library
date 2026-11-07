@@ -39,21 +39,36 @@
 
 ### PLAN
 
+#### Issue #134
+
+A track can be top-rated and still not fit the rest of a werkbak. Dave wants to move it to another werkbak instead of dropping it. The dependency on feat/werkbak-drag-order has merged.
+
+This widens the hub's Spotify write scope: tracks are now added and removed, but only between werkbakken (both ends must be "Vol. X" playlists in the snapshot). The scope note in `src/lib/spotify/config.ts` and the write-path note in `httpClient.ts` say so.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `spotifyWrite` (PUT/POST/DELETE) in `httpClient.ts`; `addPlaylistItems` and `removePlaylistItems` in `playlistApi.ts`
+- [x] `POST /api/spotify/playlist-move`: add to the target first (at the bottom), then remove from the source, so a failure never loses the track; skips the add when the target already holds it; refreshes both playlists (a pending local order is rebased by `refreshPlaylistInSnapshot`)
+- [x] A narrow column at the right of every werkbak table with a menu of the other werkbakken (`MoveToMenu` in `TrackRegister.tsx`), styled in house tokens
+- [x] Tests: route (order of the calls, refusals, rate limit, half-done failure, lock release) and component (menu, Spotify ID sent, error note)
 
 ### TEST
 
+- [x] Affected suites, `tsc --noEmit` and `eslint` clean; a werkbak page renders with the menu on every row (HTTP 200). The full gate runs in `ship-pr` after the owner's look
+- [ ] The owner looks at a werkbak page and moves one track
+
 ### DEPLOY: feat/134-move-track-between-werkbakken
 
-**Score:**
+Every row of a werkbak table (`/mixen/preparation/<id>`) now has a ⇄ menu at the right that moves the track to another werkbak. The hub adds it at the bottom of the chosen werkbak in Spotify first and only then removes it from this one, so a failure leaves the track in both rather than in neither, and it says so. Both werkbakken are fetched again afterwards, and a local order that has not been pushed yet survives the move. This is the first time the hub adds or removes tracks in a Spotify playlist, and it only does so between werkbakken.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+A great track that does not fit this mix moves to the werkbak where it belongs in two clicks, instead of being dropped or moved by hand in Spotify.
+
+**Score:** 3
 
 #### Pull Request
 
 Move a track from one werkbak to another preparation playlist
-
