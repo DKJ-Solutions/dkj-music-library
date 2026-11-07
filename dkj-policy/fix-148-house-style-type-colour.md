@@ -51,7 +51,7 @@
 ### TEST
 
 - [x] `check-house-style` at v6.9.0: `[OK] the brand book holds`, 0 findings; `main.scss` compiles with sass. The full gate runs in `ship-pr` after the owner's look
-- [ ] The owner judges the pages with dense tables (track register, playlist manager, mix bridge, dashboard): the 600 to 700 weights and the half-pixel sizes rounded to the scale shift slightly
+- [~] The owner judges the pages with dense tables (track register, playlist manager, mix bridge, dashboard): the 600 to 700 weights and the half-pixel sizes rounded to the scale shift slightly -- not done as a separate look: davekokbwj approved the branch through issues-sweep-reviews on 2026-11-07 without one.
 
 ### DEPLOY: fix/148-house-style-type-colour
 
