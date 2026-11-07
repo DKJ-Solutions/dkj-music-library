@@ -52,7 +52,7 @@ Visible result: parked for the owner's look by a sweep (#123), no PR until then.
 ### TEST
 
 - [x] `config.test.ts`: `findSpotifyConfigProblem` returns the message without credentials and null with them; `tsc --noEmit` clean
-- [ ] The owner has looked at the Login card without `.env.local`
+- [~] The owner has looked at the Login card without `.env.local` -- not done as a separate look: davekokbwj approved the branch through issues-sweep-reviews on November 7, 2026 without one.
 
 ### DEPLOY: fix/123-spotify-config-melding
 
