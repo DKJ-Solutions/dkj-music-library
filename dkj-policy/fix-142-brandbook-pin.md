@@ -48,7 +48,7 @@
 
 ### TEST
 
-- [ ] Owner bekijkt de app in de nieuwe huisstijl (http://localhost:3000/, /spotify, /mixen, /compare)
+- [~] Owner bekijkt de app in de nieuwe huisstijl (http://localhost:3000/, /spotify, /mixen, /compare) -- not done as a separate look: davekokbwj approved the branch through issues-sweep-reviews on November 7, 2026 without one.
 
 ### DEPLOY: fix/142-brandbook-pin
 
