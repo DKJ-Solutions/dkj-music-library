@@ -39,19 +39,29 @@
 
 ### PLAN
 
+#### Issue #152
+
+The README said the app writes only a playlist's name and description to Spotify; since October 31, 2026 it also writes the track order of a werkbak (`reorderPlaylistItem`). The sentence now lists every write `playlistApi.ts` makes, in a shape the parked #134 can extend with one clause.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] README: the Spotify-mirror bullet names name, description and werkbak order as the writes, all in `playlistApi.ts`
 
 ### TEST
 
+- [x] Docs only; the full gate runs in `ship-pr`
+
 ### DEPLOY: fix/152-readme-spotify-writes
 
-**Score:**
+The README now lists every write the app makes to Spotify: a mix playlist's name and description, and the track order of a werkbak. It used to say the app writes only the name and description.
+
+**Score:** 1 -- prevents a reader trusting the README that the app never changes a playlist's contents, which has not been true since the werkbak order was added.
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A
+
+**Score:** N/A
 
 #### Pull Request
 
