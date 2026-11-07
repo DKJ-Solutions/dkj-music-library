@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**35 / 45 minor entries** <!-- pending-tally -->
+**35 / 46 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/169-source-branch-prefixes · 20261107-193837Z
+
+This repo now uses the same branch prefixes as every DKJ repo (DKJ-Solutions/dkj-marketplace#3886): `feat/` -> `feature`, `fix/` -> `bug`, `docs/` -> no label, and `chore/` is refused. `scripts/lib/branch-info.ps1` carries the source's functions, `npm run library:publish` now opens a `feat/library-<time>` branch, and the one pending entry under a retired type (`config/120`) is filed as `feat/`.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+N/A
+
+**Score:** N/A
+
+#### Pull Request
+
+Use the source's branch prefixes
+
+[PR #170](https://github.com/DKJ-Solutions/dkj-music-library/pull/170)
+
+---
 
 ### DEPLOY: fix/164-house-style-pin · 20261107-181359Z
 
