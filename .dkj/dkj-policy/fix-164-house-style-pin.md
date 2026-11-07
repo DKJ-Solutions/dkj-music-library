@@ -39,19 +39,31 @@
 
 ### PLAN
 
+Issue #164. Replace `src/styles/house/house-style.css` with the v6.10.0 brand book copy, unchanged (same move as #109 and #142).
+
+#### Not a visible result
+
+The v6.9.0 to v6.10.0 diff is three CSS comments ("the hub" becomes "Admin", `Format-HubCardLinkHtml` becomes `Format-AdminCardLinkHtml`). No rule changes, so nothing renders differently and the branch ships without an owner's look.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Copied `assets/dkj-brandbook/house-style.css` from dkj-policy v6.10.0; file hash identical to the source.
 
 ### TEST
 
+- [x] `check-house-style.ps1` (dkj-solutions v6.10.0): all three copies pinned at v6.10.0, check 2 ran, `[OK] the brand book holds at v6.10.0.` The full gate runs in `ship-pr`.
+
 ### DEPLOY: fix/164-house-style-pin
 
-**Score:**
+`src/styles/house/house-style.css` is the v6.10.0 brand book copy again, so the `house-style` check is green on `main`. Only three comments changed; nothing looks different.
+
+**Score:** 1
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A
+
+**Score:** N/A
 
 #### Pull Request
 
