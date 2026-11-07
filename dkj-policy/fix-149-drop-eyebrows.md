@@ -53,7 +53,7 @@ The v6.9.0 brand book has no `.eyebrow` ("No eyebrow above a heading"), so nine 
 ### TEST
 
 - [x] No gate run at the park (issues-sweep step 4): `ship-pr` runs the full gate once the owner has looked. `MissingMixes.test.tsx` finds its heading by text, so the `h2` still satisfies it
-- [ ] The owner judges the section headings on `/spotify/dashboard`, `/compare/playlists-mixes`, `/spotify/playlists/musicmoodcolours` and `/spotify/playlists/manager`
+- [~] The owner judges the section headings on `/spotify/dashboard`, `/compare/playlists-mixes`, `/spotify/playlists/musicmoodcolours` and `/spotify/playlists/manager` -- not done as a separate look: davekokbwj approved the branch through issues-sweep-reviews on 2026-11-07 without one.
 
 ### DEPLOY: fix/149-drop-eyebrows
 
