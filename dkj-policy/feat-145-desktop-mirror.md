@@ -56,7 +56,7 @@ Design: robocopy /MIR, because Windows ships it and it copies only what differs.
 ### TEST
 
 - [x] Affected suites, `tsc --noEmit`, `eslint` and `check-house-style` (no finding in the new files) clean; `main.scss` compiles with sass. The full gate runs in `ship-pr` after the owner's look
-- [ ] The owner sets the two drive paths in `data/mirror/config.json`, runs a dry run on `/mirror` and judges the page
+- [~] The owner sets the two drive paths in `data/mirror/config.json`, runs a dry run on `/mirror` and judges the page -- not done as a separate look: davekokbwj approved the branch through issues-sweep-reviews on November 7, 2026 without one.
 
 ### DEPLOY: feat/145-desktop-mirror
 
