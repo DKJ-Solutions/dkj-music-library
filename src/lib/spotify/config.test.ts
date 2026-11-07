@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { DEFAULT_SPOTIFY_REDIRECT_URI, getSpotifyConfig } from "./config";
 import { SpotifyConfigError } from "./errors";
 
+const noRecover = () => {};
 const ENV_KEYS = ["SPOTIFY_CLIENT_ID", "SPOTIFY_CLIENT_SECRET", "SPOTIFY_REDIRECT_URI"] as const;
 let originalEnv: Record<(typeof ENV_KEYS)[number], string | undefined>;
 
@@ -28,16 +29,16 @@ afterEach(() => {
 describe("getSpotifyConfig", () => {
   it("gooit SpotifyConfigError als SPOTIFY_CLIENT_ID ontbreekt", () => {
     process.env.SPOTIFY_CLIENT_SECRET = "secret";
-    expect(() => getSpotifyConfig()).toThrow(SpotifyConfigError);
+    expect(() => getSpotifyConfig(noRecover)).toThrow(SpotifyConfigError);
   });
 
   it("gooit SpotifyConfigError als SPOTIFY_CLIENT_SECRET ontbreekt", () => {
     process.env.SPOTIFY_CLIENT_ID = "id";
-    expect(() => getSpotifyConfig()).toThrow(SpotifyConfigError);
+    expect(() => getSpotifyConfig(noRecover)).toThrow(SpotifyConfigError);
   });
 
   it("gooit SpotifyConfigError als beide env-vars ontbreken", () => {
-    expect(() => getSpotifyConfig()).toThrow(SpotifyConfigError);
+    expect(() => getSpotifyConfig(noRecover)).toThrow(SpotifyConfigError);
   });
 
   it("gooit SpotifyConfigError bij een localhost-redirect-URI, ook al zijn de andere waarden geldig", () => {
@@ -45,8 +46,8 @@ describe("getSpotifyConfig", () => {
     process.env.SPOTIFY_CLIENT_SECRET = "secret";
     process.env.SPOTIFY_REDIRECT_URI = "http://localhost:3000/api/auth/callback/spotify";
 
-    expect(() => getSpotifyConfig()).toThrow(SpotifyConfigError);
-    expect(() => getSpotifyConfig()).toThrow(/127\.0\.0\.1/);
+    expect(() => getSpotifyConfig(noRecover)).toThrow(SpotifyConfigError);
+    expect(() => getSpotifyConfig(noRecover)).toThrow(/127\.0\.0\.1/);
   });
 
   it("parsed een geldige config correct, inclusief expliciete redirect-URI", () => {
@@ -54,7 +55,7 @@ describe("getSpotifyConfig", () => {
     process.env.SPOTIFY_CLIENT_SECRET = "s3cr3t";
     process.env.SPOTIFY_REDIRECT_URI = "http://127.0.0.1:3000/api/auth/callback/spotify";
 
-    expect(getSpotifyConfig()).toEqual({
+    expect(getSpotifyConfig(noRecover)).toEqual({
       clientId: "abc123",
       clientSecret: "s3cr3t",
       redirectUri: "http://127.0.0.1:3000/api/auth/callback/spotify",
@@ -65,8 +66,31 @@ describe("getSpotifyConfig", () => {
     process.env.SPOTIFY_CLIENT_ID = "abc123";
     process.env.SPOTIFY_CLIENT_SECRET = "s3cr3t";
 
-    const config = getSpotifyConfig();
+    const config = getSpotifyConfig(noRecover);
     expect(config.redirectUri).toBe(DEFAULT_SPOTIFY_REDIRECT_URI);
     expect(config.redirectUri).not.toContain("localhost");
+  });
+
+  it("probeert het herstel als een sleutel ontbreekt, en gebruikt wat dat oplevert (#128)", () => {
+    let calls = 0;
+    const config = getSpotifyConfig(() => {
+      calls++;
+      process.env.SPOTIFY_CLIENT_ID = "hersteld-id";
+      process.env.SPOTIFY_CLIENT_SECRET = "hersteld-secret";
+    });
+    expect(calls).toBe(1);
+    expect(config.clientId).toBe("hersteld-id");
+  });
+
+  it("slaat het herstel over als beide sleutels er al zijn", () => {
+    process.env.SPOTIFY_CLIENT_ID = "id";
+    process.env.SPOTIFY_CLIENT_SECRET = "secret";
+    let calls = 0;
+    getSpotifyConfig(() => calls++);
+    expect(calls).toBe(0);
+  });
+
+  it("noemt npm run env:onedrive als het herstel niets oplevert", () => {
+    expect(() => getSpotifyConfig(noRecover)).toThrow(/npm run env:onedrive/);
   });
 });

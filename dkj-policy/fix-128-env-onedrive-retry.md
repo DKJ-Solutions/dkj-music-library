@@ -39,21 +39,32 @@
 
 ### PLAN
 
+#### Issue #128
+
+`predev` copies `.env.local` from OneDrive once; at session start OneDrive is often still syncing, so the copy can miss and the Spotify login fails until somebody runs `npm run env:onedrive` by hand. Fix: retry where it matters -- `getSpotifyConfig()` -- and name the manual command in the error.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `recoverEnvFromOneDrive()` + `parseEnvFile()` in `src/lib/env/onedriveEnv.ts`: retry the copy and load the keys into `process.env` (only keys still empty)
+- [x] `getSpotifyConfig()` runs that recovery once when a key is missing; the error message names `npm run env:onedrive`
+- [x] Tests: recovery picks up a copy that arrives later, loads an existing file without overwriting, ignores placeholders; config tests inject a no-op recovery so they never read the machine's real `.env.local`
 
 ### TEST
 
+- [x] `vitest run src/lib/env src/lib/spotify` (412 passed), `tsc --noEmit` and `eslint` on the changed files clean; the full gate runs in `ship-pr`
+
 ### DEPLOY: fix/128-env-onedrive-retry
 
-**Score:**
+When the Spotify keys are missing at the moment the hub needs them, it now copies `.env.local` from OneDrive again and loads the keys straight away. Before, `predev` copied it only once at start, and OneDrive was often still syncing then, so the login showed a "SPOTIFY_CLIENT_ID en/of SPOTIFY_CLIENT_SECRET ontbreken" error until somebody ran `npm run env:onedrive` by hand. That error now also names that command.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+On a fresh session the Spotify login works as soon as OneDrive has synced the file, without a restart or a manual copy.
+
+**Score:** 2
 
 #### Pull Request
 
 Retry the OneDrive .env.local copy when the Spotify keys are missing
-
