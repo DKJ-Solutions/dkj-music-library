@@ -29,7 +29,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--paper-2);
+  background: var(--bg-2);
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 9px 14px;
@@ -47,12 +47,12 @@
 }
 
 .playlist-search input::placeholder {
-  color: var(--muted);
+  color: var(--primary-muted);
 }
 
 .playlist-search svg {
   flex: none;
-  color: var(--muted);
+  color: var(--primary-muted);
 }
 
 // De bulk-actie voor de `mix:`-tags: staat boven de toolbar, tussen de tellers en de filters. Geen filter
@@ -68,7 +68,7 @@
 
 .playlist-bulk-tag .playlist-bulk-hint {
   font-size: 12px;
-  color: var(--muted);
+  color: var(--primary-muted);
 }
 
 // Dezelfde hint, maar los van een bulk-knop -- gebruikt door de naam-bulk om te melden hoeveel rijen
@@ -77,7 +77,7 @@
 p.playlist-bulk-hint {
   margin-top: 6px;
   font-size: 12px;
-  color: var(--muted);
+  color: var(--primary-muted);
 }
 
 // De uitslag van een bulk-actie: hoeveel gelukt, hoeveel niet. Zelfde vorm als .playlist-empty-note (die
@@ -86,7 +86,7 @@ p.playlist-bulk-hint {
 .playlist-bulk-result {
   margin-top: 26px;
   font-size: 13.5px;
-  color: var(--muted);
+  color: var(--primary-muted);
   font-family: var(--font-mono);
 }
 
@@ -117,7 +117,7 @@ p.playlist-bulk-hint {
   font-family: var(--font-mono);
   font-size: 12.5px;
   color: var(--fg-1);
-  background: var(--paper-2);
+  background: var(--bg-2);
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 7px 10px;
@@ -136,7 +136,7 @@ p.playlist-bulk-hint {
   font-size: 10.5px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--primary-muted);
   margin-right: 2px;
 }
 
@@ -167,7 +167,7 @@ p.playlist-bulk-hint {
   padding: 5px 10px 5px 8px;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: var(--paper-2);
+  background: var(--bg-2);
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--ink-soft);
@@ -198,7 +198,7 @@ p.playlist-bulk-hint {
   padding: 6px 12px;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: var(--paper-2);
+  background: var(--bg-2);
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--ink-soft);
@@ -217,7 +217,7 @@ p.playlist-bulk-hint {
 // filter-staat, dus geen data-active-styling nodig).
 .playlist-clear-filters {
   margin-left: auto;
-  color: var(--muted);
+  color: var(--primary-muted);
 }
 
 @media (max-width: 640px) {

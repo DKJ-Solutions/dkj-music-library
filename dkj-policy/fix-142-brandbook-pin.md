@@ -41,19 +41,32 @@
 
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `house-style.css` en `house-theme.js` vervangen door de v6.9.0-kopieën (sha256 gelijk aan de pin-tabel van de dkj-brandbook-skill; geen netwerk-, eval- of cookiecode)
+- [x] `house-product.css` (v6.9.0, sha256 gelijk) gevendord naast de kern en in `src/app/layout.tsx` na `house-style.css` geladen: de site-header en de breadcrumb-balk staan sinds DKJ-Solutions/dkj-marketplace#3831 in de productlaag
+- [x] Vervallen tokens hernoemd in de eigen laag (12 bestanden in `src/styles/`), volgens de hernoemtabellen van de brand book-README: `--muted` naar `--primary-muted`, `--paper-1..4` naar `--bg-1..4`, `--radius-lg` naar `--radius-3`
+- [x] `check-house-style`: geen `pin`-, `redefine`- of `retired`-bevinding meer. De 116 `type`- en 11 `colour`-bevindingen van de nieuwere regels staan in #148, de `.eyebrow`-labels zonder huisstijl in #149
 
 ### TEST
 
+- [ ] Owner bekijkt de app in de nieuwe huisstijl (http://localhost:3000/, /spotify, /mixen, /compare)
+
 ### DEPLOY: fix/142-brandbook-pin
 
-**Score:**
+De app draait op de brand book-kopieën van dkj-policy v6.9.0: `house-style.css` en `house-theme.js` vervangen, en
+`house-product.css` erbij, dat sinds die release de site-header en de breadcrumb-balk draagt. De eigen laag leest de
+nieuwe tokennamen (`--primary-muted`, `--bg-1..4`, `--radius-3`) in plaats van de vervallen namen. De pin-bevindingen
+van de `house-style`-check zijn daarmee weg.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+De vervallen tokennamen zouden bij een volgende brand book-release stil hun kleur verliezen; nu leest de eigen laag de
+namen die de huisstijl definieert.
+
+**Score:** 1
 
 #### Pull Request
 
-Take the v6.9.0 brand book copies and rename retired tokens
+Brand book-kopieën naar v6.9.0, met house-product.css en de nieuwe tokennamen
 
