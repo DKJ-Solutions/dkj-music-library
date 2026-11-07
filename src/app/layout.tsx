@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-// De huisstijl eerst, ongewijzigd uit dkj-brandbook (house-style-v3), dan de eigen laag van de app
-// erna -- die gebruikt house-tokens en herdefinieert er geen (#80).
+// De huisstijl eerst, ongewijzigd uit dkj-brandbook (gepind op v6.9.0, #142): de kern, dan de
+// productlaag (site-header, breadcrumb-balk, kaarten; nooit los geladen), dan de eigen laag van de
+// app erna -- die gebruikt house-tokens en herdefinieert er geen (#80).
 import "@/styles/house/house-style.css";
+import "@/styles/house/house-product.css";
 import "@/styles/main.scss";
 import SiteHeader from "@/components/SiteHeader";
 import Breadcrumbs from "@/components/Breadcrumbs";

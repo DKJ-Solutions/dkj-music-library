@@ -29,8 +29,8 @@
 }
 
 // Een gewone .btn (Loskoppelen) in de kop van een kaart binnen een grid: de rand van de huisstijl valt daar
-// bijna weg tegen de kaart, dus hier een zichtbare rand in --muted. Weg zodra de huisstijl dit zelf
+// bijna weg tegen de kaart, dus hier een zichtbare rand in --primary-muted. Weg zodra de huisstijl dit zelf
 // oplost: DKJ-Solutions/dkj-marketplace#3697.
 .verbinding-head .btn:not(.btn--primary) {
-  border-color: var(--muted);
+  border-color: var(--primary-muted);
 }

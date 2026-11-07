@@ -5,3 +5,4 @@ data/library/export/*.ndjson text eol=lf
 # house-style-skill en de CI-gate lezen precies deze bytes, dus geen regeleinde-conversie.
 src/styles/house/house-style.css -text
 public/house-style/house-theme.js -text
+src/styles/house/house-product.css -text
