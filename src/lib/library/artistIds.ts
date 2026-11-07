@@ -35,6 +35,7 @@ import {
   DEFAULT_RATING,
   FILE_KEY,
   GENRE_KEY,
+  MIX_RATING_KEY,
   PLAYLISTS_KEY,
   TITLE_KEY,
   PRIMARY_ARTIST_KEY,
@@ -382,6 +383,19 @@ export function fillDefaultRatings(db: DatabaseSync): number {
   return Number(result.changes);
 }
 
+/** Zet `dkj_mix_rating` op de waarde van `dkj_rating` bij elke track waar het nog leeg is (Dave, 31
+ *  oktober 2026): een nummer dat je graag luistert, begint ook hoog voor de mix. Daarna wijzig je hem los
+ *  van `dkj_rating`; een zelf gekozen mixwaardering blijft staan. Zonder `dkj_rating` wordt het
+ *  DEFAULT_RATING. Draai na fillDefaultRatings(). Geeft het aantal gevulde tracks terug. */
+export function fillMixRatings(db: DatabaseSync): number {
+  const result = db
+    .prepare(
+      `UPDATE ${TRACKS_TABLE} SET "${MIX_RATING_KEY}" = coalesce("${RATING_KEY}", ?), updated_at = ? WHERE "${MIX_RATING_KEY}" IS NULL`
+    )
+    .run(DEFAULT_RATING, new Date().toISOString());
+  return Number(result.changes);
+}
+
 export interface LibraryIdResult {
   artists: ArtistIdResult;
   /** Tracks die in deze run hun `dkj_bpm` uit de playlists kregen. */
@@ -390,6 +404,8 @@ export interface LibraryIdResult {
   genresFilled: number;
   /** Tracks die in deze run de standaard-`dkj_rating` kregen (DEFAULT_RATING). */
   ratingsFilled: number;
+  /** Tracks die in deze run hun `dkj_mix_rating` kregen, gelijk aan hun `dkj_rating` (fillMixRatings). */
+  mixRatingsFilled: number;
   /** Tracks die in deze run hun `dkj_album` uit de playlists kregen. */
   albumsFilled: number;
   /** Tracks die in deze run hun `dkj_file` kregen (bestaande tracks; nieuwe krijgen hem bij het aanmaken). */
@@ -434,6 +450,7 @@ export function applyLibraryIdsFromSnapshot(db: DatabaseSync, snapshot: Snapshot
   const bpmsFilled = fillBpmsFromPlaylists(db);
   const genresFilled = fillGenresFromPlaylists(db);
   const ratingsFilled = fillDefaultRatings(db);
+  const mixRatingsFilled = fillMixRatings(db);
   const yearsFilled = applyReleaseYears(db, snapshot);
-  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, genresFilled, live, playlistsChanged, primaryArtistsFilled, ratingsFilled, renumbered, titlesFilled, titlesRefreshed, tracks, yearsFilled };
+  return { albumArtistsFilled, albumsFilled, artists, bpmsFilled, fileNamesFilled, genresFilled, live, mixRatingsFilled, playlistsChanged, primaryArtistsFilled, ratingsFilled, renumbered, titlesFilled, titlesRefreshed, tracks, yearsFilled };
 }

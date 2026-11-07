@@ -29,7 +29,7 @@ function stored(over: Partial<StoredTrack> = {}): StoredTrack {
 
 describe("toRegisterRow", () => {
   it("neemt de eigen velden over en zoekt de artiestnamen op", () => {
-    const row = toRegisterRow(stored({ dkj_bpm: "112BPM", dkj_genre: "POP", dkj_rating: "tier-6", spotify_playcount: 42 }), { MAR01: "Mark Ronson" });
+    const row = toRegisterRow(stored({ dkj_bpm: "112BPM", dkj_genre: "POP", dkj_rating: "tier-6", dkj_mix_rating: "tier-2", spotify_playcount: 42 }), { MAR01: "Mark Ronson" });
     expect(row).toEqual({
       id: "MAR01-BRU01-01",
       title: "Uptown Funk",
@@ -41,6 +41,7 @@ describe("toRegisterRow", () => {
       bpm: "112BPM",
       genre: "POP",
       rating: "tier-6",
+      mixRating: "tier-2",
       playcount: "42",
       album: null,
       albumCandidates: [],

@@ -123,7 +123,7 @@ export default function SyncButton({ card }: SyncButtonProps) {
   }
 
   return (
-    <section className="card">
+    <section className="card verbinding-card">
       <div className="card__head verbinding-head">
         <div>
           <h3 className="card__title">Sync</h3>

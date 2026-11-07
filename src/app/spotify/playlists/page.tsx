@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export default function PlaylistsHubPage() {
   return (
-    <main className="wrap">
+    <main className="page-column">
       <header className="masthead">
         <h1>{pageTitle("/spotify/playlists")}</h1>
       </header>

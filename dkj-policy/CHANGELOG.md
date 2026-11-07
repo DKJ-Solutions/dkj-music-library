@@ -2,7 +2,399 @@
 
 ## [Unreleased]
 
-**18 / 20 minor entries** <!-- pending-tally -->
+**34 / 38 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/145-desktop-mirror · 20261107-155253Z
+
+The Desktop mirror is built: `/mirror` (with its own card on Home) mirrors the working drive with the music and the rekordbox library one way to a reserve drive, with robocopy. A dry run first lists what will be copied and what will be deleted on the reserve, and only then does a button mirror exactly that plan: the server runs a fresh dry run first and refuses if anything changed. It also refuses while rekordbox runs, when a drive is missing, when the two paths overlap, and when a file on the reserve is newer than on the working drive. The page shows the time of the last successful mirror. The two paths go in `data/mirror/config.json` (see `mirror-config.example.json`).
+
+**Score:** 4
+
+#### What makes this deploy extra special
+
+A dead working drive now costs at most the changes since the last mirror, and the mirror can never quietly throw away work done on the reserve.
+
+**Score:** 4
+
+#### Pull Request
+
+Desktop mirror: one-way mirror of the working music drive to a reserve drive
+
+[PR #158](https://github.com/DKJ-Solutions/dkj-music-library/pull/158)
+
+---
+
+### DEPLOY: feat/144-pc-spotify-scan · 20261107-154921Z
+
+`/compare/pc-spotify` heeft een bron: zet in `data/local/local-music.json` het pad naar je muziekmap (zie
+`local-music.example.json`), en de pagina toont per playlist wat in Spotify staat maar nog niet als bestand in die
+map, plus de bestanden zonder track en het aantal gekoppelde tracks. De map wordt alleen gelezen. Een bestand
+koppelt aan een track als zijn naam zonder extensie gelijk is aan `dkj_file`.
+
+**Score:** 4
+
+#### What makes this deploy extra special
+
+De downloadlijst was het hele doel van de PC-kant: wat nog gedownload moet worden, staat nu op één pagina in plaats
+van in je hoofd.
+
+**Score:** 4
+
+#### Pull Request
+
+PC <-> Spotify: lokale muziekmap scannen en tonen wat nog gedownload moet worden
+
+[PR #157](https://github.com/DKJ-Solutions/dkj-music-library/pull/157)
+
+---
+
+### DEPLOY: fix/142-brandbook-pin · 20261107-154518Z
+
+De app draait op de brand book-kopieën van dkj-policy v6.9.0: `house-style.css` en `house-theme.js` vervangen, en
+`house-product.css` erbij, dat sinds die release de site-header en de breadcrumb-balk draagt. De eigen laag leest de
+nieuwe tokennamen (`--primary-muted`, `--bg-1..4`, `--radius-3`) in plaats van de vervallen namen. De pin-bevindingen
+van de `house-style`-check zijn daarmee weg.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+De vervallen tokennamen zouden bij een volgende brand book-release stil hun kleur verliezen; nu leest de eigen laag de
+namen die de huisstijl definieert.
+
+**Score:** 1
+
+#### Pull Request
+
+Brand book-kopieën naar v6.9.0, met house-product.css en de nieuwe tokennamen
+
+[PR #156](https://github.com/DKJ-Solutions/dkj-music-library/pull/156)
+
+---
+
+### DEPLOY: feat/134-move-track-between-werkbakken · 20261107-154117Z
+
+Every row of a werkbak table (`/mixen/preparation/<id>`) now has a ⇄ menu at the right that moves the track to another werkbak. The hub adds it at the bottom of the chosen werkbak in Spotify first and only then removes it from this one, so a failure leaves the track in both rather than in neither, and it says so. Both werkbakken are fetched again afterwards, and a local order that has not been pushed yet survives the move. This is the first time the hub adds or removes tracks in a Spotify playlist, and it only does so between werkbakken.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+A great track that does not fit this mix moves to the werkbak where it belongs in two clicks, instead of being dropped or moved by hand in Spotify.
+
+**Score:** 3
+
+#### Pull Request
+
+Move a track from one werkbak to another preparation playlist
+
+[PR #155](https://github.com/DKJ-Solutions/dkj-music-library/pull/155)
+
+---
+
+### DEPLOY: fix/152-readme-spotify-writes · 20261107-153412Z
+
+The README now lists every write the app makes to Spotify: a mix playlist's name and description, and the track order of a werkbak. It used to say the app writes only the name and description.
+
+**Score:** 1 -- prevents a reader trusting the README that the app never changes a playlist's contents, which has not been true since the werkbak order was added.
+
+#### What makes this deploy extra special
+
+N/A
+
+**Score:** N/A
+
+#### Pull Request
+
+README: list every write the app makes to Spotify
+
+[PR #153](https://github.com/DKJ-Solutions/dkj-music-library/pull/153)
+
+---
+
+### DEPLOY: fix/147-triage-label-names · 20261107-152121Z
+
+The triage-label seam in `scripts/repo-config.ps1` now declares the current label names
+(`awaiting-recurrences`, `awaiting-decision-dev` and the other `awaiting-*` parking labels) instead of the
+retired `dossier` and `needs-decision`, so `adopt-triage-labels` prints the labels the sweeps actually set
+(#147). Only this repo's own workflow tooling notices.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+N/A
+
+**Score:** N/A
+
+#### Pull Request
+
+repo-config.ps1 declares the triage labels under their current names
+
+[PR #150](https://github.com/DKJ-Solutions/dkj-music-library/pull/150)
+
+---
+
+### DEPLOY: fix/128-env-onedrive-retry · 20261107-151243Z
+
+When the Spotify keys are missing at the moment the hub needs them, it now copies `.env.local` from OneDrive again and loads the keys straight away. Before, `predev` copied it only once at start, and OneDrive was often still syncing then, so the login showed a "SPOTIFY_CLIENT_ID en/of SPOTIFY_CLIENT_SECRET ontbreken" error until somebody ran `npm run env:onedrive` by hand. That error now also names that command.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+On a fresh session the Spotify login works as soon as OneDrive has synced the file, without a restart or a manual copy.
+
+**Score:** 2
+
+#### Pull Request
+
+Retry the OneDrive .env.local copy when the Spotify keys are missing
+
+[PR #146](https://github.com/DKJ-Solutions/dkj-music-library/pull/146)
+
+---
+
+### DEPLOY: feat/140-local-first-playlist-order · 20261105-174237Z
+
+Dragging a track on a werkbak page (`/mixen/preparation/<id>`) now only saves the new order in the hub. A Push button on every werkbak sends all moves to Spotify in one go. One push replaces the checks, writes and refetches each single drag used to cost, so the hub hits Spotify's rate limit far less, and dragging no longer waits on Spotify. If tracks were added to or removed from the playlist in Spotify in the meantime, the push and Fetch rebase the local order onto it: new tracks go to the bottom and vanished ones drop out. The local order is no longer thrown away.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Dave sorts his werkbakken without running into rate limits, and he decides himself when Spotify follows.
+
+**Score:** 4
+
+#### Pull Request
+
+Save werkbak drag moves locally first and push them to Spotify in bulk
+
+[PR #141](https://github.com/DKJ-Solutions/dkj-music-library/pull/141)
+
+---
+
+### DEPLOY: fix/connection-card-center · 20261031-185614Z
+
+De kaarten Login en Sync op /spotify rekken in hun `.grid-3` mee tot de hoogste kaart, waardoor de kop van de lagere kaart bovenaan bleef staan met lege ruimte eronder. Een eigen klasse `.verbinding-card` zet de inhoud van beide kaarten nu verticaal in het midden.
+
+**Score:** 1 -- cosmetisch; voorkomt een scheef ogende rij kaarten.
+
+#### What makes this deploy extra special
+
+Wie /spotify opent, ziet de kop van Login en Sync in het midden van de kaart in plaats van bovenaan.
+
+**Score:** 1 -- cosmetisch.
+
+#### Pull Request
+
+De kaartkop van Login en Sync verticaal in het midden van de kaart
+
+[PR #139](https://github.com/DKJ-Solutions/dkj-music-library/pull/139)
+
+---
+
+### DEPLOY: feat/sync-button-direction · 20261031-142237Z
+
+De twee knoppen in de kop van een werkbak heten nu **Push** en **Fetch**, zoals in git. Push (pijl omhoog)
+stuurt de lokale volgorde naar Spotify, Fetch (pijl omlaag) haalt de playlist opnieuw op uit Spotify. Fetch was
+"Sync met Spotify" en heet ook op de pagina van een gepubliceerde mix zo.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Wie tijdens een rate limit verplaatst, ziet meteen welke knop de lokale volgorde naar Spotify stuurt en welke
+hem juist overschrijft met wat in Spotify staat.
+
+**Score:** 2
+
+#### Pull Request
+
+Werkbak-knoppen tonen in welke richting ze syncen
+
+[PR #138](https://github.com/DKJ-Solutions/dkj-music-library/pull/138)
+
+---
+
+### DEPLOY: feat/werkbak-pending-order · 20261031-140350Z
+
+Verplaatsen in een werkbak werkt nu ook als Spotify de hub met een lange rate limit blokkeert: de hub bewaart de
+volgorde zelf en toont die meteen. Een knop in de kop laat zien hoeveel verplaatsingen nog niet in Spotify staan
+en vanaf hoe laat syncen weer kan; op dat moment wordt hij vanzelf klikbaar en stuurt hij de volgorde naar Spotify.
+Is de playlist in Spotify intussen echt veranderd (tracks erbij of eraf), dan schrijft hij niets en kun je de
+lokale volgorde weggooien.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Wie de hub gebruikt, kan tijdens een Spotify-blokkade gewoon doorwerken aan de volgorde van een werkbak in plaats
+van uren te wachten.
+
+**Score:** 3
+
+#### Pull Request
+
+Werkbak-volgorde lokaal bewaren tijdens een Spotify rate limit, met een knop om later te syncen
+
+[PR #137](https://github.com/DKJ-Solutions/dkj-music-library/pull/137)
+
+---
+
+### DEPLOY: fix/spotify-retry-after-cap · 20261031-133305Z
+
+Spotify-aanroepen wachten een rate limit nog maar tot 60 seconden af. Bij een langere `Retry-After`
+(Spotify gaf er een van ruim vijf uur) stopt de aanvraag meteen met een `SpotifyRateLimitError`. Tot nu toe
+sliep de aanvraag uren door. Bij het verplaatsen in een werkbak hield ze daarbij het slot van de playlist
+vast, zodat elke volgende sleep "Er loopt al een verplaatsing in deze playlist." gaf. Nu meldt de werkbak
+dat Spotify even niet laat schrijven, en vanaf hoe laat het weer kan.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Slepen in een werkbak raakt niet meer urenlang op slot na een rate limit van Spotify. De melding zegt
+voortaan wat er aan de hand is en vanaf wanneer het weer kan.
+
+**Score:** 3
+
+#### Pull Request
+
+Een lange Spotify Retry-After meteen melden in plaats van uren te wachten
+
+[PR #136](https://github.com/DKJ-Solutions/dkj-music-library/pull/136)
+
+---
+
+### DEPLOY: feat/werkbak-drag-order · 20261031-131625Z
+
+Op een werkbakpagina (/mixen/preparation/<id>) staat de tabel nu in de volgorde van de Spotify-playlist zelf, en je kunt een track met de greep links naar een andere plek slepen; die verplaatsing gaat direct naar de playlist in Spotify. Sleep je in Spotify, dan zet de sync-knop de pagina gelijk. Is de playlist in Spotify veranderd sinds de pagina laadde, dan verplaatst de app niets maar haalt eerst de nieuwe volgorde op. Dit is de eerste keer dat de app de inhoud van een playlist in Spotify wijzigt.
+
+**Score:** 4
+
+#### What makes this deploy extra special
+
+Je bepaalt de kansrijkste tracks voor de volgende mix nu door ze bovenaan te slepen, en die volgorde staat ook in Spotify.
+
+**Score:** 4
+
+#### Pull Request
+
+werkbak-volgorde slepen, in sync met de Spotify-playlist
+
+[PR #135](https://github.com/DKJ-Solutions/dkj-music-library/pull/135)
+
+---
+
+### DEPLOY: fix/connection-grid-3 · 20261031-110819Z
+
+The Login and Sync cards on /spotify now sit in a `.grid-3`, three to a row, so they match the width of the cards below them instead of each taking half the row.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+The Connection cards on /spotify are narrower and line up with the other sections.
+
+**Score:** 2
+
+#### Pull Request
+
+Connection-sectie op /spotify in een grid-3
+
+[PR #132](https://github.com/DKJ-Solutions/dkj-music-library/pull/132)
+
+---
+
+### DEPLOY: feat/play-button-left · 20261031-110621Z
+
+De afspeelknop staat in elke tabel helemaal links: in de gewone tabel, in de verborgen kolommen (waar hij
+eerst ontbrak) en op de mixpagina's, waar hij nu vóór de `#`-kolom staat.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+Wie het register gebruikt, vindt de afspeelknop nu in elke tabel op dezelfde plek, ook in de verborgen kolommen.
+
+**Score:** 2
+
+#### Pull Request
+
+Afspeelknop altijd helemaal links in de tabel
+
+[PR #131](https://github.com/DKJ-Solutions/dkj-music-library/pull/131)
+
+---
+
+### DEPLOY: feat/mix-rating · 20261031-105842Z
+
+Het veld zit door het hele bibliotheekpad heen (schema, standaard bij de sync, de opslaanroute) en de
+export kreeg het veld bij alle tracks.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+Een tweede waardering per nummer, `dkj_mix_rating`: niet hoe graag je het zelf luistert, maar hoe graag
+je het in de volgende mix wilt gebruiken. Het trackregister toont hem als kolom `mix rating` direct naast
+`dkj_rating`; op de mixpagina's (`/mixen/preparation`, `/mixen/published`) staat alleen de mix rating, en
+de tabel opent daar met de hoogste mix rating bovenaan. Je wijzigt hem met hetzelfde potloodje. Elke track begint op
+de waarde van zijn `dkj_rating`; daarna staan de twee los van elkaar.
+
+**Score:** 4
+
+#### Pull Request
+
+Tweede waardering dkj_mix_rating: hoe graag je een nummer in de volgende mix wilt gebruiken
+
+[PR #130](https://github.com/DKJ-Solutions/dkj-music-library/pull/130)
+
+---
+
+### DEPLOY: feat/preparation-card-to-spotify · 20261031-102841Z
+
+De Preparation-kaart (naar /mixen/preparation, de Spotify-werkbakken op "Vol. X") staat niet meer op de hub
+/mixen maar onder Playlists op /spotify, en daarmee ook op /spotify/playlists, die dezelfde kaarten toont. De
+pagina zelf blijft op /mixen/preparation.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+De werkbakken zijn Spotify-playlists, dus de ingang staat nu bij de andere playlist-pagina's.
+
+**Score:** 2
+
+#### Pull Request
+
+Preparation-kaart van /mixen naar de sectie Playlists op /spotify
+
+[PR #129](https://github.com/DKJ-Solutions/dkj-music-library/pull/129)
+
+---
+
+### DEPLOY: fix/126-page-column · 20261030-173110Z
+
+Every page now uses the house page column, so its blocks sit one even gap apart, as on the hub and /spotify, instead of each block bringing its own margin. The full-height pages (the Trackregister and the playlist and mix tables) keep their own window-filling layout.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+The whole app spaces its pages the same way, so a page no longer looks cramped or loose next to the hub.
+
+**Score:** 2
+
+#### Pull Request
+
+Pages use the house .page-column shell instead of .wrap
+
+[PR #127](https://github.com/DKJ-Solutions/dkj-music-library/pull/127)
+
+---
 
 ### DEPLOY: feat/122-verbinding-house-style · 20261030-170135Z
 

@@ -35,7 +35,7 @@ export default function SpotifyDashboardPage() {
   const dedup = snapshot ? computeDedupSummary(snapshot) : null;
 
   return (
-    <main className="wrap">
+    <main className="page-column">
       <header className="masthead">
         <p className="kicker">dkj-music-library · Spotify</p>
         <h1>{pageTitle("/spotify/dashboard")}</h1>

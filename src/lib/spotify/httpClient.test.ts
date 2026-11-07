@@ -8,8 +8,8 @@ vi.mock("./auth", () => ({
 }));
 
 import { getValidAccessToken } from "./auth";
-import { SpotifyApiError } from "./errors";
-import { fetchAllPages, spotifyGet } from "./httpClient";
+import { SpotifyApiError, SpotifyRateLimitError } from "./errors";
+import { fetchAllPages, MAX_RETRY_WAIT_SECONDS, spotifyGet, spotifyPut } from "./httpClient";
 
 function jsonResponse(status: number, body: unknown, headers: Record<string, string> = {}): Response {
   return {
@@ -82,6 +82,40 @@ describe("spotifyGet", () => {
 
     expect(result).toEqual({ ok: true });
     expect(fetchImpl).toHaveBeenCalledTimes(2);
+  });
+
+  // 31 oktober 2026: Spotify gaf Retry-After 19429 s en de aanvraag sliep uren (met het verplaats-slot vast).
+  it("wacht een Retry-After boven MAX_RETRY_WAIT_SECONDS niet af maar gooit meteen SpotifyRateLimitError", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    const fetchImpl = vi.fn().mockResolvedValue(jsonResponse(429, null, { "Retry-After": "19429" }));
+
+    const error = await spotifyGet("/me", {}, { fetchImpl }).catch((e: unknown) => e);
+
+    expect(error).toBeInstanceOf(SpotifyRateLimitError);
+    expect(error).toBeInstanceOf(SpotifyApiError);
+    expect(error).toMatchObject({ status: 429, retryAfterSeconds: 19429 });
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
+
+  it("wacht een Retry-After van precies MAX_RETRY_WAIT_SECONDS nog wel af", async () => {
+    vi.useFakeTimers();
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    const fetchImpl = vi
+      .fn()
+      .mockResolvedValueOnce(jsonResponse(429, null, { "Retry-After": String(MAX_RETRY_WAIT_SECONDS) }))
+      .mockResolvedValueOnce(jsonResponse(200, { ok: true }));
+
+    const promise = spotifyGet("/me", {}, { fetchImpl });
+    await vi.advanceTimersByTimeAsync(MAX_RETRY_WAIT_SECONDS * 1000);
+    expect(await promise).toEqual({ ok: true });
+  });
+
+  it("gooit SpotifyRateLimitError ook bij een PUT met een te lange Retry-After", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    const fetchImpl = vi.fn().mockResolvedValue(jsonResponse(429, null, { "Retry-After": "3600" }));
+
+    await expect(spotifyPut("/playlists/x", { name: "y" }, { fetchImpl })).rejects.toBeInstanceOf(SpotifyRateLimitError);
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
   });
 
   it("gooit SpotifyApiError als 429 blijft aanhouden na de max. aantal pogingen", async () => {

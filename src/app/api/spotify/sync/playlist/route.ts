@@ -10,11 +10,9 @@
 // Geen archiefkopie van de oude snapshot, anders dan de volledige sync: elke klik zou dan een kopie van
 // tientallen MB's maken en de historie (MAX_HISTORY_ENTRIES) volschuiven met bijna-gelijke versies.
 import { NextResponse } from "next/server";
-import { syncOnePlaylist } from "@/lib/spotify/ingest";
-import { readSnapshot, writeSnapshot } from "@/lib/spotify/snapshotStore";
+import { NoSnapshotError, refreshPlaylistInSnapshot } from "@/lib/spotify/refreshPlaylist";
 import { SpotifyApiError, SpotifyReauthRequiredError } from "@/lib/spotify/errors";
 import { sameOriginGuard } from "@/lib/http/sameOrigin";
-import { updateLibraryFromSnapshot } from "@/lib/library/librarySync";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -32,29 +30,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "bad_request", message: "Geen geldig playlist-id." }, { status: 400 });
   }
 
-  const previous = readSnapshot();
-  if (!previous) {
-    return NextResponse.json(
-      { error: "no_snapshot", message: "Er is nog geen snapshot -- start eerst een volledige sync op /spotify." },
-      { status: 409 }
-    );
-  }
-
   try {
-    const { snapshot, playlist } = await syncOnePlaylist(previous, playlistId);
-    writeSnapshot(snapshot);
-
-    // Lukt de bibliotheek niet, dan staat de snapshot er wél -- zelfde afspraak als de volledige sync.
-    let libraryUpdated = true;
-    try {
-      updateLibraryFromSnapshot(snapshot);
-    } catch (err) {
-      libraryUpdated = false;
-      console.error("[api/spotify/sync/playlist] bibliotheek bijwerken mislukt:", err);
-    }
-
+    const { playlist, libraryUpdated } = await refreshPlaylistInSnapshot(playlistId);
     return NextResponse.json({ playlistId: playlist.id, name: playlist.name, trackCount: playlist.trackCount, libraryUpdated });
   } catch (err) {
+    if (err instanceof NoSnapshotError) {
+      return NextResponse.json({ error: "no_snapshot", message: err.message }, { status: 409 });
+    }
     if (err instanceof SpotifyReauthRequiredError) {
       return NextResponse.json({ error: "reauth_required", message: err.message }, { status: 401 });
     }

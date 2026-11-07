@@ -41,7 +41,7 @@ export default async function MixDetailPage({ params }: { params: Promise<{ slug
   ];
 
   return (
-    <main className="wrap wrap--full">
+    <main className="page-column wrap--full">
       <header className="masthead masthead--action">
         <p className="kicker">dkj-music-library · Mixen</p>
         <h1>{mix.title}</h1>

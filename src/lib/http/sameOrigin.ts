@@ -3,7 +3,7 @@
 // api/auth/login/spotify/route.ts) -- in plaats daarvan controleert deze guard of de aanvraag
 // daadwerkelijk van dezelfde origin komt, via headers die de browser zelf meestuurt en een pagina
 // niet kan vervalsen. Gedeeld door elke state-wijzigende POST-route: /api/spotify/sync, done, bpm,
-// world, mix-tag, playlist-name en rating, en /api/auth/logout/spotify.
+// world, mix-tag, playlist-name, rating en playlist-order, en /api/auth/logout/spotify.
 //
 // Volgorde: `Sec-Fetch-Site` (door alle courante browsers gestuurd op vrijwel elke request) weegt
 // het zwaarst -- "same-origin" of "none" (rechtstreekse navigatie/geen pagina die 'm initieert,

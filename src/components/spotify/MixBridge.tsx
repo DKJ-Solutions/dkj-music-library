@@ -53,7 +53,7 @@ export function MixBridge() {
   const spotifyIdPlan = getSpotifyIdPlan(snapshot);
 
   return (
-    <main className="wrap">
+    <main className="page-column">
       <header className="masthead">
         <h1>{pageTitle("/compare/playlists-mixes")}</h1>
         <p className="lede">

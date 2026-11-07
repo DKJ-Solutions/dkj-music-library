@@ -7,7 +7,7 @@
 }
 
 .playlist-sync__note {
-  color: var(--muted);
+  color: var(--primary-muted);
   font-size: var(--text-sm);
 }
 
@@ -15,8 +15,8 @@
   color: var(--negative-5);
 }
 
-// Het sync-icoon voor de tekst van de knop: lijnen in de tekstkleur, zo hoog als de tekst. Draait rond
-// zolang de sync loopt.
+// Het icoon voor de tekst van de knop: lijnen in de tekstkleur, zo hoog als de tekst. Een pijl uit of in een
+// bak voor de richting (SyncDirection.tsx), het draaiende sync-icoon zolang er iets loopt.
 .playlist-sync__icon {
   width: 1em;
   height: 1em;
@@ -43,4 +43,14 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+// De kop van een werkbak heeft twee knoppen naast elkaar: de uitgestelde volgorde (PendingOrderButton, alleen
+// als er een is) en de sync met Spotify. Op een smal venster zakt de tweede onder de eerste.
+.playlist-sync-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-2-5) var(--spacing-4);
 }

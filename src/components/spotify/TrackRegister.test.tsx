@@ -8,6 +8,17 @@ import { TrackRegister } from "./TrackRegister";
 import { CANDIDATES_FILTER, type RegisterRow } from "@/lib/library/register";
 import { REGISTER_PREFS_KEY } from "@/lib/library/registerPrefs";
 import { loadSpotifyIframeApi } from "@/lib/library/trackEmbed";
+import { PlaylistOrderError, savePlaylistOrder } from "@/lib/library/savePlaylistOrder";
+import { moveTrackToPlaylist } from "@/lib/library/moveTrack";
+
+// TrackRegister ververst de pagina na een verplaatsing; buiten de app-router bestaat er geen router.
+const refresh = vi.fn();
+vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh }) }));
+vi.mock("@/lib/library/savePlaylistOrder", async (original) => ({
+  ...(await original<typeof import("@/lib/library/savePlaylistOrder")>()),
+  savePlaylistOrder: vi.fn(),
+}));
+vi.mock("@/lib/library/moveTrack", () => ({ moveTrackToPlaylist: vi.fn() }));
 
 // De iFrame API van Spotify is een script van buiten; de tests geven de component een nep-API.
 vi.mock("@/lib/library/trackEmbed", async (original) => ({
@@ -17,7 +28,12 @@ vi.mock("@/lib/library/trackEmbed", async (original) => ({
 
 // Elke test begint met een lege localStorage: anders leest de volgende test de bewaarde stand van de
 // vorige terug, en cleanup() ontkoppelt de vorige render (zijn schrijf-effect mag niet meer vuren).
-beforeEach(() => window.localStorage.clear());
+beforeEach(() => {
+  window.localStorage.clear();
+  refresh.mockClear();
+  vi.mocked(savePlaylistOrder).mockReset();
+  vi.mocked(moveTrackToPlaylist).mockReset();
+});
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
@@ -35,6 +51,7 @@ function row(n: number, over: Partial<RegisterRow> = {}): RegisterRow {
     bpm: null,
     genre: null,
     rating: null,
+    mixRating: null,
     playcount: null,
     album: null,
     albumCandidates: [],
@@ -57,15 +74,149 @@ describe("TrackRegister", () => {
   ];
 
   it("nummert de rijen van de compacte tabel 1 tot en met n, ook na sorteren", () => {
-    const three = [row(1, { rating: "tier-2" }), row(2, { rating: "tier-8" }), row(3, { rating: "tier-5" })];
+    const three = [row(1, { mixRating: "tier-2" }), row(2, { mixRating: "tier-8" }), row(3, { mixRating: "tier-5" })];
     render(<TrackRegister rows={three} artistCount={1} compact />);
     const positions = () => Array.from(document.querySelectorAll(".register-position"), (cell) => cell.textContent);
     const titles = () => Array.from(document.querySelectorAll(".register-title"), (cell) => cell.textContent);
     expect(positions()).toEqual(["1", "2", "3"]);
+    // Zonder playlistOrder (een mixpagina): de hoogste dkj_mix_rating eerst.
     expect(titles()).toEqual(["Nummer 2", "Nummer 3", "Nummer 1"]);
     fireEvent.click(screen.getByRole("button", { name: /dkj_title/ }));
     expect(positions()).toEqual(["1", "2", "3"]);
     expect(titles()).toEqual(["Nummer 1", "Nummer 2", "Nummer 3"]);
+  });
+
+  it("toont in de compacte tabel alleen dkj_mix_rating, en sorteert daarop", () => {
+    const three = [row(1, { rating: "tier-8", mixRating: "tier-1" }), row(2, { rating: "tier-1", mixRating: "tier-7" })];
+    render(<TrackRegister rows={three} artistCount={1} compact />);
+    expect(screen.getByRole("columnheader", { name: /mix rating/ })).toBeTruthy();
+    expect(screen.queryByRole("columnheader", { name: /dkj_rating/ })).toBeNull();
+    expect(screen.queryByText("tier-8", { selector: ".register-tag" })).toBeNull();
+    const titles = () => Array.from(document.querySelectorAll(".register-title"), (cell) => cell.textContent);
+    expect(titles()).toEqual(["Nummer 2", "Nummer 1"]);
+  });
+
+  describe("verslepen in de tabel van een playlist", () => {
+    const three = [row(1), row(2), row(3)];
+    // Plek 1 in de playlist is een item zonder bibliotheekrij (bv. een lokaal bestand).
+    const order = { playlistId: "P".repeat(22), snapshotId: "snap1", positions: { [three[0].id]: 0, [three[1].id]: 2, [three[2].id]: 3 }, itemIds: ["sp1", null, "sp2", "sp3"] };
+    const titles = () => Array.from(document.querySelectorAll(".register-title"), (cell) => cell.textContent);
+    const grip = (n: number) => screen.getByRole("button", { name: new RegExp(`Nummer ${n} verplaatsen`) });
+
+    it("opent in de volgorde van de playlist, ook als de mix rating anders zou sorteren", () => {
+      const rated = [row(1, { mixRating: "tier-1" }), row(2, { mixRating: "tier-8" })];
+      render(<TrackRegister rows={rated} artistCount={1} compact playlistOrder={{ ...order, positions: { [rated[0].id]: 0, [rated[1].id]: 1 } }} />);
+      expect(titles()).toEqual(["Nummer 1", "Nummer 2"]);
+    });
+
+    it("heeft geen sleepgrepen zonder playlistOrder", () => {
+      render(<TrackRegister rows={three} artistCount={1} compact />);
+      expect(document.querySelector(".register-grip")).toBeNull();
+    });
+
+    it("verplaatst met de pijltoets, optimistisch, met de plekken van de playlist, en ververst daarna", async () => {
+      vi.mocked(savePlaylistOrder).mockResolvedValue({ refreshed: true, pending: false, rateLimitedUntil: null });
+      render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={order} />);
+      fireEvent.keyDown(grip(1), { key: "ArrowDown" });
+      expect(titles()).toEqual(["Nummer 2", "Nummer 1", "Nummer 3"]);
+      expect(savePlaylistOrder).toHaveBeenCalledWith(order.playlistId, "snap1", {
+        rangeStart: 0,
+        insertBefore: 3,
+        targetPosition: 2,
+        expectedStartId: "sp1",
+        expectedTargetId: "sp2",
+      });
+      await waitFor(() => expect(refresh).toHaveBeenCalled());
+      expect(Array.from(document.querySelectorAll(".register-position"), (cell) => cell.textContent)).toEqual(["1", "2", "3"]);
+    });
+
+    it("houdt de verplaatste volgorde, ververst niet en zet slepen uit als de snapshot na de PUT niet bijwerkte", async () => {
+      vi.mocked(savePlaylistOrder).mockResolvedValue({ refreshed: false, pending: false, rateLimitedUntil: null });
+      render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={order} />);
+      fireEvent.keyDown(grip(1), { key: "ArrowDown" });
+      await screen.findByText(/klik op Fetch/);
+      expect(titles()).toEqual(["Nummer 2", "Nummer 1", "Nummer 3"]);
+      expect(refresh).not.toHaveBeenCalled();
+      expect(grip(1).getAttribute("aria-disabled")).toBe("true");
+    });
+
+    it("meldt een lokaal bewaarde verplaatsing (de enige uitkomst van slepen) als informatie, niet als fout, en ververst de pagina", async () => {
+      vi.mocked(savePlaylistOrder).mockResolvedValue({ refreshed: true, pending: true, rateLimitedUntil: Date.now() + 3_600_000 });
+      render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={order} />);
+      fireEvent.keyDown(grip(1), { key: "ArrowDown" });
+      const note = await screen.findByText(/Bewaard in de hub; stuur de volgorde met Push naar Spotify/);
+      expect(note.className).not.toContain("is-error");
+      await waitFor(() => expect(refresh).toHaveBeenCalled());
+      expect(titles()).toEqual(["Nummer 2", "Nummer 1", "Nummer 3"]);
+    });
+
+    it("meldt kort dat een rij zonder plek in de playlist niet verplaatst kan worden", () => {
+      render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={{ ...order, positions: { [three[0].id]: 0 } }} />);
+      fireEvent.keyDown(grip(1), { key: "ArrowDown" });
+      expect(screen.getByText(/niet in de playlist/)).toBeTruthy();
+      expect(savePlaylistOrder).not.toHaveBeenCalled();
+    });
+
+    it("zet de oude volgorde terug en meldt de fout als het verplaatsen mislukt", async () => {
+      vi.mocked(savePlaylistOrder).mockRejectedValue(new Error("Spotify zegt nee"));
+      render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={order} />);
+      fireEvent.keyDown(grip(3), { key: "ArrowUp" });
+      await screen.findByText(/Verplaatsen mislukt: Spotify zegt nee/);
+      expect(titles()).toEqual(["Nummer 1", "Nummer 2", "Nummer 3"]);
+      expect(refresh).not.toHaveBeenCalled();
+    });
+
+    it("ververst de pagina en toont de melding als Spotify de playlist intussen anders had", async () => {
+      vi.mocked(savePlaylistOrder).mockRejectedValue(new PlaylistOrderError("De playlist was in Spotify gewijzigd.", true));
+      render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={order} />);
+      fireEvent.keyDown(grip(1), { key: "ArrowDown" });
+      await screen.findByText(/in Spotify gewijzigd/);
+      expect(titles()).toEqual(["Nummer 1", "Nummer 2", "Nummer 3"]);
+      expect(refresh).toHaveBeenCalled();
+    });
+
+    it("zet het slepen uit zolang er gesorteerd is, en weer aan als het sorteren uit is", () => {
+      render(<TrackRegister rows={three} artistCount={1} compact playlistOrder={order} />);
+      const title = screen.getByRole("button", { name: /dkj_title/ });
+      fireEvent.click(title);
+      expect(grip(1).getAttribute("aria-disabled")).toBe("true");
+      fireEvent.keyDown(grip(1), { key: "ArrowDown" });
+      expect(savePlaylistOrder).not.toHaveBeenCalled();
+      fireEvent.click(title);
+      fireEvent.click(title);
+      expect(grip(1).getAttribute("aria-disabled")).toBe("false");
+    });
+  });
+
+  describe("naar een andere werkbak verplaatsen (#134)", () => {
+    const two = [row(1), row(2)];
+    const target = { id: "T".repeat(22), name: "Blue Mix Vol. X" };
+    const order = { playlistId: "P".repeat(22), snapshotId: "snap1", positions: { [two[0].id]: 0, [two[1].id]: 1 }, itemIds: ["sp1", "sp2"] };
+    const toggle = (n: number) => screen.getByRole("button", { name: new RegExp(`Nummer ${n} naar een andere werkbak`) });
+
+    it("heeft geen verplaats-kolom zonder andere werkbakken", () => {
+      render(<TrackRegister rows={two} artistCount={1} compact playlistOrder={order} />);
+      expect(document.querySelector(".register-move-toggle")).toBeNull();
+    });
+
+    it("stuurt het Spotify-ID van de rij naar de gekozen werkbak, meldt het en ververst", async () => {
+      vi.mocked(moveTrackToPlaylist).mockResolvedValue({ added: true, refreshed: true });
+      render(<TrackRegister rows={two} artistCount={1} compact playlistOrder={{ ...order, moveTargets: [target] }} />);
+      fireEvent.click(toggle(2));
+      fireEvent.click(screen.getByRole("button", { name: target.name }));
+      expect(moveTrackToPlaylist).toHaveBeenCalledWith(order.playlistId, target.id, "sp2");
+      await waitFor(() => expect(refresh).toHaveBeenCalled());
+      expect(screen.getByRole("status").textContent).toBe("Nummer 2 staat nu onderaan Blue Mix Vol. X.");
+    });
+
+    it("toont de reden als het verplaatsen mislukt", async () => {
+      vi.mocked(moveTrackToPlaylist).mockRejectedValue(new Error("Spotify zegt nee"));
+      render(<TrackRegister rows={two} artistCount={1} compact playlistOrder={{ ...order, moveTargets: [target] }} />);
+      fireEvent.click(toggle(1));
+      fireEvent.click(screen.getByRole("button", { name: target.name }));
+      await waitFor(() => expect(screen.getByRole("status").textContent).toBe("Verplaatsen mislukt: Spotify zegt nee"));
+      expect(refresh).not.toHaveBeenCalled();
+    });
   });
 
   it("heeft geen plek-kolom in de gewone tabel", () => {
@@ -244,13 +395,37 @@ describe("TrackRegister", () => {
     expect(JSON.parse(init.body as string)).toEqual({ trackId: "ART01-001", rating: "tier-6" });
   });
 
+  it("toont dkj_mix_rating naast dkj_rating, met de korte kop mix rating", () => {
+    render(<TrackRegister rows={[row(1, { rating: "tier-2", mixRating: "tier-7" })]} artistCount={1} />);
+    const header = screen.getByRole("columnheader", { name: /mix rating/ });
+    expect(header.querySelector("button")?.getAttribute("title")).toBe("Sorteer op dkj_mix_rating");
+    const headers = screen.getAllByRole("columnheader").map((h) => h.textContent ?? "");
+    const rating = headers.findIndex((h) => h.includes("dkj_rating"));
+    expect(headers[rating + 1]).toContain("mix rating");
+    expect(screen.getByText("tier-7", { selector: ".register-tag" })).toBeTruthy();
+  });
+
+  it("wijzigt dkj_mix_rating via zijn eigen potloodje, los van dkj_rating", async () => {
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify({ trackId: "ART01-001", field: "dkj_mix_rating", rating: "tier-8" }), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+    render(<TrackRegister rows={[row(1, { rating: "tier-3", mixRating: "tier-4" })]} artistCount={1} />);
+    fireEvent.click(screen.getByRole("button", { name: "dkj_mix_rating van ART01-001 wijzigen" }));
+    fireEvent.click(screen.getByRole("button", { name: "tier-8" }));
+
+    expect(screen.getByText("tier-8", { selector: ".register-tag" })).toBeTruthy();
+    expect(screen.getByText("tier-3", { selector: ".register-tag" })).toBeTruthy();
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    expect(JSON.parse(init.body as string)).toEqual({ trackId: "ART01-001", rating: "tier-8", field: "dkj_mix_rating" });
+  });
+
   it("zet de vorige dkj_rating terug als opslaan mislukt, met de reden in de tooltip", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async () => new Response(JSON.stringify({ error: "save_failed", message: "schijf vol" }), { status: 500 }))
     );
     render(<TrackRegister rows={[row(1, { rating: "tier-4" })]} artistCount={1} />);
-    fireEvent.click(screen.getByRole("button", { name: /wijzigen/ }));
+    fireEvent.click(screen.getByRole("button", { name: "dkj_rating van ART01-001 wijzigen" }));
     fireEvent.click(screen.getByRole("button", { name: "tier-8" }));
 
     await waitFor(() => expect(screen.getByTitle("Opslaan mislukt: schijf vol")).toBeTruthy());
@@ -435,6 +610,17 @@ describe("TrackRegister", () => {
     fireEvent.click(screen.getByRole("button", { name: "Nummer 1 afspelen" }));
     const frame = await screen.findByTitle("Spotify-speler: Nummer 1");
     expect(frame.getAttribute("src")).toBe("https://open.spotify.com/embed/track/sp1");
+  });
+
+  it("zet de afspeelknop in elke tabel helemaal links", () => {
+    const firstCell = () => document.querySelector(".register-table tbody tr td");
+    render(<TrackRegister rows={[row(1)]} artistCount={1} />);
+    expect(firstCell()?.classList.contains("register-play-cell")).toBe(true);
+    fireEvent.click(screen.getByRole("switch"));
+    expect(firstCell()?.classList.contains("register-play-cell")).toBe(true);
+    cleanup();
+    render(<TrackRegister rows={[row(1)]} artistCount={1} compact />);
+    expect(firstCell()?.classList.contains("register-play-cell")).toBe(true);
   });
 
   it("geeft een track zonder spotify_track_id geen afspeelknop", () => {

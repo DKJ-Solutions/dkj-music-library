@@ -4,20 +4,26 @@
 // SpotifyReauthRequiredError door als re-auth nodig is -- die fout hier bewust NIET vangen, de
 // aanroeper in de route handler toont de "log opnieuw in"-melding).
 //
-// Bewust GEEN write-methodes (POST/PUT/DELETE) -- dit project is en blijft read-only (zie de
-// opdracht).
+// Schrijven kan alleen via spotifyWrite hieronder (PUT, POST en DELETE; de enige schrijfweg).
 //
 // SERVER-ONLY: importeert getValidAccessToken (fs via tokenStore), mag dus nooit vanuit een
 // 'use client'-bestand gebruikt worden.
 
 import { getValidAccessToken } from "./auth";
-import { SpotifyApiError } from "./errors";
+import { SpotifyApiError, SpotifyRateLimitError } from "./errors";
+import { recordRateLimit } from "./rateLimitStore";
 
 export const SPOTIFY_API_BASE = "https://api.spotify.com/v1";
 
 // Bovengrens tegen een oneindige wachtlus als Spotify structureel 429 blijft geven -- beter een
 // duidelijke fout dan een script dat voor altijd blijft hangen.
 const MAX_RETRIES = 5;
+
+// Langste Retry-After die we binnen één aanvraag uitzitten. Spotify geeft na veel verkeer soms uren
+// (gemeten 31 oktober 2026: 19429 s op een werkbak); wie dat uitslaapt houdt een HTTP-aanvraag -- en bij
+// het verplaatsen ook het slot van die playlist -- urenlang bezet, terwijl de pagina allang weg is.
+// Daarboven geven we meteen een SpotifyRateLimitError met de wachttijd, zodat de gebruiker weet hoe lang.
+export const MAX_RETRY_WAIT_SECONDS = 60;
 
 export interface SpotifyFetchOptions {
   /** Override voor tests: eigen fetch-implementatie i.p.v. het globale fetch. */
@@ -26,6 +32,32 @@ export interface SpotifyFetchOptions {
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/** Wacht de Retry-After van een 429 uit, of gooit SpotifyRateLimitError als die langer is dan
+ *  MAX_RETRY_WAIT_SECONDS. `label` is wat de waarschuwing noemt (bv. "/v1/me" of "PUT /v1/..."). */
+async function waitOutRateLimit(res: Response, label: string, attempt: number): Promise<void> {
+  const retryAfterHeader = res.headers.get("Retry-After");
+  const retryAfterSeconds = retryAfterHeader ? Number(retryAfterHeader) : 1;
+  const waitSeconds = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0 ? retryAfterSeconds : 1;
+  if (waitSeconds > MAX_RETRY_WAIT_SECONDS) {
+    console.warn(`[spotify/httpClient] 429 op ${label} -- Retry-After ${waitSeconds}s is te lang om af te wachten, opgegeven`);
+    // Het einde van zo'n straf staat vast (app-breed): bewaar het, zodat de routes Spotify niet nodeloos
+    // aanroepen en een uitgestelde volgorde weet vanaf wanneer hij verstuurd kan worden.
+    try {
+      recordRateLimit(waitSeconds);
+    } catch (err) {
+      console.warn("[spotify/httpClient] rate limit niet kunnen vastleggen:", err);
+    }
+    throw new SpotifyRateLimitError(
+      `Spotify vraagt ${waitSeconds}s te wachten (rate limit) op ${label}`,
+      waitSeconds
+    );
+  }
+  console.warn(
+    `[spotify/httpClient] 429 op ${label} -- wacht ${waitSeconds}s (Retry-After), poging ${attempt + 1}/${MAX_RETRIES + 1}`
+  );
+  await sleep(waitSeconds * 1000);
 }
 
 /** Het foutlichaam van een niet-2xx-respons, zonder het te verliezen.
@@ -97,13 +129,7 @@ export async function spotifyGet<T>(
     });
 
     if (res.status === 429) {
-      const retryAfterHeader = res.headers.get("Retry-After");
-      const retryAfterSeconds = retryAfterHeader ? Number(retryAfterHeader) : 1;
-      const waitSeconds = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0 ? retryAfterSeconds : 1;
-      console.warn(
-        `[spotify/httpClient] 429 op ${url.pathname} -- wacht ${waitSeconds}s (Retry-After), poging ${attempt + 1}/${MAX_RETRIES + 1}`
-      );
-      await sleep(waitSeconds * 1000);
+      await waitOutRateLimit(res, url.pathname, attempt);
       continue;
     }
 
@@ -126,26 +152,32 @@ export async function spotifyGet<T>(
   );
 }
 
-/** Eén PUT-aanvraag met een JSON-body. Zelfde 429-afhandeling en token-verversing als `spotifyGet`.
+/** Eén schrijfaanvraag (PUT, POST of DELETE) met een JSON-body. Zelfde 429-afhandeling en token-verversing
+ *  als `spotifyGet`.
  *
- *  Levert niets terug: de endpoints die de hub schrijft (`PUT /playlists/{id}`) antwoorden met 200 en een
- *  lege body, en `res.json()` zou daarop klappen. Een fout komt als `SpotifyApiError` naar boven.
+ *  Levert de body van het antwoord als JSON, of `null` bij een lege body: `PUT /playlists/{id}` antwoordt
+ *  met 200 en niets (`res.json()` zou daarop klappen), de `/playlists/{id}/items`-aanroepen met
+ *  `{ snapshot_id }`. Een fout komt als `SpotifyApiError` naar boven.
  *
  *  DIT IS DE ENIGE SCHRIJFWEG NAAR SPOTIFY in deze codebase (zie de scope-toelichting in config.ts).
- *  Wie hier een tweede aanroeper aan toevoegt, verbreedt daarmee wat de hub feitelijk mag doen -- dat
- *  hoort een bewuste keuze te zijn, niet een bijkomstigheid. */
-export async function spotifyPut(
+ *  Wie hier een extra aanroeper aan toevoegt, verbreedt daarmee wat de hub feitelijk mag doen -- dat
+ *  hoort een bewuste keuze te zijn, niet een bijkomstigheid. Aanroepers nu, allemaal in playlistApi.ts: naam
+ *  en beschrijving van een playlist, sinds 31 oktober 2026 de VOLGORDE van de tracks in een playlist
+ *  (`reorderPlaylistItem`), en sinds 7 november 2026 (#134) het verplaatsen van een track van de ene werkbak
+ *  naar de andere (`addPlaylistItems` + `removePlaylistItems`). */
+export async function spotifyWrite(
+  method: "PUT" | "POST" | "DELETE",
   path: string,
   body: unknown,
   options: SpotifyFetchOptions = {}
-): Promise<void> {
+): Promise<unknown> {
   const fetchImpl = options.fetchImpl ?? fetch;
   const url = buildUrl(path);
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     const accessToken = await getValidAccessToken();
     const res = await fetchImpl(url, {
-      method: "PUT",
+      method,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
@@ -154,33 +186,38 @@ export async function spotifyPut(
     });
 
     if (res.status === 429) {
-      const retryAfterHeader = res.headers.get("Retry-After");
-      const retryAfterSeconds = retryAfterHeader ? Number(retryAfterHeader) : 1;
-      const waitSeconds = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0 ? retryAfterSeconds : 1;
-      console.warn(
-        `[spotify/httpClient] 429 op PUT ${url.pathname} -- wacht ${waitSeconds}s (Retry-After), poging ${attempt + 1}/${MAX_RETRIES + 1}`
-      );
-      await sleep(waitSeconds * 1000);
+      await waitOutRateLimit(res, `${method} ${url.pathname}`, attempt);
       continue;
     }
 
     if (!res.ok) {
       const errorBody = await readErrorBody(res);
       throw new SpotifyApiError(
-        `Spotify API gaf ${res.status} terug op PUT ${url.pathname}`,
+        `Spotify API gaf ${res.status} terug op ${method} ${url.pathname}`,
         res.status,
         errorBody
       );
     }
 
-    return;
+    const tekst = await res.text().catch(() => "");
+    if (tekst.trim() === "") return null;
+    try {
+      return JSON.parse(tekst);
+    } catch {
+      return null;
+    }
   }
 
   throw new SpotifyApiError(
-    `Spotify API bleef 429 (rate limit) geven op PUT ${url.pathname} na ${MAX_RETRIES} pogingen`,
+    `Spotify API bleef 429 (rate limit) geven op ${method} ${url.pathname} na ${MAX_RETRIES} pogingen`,
     429,
     null
   );
+}
+
+/** `spotifyWrite` met PUT -- de vorm die naam, beschrijving en volgorde gebruiken. */
+export function spotifyPut(path: string, body: unknown, options: SpotifyFetchOptions = {}): Promise<unknown> {
+  return spotifyWrite("PUT", path, body, options);
 }
 
 export interface SpotifyPagingObject<T> {

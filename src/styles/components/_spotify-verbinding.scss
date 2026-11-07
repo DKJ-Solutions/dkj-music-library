@@ -10,6 +10,15 @@
   gap: var(--spacing-4);
 }
 
+// De kaarten Login en Sync staan in een .grid-3 en rekken mee tot de hoogste kaart in de rij. Zonder dit
+// blijft de kop van de lagere kaart bovenaan staan, met de lege ruimte eronder. Nu staat de inhoud
+// (kop, en een uitslag als die er is) verticaal in het midden van de kaart.
+.verbinding-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .verbinding-result {
   margin-top: var(--spacing-4);
 }
@@ -20,8 +29,8 @@
 }
 
 // Een gewone .btn (Loskoppelen) in de kop van een kaart binnen een grid: de rand van de huisstijl valt daar
-// bijna weg tegen de kaart, dus hier een zichtbare rand in --muted. Weg zodra de huisstijl dit zelf
+// bijna weg tegen de kaart, dus hier een zichtbare rand in --primary-muted. Weg zodra de huisstijl dit zelf
 // oplost: DKJ-Solutions/dkj-marketplace#3697.
 .verbinding-head .btn:not(.btn--primary) {
-  border-color: var(--muted);
+  border-color: var(--primary-muted);
 }

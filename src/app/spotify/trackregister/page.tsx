@@ -15,7 +15,7 @@ export default function TrackRegisterPage() {
   const register = readRegister();
 
   return (
-    <main className="wrap wrap--full">
+    <main className="page-column wrap--full">
       <header className="masthead">
         <p className="kicker">dkj-music-library · Bibliotheek</p>
         <h1>{pageTitle("/spotify/trackregister")}</h1>

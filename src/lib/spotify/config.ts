@@ -5,6 +5,8 @@
 // vanuit server-side code (route handlers, andere lib-bestanden) geïmporteerd worden, nooit
 // vanuit een 'use client'-bestand.
 
+import path from "path";
+import { getOneDriveEnvPath, recoverEnvFromOneDrive } from "../env/onedriveEnv";
 import { SpotifyConfigError } from "./errors";
 
 export const SPOTIFY_AUTHORIZE_URL = "https://accounts.spotify.com/authorize";
@@ -18,9 +20,12 @@ export const SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token";
 // De grens is daarmee smal gehouden, en dat is bewust:
 //   * `playlist-modify-private` + `-public` geven toegang tot de playlist-METADATA (naam, beschrijving,
 //     openbaarheid). De hub gebruikt daarvan alléén de beschrijving en de naam.
-//   * Tracks toevoegen of verwijderen valt ook onder deze scopes, maar daar is in de hele codebase geen
-//     enkele aanroep voor -- de enige schrijfacties naar Spotify zijn `updatePlaylistDescription()` en
-//     `updatePlaylistName()` in playlistApi.ts, en die raken uitsluitend `description` resp. `name`.
+//   * De schrijfacties naar Spotify staan allemaal in playlistApi.ts: `updatePlaylistDescription()` en
+//     `updatePlaylistName()` raken uitsluitend `description` resp. `name`, `reorderPlaylistItem()` (sinds 31
+//     oktober 2026, Dave) alleen de VOLGORDE van de tracks in een werkbak, en `addPlaylistItems()` +
+//     `removePlaylistItems()` (sinds 7 november 2026, Dave, #134) verplaatsen een track van de ene werkbak naar
+//     een andere -- de enige plek waar een track ergens bij komt of weggaat, en alleen tussen werkbakken
+//     (api/spotify/playlist-move).
 //   * Niet gevraagd blijven o.a. `user-library-modify`, `ugc-image-upload` en alle playback-scopes.
 //
 // LET OP bij een wijziging hier: een uitgebreidere scope-set geldt pas na opnieuw inloggen. Een bestaand
@@ -49,7 +54,17 @@ export function getSpotifyRedirectUri(): string {
   return process.env.SPOTIFY_REDIRECT_URI || DEFAULT_SPOTIFY_REDIRECT_URI;
 }
 
-export function getSpotifyConfig(): SpotifyConfig {
+/** De standaard-herstelpoging bij ontbrekende sleutels (#128): de OneDrive-kopie alsnog overnemen en in
+ *  `process.env` laden. `predev` doet dat maar één keer, en bij het opstarten is OneDrive vaak nog bezig. */
+export function recoverSpotifyEnv(): void {
+  recoverEnvFromOneDrive(path.resolve(process.cwd(), ".env.local"), getOneDriveEnvPath());
+}
+
+/** `recoverEnv` draait alleen als een sleutel ontbreekt; tests geven een eigen (of lege) mee, zodat ze nooit
+ *  de echte .env.local van de machine inlezen. */
+export function getSpotifyConfig(recoverEnv: () => void = recoverSpotifyEnv): SpotifyConfig {
+  if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) recoverEnv();
+
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
   const redirectUri = getSpotifyRedirectUri();
@@ -58,8 +73,9 @@ export function getSpotifyConfig(): SpotifyConfig {
     throw new SpotifyConfigError(
       "SPOTIFY_CLIENT_ID en/of SPOTIFY_CLIENT_SECRET ontbreken. Kopieer .env.local.example naar " +
         ".env.local en vul de client-ID en het secret uit het Spotify Developer Dashboard in -- of zet je " +
-        "ingevulde .env.local in %OneDrive%\\dkj-solutions\\dkj-music-library, dan neemt `npm run dev` " +
-        "hem vanzelf over. Start daarna `npm run dev` opnieuw (zie de README, 'Starten')."
+        "ingevulde .env.local in %OneDrive%\\dkj-solutions\\dkj-music-library. Staat hij daar al (OneDrive " +
+        "kan nog aan het synchroniseren zijn), probeer het dan zo opnieuw, of draai `npm run env:onedrive` " +
+        "(zie de README, 'Starten')."
     );
   }
 
@@ -78,10 +94,12 @@ export function getSpotifyConfig(): SpotifyConfig {
 /** De melding van `getSpotifyConfig()` als de configuratie niet klopt, anders null.
  *
  *  Voor de Login-kaart op /spotify (#123): die toont de melding in plaats van de inlogknop, zodat een
- *  ontbrekende `.env.local` op de pagina zelf te zien is en niet pas na een klik als kale JSON. */
-export function findSpotifyConfigProblem(): string | null {
+ *  ontbrekende `.env.local` op de pagina zelf te zien is en niet pas na een klik als kale JSON. Het herstel
+ *  van `getSpotifyConfig()` (#128) draait hier ook, zodat de kaart een inmiddels gesynchroniseerde OneDrive-
+ *  kopie meteen oppikt; tests geven een eigen `recoverEnv` mee. */
+export function findSpotifyConfigProblem(recoverEnv: () => void = recoverSpotifyEnv): string | null {
   try {
-    getSpotifyConfig();
+    getSpotifyConfig(recoverEnv);
     return null;
   } catch (err) {
     if (err instanceof SpotifyConfigError) return err.message;

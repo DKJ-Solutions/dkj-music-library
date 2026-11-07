@@ -3,7 +3,8 @@
 // alleen de tabel zelf, want die heeft ruim twaalfduizend rijen en negen kolommen, meer dan de rijenlijsten
 // elders in de app dragen.
 // Het register gebruikt de hele breedte van het venster, niet de 1080px van de andere pagina's: acht
-// kolommen passen daar niet in. De zijmarges van .wrap blijven.
+// kolommen passen daar niet in. De zijmarges van .page-column blijven; .wrap--full staat ernaast op <main>
+// en zet de grid om in een flex-kolom met zijn eigen, ruimere gap.
 // HOOGSTENS ÉÉN VERTICALE SCROLLBALK (Dave): de pagina is precies zo hoog als het venster en scrolt zelf
 // niet; masthead, filters en pager nemen wat ze nodig hebben, en het scrollvak van de tabel vult de rest.
 // Alleen in een venster dat daar te laag voor is (zie min-height van .register-table-area) scrolt de pagina.
@@ -58,7 +59,7 @@
   min-width: 0;
   margin: 0;
   padding: 12px 14px 14px;
-  background: var(--paper-2);
+  background: var(--bg-2);
   border: 1px solid var(--line);
   border-radius: var(--radius);
 }
@@ -69,7 +70,7 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--primary-muted);
 }
 
 .register-filter {
@@ -82,7 +83,7 @@
 .register-filter span {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--muted);
+  color: var(--primary-muted);
   white-space: nowrap;
 }
 
@@ -92,7 +93,7 @@
   font: inherit;
   font-size: 13px;
   color: var(--fg-1);
-  background: var(--paper-2);
+  background: var(--bg-2);
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 8px 10px;
@@ -109,7 +110,7 @@
 }
 
 .register-filter .register-option-meta {
-  color: var(--muted);
+  color: var(--primary-muted);
 }
 
 .register-filter select:focus-visible,
@@ -121,7 +122,7 @@
 
 .register-count {
   font-size: 13px;
-  color: var(--muted);
+  color: var(--primary-muted);
   font-variant-numeric: tabular-nums;
 }
 
@@ -133,7 +134,7 @@
   min-height: 240px;
   display: flex;
   flex-direction: column;
-  background: var(--paper-2);
+  background: var(--bg-2);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -179,13 +180,13 @@
   position: sticky;
   top: 0;
   z-index: 1;
-  background: var(--paper-2);
+  background: var(--bg-2);
   box-shadow: inset 0 -1px 0 var(--line);
   font-size: 10.5px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--primary-muted);
   white-space: nowrap;
 }
 
@@ -244,7 +245,7 @@
 
 // Om en om een iets donkerdere rij (Dave), zodat je een lange rij makkelijk tot het eind volgt.
 .register-table tbody tr:nth-child(even) td {
-  background: color-mix(in srgb, var(--surface-2) 60%, var(--paper-2));
+  background: color-mix(in srgb, var(--surface-2) 60%, var(--bg-2));
 }
 
 .register-table tbody tr:last-child td {
@@ -293,7 +294,7 @@
 }
 
 .register-table tbody tr.register-playing td {
-  background: color-mix(in srgb, var(--accent) 10%, var(--paper-2));
+  background: color-mix(in srgb, var(--accent) 10%, var(--bg-2));
 }
 
 // ELKE RIJ IS PRECIES ÉÉN REGEL (Dave). Tekst wordt afgekapt met … en staat volledig in de tooltip
@@ -311,7 +312,7 @@
   color: var(--fg-1);
 }
 
-// De afspeelknop in een EIGEN KOLOM vóór dkj_title (Dave; PlayButton in TrackRegister.tsx): 40px breed,
+// De afspeelknop in een EIGEN KOLOM, in elke tabel helemaal links (Dave; PLAY_COLUMN in TrackRegister.tsx): 40px breed,
 // het knopje op de linkermarge van de tabel, en de rest van de ruimte als afstand tot de titel.
 .register-table .register-play-cell {
   padding-right: 0;
@@ -339,7 +340,7 @@
   border: 1px solid var(--accent-ink);
   border-radius: 50%;
   background: var(--accent-ink);
-  color: var(--paper-1);
+  color: var(--bg-1);
   cursor: pointer;
   transition: opacity 0.12s ease;
 }
@@ -384,7 +385,7 @@ $register-player-height: 97px; // 80px iframe + 2 x 8px padding + 1px rand
   box-sizing: border-box;
   padding: 8px;
   border-top: 1px solid var(--line);
-  background: var(--paper-2);
+  background: var(--bg-2);
   animation: register-player-in 0.22s ease-out;
 }
 
@@ -451,8 +452,8 @@ $register-player-height: 97px; // 80px iframe + 2 x 8px padding + 1px rand
   padding: 0;
   border: 1px solid var(--line);
   border-radius: 50%;
-  background: var(--paper-2);
-  color: var(--muted);
+  background: var(--bg-2);
+  color: var(--primary-muted);
   box-shadow: var(--shadow);
   cursor: pointer;
 }
@@ -520,7 +521,7 @@ $register-player-height: 97px; // 80px iframe + 2 x 8px padding + 1px rand
 .register-menu-toggle:hover,
 .register-menu-toggle[aria-expanded="true"] {
   border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 22%, var(--paper-2));
+  background: color-mix(in srgb, var(--accent) 22%, var(--bg-2));
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -556,7 +557,7 @@ $register-player-height: 97px; // 80px iframe + 2 x 8px padding + 1px rand
   padding: 4px;
   font-family: var(--font-narrow);
   font-variation-settings: "wdth" var(--font-narrow-width);
-  background: var(--paper-2);
+  background: var(--bg-2);
   border: 1px solid var(--line);
   border-radius: 10px;
   box-shadow: var(--shadow);
@@ -635,7 +636,7 @@ a.register-menu-item:hover {
   border: 1px solid transparent;
   border-radius: 6px;
   background: none;
-  color: var(--muted);
+  color: var(--primary-muted);
   cursor: pointer;
 }
 
@@ -721,7 +722,7 @@ a.register-menu-item:hover {
 }
 
 .register-none {
-  color: var(--muted);
+  color: var(--primary-muted);
   opacity: 0.6;
 }
 
@@ -733,7 +734,7 @@ a.register-menu-item:hover {
 
 .register-empty {
   padding: 28px 14px;
-  color: var(--muted);
+  color: var(--primary-muted);
   text-align: center;
 }
 
@@ -761,7 +762,7 @@ a.register-menu-item:hover {
   padding: 7px 14px;
   border-radius: 10px;
   border: 1px solid var(--line);
-  background: var(--paper-2);
+  background: var(--bg-2);
   color: var(--fg-1);
   cursor: pointer;
 }
@@ -785,7 +786,7 @@ a.register-menu-item:hover {
   background: none;
   font: inherit;
   font-size: 12px;
-  color: var(--muted);
+  color: var(--primary-muted);
   cursor: pointer;
 }
 
@@ -812,7 +813,7 @@ a.register-menu-item:hover {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--paper-2);
+  background: var(--bg-2);
   transition: transform 0.15s ease;
 }
 
@@ -862,4 +863,100 @@ a.register-menu-item:hover {
   min-width: 64px;
   font-size: 11.5px;
   color: var(--ink-soft);
+}
+
+// Verslepen in de tabel van een playlist (TrackRegister.tsx, GRIP_COLUMN en DragHandle; Dave, 31 oktober
+// 2026). De greep staat in een eigen smalle kolom links van de afspeelknop; zolang er op een kop gesorteerd
+// is, staat hij er gedimd (de tabel is dan niet meer in de volgorde van de playlist).
+.register-table .register-grip-cell {
+  padding-right: 0;
+}
+
+.register-grip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 24px;
+  color: var(--primary-muted);
+  cursor: grab;
+  border-radius: var(--radius);
+
+  svg {
+    width: 10px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--accent);
+  }
+
+  &.is-disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+  }
+}
+
+.register-table tbody tr.register-dragging {
+  opacity: 0.45;
+}
+
+// Waar de rij landt: een lijn in de themakleur boven (naar boven slepen) of onder (naar beneden) de rij
+// waar je overheen bent. Een inset-schaduw, zodat de hoogte van de rij niet verandert.
+.register-table tbody tr.register-drop-before td {
+  box-shadow: inset 0 2px 0 var(--accent);
+}
+
+.register-table tbody tr.register-drop-after td {
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+// De uitkomst van de laatste verplaatsing, als die niet slaagde of niet helemaal.
+.register-order-note {
+  margin: 0 0 var(--spacing-2-5);
+  color: var(--primary-muted);
+  font-size: var(--text-sm);
+
+  &.is-error {
+    color: var(--negative-5);
+  }
+}
+
+// Naar een andere werkbak verplaatsen (TrackRegister.tsx, MOVE_TO_COLUMN en MoveToMenu; Dave, #134). Een smalle
+// kolom helemaal rechts in de tabel van een werkbak, met dezelfde stille knop als het potlood van een waardering.
+.register-table .register-move-cell {
+  padding-left: 0;
+  text-align: center;
+}
+
+.register-move-toggle {
+  font: inherit;
+  font-size: var(--text-sm);
+  line-height: 1;
+  padding: 2px 4px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--fg-3);
+  cursor: pointer;
+
+  &:hover,
+  &[aria-expanded="true"] {
+    color: var(--primary);
+    border-color: var(--line);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+  }
+}
+
+.register-menu-note {
+  margin: 0;
+  padding: 4px 10px;
+  font-size: var(--text-xs);
+  color: var(--fg-3);
 }

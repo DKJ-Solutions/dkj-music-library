@@ -2,7 +2,7 @@
 // "The hub"): onder de breadcrumb-balk (uit de layout, hier alleen Home) één .grid-3 met een
 // .card.card--link per pagina, zonder kop erboven. De pagina's onder Spotify hebben hun card op
 // /spotify zelf, de mixen de hunne op /mixen, de
-// vergelijkingen tussen de bronnen op /compare; komt de desktop-mirror erbij, dan krijgt die hier een eigen card.
+// vergelijkingen tussen de bronnen op /compare, en de desktop-mirror (#145) heeft hier een eigen card.
 import { PageCardGrid, type PageCard } from "@/components/PageCardGrid";
 import { pageTitle } from "@/lib/pages";
 
@@ -24,6 +24,12 @@ const CARDS: PageCard[] = [
     icon: "compare",
     label: pageTitle("/compare"),
     sub: "De verschillen tussen je bronnen: Spotify-playlists naast de mixen, je pc naast Spotify",
+  },
+  {
+    href: "/mirror",
+    icon: "monitor",
+    label: pageTitle("/mirror"),
+    sub: "De werkschijf met muziek en rekordbox één kant op gespiegeld naar de reserveschijf",
   },
 ];
 

@@ -10,7 +10,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { readRouteErrorMessage } from "@/lib/http/routeError";
+import { SyncDirectionIcon } from "./SyncDirection";
 
+/** Staat er een uitgestelde volgorde (PendingOrderButton), dan blijft die bij ophalen behouden: de server
+ *  herbaseert hem op de nieuwe stand (library/pendingOrder.ts rebaseOrder, spotify/pendingOrderRebase.ts), dus
+ *  er is geen bevestiging nodig. */
 export function PlaylistSyncButton({ playlistId, playlistName }: { playlistId: string; playlistName: string }) {
   const router = useRouter();
   const [status, setStatus] = useState<"idle" | "busy" | "done" | "error">("idle");
@@ -52,19 +56,12 @@ export function PlaylistSyncButton({ playlistId, playlistName }: { playlistId: s
         type="button"
         className="btn btn--primary"
         disabled={status === "busy"}
-        title={`Haal "${playlistName}" opnieuw op bij Spotify`}
+        title={`Fetch: haal "${playlistName}" opnieuw op bij Spotify`}
         onClick={sync}
+        aria-label={status === "busy" ? "Bezig met ophalen uit Spotify…" : "Fetch: ophalen uit Spotify"}
       >
-        <svg
-          className={status === "busy" ? "playlist-sync__icon is-spinning" : "playlist-sync__icon"}
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <path d="M20 12a8 8 0 0 1-14 5.3M4 12a8 8 0 0 1 14-5.3" />
-          <path d="M18 3v3.7h-3.7M6 21v-3.7h3.7" />
-        </svg>
-        {status === "busy" ? "Bezig met sync…" : "Sync met Spotify"}
+        <SyncDirectionIcon direction="pull" spinning={status === "busy"} />
+        {status === "busy" ? "Fetchen…" : "Fetch"}
       </button>
     </div>
   );

@@ -53,6 +53,52 @@ export function syncEnvFromOneDrive(target: string, source: string | null): EnvS
   return { kind: "copied", from: source };
 }
 
+/** Leest `KEY=waarde`-regels uit een .env-bestand. Commentaar en lege regels vallen weg, aanhalingstekens
+ *  rond de waarde ook. Bewust minimaal: alleen voor het herstel hieronder, niet als algemene dotenv. */
+export function parseEnvFile(text: string): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const raw of text.split(/\r?\n/)) {
+    const line = raw.trim();
+    if (!line || line.startsWith("#")) continue;
+    const eq = line.indexOf("=");
+    if (eq <= 0) continue;
+    const key = line.slice(0, eq).trim();
+    let value = line.slice(eq + 1).trim();
+    if (value.length >= 2 && (value[0] === '"' || value[0] === "'") && value.endsWith(value[0])) {
+      value = value.slice(1, -1);
+    }
+    out[key] = value;
+  }
+  return out;
+}
+
+/** Het herstel voor #128: `predev` neemt de OneDrive-kopie maar één keer over, en bij het opstarten is
+ *  OneDrive vaak nog aan het synchroniseren. Ontbreken de sleutels op het moment dat ze nodig zijn, dan
+ *  probeert dit het opnieuw: de kopie overnemen (als de repo er nog geen ingevulde heeft) en de waarden uit
+ *  `target` in `env` zetten, alleen voor sleutels die daar nog leeg zijn. Next.js laadt een nieuwe
+ *  .env.local zelf ook in, maar pas ná het verzoek dat erom vroeg. Gooit nooit. */
+export function recoverEnvFromOneDrive(
+  target: string,
+  source: string | null,
+  env: Record<string, string | undefined> = process.env
+): EnvSyncResult {
+  let result: EnvSyncResult;
+  try {
+    result = syncEnvFromOneDrive(target, source);
+  } catch {
+    return { kind: "no-onedrive" };
+  }
+  if (result.kind === "present" || result.kind === "copied") {
+    const text = readIfExists(target);
+    if (text !== null) {
+      for (const [key, value] of Object.entries(parseEnvFile(text))) {
+        if (!env[key]) env[key] = value;
+      }
+    }
+  }
+  return result;
+}
+
 export function describeEnvSync(result: EnvSyncResult): string | null {
   switch (result.kind) {
     case "present":

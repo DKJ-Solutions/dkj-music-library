@@ -48,7 +48,7 @@ export function WorldPage({
   const mixesWithId = world === "mmc" ? mixIndex.mixesWithId : null;
 
   return (
-    <main className="wrap">
+    <main className="page-column">
       <header className="masthead">
         <h1>{pageTitle(meta.href)}</h1>
         <p className="lede">{meta.description}</p>

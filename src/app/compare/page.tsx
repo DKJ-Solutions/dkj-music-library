@@ -22,7 +22,7 @@ const CARDS: PageCard[] = [
 
 export default function CompareHubPage() {
   return (
-    <main className="wrap">
+    <main className="page-column">
       <header className="masthead">
         <p className="kicker">dkj-music-library · Compare</p>
         <h1>{pageTitle("/compare")}</h1>
