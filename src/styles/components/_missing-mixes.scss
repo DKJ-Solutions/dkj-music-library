@@ -14,7 +14,7 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
 
 .missing-mixes .missing-count {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-xs);
   color: var(--primary-muted);
   background: var(--tile);
   padding: 2px 8px;
@@ -42,7 +42,7 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
   margin-top: 18px;
   padding-bottom: 6px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-micro);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--primary-muted);
@@ -91,14 +91,14 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
 
 .missing-row .missing-id {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: var(--text-micro);
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;
 }
 
 // Zelfde maat als `.playlist-row .name`, zodat de twee tabellen ook typografisch één geheel zijn.
 .missing-row .missing-title {
-  font-size: 13.5px;
+  font-size: var(--text-base);
   color: var(--fg-1);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -109,7 +109,7 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
 // dezelfde kolom binnen MMC een select.
 .missing-row .missing-bpm {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-xs);
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;
   text-align: center;
@@ -118,7 +118,7 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
 // Dichtheid + geslacht: dezelfde vorm als in de hoofdtabel (`.playlist-row .density`/`.gender`).
 .missing-row .missing-density {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-micro);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--ink-soft);
@@ -131,14 +131,14 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
 
 .missing-row .missing-gender {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-xs);
   color: var(--primary-muted);
   text-align: center;
 }
 
 .missing-row .missing-genre,
 .missing-row .missing-subgenre {
-  font-size: 11.5px;
+  font-size: var(--text-xs);
   color: var(--ink-soft);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -151,7 +151,7 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
 
 .missing-row .missing-vol {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-xs);
   color: var(--primary-muted);
   font-variant-numeric: tabular-nums;
   text-align: center;
@@ -160,7 +160,7 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
 // Rechts uitgelijnd, net als de tracks-kolom in de hoofdtabel.
 .missing-row .missing-tracks {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-xs);
   color: var(--primary-muted);
   font-variant-numeric: tabular-nums;
   text-align: right;
@@ -171,7 +171,7 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
 // is de normale werkvoorraad en krijgt daarom niets dan een puntje; "niet teruggevonden" is het geval dat
 // aandacht vraagt. Accent i.p.v. alarm-rood: het is een signaal over de data, geen fout in de app.
 .missing-row .missing-flag {
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1;
   text-align: center;
   color: var(--line);
@@ -180,13 +180,13 @@ $missing-columns: 86px minmax(150px, 2fr) 54px 78px 96px 114px 56px 42px 44px 56
 
 .missing-row[data-reason="unmatched"] .missing-flag {
   color: var(--accent-ink);
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 
 // Hetzelfde teken in de lede-tekst, zodat de legenda en de kolom hetzelfde zeggen.
 .missing-mixes .missing-flag-inline {
   color: var(--accent-ink);
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 
 @media (max-width: 720px) {

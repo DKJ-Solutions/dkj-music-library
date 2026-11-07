@@ -26,6 +26,18 @@
   --status-critical: var(--negative-3);
   --status-done: var(--positive-3);
   --meter-fill: var(--primary-muted);
+  // Afgeleide kleuren (#148): de huisstijl laat een regel een kleur alleen als token lezen, dus elke
+  // color-mix() staat hier als domeintoken en de componenten lezen die met var().
+  --accent-edge: color-mix(in srgb, var(--accent) 45%, transparent); // rand van een actieve chip
+  --accent-edge-line: color-mix(in srgb, var(--accent) 45%, var(--line)); // hover-rand van een tegel
+  --accent-edge-strong: color-mix(in srgb, var(--accent) 55%, var(--line));
+  --accent-line-mix: color-mix(in srgb, var(--accent) 40%, var(--line));
+  --accent-wash: color-mix(in srgb, var(--accent) 10%, var(--bg-2)); // getinte rij
+  --accent-wash-strong: color-mix(in srgb, var(--accent) 22%, var(--bg-2));
+  --surface-row: color-mix(in srgb, var(--surface-2) 60%, var(--bg-2));
+  // Typeschaal (#148): twee domeinstappen onder de house-schaal (kleinste: --text-xs, 11px).
+  --text-micro: 10px; // kolomkoppen, badges en tellers in dichte tabellen
+  --text-glyph: 7px; // het sorteerpijltje in een kolomkop
   // Spotify playlist manager (fase 5) — het 8-kleuren Plutchik-emotiepalet, Gwen's ontwerpspec.
   // Naamgeving lowercase-matchend met plutchikColors.ts' PlutchikColor-waarden zodat de UI
   // `var(--emotion-${color.toLowerCase()})` kan opbouwen. Domeinkleuren: een eigen waarde per modus.
@@ -38,6 +50,11 @@
   --emotion-magenta: light-dark(#c2128a, #f472d0);
   --emotion-purple: light-dark(#6d28d9, #a78bfa);
   --emotion-blue: light-dark(#1d4ed8, #60a5fa);
+  // Per emotiekleur een getint vlak (-tint) en een rand (-edge) voor de actieve kleurfilter (#148).
+  @each $color in "cyan", "green", "yellow", "orange", "red", "magenta", "purple", "blue" {
+    --emotion-#{$color}-tint: color-mix(in srgb, var(--emotion-#{$color}) 16%, transparent);
+    --emotion-#{$color}-edge: color-mix(in srgb, var(--emotion-#{$color}) 45%, transparent);
+  }
   // De symbolen van dkj_rating, exact uit Daves voorbeeld (29 september 2026); gelijk in licht en donker.
   --rating-green: #35fb39;
   --rating-blue: #35b7ef;

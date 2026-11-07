@@ -1,6 +1,6 @@
 // Fase 5 — Spotify playlist manager: de sticky filter/groepeer/zoek-toolbar op /spotify/playlists/manager.
 // Idioom + tokens 1-op-1 hergebruikt uit Gwen's ontwerp-illustratie (spotify-fase5-mockup.html);
-// het chip/badge-tinting-recept (kleur vol, achtergrond/rand via color-mix) is hetzelfde recept
+// het chip/badge-tinting-recept (kleur vol, achtergrond/rand via de -tint/-edge-tokens in _root.scss) is hetzelfde recept
 // als components/_dossier-card.scss's badges, nu toegepast op de 8 --emotion-*-tokens.
 .playlist-toolbar {
   position: sticky;
@@ -42,7 +42,7 @@
   background: transparent;
   color: var(--fg-1);
   font-family: var(--font-body);
-  font-size: 13.5px;
+  font-size: var(--text-base);
   width: 100%;
 }
 
@@ -67,7 +67,7 @@
 }
 
 .playlist-bulk-tag .playlist-bulk-hint {
-  font-size: 12px;
+  font-size: var(--text-sm);
   color: var(--primary-muted);
 }
 
@@ -76,7 +76,7 @@
 // maar het hoort er wel bij te horen qua toon.
 p.playlist-bulk-hint {
   margin-top: 6px;
-  font-size: 12px;
+  font-size: var(--text-sm);
   color: var(--primary-muted);
 }
 
@@ -85,7 +85,7 @@ p.playlist-bulk-hint {
 // "lege lijst"-melding, en de volgende lezer hoort dat niet te hoeven uitzoeken.
 .playlist-bulk-result {
   margin-top: 26px;
-  font-size: 13.5px;
+  font-size: var(--text-base);
   color: var(--primary-muted);
   font-family: var(--font-mono);
 }
@@ -96,7 +96,7 @@ p.playlist-bulk-hint {
   display: inline-block;
   margin-top: 4px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-xs);
   line-height: 1.5;
 }
 
@@ -108,14 +108,14 @@ p.playlist-bulk-hint {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12.5px;
+  font-size: var(--text-sm);
   color: var(--ink-soft);
   font-family: var(--font-mono);
 }
 
 .playlist-genrefilter select {
   font-family: var(--font-mono);
-  font-size: 12.5px;
+  font-size: var(--text-sm);
   color: var(--fg-1);
   background: var(--bg-2);
   border: 1px solid var(--line);
@@ -133,7 +133,7 @@ p.playlist-bulk-hint {
 
 .playlist-filter-group .flabel {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: var(--text-micro);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--primary-muted);
@@ -169,7 +169,7 @@ p.playlist-bulk-hint {
   border: 1px solid var(--line);
   background: var(--bg-2);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-xs);
   color: var(--ink-soft);
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease;
@@ -184,13 +184,13 @@ p.playlist-bulk-hint {
 
 .color-toggle[data-active="true"] {
   color: var(--fg-1);
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 
 @each $color in "cyan", "green", "yellow", "orange", "red", "magenta", "purple", "blue" {
   .color-toggle[data-color="#{$color}"][data-active="true"] {
-    background: color-mix(in srgb, var(--emotion-#{$color}) 16%, transparent);
-    border-color: color-mix(in srgb, var(--emotion-#{$color}) 45%, transparent);
+    background: var(--emotion-#{$color}-tint);
+    border-color: var(--emotion-#{$color}-edge);
   }
 }
 
@@ -200,7 +200,7 @@ p.playlist-bulk-hint {
   border: 1px solid var(--line);
   background: var(--bg-2);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-xs);
   color: var(--ink-soft);
   cursor: pointer;
 }
@@ -208,8 +208,8 @@ p.playlist-bulk-hint {
 .pill-toggle[data-active="true"] {
   color: var(--accent-ink);
   background: var(--accent-soft);
-  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
-  font-weight: 600;
+  border-color: var(--accent-edge);
+  font-weight: var(--font-weight-bold);
 }
 
 // "Wis filters": alleen zichtbaar zolang er minstens één filter/zoekterm actief is (zie

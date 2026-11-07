@@ -15,7 +15,7 @@
 // nadrukkelijker dan .section-lede.
 .section-sublede {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--primary-muted);
@@ -40,14 +40,14 @@
 
 .dashboard-bar-row .rank {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: var(--text-micro);
   color: var(--primary-muted);
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
 .dashboard-bar-row .label {
-  font-size: 13px;
+  font-size: var(--text-base);
   color: var(--fg-1);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -56,7 +56,7 @@
 
 .dashboard-bar-row .label .sublabel {
   color: var(--primary-muted);
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
 }
 
 .dashboard-bar-track {
@@ -75,7 +75,7 @@
 
 .dashboard-bar-row .value {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-xs);
   color: var(--primary-muted);
   font-variant-numeric: tabular-nums;
   text-align: right;
@@ -92,7 +92,7 @@ $dedup-columns: minmax(150px, 2fr) minmax(120px, 1.4fr) 74px minmax(160px, 2fr);
   padding: 0 8px 6px;
   margin-top: 4px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-micro);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--primary-muted);
@@ -124,7 +124,7 @@ $dedup-columns: minmax(150px, 2fr) minmax(120px, 1.4fr) 74px minmax(160px, 2fr);
 }
 
 .dedup-row .name {
-  font-size: 13.5px;
+  font-size: var(--text-base);
   color: var(--fg-1);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -132,7 +132,7 @@ $dedup-columns: minmax(150px, 2fr) minmax(120px, 1.4fr) 74px minmax(160px, 2fr);
 }
 
 .dedup-row .artists {
-  font-size: 12.5px;
+  font-size: var(--text-sm);
   color: var(--ink-soft);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -141,7 +141,7 @@ $dedup-columns: minmax(150px, 2fr) minmax(120px, 1.4fr) 74px minmax(160px, 2fr);
 
 .dedup-row .count-badge {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-xs);
   font-variant-numeric: tabular-nums;
   color: var(--accent-ink);
   background: var(--accent-soft);
@@ -153,7 +153,7 @@ $dedup-columns: minmax(150px, 2fr) minmax(120px, 1.4fr) 74px minmax(160px, 2fr);
 
 .dedup-row .in-playlists {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: var(--text-micro);
   color: var(--primary-muted);
   overflow: hidden;
   text-overflow: ellipsis;

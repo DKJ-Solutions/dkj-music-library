@@ -119,7 +119,7 @@ $playlist-cols: (
   padding: 0 3px 6px;
   margin-top: 22px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-micro);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--primary-muted);
@@ -156,7 +156,7 @@ $playlist-cols: (
 // kop de lijst bepaalt -- ook als de pijl in een smalle kolom nauwelijks opvalt.
 .col-head-sort[data-active="true"] {
   color: var(--accent-ink);
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 
 .col-head-sort .col-head-label {
@@ -167,7 +167,7 @@ $playlist-cols: (
 
 .col-head-sort .col-head-arrow {
   flex: none;
-  font-size: 7px;
+  font-size: var(--text-glyph);
   line-height: 1;
 }
 
@@ -225,7 +225,7 @@ $playlist-cols: (
 }
 
 .playlist-row .name {
-  font-size: 13.5px;
+  font-size: var(--text-base);
   color: var(--fg-1);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -239,7 +239,7 @@ $playlist-cols: (
 // buurkolom. Vandaar 5px marge buiten de pil + 6px padding erbinnen.
 .playlist-row .type {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: var(--text-micro);
   letter-spacing: 0.03em;
   color: var(--accent-ink);
   background: var(--accent-soft);
@@ -266,7 +266,7 @@ $playlist-cols: (
 // in één blik moeten opvallen.
 .playlist-row .mix-id {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: var(--text-micro);
   color: var(--primary-muted);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -290,7 +290,7 @@ $playlist-cols: (
 .playlist-row .mix-id[data-key="declared"]::before {
   content: "#";
   margin-right: 1px;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 
 // Het schrijfknopje: de enige knop in deze interface die iets in Dave's Spotify-account wijzigt. Bewust
@@ -305,7 +305,7 @@ $playlist-cols: (
   padding: 0 2px;
   margin: 0;
   font: inherit;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   line-height: 1;
   color: var(--line);
   cursor: pointer;
@@ -389,7 +389,7 @@ $playlist-cols: (
 .playlist-row .name-blocked {
   flex: none;
   margin-left: 4px;
-  font-size: 10px;
+  font-size: var(--text-micro);
   line-height: 1;
   color: var(--status-critical);
   cursor: help;
@@ -400,7 +400,7 @@ $playlist-cols: (
 // anders visueel domineren.
 .playlist-row .genre,
 .playlist-row .subgenre {
-  font-size: 11.5px;
+  font-size: var(--text-xs);
   color: var(--ink-soft);
   white-space: nowrap;
   overflow: hidden;
@@ -413,7 +413,7 @@ $playlist-cols: (
 
 .playlist-row .density {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-micro);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--ink-soft);
@@ -426,7 +426,7 @@ $playlist-cols: (
 
 .playlist-row .gender {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-xs);
   color: var(--primary-muted);
   text-align: center;
 }
@@ -440,14 +440,14 @@ $playlist-cols: (
   justify-content: center;
   gap: 4px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-xs);
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;
 }
 
 .playlist-row .vol {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-xs);
   color: var(--primary-muted);
   font-variant-numeric: tabular-nums;
   text-align: center;
@@ -455,7 +455,7 @@ $playlist-cols: (
 
 .playlist-row .tracks {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-xs);
   color: var(--primary-muted);
   font-variant-numeric: tabular-nums;
   text-align: right;
@@ -475,7 +475,7 @@ $playlist-cols: (
   appearance: none;
   -webkit-appearance: none;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: var(--text-micro);
   color: var(--ink-soft);
   background: var(--bg-2);
   border: 1px solid var(--line);
@@ -490,9 +490,9 @@ $playlist-cols: (
 // subtiel, geen alarmkleur, puur "dit is een menselijke correctie, geen gok".
 .world-select[data-overridden="true"] {
   color: var(--accent-ink);
-  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  border-color: var(--accent-edge);
   background: var(--accent-soft);
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 
 .world-reset {
@@ -502,7 +502,7 @@ $playlist-cols: (
   background: none;
   padding: 0;
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1;
   color: var(--primary-muted);
   cursor: pointer;
@@ -524,7 +524,7 @@ $playlist-cols: (
   appearance: none;
   -webkit-appearance: none;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: var(--text-micro);
   color: var(--ink-soft);
   background: var(--bg-2);
   border: 1px solid var(--line);
@@ -537,9 +537,9 @@ $playlist-cols: (
 
 .bpm-tier-select[data-overridden="true"] {
   color: var(--accent-ink);
-  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  border-color: var(--accent-edge);
   background: var(--accent-soft);
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 
 .bpm-tier-reset {
@@ -549,7 +549,7 @@ $playlist-cols: (
   background: none;
   padding: 0;
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1;
   color: var(--primary-muted);
   cursor: pointer;
@@ -568,7 +568,7 @@ $playlist-cols: (
   appearance: none;
   -webkit-appearance: none;
   text-align: center;
-  font-size: 13px;
+  font-size: var(--text-base);
   background: none;
   border: none;
   // Alleen verticaal op 0 -- horizontaal blijft de kolom-tussenruimte staan (zie $playlist-cols).
@@ -594,7 +594,7 @@ $playlist-cols: (
 
 .playlist-empty-note {
   margin-top: 26px;
-  font-size: 13.5px;
+  font-size: var(--text-base);
   color: var(--primary-muted);
   font-family: var(--font-mono);
 }
