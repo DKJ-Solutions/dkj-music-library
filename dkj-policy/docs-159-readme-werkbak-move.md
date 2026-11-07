@@ -39,19 +39,29 @@
 
 ### PLAN
 
+#### Issue #159
+
+Since #134 (PR #155) the app also adds and removes tracks between werkbakken (`addPlaylistItems` + `removePlaylistItems` in `src/lib/spotify/playlistApi.ts`, via `api/spotify/playlist-move`), but the README's Spotify-mirror bullet still lists only name, description and werkbak order before "Verder schrijft de app niets naar Spotify."
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] README: the Spotify-mirror bullet also names moving a track between werkbakken (the ⇄ menu on `/mixen/preparation/<id>`, landing at the bottom of the target)
 
 ### TEST
 
+- [x] Docs only; `ship-pr` runs the gate
+
 ### DEPLOY: docs/159-readme-werkbak-move
 
-**Score:**
+The README's list of what the app writes to Spotify now also names moving a track from one werkbak to another, which lands it at the bottom of the target werkbak.
+
+**Score:** 1 -- prevents a reader trusting the README that the app never adds or removes a track in a Spotify playlist, which has not been true since the move between werkbakken landed.
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A
+
+**Score:** N/A
 
 #### Pull Request
 
