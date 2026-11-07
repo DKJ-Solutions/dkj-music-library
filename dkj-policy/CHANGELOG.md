@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**35 / 41 minor entries** <!-- pending-tally -->
+**35 / 42 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/149-drop-eyebrows · 20261107-173713Z
+
+The section labels on the Spotify dashboard, the playlists/mixes bridge, the MusicMoodColours page and the playlist manager are headings again: each is now its section's `h2` in the house heading style, with its count beside it, instead of the plain text it had become after the v6.9.0 brand book dropped `.eyebrow`.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+N/A
+
+**Score:** N/A
+
+#### Pull Request
+
+Eyebrow labels lost their house styling
+
+[PR #162](https://github.com/DKJ-Solutions/dkj-music-library/pull/162)
+
+---
 
 ### DEPLOY: feat/151-pc-spotify-fuzzy-link · 20261107-173324Z
 
