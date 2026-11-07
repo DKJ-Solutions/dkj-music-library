@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**30 / 34 minor entries** <!-- pending-tally -->
+**31 / 35 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/134-move-track-between-werkbakken · 20261107-154117Z
+
+Every row of a werkbak table (`/mixen/preparation/<id>`) now has a ⇄ menu at the right that moves the track to another werkbak. The hub adds it at the bottom of the chosen werkbak in Spotify first and only then removes it from this one, so a failure leaves the track in both rather than in neither, and it says so. Both werkbakken are fetched again afterwards, and a local order that has not been pushed yet survives the move. This is the first time the hub adds or removes tracks in a Spotify playlist, and it only does so between werkbakken.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+A great track that does not fit this mix moves to the werkbak where it belongs in two clicks, instead of being dropped or moved by hand in Spotify.
+
+**Score:** 3
+
+#### Pull Request
+
+Move a track from one werkbak to another preparation playlist
+
+[PR #155](https://github.com/DKJ-Solutions/dkj-music-library/pull/155)
+
+---
 
 ### DEPLOY: fix/152-readme-spotify-writes · 20261107-153412Z
 
