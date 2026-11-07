@@ -2,7 +2,31 @@
 
 ## [Unreleased]
 
-**32 / 36 minor entries** <!-- pending-tally -->
+**33 / 37 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/144-pc-spotify-scan · 20261107-154921Z
+
+`/compare/pc-spotify` heeft een bron: zet in `data/local/local-music.json` het pad naar je muziekmap (zie
+`local-music.example.json`), en de pagina toont per playlist wat in Spotify staat maar nog niet als bestand in die
+map, plus de bestanden zonder track en het aantal gekoppelde tracks. De map wordt alleen gelezen. Een bestand
+koppelt aan een track als zijn naam zonder extensie gelijk is aan `dkj_file`.
+
+**Score:** 4
+
+#### What makes this deploy extra special
+
+De downloadlijst was het hele doel van de PC-kant: wat nog gedownload moet worden, staat nu op één pagina in plaats
+van in je hoofd.
+
+**Score:** 4
+
+#### Pull Request
+
+PC <-> Spotify: lokale muziekmap scannen en tonen wat nog gedownload moet worden
+
+[PR #157](https://github.com/DKJ-Solutions/dkj-music-library/pull/157)
+
+---
 
 ### DEPLOY: fix/142-brandbook-pin · 20261107-154518Z
 
