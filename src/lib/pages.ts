@@ -21,6 +21,7 @@ export const PAGE_TITLES: Record<string, string> = {
   "/compare": "Compare",
   "/compare/playlists-mixes": "Playlists ↔ Mixes",
   "/compare/pc-spotify": "PC ↔ Spotify",
+  "/mirror": "Desktop-mirror",
   "/spotify/playlists": "Playlists",
   "/spotify/playlists/manager": "Playlist manager",
   "/spotify/verbinding": "Verbinding",
