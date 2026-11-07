@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**35 / 39 minor entries** <!-- pending-tally -->
+**35 / 40 minor entries** <!-- pending-tally -->
+
+### DEPLOY: docs/159-readme-werkbak-move · 20261107-164913Z
+
+The README's list of what the app writes to Spotify now also names moving a track from one werkbak to another, which lands it at the bottom of the target werkbak.
+
+**Score:** 1 -- prevents a reader trusting the README that the app never adds or removes a track in a Spotify playlist, which has not been true since the move between werkbakken landed.
+
+#### What makes this deploy extra special
+
+N/A
+
+**Score:** N/A
+
+#### Pull Request
+
+README: name the move between werkbakken among the app's Spotify writes
+
+[PR #160](https://github.com/DKJ-Solutions/dkj-music-library/pull/160)
+
+---
 
 ### DEPLOY: fix/123-spotify-config-melding · 20261107-164616Z
 
