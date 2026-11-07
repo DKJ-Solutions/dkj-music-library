@@ -1,12 +1,13 @@
 // PC <-> Spotify op /compare/pc-spotify (#144): wat in de Spotify-playlists staat maar nog niet in de lokale
 // muziekmap, de downloadlijst. De map komt uit data/local/local-music.json (localMusicConfig.ts), de
-// koppeling loopt via `dkj_file` (compareLocal.ts). Zonder map blijft de lege melding staan. De card
+// koppeling loopt via een eigen koppeling of `dkj_file`, met voorstellen voor de rest (compareLocal.ts, #151). Zonder map blijft de lege melding staan. De card
 // ernaartoe staat op de hub /compare, naast Playlists <-> Mixes.
 import { pageTitle } from "@/lib/pages";
 import { readLocalMusicConfig } from "@/lib/local/localMusicConfig";
 import { scanMusicFolder } from "@/lib/local/scanMusicFolder";
 import { compareLocal } from "@/lib/local/compareLocal";
 import { readRegister } from "@/lib/library/readRegister";
+import { PcSpotifyLinks } from "@/components/local/PcSpotifyLinks";
 
 // Leest de schijf en de bibliotheek, die buiten de build veranderen.
 export const dynamic = "force-dynamic";
@@ -57,6 +58,10 @@ export default function ComparePcSpotifyPage() {
           <div className="v">{result.matchedCount}</div>
         </div>
         <div className="tile">
+          <div className="label">Voorstellen</div>
+          <div className="v">{result.suggestions.length}</div>
+        </div>
+        <div className="tile">
           <div className="label">Alleen lokaal</div>
           <div className="v">{result.localOnly.length}</div>
         </div>
@@ -66,7 +71,7 @@ export default function ComparePcSpotifyPage() {
         </div>
       </div>
 
-      <div className="grid-2">
+      <div className="grid-3">
         <section className="card">
           <div className="card__head">
             <h2 className="card__title">Te downloaden</h2>
@@ -89,6 +94,18 @@ export default function ComparePcSpotifyPage() {
               ))}
             </div>
           )}
+        </section>
+
+        <section className="card">
+          <div className="card__head">
+            <h2 className="card__title">Voorstellen</h2>
+          </div>
+          <PcSpotifyLinks
+            suggestions={result.suggestions}
+            ownLinks={result.ownLinks}
+            unlinked={result.unlinked}
+            filePaths={[...result.localOnly, ...result.suggestions.map((s) => s.suggestion)].map((f) => f.relativePath).sort((a, b) => a.localeCompare(b))}
+          />
         </section>
 
         <section className="card">

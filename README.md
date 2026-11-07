@@ -75,6 +75,12 @@ koppelt aan een track als zijn naam zonder extensie gelijk is aan `dkj_file`; ho
 tellen niet mee (zie `src/lib/local/compareLocal.ts`). Zonder bestand meldt de pagina dat er nog geen
 map gekoppeld is.
 
+Een bestand dat anders heet (`ft.` in plaats van `feat.`, een hernoemd bestand) komt onder **Voorstellen**:
+het lokale bestand waarvan artiest en titel het meest op de track lijken. Met **Koppel** bevestig je het
+voorstel, of je kiest eerst een ander bestand; onder *Zelf koppelen* koppel je elke track uit de
+downloadlijst. Zo'n koppeling staat in `dkj_local_file` (het pad vanaf de muziekmap), gaat voor op
+`dkj_file` en komt met de export in git mee naar je andere machines.
+
 ### Bestaande data uit life-hub meenemen
 
 Draaide de Spotify-mirror eerder in `life-hub`, kopieer dan op die machine `life-hub/data/spotify/` en

@@ -60,6 +60,9 @@ export const ALBUM_ARTIST_KEY = "dkj_albumartiest";
 /** Het veld met de bestandsnaam zoals op de desktop (zie fileName.ts). */
 export const FILE_KEY = "dkj_file";
 
+/** Het veld met het lokale bestand dat zelf aan de track gekoppeld is (zie compareLocal.ts, #151). */
+export const LOCAL_FILE_KEY = "dkj_local_file";
+
 /** Het veld met alleen de titel van het nummer, zoals in `dkj_file` na de artiesten (zie fileName.ts). */
 export const TITLE_KEY = "dkj_title";
 
@@ -196,6 +199,11 @@ export const TRACK_FIELDS: readonly FieldDef[] = [
     type: "text",
     label: "Hoe graag je de track in de volgende mix wilt gebruiken, tier-1 (laag) tot tier-8 (hoog); begint gelijk aan dkj_rating, tenzij zelf ingevuld",
     options: DKJ_RATING_OPTIONS,
+  },
+  {
+    key: "dkj_local_file",
+    type: "text",
+    label: "Lokaal bestand dat zelf aan de track gekoppeld is, als pad vanaf de muziekmap: voor een bestand waarvan de naam afwijkt van dkj_file (#151, compareLocal.ts)",
   },
   // Nieuw veld? Voeg het hier toe, bv.:
   // { key: "energy", type: "integer", label: "Energie 1-10" },

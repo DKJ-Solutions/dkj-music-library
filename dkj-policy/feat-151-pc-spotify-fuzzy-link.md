@@ -39,19 +39,32 @@
 
 ### PLAN
 
+Owner's decision on #151 (November 7, 2026): a fuzzy artist + title match that suggests a link, plus a manual link stored as a `dkj_*` field to confirm or correct it. rekordbox's `collection.xml` does not join as a source.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] New field `dkj_local_file` (`fields.ts`, `RegisterRow.localFile`): the hand-made link, as the path from the music folder
+- [x] `compareLocal`: own link first (while that file exists), then `dkj_file`, then a one-to-one suggestion for what is left: Dice on the normalised artist + title words (`ft.`/`featuring` fold to `feat`, accents and punctuation dropped), from 0.7, found through a word index. A suggested pair leaves both lists until it is confirmed
+- [x] `POST /api/local/link` (`localLink.ts`, `saveLocalLink.ts`): sets or clears `dkj_local_file` of an existing track, like the rating route
+- [x] `/compare/pc-spotify`: a third card *Voorstellen* (`PcSpotifyLinks.tsx`) to confirm or correct each suggestion, link any track by hand, and undo an own link; a tile with the count
+- [x] README: the lokale-muziekmap section names the suggestions and `dkj_local_file`
 
 ### TEST
 
+- [x] `vitest` on `src/lib` and `src/components` (1071 passed, new cases for links, suggestions, threshold and one-to-one), `tsc --noEmit` and `eslint` clean; `check-house-style` adds no finding (the 127 on main are #148's). The full gate runs in `ship-pr` after the owner's look
+- [ ] The owner opens `/compare/pc-spotify` against the music folder, judges the suggestions and links one by hand
+
 ### DEPLOY: feat/151-pc-spotify-fuzzy-link
 
-**Score:**
+`/compare/pc-spotify` now suggests a local file for a track whose file name is spelt differently (`ft.` for `feat.`, a renamed file), so it no longer shows up both as *to download* and as *local only*. You confirm or correct the suggestion with one click, or link any track to a file by hand; the link is stored in `dkj_local_file` and travels with the library export.
+
+**Score:** 3
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A
+
+**Score:** N/A
 
 #### Pull Request
 

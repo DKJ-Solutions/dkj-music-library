@@ -31,3 +31,34 @@
 .pc-count {
   color: var(--ink-soft);
 }
+
+// De card Voorstellen (#151): de tracknaam boven een veld met het voorgestelde bestand en de knop ernaast.
+.pc-link {
+  display: grid;
+  gap: var(--spacing-1);
+}
+
+.pc-link-track {
+  overflow-wrap: anywhere;
+}
+
+.pc-link-form {
+  display: flex;
+  gap: var(--spacing-1-5);
+  padding: var(--spacing-1) 0;
+}
+
+.pc-link-form input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  padding: var(--spacing-1) var(--spacing-1-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-1);
+  background: var(--bg);
+  color: inherit;
+}
+
+.pc-link-error {
+  color: var(--status-critical);
+}
