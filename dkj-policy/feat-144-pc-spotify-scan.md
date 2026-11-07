@@ -55,7 +55,7 @@ koppeling (artiest + titel, ID3/ISRC, een handmatige link) en rekordbox' `collec
 ### TEST
 
 - [x] Unit-tests voor de drie modules (14 tests), `tsc --noEmit` groen
-- [ ] Owner bekijkt /compare/pc-spotify met een gekoppelde map
+- [~] Owner bekijkt /compare/pc-spotify met een gekoppelde map -- not done as a separate look: davekokbwj approved the branch through issues-sweep-reviews on November 7, 2026 without one.
 
 ### DEPLOY: feat/144-pc-spotify-scan
 
