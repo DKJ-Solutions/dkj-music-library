@@ -39,19 +39,39 @@
 
 ### PLAN
 
+#### Keuzes voor de open vragen van #144
+
+Alleen de exacte koppeling op `dkj_file` (hoofdletters, witruimte en Unicode-vorm tellen niet mee). Een vagere
+koppeling (artiest + titel, ID3/ISRC, een handmatige link) en rekordbox' `collection.xml` als tweede bron staan in #151.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `src/lib/local/localMusicConfig.ts`: de map uit het git-ignored `data/local/local-music.json`, met `local-music.example.json` in de repo-root
+- [x] `src/lib/local/scanMusicFolder.ts`: recursief, alleen audiobestanden, alleen lezen
+- [x] `src/lib/local/compareLocal.ts`: te downloaden per playlist, alleen lokaal, gekoppeld, zonder bestandsnaam
+- [x] `/compare/pc-spotify` toont de vier getallen en de twee lijsten; zonder map blijft de lege melding
+- [x] README: de sectie over `data/local/local-music.json`
 
 ### TEST
 
+- [x] Unit-tests voor de drie modules (14 tests), `tsc --noEmit` groen
+- [ ] Owner bekijkt /compare/pc-spotify met een gekoppelde map
+
 ### DEPLOY: feat/144-pc-spotify-scan
 
-**Score:**
+`/compare/pc-spotify` heeft een bron: zet in `data/local/local-music.json` het pad naar je muziekmap (zie
+`local-music.example.json`), en de pagina toont per playlist wat in Spotify staat maar nog niet als bestand in die
+map, plus de bestanden zonder track en het aantal gekoppelde tracks. De map wordt alleen gelezen. Een bestand
+koppelt aan een track als zijn naam zonder extensie gelijk is aan `dkj_file`.
+
+**Score:** 4
 
 #### What makes this deploy extra special
 
-**Score:**
+De downloadlijst was het hele doel van de PC-kant: wat nog gedownload moet worden, staat nu op één pagina in plaats
+van in je hoofd.
+
+**Score:** 4
 
 #### Pull Request
 

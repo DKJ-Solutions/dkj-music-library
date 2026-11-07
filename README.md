@@ -58,6 +58,18 @@ de code. Deze repo is publiek. Die gegevens staan in een lokaal bestand. Kopieer
 Ontbreekt het bestand, dan draait de app gewoon, maar telt elke playlist als "gevolgd" en klopt de
 indeling niet. De serverconsole waarschuwt daarvoor (zie `src/lib/spotify/privateRules.ts`).
 
+### De lokale muziekmap: `data/local/local-music.json`
+
+`/compare/pc-spotify` laat zien wat in je Spotify-playlists staat maar nog niet in je muziekmap: de
+downloadlijst. Welke map dat is (in de praktijk de werkschijf met de rekordbox-bibliotheek), verschilt
+per machine en staat daarom niet in git. Kopieer `local-music.example.json` naar
+`data/local/local-music.json` en zet in `musicFolder` het pad naar de map.
+
+De map wordt recursief gelezen (`.mp3`, `.wav`, `.aiff`, `.flac`, `.m4a`), nooit gewijzigd. Een bestand
+koppelt aan een track als zijn naam zonder extensie gelijk is aan `dkj_file`; hoofdletters en witruimte
+tellen niet mee (zie `src/lib/local/compareLocal.ts`). Zonder bestand meldt de pagina dat er nog geen
+map gekoppeld is.
+
 ### Bestaande data uit life-hub meenemen
 
 Draaide de Spotify-mirror eerder in `life-hub`, kopieer dan op die machine `life-hub/data/spotify/` en
