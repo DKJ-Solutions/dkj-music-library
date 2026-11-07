@@ -1,0 +1,39 @@
+// De desktop-mirror op /mirror (MirrorPanel.tsx, #145): de knoppen met hun statusregel op één rij onder de
+// schijven, en de lijsten van de dry run, die binnen hun card scrollen zodat de pagina op één scherm past.
+.mirror-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-4);
+}
+
+.mirror-status {
+  color: var(--fg-3);
+
+  &.is-error {
+    color: var(--negative-5);
+  }
+}
+
+.mirror-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 420px;
+  overflow: auto;
+  font-size: var(--text-sm);
+
+  li {
+    padding: var(--spacing-1) 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+.mirror-list__label {
+  color: var(--fg-3);
+}
+
+.mirror-list__more {
+  color: var(--fg-3);
+}

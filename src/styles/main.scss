@@ -20,5 +20,6 @@
 @use "components/track-register"; // /spotify/trackregister -- het Trackregister (bibliotheek-tabel)
 @use "components/colour-cards"; // /mixen/planned -- een card per albumkleur, met een stip in die kleur
 @use "components/playlist-sync"; // De sync-knop boven de tracks van één Spotify-playlist
+@use "components/mirror"; // De desktop-mirror op /mirror (#145)
 @use "components/spotify-verbinding"; // /spotify -- de secties Connection (Login, Sync), Playlists en Dashboard
 @use "components/pc-spotify"; // /compare/pc-spotify -- de downloadlijst naast de lokale muziekmap

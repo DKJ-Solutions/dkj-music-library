@@ -9,7 +9,11 @@ machine.
   beschrijving van een playlist die bij een mix hoort, en de volgorde van de tracks in een werkbak (slepen
   op `/mixen/preparation/<id>`, met Push naar Spotify). Verder schrijft de app niets naar Spotify. In
   de eigen bibliotheek kun je twee velden zelf aanpassen: `dkj_rating` en `dkj_mix_rating`, in het trackregister.
-- **Desktop-mirror**: moet nog gebouwd worden.
+- **Desktop-mirror** (`/mirror`): spiegelt de werkschijf met de muziek en de rekordbox-bibliotheek één kant op
+  naar een reserveschijf, met robocopy. Eerst een dry run die toont wat er gekopieerd en wat er op de reserve
+  verwijderd wordt, dan pas de spiegel. De twee paden staan in `data/mirror/config.json` (git-ignored; zie
+  `mirror-config.example.json`). Hij weigert zolang rekordbox draait, als een schijf ontbreekt, of als er op de
+  reserve nieuwere bestanden staan.
 
 De app kwam op 2026-09-27 uit de private repo `life-hub`, en is daar in zijn geheel weggehaald.
 
