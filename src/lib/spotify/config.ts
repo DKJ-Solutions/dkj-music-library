@@ -5,6 +5,8 @@
 // vanuit server-side code (route handlers, andere lib-bestanden) geïmporteerd worden, nooit
 // vanuit een 'use client'-bestand.
 
+import path from "path";
+import { getOneDriveEnvPath, recoverEnvFromOneDrive } from "../env/onedriveEnv";
 import { SpotifyConfigError } from "./errors";
 
 export const SPOTIFY_AUTHORIZE_URL = "https://accounts.spotify.com/authorize";
@@ -52,7 +54,17 @@ export function getSpotifyRedirectUri(): string {
   return process.env.SPOTIFY_REDIRECT_URI || DEFAULT_SPOTIFY_REDIRECT_URI;
 }
 
-export function getSpotifyConfig(): SpotifyConfig {
+/** De standaard-herstelpoging bij ontbrekende sleutels (#128): de OneDrive-kopie alsnog overnemen en in
+ *  `process.env` laden. `predev` doet dat maar één keer, en bij het opstarten is OneDrive vaak nog bezig. */
+export function recoverSpotifyEnv(): void {
+  recoverEnvFromOneDrive(path.resolve(process.cwd(), ".env.local"), getOneDriveEnvPath());
+}
+
+/** `recoverEnv` draait alleen als een sleutel ontbreekt; tests geven een eigen (of lege) mee, zodat ze nooit
+ *  de echte .env.local van de machine inlezen. */
+export function getSpotifyConfig(recoverEnv: () => void = recoverSpotifyEnv): SpotifyConfig {
+  if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) recoverEnv();
+
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
   const redirectUri = getSpotifyRedirectUri();
@@ -60,8 +72,8 @@ export function getSpotifyConfig(): SpotifyConfig {
   if (!clientId || !clientSecret) {
     throw new SpotifyConfigError(
       "SPOTIFY_CLIENT_ID en/of SPOTIFY_CLIENT_SECRET ontbreken. Zet je ingevulde .env.local in " +
-        "%OneDrive%\\dkj-solutions\\dkj-music-library en start `npm run dev` opnieuw -- die neemt hem " +
-        "dan vanzelf over (zie de README, 'Starten')."
+        "%OneDrive%\\dkj-solutions\\dkj-music-library -- staat hij daar al (OneDrive kan nog aan het " +
+        "synchroniseren zijn), probeer het dan zo opnieuw, of draai `npm run env:onedrive` (zie de README, 'Starten')."
     );
   }
 
