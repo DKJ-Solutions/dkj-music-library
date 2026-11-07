@@ -2,7 +2,31 @@
 
 ## [Unreleased]
 
-**31 / 35 minor entries** <!-- pending-tally -->
+**32 / 36 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/142-brandbook-pin · 20261107-154518Z
+
+De app draait op de brand book-kopieën van dkj-policy v6.9.0: `house-style.css` en `house-theme.js` vervangen, en
+`house-product.css` erbij, dat sinds die release de site-header en de breadcrumb-balk draagt. De eigen laag leest de
+nieuwe tokennamen (`--primary-muted`, `--bg-1..4`, `--radius-3`) in plaats van de vervallen namen. De pin-bevindingen
+van de `house-style`-check zijn daarmee weg.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+De vervallen tokennamen zouden bij een volgende brand book-release stil hun kleur verliezen; nu leest de eigen laag de
+namen die de huisstijl definieert.
+
+**Score:** 1
+
+#### Pull Request
+
+Brand book-kopieën naar v6.9.0, met house-product.css en de nieuwe tokennamen
+
+[PR #156](https://github.com/DKJ-Solutions/dkj-music-library/pull/156)
+
+---
 
 ### DEPLOY: feat/134-move-track-between-werkbakken · 20261107-154117Z
 
