@@ -55,7 +55,7 @@ This widens the hub's Spotify write scope: tracks are now added and removed, but
 ### TEST
 
 - [x] Affected suites, `tsc --noEmit` and `eslint` clean; a werkbak page renders with the menu on every row (HTTP 200). The full gate runs in `ship-pr` after the owner's look
-- [ ] The owner looks at a werkbak page and moves one track
+- [~] The owner looks at a werkbak page and moves one track -- not done as a separate look: davekokbwj approved the branch through issues-sweep-reviews on November 7, 2026 without one.
 
 ### DEPLOY: feat/134-move-track-between-werkbakken
 
