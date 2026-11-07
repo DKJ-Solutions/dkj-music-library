@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**35 / 43 minor entries** <!-- pending-tally -->
+**35 / 44 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/143-dkj-folder-move · 20261107-180944Z
+
+The workflow folder moved from the repo root `dkj-policy/` to `.dkj/dkj-policy/`, the home every plugin of the marketplace now uses (DKJ-Solutions/dkj-marketplace#3870). `scripts/repo-config.ps1` points at the new paths, and `CLAUDE.md` imports the `dkj-solutions` extension at its current path, so that extension's rules load again.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+N/A
+
+**Score:** N/A
+
+#### Pull Request
+
+Move the workflow folder from dkj-policy/ to .dkj/dkj-policy/
+
+[PR #165](https://github.com/DKJ-Solutions/dkj-music-library/pull/165)
+
+---
 
 ### DEPLOY: fix/148-house-style-type-colour · 20261107-174049Z
 
