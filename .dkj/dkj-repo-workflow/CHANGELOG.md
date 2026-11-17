@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**35 / 46 minor entries** <!-- pending-tally -->
+**35 / 47 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/migrate-dkj-marketplace-v7 · 20261117-213538Z
+
+This repo now runs on dkj-marketplace v7.0.0: the workflow plugin under its new name, the developers team enabled, the workflow folder at `.dkj/dkj-repo-workflow/`, and the CI runners and gate callers pinned at v7.0.0. `npm run library:publish` finds the renamed plugin again.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+N/A -- the app itself does not change; only the workflow it is built with.
+
+**Score:** N/A
+
+#### Pull Request
+
+Migrate to dkj-marketplace v7.0.0
+
+[PR #173](https://github.com/DKJ-Solutions/dkj-music-library/pull/173)
+
+---
 
 ### DEPLOY: fix/169-source-branch-prefixes · 20261107-193837Z
 
