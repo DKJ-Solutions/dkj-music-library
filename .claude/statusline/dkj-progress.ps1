@@ -1,8 +1,8 @@
 <#
-    dkj-policy statusline shim -- placed by adopt-statusline.ps1 (issue #2103). DO NOT EDIT.
+    dkj-repo-workflow statusline shim -- placed by adopt-statusline.ps1 (issue #2103). DO NOT EDIT.
 
     It exists so .claude/settings.json can name a path that never changes. The script it hands over to
-    lives in the dkj-policy plugin payload, whose cache directory is keyed by VERSION -- so a path
+    lives in the dkj-repo-workflow plugin payload, whose cache directory is keyed by VERSION -- so a path
     written straight into settings.json would go on rendering the version installed the day it was
     written, silently, forever. This file resolves the CURRENT payload instead, every time it runs.
 
@@ -58,11 +58,11 @@ try {
     # '<plugin>@<marketplace>', and the marketplace half is exactly the part that has changed under
     # this repo before -- so pinning the full id would strand every consumer whose marketplace is
     # named anything else, which is the staleness this whole file exists to avoid, arriving through
-    # the matcher instead of through the path. ('dkj-policy-bwj@...' does not match: the character
+    # the matcher instead of through the path. ('dkj-repo-workflow-bwj@...' does not match: the character
     # after the name has to be the '@'.)
     #
     # WHICH MAKES SEVERAL MATCHES POSSIBLE, AND THAT IS THE CASE TO GET RIGHT. A marketplace rename
-    # leaves a stale 'dkj-policy@<old>' record beside the current one, both naming this repo --
+    # leaves a stale 'dkj-repo-workflow@<old>' record beside the current one, both naming this repo --
     # check-report-lib's Get-InstallRecord documents that exact pair as real and hands back ALL of
     # them so a caller can see the disagreement. This file cannot do that: its contract is to print
     # nothing and never report. So it collects every candidate and takes the most recently updated,
@@ -71,7 +71,7 @@ try {
     $matched  = @()
     $pathless = @()
     foreach ($entry in @($admin.plugins.PSObject.Properties)) {
-        if ("$($entry.Name)" -notlike 'dkj-policy@*') { continue }
+        if ("$($entry.Name)" -notlike 'dkj-repo-workflow@*') { continue }
         foreach ($record in @($entry.Value)) {
             if (-not $record -or -not $record.installPath) { continue }
             $projectPath = "$($record.projectPath)".TrimEnd('\', '/')

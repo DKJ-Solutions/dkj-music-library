@@ -4,7 +4,7 @@
     het potloodje in het trackregister) met een commando op main.
 .DESCRIPTION
     De app schrijft een wijziging meteen in data/library/export/, en die map staat in git. Direct op main
-    committen mag niet (dkj-policy: alles via branch + PR), dus dit script loopt die route voor je, voor
+    committen mag niet (dkj-repo-workflow: alles via branch + PR), dus dit script loopt die route voor je, voor
     ALLEEN de export (Dave, 29 september 2026):
 
       1. weigert als je niet op main staat, of als er naast data/library/export/ nog iets gewijzigd is --
@@ -18,7 +18,7 @@
 
     -DryRun doet alleen stap 1 en 2 en zegt wat hij zou doen.
 
-    De plugin-scripts komen uit de dkj-policy-installatie van DEZE checkout
+    De plugin-scripts komen uit de dkj-repo-workflow-installatie van DEZE checkout
     (~/.claude/plugins/installed_plugins.json), niet uit een vaste versie.
     Pure ASCII (repo convention for .ps1).
 #>
@@ -36,11 +36,12 @@ function Stop-Publish([string]$Message) {
 
 function Get-PolicyScriptsRoot {
     $registry = Join-Path $env:USERPROFILE '.claude/plugins/installed_plugins.json'
-    if (-not (Test-Path $registry)) { Stop-Publish "geen $registry -- is dkj-policy geinstalleerd?" }
-    # De marketplace heet sinds v6.0.0 `dkj-marketplace` (#120). Een machine die nog niet opnieuw heeft
-    # geinstalleerd, staat nog onder de oude naam in het register: dus beide namen.
+    if (-not (Test-Path $registry)) { Stop-Publish "geen $registry -- is dkj-repo-workflow geinstalleerd?" }
+    # De plugin heet sinds v7.0.0 `dkj-repo-workflow` (was `dkj-policy`), de marketplace sinds v6.0.0
+    # `dkj-marketplace` (#120). Na de hernoeming blijft het oude dkj-policy-record uitgeschakeld in het
+    # register staan, dus alleen de nieuwe naam telt: een oud record zou scripts van 6.x laden.
     $plugins = (Get-Content $registry -Raw | ConvertFrom-Json).plugins
-    $installs = @($plugins.'dkj-policy@dkj-marketplace') + @($plugins.'dkj-policy@dkj-claude-plugins') | Where-Object { $_ }
+    $installs = @($plugins.'dkj-repo-workflow@dkj-marketplace') | Where-Object { $_ }
     # Voor deze checkout gelden twee soorten records: een projectinstallatie op dit pad, en een installatie
     # voor de hele machine (scope user, zonder projectPath). Ze kunnen verschillen (gemeten 29 september
     # 2026: project 5.8.0, user 5.9.0, en de sessie laadde 5.9.0), dus de nieuwste van de twee wint.
@@ -48,9 +49,9 @@ function Get-PolicyScriptsRoot {
     $mine = @($installs | Where-Object {
         ($_.scope -eq 'user') -or ($_.projectPath -and ((Resolve-Path $_.projectPath -ErrorAction SilentlyContinue).Path -eq $here))
     } | Sort-Object { [version]$_.version } -Descending)
-    if ($mine.Count -eq 0) { Stop-Publish "dkj-policy is niet voor deze checkout geinstalleerd ($root)." }
+    if ($mine.Count -eq 0) { Stop-Publish "dkj-repo-workflow is niet voor deze checkout geinstalleerd ($root)." }
     $scripts = Join-Path $mine[0].installPath 'scripts'
-    if (-not (Test-Path $scripts)) { Stop-Publish "de dkj-policy-installatie mist $scripts." }
+    if (-not (Test-Path $scripts)) { Stop-Publish "de dkj-repo-workflow-installatie mist $scripts." }
     return $scripts
 }
 
@@ -93,7 +94,7 @@ try {
 
     # 3. De branch en zijn document.
     Invoke-Step "branch $name" { powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $scripts 'task/new-branch.ps1') -Name $name -Title $title }
-    $docPath = Join-Path $root ('dkj-policy/' + ($name -replace '/', '-') + '.md')
+    $docPath = Join-Path $root ('.dkj/dkj-repo-workflow/' + ($name -replace '/', '-') + '.md')
     $doc = [IO.File]::ReadAllText($docPath)
     $nl = if ($doc.Contains("`r`n")) { "`r`n" } else { "`n" }
     $doc = $doc.Replace('- [ ] TODO: the first step of this branch', "- [x] Export uit de app gecommit: $summary")
