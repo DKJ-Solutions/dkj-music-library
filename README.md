@@ -348,7 +348,7 @@ Het script (`scripts/library/publish-library.ps1`) weigert als je niet op `main`
 `data/library/export/` nog iets anders gewijzigd is. Anders zou er werk meeliften dat niet in een
 datawijziging hoort. Daarna maakt het een branch `feat/library-<tijd>`, vult het changelog-item met
 wat er veranderde (bijvoorbeeld "2 tracks gewijzigd (dkj_rating 2)"), en draait het de gewone `open-pr`
-en `ship-pr` van de dkj-policy-plugin. Je eindigt op een bijgewerkte `main`.
+en `ship-pr` van de dkj-repo-workflow-plugin. Je eindigt op een bijgewerkte `main`.
 
 ### Velden met vaste keuzes
 

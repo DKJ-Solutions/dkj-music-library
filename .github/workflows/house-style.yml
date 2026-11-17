@@ -5,7 +5,7 @@
 # (DKJ-Solutions/dkj-claude-plugins#3035), which runs check-house-style.ps1 against the checksums on
 # the skill page. NEVER pull_request_target: the gate dot-sources this PR's scripts/repo-config.ps1.
 #
-# @main IS DELIBERATE, for the reason branch-entry.yml states.
+# PINNED to the adopted release (DKJ-Solutions/dkj-marketplace#4246), as branch-entry.yml states.
 name: House style
 
 on:
@@ -16,4 +16,6 @@ permissions:
 
 jobs:
   house-style:
-    uses: DKJ-Solutions/dkj-marketplace/.github/workflows/reusable-house-style.yml@main
+    uses: DKJ-Solutions/dkj-marketplace/.github/workflows/reusable-house-style.yml@v7.0.0
+    with:
+      scripts-ref: v7.0.0
