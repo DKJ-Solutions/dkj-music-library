@@ -16,6 +16,6 @@ permissions:
 
 jobs:
   house-style:
-    uses: DKJ-Solutions/dkj-marketplace/.github/workflows/reusable-house-style.yml@v7.0.0
+    uses: DKJ-Solutions/dkj-marketplace/.github/workflows/reusable-house-style.yml@v7.1.0
     with:
-      scripts-ref: v7.0.0
+      scripts-ref: v7.1.0

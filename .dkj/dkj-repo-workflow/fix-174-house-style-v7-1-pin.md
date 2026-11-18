@@ -39,19 +39,35 @@
 
 ### PLAN
 
+The house-style gate has been red since #173 moved the repo to dkj-marketplace v7 without taking the
+v7.0.0 brand book copies, and `--fg-3` was retired upstream (#4046). It blocks every PR, #175 included
+(issue #174). Take the v7.1.0 copies (the release the session runs) and move the gate's caller with them,
+in one change, as the dkj-brandbook skill requires.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] Vendor `house-style.css`, `house-product.css` and `house-theme.js` at v7.1.0, each sha256-checked against the skill's pin table
+- [x] Vendor `InterVariable.woff2` and `LICENSE-Inter.txt` beside `house-style.css` (its `@font-face` loads the font relative to itself); mark the font `binary` in `.gitattributes`
+- [x] Rename `var(--fg-3)` to `var(--fg-1)` in `_mirror.scss` and `_track-register.scss` (one text colour since #4046)
+- [x] Point `.github/workflows/house-style.yml` at `@v7.1.0` and `scripts-ref: v7.1.0`
 
 ### TEST
 
+- [x] `check-house-style.ps1` against the v7.1.0 skill page: `[OK] the brand book holds at v7.1.0`
+- [x] `npm run build` passes, so the font URL resolves
+
 ### DEPLOY: fix/174-house-style-v7-1-pin
 
-**Score:**
+The app now renders with the v7.1.0 brand book, including the house font Inter, and the house-style check on
+pull requests is green again. The mirror and the track register's secondary text takes the one house text colour.
+
+**Score:** 2
 
 #### What makes this deploy extra special
 
-**Score:**
+For the owner using the app: the pages pick up the brand book's current look and font.
+
+**Score:** 2
 
 #### Pull Request
 
