@@ -39,19 +39,28 @@
 
 ### PLAN
 
+Issue #172 asks to adopt Priya (02-31) and Uma (04-32). The roster was still the untouched `(VUL-IN)` scaffold, so two rows alone turned the pending state into 19 roster errors (measured with `check-roster-sync`): the whole roster is written instead.
+
 ### CREATE
 
-- [ ] TODO: the first step of this branch
+- [x] `sync-roster` placed the empty lens scaffolds for 02-31 and 04-32.
+- [x] `SPECIALISTS.md` carries the full roster: all 21 specialists, each with its lens; the persona-only ids (Chris, Bianca, Derek, Rendall) named from their persona headings.
 
 ### TEST
 
+- [x] `check-roster-sync.ps1`: 0 errors (was 4 errors plus the ROSTER-PENDING signal for 19 specialists), no orphan roster tokens or lens files.
+
 ### DEPLOY: docs/172-adopt-priya-uma
 
-**Score:**
+The specialists roster now lists the whole team, Priya (Product Owner) and Uma (UX Designer) included, and the roster check at session start is clean again. Every lens is still an empty scaffold until its specialist has work here.
+
+**Score:** 1
 
 #### What makes this deploy extra special
 
-**Score:**
+N/A
+
+**Score:** 0
 
 #### Pull Request
 
