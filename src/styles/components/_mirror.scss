@@ -9,7 +9,7 @@
 }
 
 .mirror-status {
-  color: var(--fg-3);
+  color: var(--fg-1);
 
   &.is-error {
     color: var(--negative-5);
@@ -31,9 +31,9 @@
 }
 
 .mirror-list__label {
-  color: var(--fg-3);
+  color: var(--fg-1);
 }
 
 .mirror-list__more {
-  color: var(--fg-3);
+  color: var(--fg-1);
 }

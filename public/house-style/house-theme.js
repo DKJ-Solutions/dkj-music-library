@@ -215,15 +215,18 @@
   function set(id) { if (!byId(id)) return; try { localStorage.setItem(key, id); } catch (e) {} apply(); }
   function reset() { try { localStorage.removeItem(key); } catch (e) {} apply(); }
 
-  /* The site header's menu (house-style.css, "Site header menu"): its toggle opens the drawer it controls as a modal,
-     so Escape, the focus trap and the return of focus to the toggle are the browser's. Listening on the document
-     means a header drawn after this script ran needs no call. A click on the close button or on the backdrop shuts it,
-     and so does the header growing wide enough to show its links again, which hides the toggle. */
+  /* The site header's dialogs (house-product.css, "Site header menu" and "The header's two sheet triggers"): the menu
+     toggle, the path title and the More cell each open the dialog they control as a modal, so Escape, the focus trap
+     and the return of focus to the trigger are the browser's. Listening on the document means a header drawn after
+     this script ran needs no call. A click on the close button or on the backdrop shuts it, and so does its trigger
+     disappearing as the header grows wide (#4095 added the actions sheet; its path sheet is gone). A bottom bar's More
+     (house-product.css, "Bottom bar", #4094) is such a toggle too, and the window outgrowing the bar shuts it the same way. */
+  var TRIGGERS = '.site-header__menu-toggle, .site-header__more, .bottom-bar__more';
   function menuOf(toggle) { var d = document.getElementById(toggle.getAttribute('aria-controls') || ''); return d && d.showModal ? d : null; }
   document.addEventListener('click', function (e) {
     var t = e.target && e.target.closest ? e.target : null;
     if (!t) return;
-    var toggle = t.closest('.site-header__menu-toggle');
+    var toggle = t.closest(TRIGGERS);
     if (toggle) {
       var d = menuOf(toggle);
       if (!d || d.open) return;
@@ -232,11 +235,24 @@
       d.addEventListener('close', function () { toggle.setAttribute('aria-expanded', 'false'); }, { once: true });
       return;
     }
-    var menu = t.closest('dialog.site-menu');
+    /* A device preview's version toggle (house-product.css, "Device preview", #4112): the pressed button's
+       data-variant is shown, every other [data-variant] of the same stage hidden. */
+    var pick = t.closest('.device-stage .seg button[data-variant]');
+    if (pick) {
+      var stage = pick.closest('.device-stage'), v = pick.getAttribute('data-variant');
+      var parts = stage.querySelectorAll('[data-variant]');
+      for (var i = 0; i < parts.length; i++) {
+        if (parts[i].closest('.device-stage') !== stage) continue;
+        var on = parts[i].getAttribute('data-variant') === v;
+        if (parts[i].tagName === 'BUTTON') parts[i].setAttribute('aria-pressed', String(on)); else parts[i].hidden = !on;
+      }
+      return;
+    }
+    var menu = t.closest('dialog.site-menu, dialog.dialog--sheet');
     if (menu && (t === menu || t.closest('.dialog__close'))) menu.close();
   });
   window.addEventListener('resize', function () {
-    var toggles = document.querySelectorAll('.site-header__menu-toggle[aria-expanded="true"]');
+    var toggles = document.querySelectorAll('.site-header [aria-controls][aria-expanded="true"], .bottom-bar__more[aria-expanded="true"]');
     for (var i = 0; i < toggles.length; i++) {
       var d = menuOf(toggles[i]);
       if (d && d.open && !toggles[i].offsetParent) d.close();
@@ -248,6 +264,32 @@
     var onChange = function () { if (!byId(stored())) apply(); };
     if (mq.addEventListener) mq.addEventListener('change', onChange); else if (mq.addListener) mq.addListener(onChange);
   }
+  /* A table that stacks on a phone (house-style.css, ".table-wrap--stack", #4129): each body cell gets its column
+     head's text as data-label, the name the stacked row shows above its value. A cell that has one keeps it. */
+  function labelStackTables() {
+    var tables = document.querySelectorAll('.table-wrap--stack table');
+    for (var i = 0; i < tables.length; i++) {
+      var head = tables[i].tHead && tables[i].tHead.rows.length ? tables[i].tHead.rows[tables[i].tHead.rows.length - 1] : null;
+      if (!head) continue;
+      var names = [];
+      for (var h = 0; h < head.cells.length; h++) {
+        for (var s = 0; s < (head.cells[h].colSpan || 1); s++) names.push((head.cells[h].textContent || '').replace(/\s+/g, ' ').trim());
+      }
+      for (var b = 0; b < tables[i].tBodies.length; b++) {
+        var rows = tables[i].tBodies[b].rows;
+        for (var r = 0; r < rows.length; r++) {
+          var col = 0;
+          for (var c = 0; c < rows[r].cells.length; c++) {
+            var cell = rows[r].cells[c];
+            if (!cell.hasAttribute('data-label') && names[col]) cell.setAttribute('data-label', names[col]);
+            col += cell.colSpan || 1;
+          }
+        }
+      }
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', labelStackTables); else labelStackTables();
+
   apply();
   applyWidth();
   window.DKJTheme = { themes: THEMES.slice(), set: set, reset: reset, picker: picker, settings: settings, current: function () { return root.getAttribute('data-theme'); },
