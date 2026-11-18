@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**37 / 49 minor entries** <!-- pending-tally -->
+**37 / 50 minor entries** <!-- pending-tally -->
+
+### DEPLOY: docs/172-adopt-priya-uma · 20261118-201834Z
+
+The specialists roster now lists the whole team, Priya (Product Owner) and Uma (UX Designer) included, and the roster check at session start is clean again. Every lens is still an empty scaffold until its specialist has work here.
+
+**Score:** 1
+
+#### What makes this deploy extra special
+
+N/A
+
+**Score:** N/A
+
+#### Pull Request
+
+Adopt Priya (02-31) and Uma (04-32) into the roster
+
+[PR #177](https://github.com/DKJ-Solutions/dkj-music-library/pull/177)
+
+---
 
 ### DEPLOY: feat/library-export-onedrive · 20261118-200921Z
 
