@@ -938,7 +938,7 @@ a.register-menu-item:hover {
   border: 1px solid transparent;
   border-radius: var(--radius);
   background: none;
-  color: var(--fg-3);
+  color: var(--fg-1);
   cursor: pointer;
 
   &:hover,
@@ -957,5 +957,5 @@ a.register-menu-item:hover {
   margin: 0;
   padding: 4px 10px;
   font-size: var(--text-xs);
-  color: var(--fg-3);
+  color: var(--fg-1);
 }
