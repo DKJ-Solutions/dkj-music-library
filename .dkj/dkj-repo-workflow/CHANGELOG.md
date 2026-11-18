@@ -2,7 +2,28 @@
 
 ## [Unreleased]
 
-**35 / 47 minor entries** <!-- pending-tally -->
+**36 / 48 minor entries** <!-- pending-tally -->
+
+### DEPLOY: fix/174-house-style-v7-1-pin · 20261118-200436Z
+
+The app now renders with the v7.1.0 brand book, including the house font Inter, and the house-style check on
+pull requests is green again. The mirror and the track register's secondary text takes the one house text colour.
+
+**Score:** 2
+
+#### What makes this deploy extra special
+
+For the owner using the app: the pages pick up the brand book's current look and font.
+
+**Score:** 2
+
+#### Pull Request
+
+Take the v7.1.0 brand book and drop the retired --fg-3
+
+[PR #176](https://github.com/DKJ-Solutions/dkj-music-library/pull/176)
+
+---
 
 ### DEPLOY: fix/migrate-dkj-marketplace-v7 · 20261117-213538Z
 
