@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-**36 / 48 minor entries** <!-- pending-tally -->
+**37 / 49 minor entries** <!-- pending-tally -->
+
+### DEPLOY: feat/library-export-onedrive · 20261118-200921Z
+
+The track library now travels between machines through OneDrive instead of git. A rating, a local-file link or a sync is written to `%OneDrive%\dkj-solutions\dkj-music-library\library-export\` and reaches the other machine by itself: no commit, no PR, and the library is no longer public. `npm run library:publish` is gone. After pulling, run `npm run library:sync` once per machine, starting with the machine where the library last changed (README, "De overstap van git naar OneDrive"). The old export stays in the git history.
+
+**Score:** 3
+
+#### What makes this deploy extra special
+
+For the owner using the app: changing a rating no longer costs a PR, and the ratings, notes and playlist names stop being public.
+
+**Score:** 2
+
+#### Pull Request
+
+Move the library export from git to OneDrive
+
+[PR #175](https://github.com/DKJ-Solutions/dkj-music-library/pull/175)
+
+---
 
 ### DEPLOY: fix/174-house-style-v7-1-pin · 20261118-200436Z
 
