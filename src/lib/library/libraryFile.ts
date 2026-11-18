@@ -1,18 +1,34 @@
-// DE BIBLIOTHEEK IN GIT: een tekst-export naast de database, zodat elke kloon van de repo hem heeft.
+// DE BIBLIOTHEEK OP ELKE MACHINE: een tekst-export naast de database, in OneDrive.
 //
-// data/library/library.db blijft lokaal en git-ignored: een binair SQLite-bestand valt in git niet te
-// vergelijken of samen te voegen. Wat wél in git staat, is data/library/export/:
+// data/library/library.db blijft lokaal: een binair SQLite-bestand hoort niet in een map die OneDrive
+// synchroniseert (twee machines die er tegelijk in schrijven, of een half gesynchroniseerd bestand,
+// maken hem stuk). Wat wél reist, is de tekst-export:
 //   - tracks.ndjson             één regel per nummer (dkj_track_id, created_at, updated_at + fields.ts),
 //                               gesorteerd op dkj_track_id
 //   - spotify_track_ids.ndjson  de koppeltabel uit trackIds.ts, gesorteerd op dkj_track_id en Spotify-ID
 //   - artists.ndjson            de artiesten uit artistIds.ts, gesorteerd op dkj_artist_id (ontbreekt in
 //                               een export van vóór de artiest-ID's; dan is de tabel gewoon leeg)
+//
+// WAAR DE EXPORT STAAT (getLibraryExportDir): LIBRARY_EXPORT_DIR als die gezet is; anders
+// %OneDrive%\dkj-solutions\dkj-music-library\library-export, naast de bewaarde .env.local
+// (src/lib/env/onedriveEnv.ts); en zonder OneDrive (CI, een machine zonder OneDrive) data/library/export/.
+// Tot 18 november 2026 stond de export in git, in data/library/export/. Elke wijziging (een tier via het
+// potloodje) moest dan via een branch en een PR naar main (`npm run library:publish`), en de repo is
+// publiek, dus ook je ratings en notities waren openbaar. Nu reist de export via OneDrive: geen commit,
+// geen PR, niet openbaar (Dave, 18 november 2026). De oude export blijft wel in de git-historie staan.
+//
+// De OneDrive-variabele komt van Windows zelf en geldt dus voor de dev-server en de scripts (tsx) gelijk;
+// LIBRARY_EXPORT_DIR in .env.local leest alleen de dev-server, niet een script.
+//
 // Eén rij per regel en een vaste volgorde, dus een diff laat precies zien wat er veranderde.
+//
+// Werk op één machine tegelijk aan de bibliotheek: schrijven twee machines voordat OneDrive de ene export
+// naar de andere heeft gebracht, dan maakt OneDrive een conflict-kopie en wint de laatste schrijver.
 //
 // DE EXPORT IS DE BRON, DE DATABASE IS EEN KOPIE. openLibrary() vergelijkt bij het openen de hash
 // van de export met de hash die de database de laatste keer schreef of las (tabel library_meta):
-//   - verschillen ze (verse kloon, of een `git pull` met nieuwe data), dan wordt de database uit de
-//     export opnieuw opgebouwd;
+//   - verschillen ze (een eerste start op een machine, of OneDrive bracht een nieuwere export van je
+//     andere machine), dan wordt de database uit de export opnieuw opgebouwd;
 //   - is er nog geen export maar wel data, dan wordt de export nu geschreven.
 // Dat is veilig omdat elke schrijvende stap via withLibrary() loopt, die direct daarna exporteert.
 // En voor het geval dat misgaat (een crash, een volle schijf, of het tweede bestand dat niet
@@ -45,6 +61,7 @@ import { ARTISTS_TABLE, ensureArtistsTable } from "./artistIds";
 import { LEGACY_TRACK_ID_KEY, TRACK_FIELDS, TRACK_ID_KEY, type FieldDef } from "./fields";
 import { SPOTIFY_LINK_TABLE, ensureSpotifyLinkTable } from "./trackIds";
 import { countTracks, listTracks, toSqlValue, type TrackValue } from "./trackStore";
+import { getOneDriveRoot } from "../env/onedriveEnv";
 
 const DEFAULT_EXPORT_DIR = path.join(process.cwd(), "data", "library", "export");
 const TRACKS_FILE = "tracks.ndjson";
@@ -55,9 +72,14 @@ const HASH_KEY = "export_hash";
 /** Staat als hash in library_meta zolang de database wijzigingen heeft die nog niet geëxporteerd zijn. */
 const PENDING = "pending";
 
-export function getLibraryExportDir(): string {
-  const override = process.env.LIBRARY_EXPORT_DIR;
-  return override ? path.resolve(override) : DEFAULT_EXPORT_DIR;
+/** De export in OneDrive, onder %OneDrive% (zie de kop van dit bestand). */
+export const ONEDRIVE_EXPORT_SUBPATH = path.join("dkj-solutions", "dkj-music-library", "library-export");
+
+export function getLibraryExportDir(env: Record<string, string | undefined> = process.env): string {
+  const override = env.LIBRARY_EXPORT_DIR;
+  if (override) return path.resolve(override);
+  const oneDrive = getOneDriveRoot(env);
+  return oneDrive ? path.join(oneDrive, ONEDRIVE_EXPORT_SUBPATH) : DEFAULT_EXPORT_DIR;
 }
 
 function ensureMetaTable(db: DatabaseSync): void {
@@ -296,7 +318,7 @@ export function openLibrary(
 }
 
 /** Opent de bibliotheek, voert `work` uit, exporteert het resultaat en sluit af. Voor elke stap die
- *  schrijft, zodat de export in git nooit achterloopt. */
+ *  schrijft, zodat de export nooit achterloopt. */
 export function withLibrary<T>(work: (db: DatabaseSync) => T, dbPath?: string, dir?: string): T {
   const { db } = openLibrary(dbPath, dir);
   try {

@@ -10,7 +10,7 @@
 // daar (ook in submappen) naar elk `Streaming_History_Audio_*.json`; de video-bestanden doen niet mee.
 //
 // Elke run telt alles opnieuw en overschrijft de vorige aantallen, dus met een nieuwere export draai je
-// dit gewoon nog een keer. Daarna staat het resultaat in de export: commit data/library/export/.
+// dit gewoon nog een keer. Daarna staat het resultaat in de export (in OneDrive).
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { withLibrary } from "../../src/lib/library/libraryFile";
@@ -72,7 +72,7 @@ try {
   const result = withLibrary((db) => applyPlaycounts(db, plays));
   console.log(
     `Klaar: ${result.played} tracks met plays, ${result.changed} aantallen veranderd, ` +
-      `${result.unmatchedPlays} plays van tracks die niet in de bibliotheek staan. Commit data/library/export/.`
+      `${result.unmatchedPlays} plays van tracks die niet in de bibliotheek staan.`
   );
 } catch (err) {
   console.error(`Playcounts importeren mislukt: ${err instanceof Error ? err.message : String(err)}`);

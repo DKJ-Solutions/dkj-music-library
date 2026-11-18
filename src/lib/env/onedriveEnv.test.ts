@@ -2,7 +2,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { getOneDriveEnvPath, parseEnvFile, recoverEnvFromOneDrive, syncEnvFromOneDrive } from "./onedriveEnv";
+import { getOneDriveEnvPath, getOneDriveRoot, parseEnvFile, recoverEnvFromOneDrive, syncEnvFromOneDrive } from "./onedriveEnv";
 
 const FILLED = "SPOTIFY_CLIENT_ID=abc\nSPOTIFY_CLIENT_SECRET=def\n";
 const UNFILLED = "SPOTIFY_CLIENT_ID=vul-hier-je-client-id-in\nSPOTIFY_CLIENT_SECRET=vul-hier-je-client-secret-in\n";
@@ -30,6 +30,17 @@ describe("getOneDriveEnvPath", () => {
 
   it("geeft null zonder OneDrive", () => {
     expect(getOneDriveEnvPath({})).toBeNull();
+  });
+});
+
+describe("getOneDriveRoot", () => {
+  it("neemt OneDrive, en anders de consumer- of zakelijke variant", () => {
+    expect(getOneDriveRoot({ OneDrive: "X:\\od", OneDriveConsumer: "Y:\\od" })).toBe("X:\\od");
+    expect(getOneDriveRoot({ OneDriveCommercial: "Z:\\od" })).toBe("Z:\\od");
+  });
+
+  it("geeft null zonder OneDrive", () => {
+    expect(getOneDriveRoot({})).toBeNull();
   });
 });
 

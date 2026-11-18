@@ -8,8 +8,8 @@
 //   - een playlist met een beschrijving hoort sowieso bij MMC;
 // Alleen zolang het veld leeg is, net als de andere afgeleide velden: wat je zelf invult, blijft staan.
 //
-// De werelden komen uit de snapshot en de worldStore, die allebei niet in git staan; de uitkomst wel
-// (in de export), dus het register toont de groepen op elke machine.
+// De werelden komen uit de snapshot en de worldStore, die allebei lokaal blijven; de uitkomst staat in de
+// export (in OneDrive), dus het register toont de groepen op elke machine.
 //
 // planGroups() is puur; fillGroupsFromWorlds() schrijft.
 import type { DatabaseSync } from "node:sqlite";

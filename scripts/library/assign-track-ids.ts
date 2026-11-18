@@ -11,7 +11,7 @@ import { fillGroupsFromWorlds } from "../../src/lib/library/groupFromWorlds";
 import { applyDjcylowMixes } from "../../src/lib/library/djcylowMixes";
 import { getMixLinks } from "../../src/lib/mixes/mixLinks";
 import { getEnrichedSnapshot } from "../../src/lib/spotify/enrichedPlaylists";
-import { withLibrary } from "../../src/lib/library/libraryFile";
+import { getLibraryExportDir, withLibrary } from "../../src/lib/library/libraryFile";
 import { countTracks } from "../../src/lib/library/trackStore";
 import { readSnapshot } from "../../src/lib/spotify/snapshotStore";
 import { readPrivateRules } from "../../src/lib/spotify/privateRules";
@@ -69,7 +69,7 @@ try {
   if (mixRatingsFilled > 0) console.log(`dkj_mix_rating gelijk aan dkj_rating gezet bij ${mixRatingsFilled} tracks`);
   if (groupsFilled > 0) console.log(`dkj_group uit de werelden gevuld bij ${groupsFilled} tracks`);
   if (yearsFilled > 0) console.log(`year uit Spotify gevuld bij ${yearsFilled} tracks`);
-  console.log("Export bijgewerkt in data/library/export/ -- commit die map om hem op je andere machines te hebben.");
+  console.log(`Export bijgewerkt in ${getLibraryExportDir()} -- OneDrive brengt hem naar je andere machines.`);
 } catch (err) {
   console.error(`Toekennen mislukt: ${err instanceof Error ? err.message : String(err)}`);
   process.exit(1);

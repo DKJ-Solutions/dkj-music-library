@@ -1,7 +1,7 @@
 // POST /api/local/link -- koppelt een lokaal bestand zelf aan een track (dkj_local_file), of maakt dat los,
 // vanaf /compare/pc-spotify (#151, PcSpotifyLinks.tsx).
-// Schrijft in de bibliotheek via withLibrary(), dus de export in data/library/export/ is meteen bij;
-// commit die map om de koppeling op je andere machines te hebben. Naar Spotify gaat niets.
+// Schrijft in de bibliotheek via withLibrary(), dus de export (in OneDrive, libraryFile.ts) is meteen bij,
+// en OneDrive brengt de koppeling naar je andere machines. Naar Spotify gaat niets.
 //
 // Body: { trackId: string; localFile: string | null }  ->  { trackId, localFile } zoals opgeslagen.
 //

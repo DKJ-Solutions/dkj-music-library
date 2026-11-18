@@ -41,15 +41,15 @@ niet meer als redirect-URI. De redirect-URI in `.env.local` moet **exact** gelij
 
 ## Waar de data staat
 
-Deze repo is publiek. Geheimen en Spotify-brondata blijven daarom buiten git, op één map na:
+Deze repo is publiek. Geheimen, Spotify-brondata en je bibliotheek blijven daarom buiten git:
 
-| Map | Inhoud | In git? |
+| Map | Inhoud | Waar? |
 |---|---|---|
-| `.data/spotify/` | geheimen: de OAuth-tokens | nee |
-| `data/spotify/` | opgehaalde brondata: de snapshot, de historie, en de BPM-, wereld- en afgevinkt-stores | nee |
-| `data/library/library.db` | de trackdatabase zelf (een lokale kopie, zie hieronder) | nee |
-| `data/library/export/` | de trackbibliotheek als tekst: je eigen ID's en alle velden | **ja, en dus openbaar** |
-| `data/musicbrainz/` | de MusicBrainz-jaarcache (zie hieronder) | nee |
+| `.data/spotify/` | geheimen: de OAuth-tokens | lokaal |
+| `data/spotify/` | opgehaalde brondata: de snapshot, de historie, en de BPM-, wereld- en afgevinkt-stores | lokaal |
+| `data/library/library.db` | de trackdatabase zelf (een lokale kopie, zie hieronder) | lokaal |
+| `%OneDrive%\dkj-solutions\dkj-music-library\library-export\` | de trackbibliotheek als tekst: je eigen ID's en alle velden | **OneDrive**, op elke machine dezelfde |
+| `data/musicbrainz/` | de MusicBrainz-jaarcache (zie hieronder) | lokaal |
 
 ### Persoonlijke regels: `data/spotify/private-rules.json`
 
@@ -81,7 +81,7 @@ Een bestand dat anders heet (`ft.` in plaats van `feat.`, een hernoemd bestand) 
 het lokale bestand waarvan artiest en titel het meest op de track lijken. Met **Koppel** bevestig je het
 voorstel, of je kiest eerst een ander bestand; onder *Zelf koppelen* koppel je elke track uit de
 downloadlijst. Zo'n koppeling staat in `dkj_local_file` (het pad vanaf de muziekmap), gaat voor op
-`dkj_file` en komt met de export in git mee naar je andere machines.
+`dkj_file` en komt met de export via OneDrive mee naar je andere machines.
 
 ### Bestaande data uit life-hub meenemen
 
@@ -101,26 +101,46 @@ hoeft niets extra's geïnstalleerd te worden. Wil je het bestand ergens anders, 
 
 ### Op elke machine dezelfde bibliotheek
 
-De database zelf staat niet in git: een binair bestand valt niet te vergelijken of samen te voegen.
-Wat wel in git staat, is een tekst-export in `data/library/export/`:
+De database zelf blijft lokaal: een binair SQLite-bestand hoort niet in een map die OneDrive
+synchroniseert. Wat reist, is een tekst-export in OneDrive, in
+`%OneDrive%\dkj-solutions\dkj-music-library\library-export\` (naast de bewaarde `.env.local`):
 
 - `tracks.ndjson`: één regel per nummer, gesorteerd op `dkj_track_id`;
-- `spotify_track_ids.ndjson`: welk Spotify-ID bij welk eigen ID hoort.
+- `spotify_track_ids.ndjson`: welk Spotify-ID bij welk eigen ID hoort;
+- `artists.ndjson`: de eigen artiest-ID's.
 
 **De export is de bron, de database een kopie.** Elke stap die de bibliotheek opent (de sync op
-`/spotify`, `library:import`, `library:assign-ids`) kijkt eerst of de export veranderd is sinds de
-database hem het laatst las of schreef. Zo ja (een verse kloon, of een `git pull` met nieuwe data), dan
-wordt de database uit de export opnieuw opgebouwd. Na elke schrijvende stap wordt de export meteen
-bijgewerkt. Je hoeft dus alleen te committen en te pushen:
+`/spotify`, het trackregister, `library:import`, `library:assign-ids`) kijkt eerst of de export veranderd
+is sinds de database hem het laatst las of schreef. Zo ja (een eerste start op deze machine, of OneDrive
+bracht een export van je andere machine), dan wordt de database uit de export opnieuw opgebouwd. Na elke
+schrijvende stap, ook een tier via het potloodje, wordt de export meteen bijgewerkt. **Meer hoef je niet
+te doen**: geen commit, geen PR. OneDrive brengt de wijziging naar je andere machines, en bewaart eerdere
+versies van de bestanden als back-up.
 
-```sh
-git add data/library/export && git commit -m "data: bibliotheek bijgewerkt" && git push
-```
+- **Werk op één machine tegelijk** aan de bibliotheek. Schrijven twee machines voordat OneDrive de ene
+  export naar de andere heeft gebracht, dan maakt OneDrive een conflict-kopie en wint de laatste.
+- **Op een nieuwe machine:** laat OneDrive de map eerst helemaal binnenhalen voordat je de app start.
+  Vindt de app nog geen export maar wel een database, dan schrijft hij zijn eigen versie.
+- **Een andere map?** Zet `LIBRARY_EXPORT_DIR` als omgevingsvariabele van Windows (dan geldt hij ook voor
+  de scripts; in `.env.local` leest alleen de dev-server hem). Zonder OneDrive en zonder die variabele
+  (bijvoorbeeld in CI) staat de export in `data/library/export/`, en die map is git-ignored.
 
-Na een verse kloon of een pull kun je de database ook direct opbouwen met `npm run library:sync`.
+`npm run library:sync` trekt database en export direct gelijk en zegt in welke map de export staat.
 Kolommen die niet (meer) in `fields.ts` staan, gaan niet mee in de export. Hoe het werkt staat in
-`src/lib/library/libraryFile.ts`. Let op: omdat de repo publiek is, zijn ook je `notes` en `tags` voor
-iedereen te lezen zodra je ze pusht.
+`src/lib/library/libraryFile.ts`.
+
+#### De overstap van git naar OneDrive (18 november 2026)
+
+Tot 18 november 2026 stond de export in de repo, in `data/library/export/`, en ging elke wijziging via
+`npm run library:publish` als PR naar `main`. Een `git pull` van deze versie haalt die map uit je checkout.
+De oude export blijft wel in de git-historie van de publieke repo staan.
+
+1. **Begin op de machine waar je het laatst iets aan de bibliotheek veranderde.** Heb je daar nog
+   wijzigingen die niet op `main` staan, dan staan die ook in je database: zet de map terug met
+   `git restore data/library/export` zodat de pull niet weigert. Dan `git pull` en
+   `npm run library:sync`. Die meldt `export geschreven uit de database` en het pad in OneDrive.
+2. **Op elke andere machine:** wacht tot OneDrive de map `library-export` heeft binnengehaald, dan
+   `git pull` en `npm run library:sync`. Die meldt `database opnieuw opgebouwd uit de export`.
 
 ### Het Trackregister bekijken
 
@@ -285,8 +305,9 @@ staan. Ook dit veld wordt alleen gevuld zolang het leeg is. Het trackregister to
 
 `spotify_playlist` (tot 27 september 2026 `dkj_playlists`) is de lijst Spotify-playlists waarin een track staat, elk met ID en naam, in de volgorde
 van je playlists. Anders dan de andere eigen velden wordt dit veld bij elke sync opnieuw gezet: het is
-een feit van Spotify, geen keuze van jou. Let op: de playlistnamen staan daarmee in de publieke export,
-ook die uit de wereld Privé. Daarvoor is bewust gekozen, zodat het register ze op elke machine toont. De
+een feit van Spotify, geen keuze van jou. De playlistnamen staan daarmee in de export, ook die uit de wereld
+Privé, zodat het register ze op elke machine toont. Sinds de export in OneDrive staat (18 november
+2026), zijn ze niet meer openbaar. De
 regels staan in `src/lib/library/playlistLinks.ts`.
 
 ### De mixen: `djcylow_mix`
@@ -333,22 +354,6 @@ staan de twee los van elkaar: een mixwaardering die je zelf kiest, blijft staan.
 `/mixen/published/<slug>`) staat alleen deze waardering, zonder `dkj_rating`, en die tabel opent met de hoogste
 mixwaardering bovenaan. De route is dezelfde `POST /api/spotify/rating`, met
 `field: "dkj_mix_rating"` in de body; zonder `field` gaat het om `dkj_rating`.
-
-#### Je wijzigingen op main zetten: `npm run library:publish`
-
-De export staat in git, en direct op `main` committen mag niet: alles gaat via een branch en een PR.
-Dat hoef je niet zelf te doen. Sta op `main`, wijzig wat je wilt in de app, en draai:
-
-```sh
-npm run library:publish            # branch, commit, PR, merge en fold in één keer
-npm run library:publish -- -DryRun # alleen laten zien wat er veranderd is
-```
-
-Het script (`scripts/library/publish-library.ps1`) weigert als je niet op `main` staat, of als er naast
-`data/library/export/` nog iets anders gewijzigd is. Anders zou er werk meeliften dat niet in een
-datawijziging hoort. Daarna maakt het een branch `feat/library-<tijd>`, vult het changelog-item met
-wat er veranderde (bijvoorbeeld "2 tracks gewijzigd (dkj_rating 2)"), en draait het de gewone `open-pr`
-en `ship-pr` van de dkj-repo-workflow-plugin. Je eindigt op een bijgewerkte `main`.
 
 ### Velden met vaste keuzes
 
