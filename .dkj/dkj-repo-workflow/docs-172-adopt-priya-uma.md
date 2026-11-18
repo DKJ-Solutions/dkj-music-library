@@ -60,7 +60,7 @@ The specialists roster now lists the whole team, Priya (Product Owner) and Uma (
 
 N/A
 
-**Score:** 0
+**Score:** N/A
 
 #### Pull Request
 
