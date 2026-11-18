@@ -3,14 +3,14 @@
 // Anders dan de andere eigen velden wordt dit veld bij ELKE sync opnieuw gezet, niet alleen zolang het
 // leeg is: welke playlists een track heeft, is een feit van Spotify, geen keuze van jou. Een track die
 // uit alle playlists verdwijnt, krijgt null. Alleen wat echt verandert, wordt geschreven, zodat de
-// export in git niet bij elke sync helemaal verschuift.
+// export niet bij elke sync helemaal verschuift.
 //
 // De volgorde is die van de snapshot (de volgorde van je playlists in Spotify), en elke playlist staat
 // er één keer in, ook als de track er twee keer in zit of als twee releasevarianten van hetzelfde
 // nummer (zelfde dkj_track_id) er allebei in staan.
 //
-// De namen staan in de export in git, en die repo is publiek; daar is bewust voor gekozen (Dave, 27
-// september 2026), zodat het register op elke machine de labels toont.
+// De namen staan in de export, zodat het register op elke machine de labels toont. Tot 18 november 2026
+// stond die export in de publieke repo (bewust, Dave, 27 september 2026); nu staat hij in OneDrive.
 //
 // planPlaylistLinks() is puur; applyPlaylistLinks() schrijft, in één transactie.
 import type { DatabaseSync } from "node:sqlite";

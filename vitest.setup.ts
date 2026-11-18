@@ -19,3 +19,11 @@ process.env.SPOTIFY_RATE_LIMIT_STORE_PATH = path.join(
   os.tmpdir(),
   `dkj-test-rate-limit-${process.pid}-${Math.random().toString(36).slice(2)}.json`
 );
+
+// De bibliotheek-export staat op een machine met OneDrive in OneDrive (getLibraryExportDir in
+// src/lib/library/libraryFile.ts). Een test die zonder eigen map exporteert, zou daar de echte
+// bibliotheek overschrijven -- en OneDrive zet dat door naar je andere machines.
+process.env.LIBRARY_EXPORT_DIR = path.join(
+  os.tmpdir(),
+  `dkj-test-library-export-${process.pid}-${Math.random().toString(36).slice(2)}`
+);

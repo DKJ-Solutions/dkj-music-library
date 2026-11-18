@@ -5,7 +5,7 @@
 // Opnieuw draaien is veilig: een bestaande dkj_track_id wordt bijgewerkt, niet verdubbeld. Faalt één
 // rij, dan wordt er niets geschreven en meldt het script welke rij het was.
 import { openLibraryDb } from "../../src/lib/library/db";
-import { withLibrary } from "../../src/lib/library/libraryFile";
+import { getLibraryExportDir, withLibrary } from "../../src/lib/library/libraryFile";
 import { readImportFile } from "../../src/lib/library/importFile";
 import { countTracks, upsertTracks } from "../../src/lib/library/trackStore";
 
@@ -25,7 +25,7 @@ try {
 
   const { inserted, updated, total } = withLibrary((db) => ({ ...upsertTracks(db, records), total: countTracks(db) }));
   console.log(`${inserted} toegevoegd, ${updated} bijgewerkt -- ${total} tracks in totaal`);
-  console.log("Export bijgewerkt in data/library/export/ -- commit die map om hem op je andere machines te hebben.");
+  console.log(`Export bijgewerkt in ${getLibraryExportDir()} -- OneDrive brengt hem naar je andere machines.`);
 } catch (err) {
   console.error(`Import mislukt: ${err instanceof Error ? err.message : String(err)}`);
   process.exit(1);

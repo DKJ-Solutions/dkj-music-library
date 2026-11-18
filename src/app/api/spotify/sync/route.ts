@@ -51,8 +51,7 @@ export async function POST(request: Request) {
     }
 
     // Elk nummer en elke artiest in de nieuwe snapshot een eigen ID geven (trackIds.ts, artistIds.ts)
-    // en de export in
-    // data/library/export/ bijwerken (libraryFile.ts). Lukt dat niet, dan is de sync zelf nog steeds
+    // en de export bijwerken (libraryFile.ts). Lukt dat niet, dan is de sync zelf nog steeds
     // geslaagd: de snapshot staat er, en `npm run library:assign-ids` haalt het in.
     let trackIds: TrackIdResult | null = null;
     let artistIds: ArtistIdResult | null = null;

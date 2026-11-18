@@ -1,5 +1,5 @@
-// De trackdatabase: één SQLite-bestand in data/library/library.db, lokaal en git-ignored. Wat wél in
-// git staat, is de tekst-export in data/library/export/ -- die is de bron, deze database een kopie
+// De trackdatabase: één SQLite-bestand in data/library/library.db, lokaal en git-ignored. Wat wél
+// reist, is de tekst-export in OneDrive (getLibraryExportDir) -- die is de bron, deze database een kopie
 // ervan. Open de bibliotheek daarom via openLibrary()/withLibrary() uit libraryFile.ts; die trekken
 // database en export gelijk. openLibraryDb() hieronder is alleen het SQLite-deel.
 //

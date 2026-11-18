@@ -1,7 +1,7 @@
 // HET TRACKREGISTER: de rijen en het filter achter /spotify/trackregister.
 //
 // De pagina leest de bibliotheek (libraryFile.ts), en die bouwt zich op een verse kloon zelf op uit de
-// export in git -- dus het register is op elke machine met de repo te zien, zonder account of sync.
+// export in OneDrive -- dus het register is op elke machine met de repo te zien, zonder account of sync.
 // Hier staat alleen wat de tabel nodig heeft: één compacte rij per track, en het filter op zoekterm,
 // dkj_bpm, dkj_genre, dkj_album, dkj_group en een bereik van year.
 //

@@ -19,8 +19,13 @@ export function hasPlaceholders(text: string): boolean {
   return PLACEHOLDER.test(text);
 }
 
+/** De OneDrive-map van deze machine, uit de variabele die Windows zelf zet, of null zonder OneDrive. */
+export function getOneDriveRoot(env: Record<string, string | undefined> = process.env): string | null {
+  return env.OneDrive || env.OneDriveConsumer || env.OneDriveCommercial || null;
+}
+
 export function getOneDriveEnvPath(env: Record<string, string | undefined> = process.env): string | null {
-  const oneDrive = env.OneDrive || env.OneDriveConsumer || env.OneDriveCommercial;
+  const oneDrive = getOneDriveRoot(env);
   return oneDrive ? path.join(oneDrive, ONEDRIVE_ENV_SUBPATH) : null;
 }
 

@@ -4,7 +4,7 @@ import path from "path";
 import { DatabaseSync } from "node:sqlite";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { openLibraryDb } from "./db";
-import { exportHash, exportLibrary, openLibrary, restoreLibrary, syncWithExport, withLibrary } from "./libraryFile";
+import { exportHash, exportLibrary, getLibraryExportDir, openLibrary, restoreLibrary, syncWithExport, withLibrary } from "./libraryFile";
 import { TRACK_FIELDS } from "./fields";
 import { ensureSpotifyLinkTable } from "./trackIds";
 import { getTrack, listTracks, upsertTracks } from "./trackStore";
@@ -248,5 +248,21 @@ describe("de hernoeming track_id -> dkj_track_id", () => {
     const db = memoryDb();
     expect(upsertTracks(db, [{ track_id: "T000001", bpm: "128" }])).toEqual({ inserted: 1, updated: 0 });
     expect(getTrack(db, "T000001")?.bpm).toBe(128);
+  });
+});
+
+describe("getLibraryExportDir", () => {
+  it("volgt LIBRARY_EXPORT_DIR als die gezet is, ook met OneDrive", () => {
+    expect(getLibraryExportDir({ LIBRARY_EXPORT_DIR: tmp, OneDrive: "X:\\od" })).toBe(path.resolve(tmp));
+  });
+
+  it("staat anders in OneDrive, naast de bewaarde .env.local", () => {
+    expect(getLibraryExportDir({ OneDrive: "X:\\od" })).toBe(
+      path.join("X:\\od", "dkj-solutions", "dkj-music-library", "library-export")
+    );
+  });
+
+  it("valt zonder OneDrive terug op data/library/export/ in de repo", () => {
+    expect(getLibraryExportDir({})).toBe(path.join(process.cwd(), "data", "library", "export"));
   });
 });

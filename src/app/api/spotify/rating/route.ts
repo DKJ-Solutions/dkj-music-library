@@ -1,7 +1,7 @@
 // POST /api/spotify/rating -- zet dkj_rating of dkj_mix_rating van één track, vanuit het trackregister
 // (Rating in TrackRegister.tsx).
-// Schrijft in de bibliotheek via withLibrary(), dus de export in data/library/export/ is meteen bij;
-// commit die map om de waardering op je andere machines te hebben. Naar Spotify gaat niets.
+// Schrijft in de bibliotheek via withLibrary(), dus de export (in OneDrive, libraryFile.ts) is meteen bij,
+// en OneDrive brengt de waardering naar je andere machines. Naar Spotify gaat niets.
 //
 // Body: { trackId: string; rating: string; field?: "dkj_rating" | "dkj_mix_rating" }
 //   -> { trackId, field, rating } met de opgeslagen spelling. Zonder field: dkj_rating.

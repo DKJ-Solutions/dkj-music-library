@@ -21,11 +21,8 @@ next-env.d.ts
 # src/lib/spotify/snapshotStore.ts, en de SQLite-database zelf). LET OP: dit is een ANDERE map dan
 # .data/ hierboven (die is voor geheimen zoals tokens; deze is voor opgehaalde brondata).
 #
-# Eén uitzondering: data/library/export/, de tekst-export van de trackbibliotheek (eigen ID's +
-# velden, zie src/lib/library/libraryFile.ts). Die staat bewust in git, zodat elke kloon hem heeft --
-# en deze repo is PUBLIEK, dus alles wat daarin staat (ook notities en tags) is voor iedereen te zien.
-data/*
-!data/library/
-data/library/*
-!data/library/export/
+# Ook data/library/export/ valt hieronder: de tekst-export van de trackbibliotheek staat sinds
+# 18 november 2026 in OneDrive (src/lib/library/libraryFile.ts), en alleen op een machine zonder
+# OneDrive nog in deze map. Hij hoort niet in git: de repo is publiek, en elke rating zou een PR zijn.
+data/
 

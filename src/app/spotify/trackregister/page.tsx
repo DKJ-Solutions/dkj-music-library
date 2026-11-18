@@ -1,6 +1,6 @@
 // /spotify/trackregister -- het Trackregister: elke track met zijn eigen velden (fields.ts), te
 // doorzoeken en te filteren op dkj_bpm en dkj_album. Leest de bibliotheek, niet de Spotify-snapshot:
-// die bouwt zich op een verse kloon zelf op uit de export in git (libraryFile.ts), dus deze pagina
+// die bouwt zich op een verse kloon zelf op uit de export in OneDrive (libraryFile.ts), dus deze pagina
 // werkt op elke machine met de repo, ook zonder Spotify-login of sync. Dun schilletje, zelfde recept
 // als de andere spotify-routes: de rijen komen uit readRegister.ts, de weergave uit TrackRegister.tsx.
 import Link from "next/link";
